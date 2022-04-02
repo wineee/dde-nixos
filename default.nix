@@ -29,6 +29,9 @@ let
     dmarked = callPackage ./pkgs/dmarked { };
     deepin-picker = callPackage ./pkgs/deepin-picker { };
     deepin-draw = callPackage ./pkgs/deepin-draw { };
+    deepin-wallpapers = callPackage ./pkgs/deepin-wallpapers { };
+    go-lib = callPackage ./pkgs/go-lib { };
+    dde-api = callPackage ./pkgs/dde-api { };
 
     # break, need fix
     deepin-camera = callPackage ./pkgs/deepin-camera { };
