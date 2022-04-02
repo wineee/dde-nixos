@@ -1,6 +1,7 @@
 { stdenv
 , lib
 , fetchFromGitHub
+, go
 , glib
 , xorg
 , gdk-pixbuf
@@ -19,7 +20,14 @@ stdenv.mkDerivation rec {
     sha256 = "sha256-9u/dstjsL/hcd+JYYiQnR4S4Jcu6BKxeBgl963jyJc0=";
   };
 
-  buildInputs = [
+  installPhase = ''
+    mkdir -p $out/share/gocode/src/pkg.deepin.io/lib
+    cp -a * $out/share/gocode/src/pkg.deepin.io/lib
+    rm -r $out/share/gocode/src/pkg.deepin.io/lib/debian
+  '';
+
+  installCheckInputs = [
+    go
     glib
     xorg.libX11
     gdk-pixbuf
@@ -27,10 +35,15 @@ stdenv.mkDerivation rec {
     mobile-broadband-provider-info
   ];
 
-  installPhase = ''
-    mkdir -p $out/share/gocode/src/pkg.deepin.io/lib
-    cp -a * $out/share/gocode/src/pkg.deepin.io/lib
-    rm -r $out/share/gocode/src/pkg.deepin.io/lib/debian
+  doInstallCheck = false;
+
+  # FIXME go get can't access web
+  installCheckPhase = ''
+    export GOPROXY=https://goproxy.cn
+    export GOPATH="$out/share/gocode"
+    cd $out/share/gocode/src/pkg.deepin.io/lib
+    go get github.com/smartystreets/goconvey github.com/howeyc/fsnotify gopkg.in/check.v1 github.com/linuxdeepin/go-x11-client
+    go test -v $(go list ./... | grep -v -e lib/pulse -e lib/users/passwd -e lib/users/group -e lib/timer -e lib/log -e lib/dbus -e lib/shell)
   '';
 
   meta = with lib; {
