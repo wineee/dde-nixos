@@ -31,6 +31,7 @@ let
     deepin-draw = callPackage ./pkgs/deepin-draw { };
     deepin-wallpapers = callPackage ./pkgs/deepin-wallpapers { };
     go-dbus-factory = callPackage ./pkgs/go-dbus-factory { };
+    go-gir-generator = callPackage ./pkgs/go-gir-generator { };
     go-lib = callPackage ./pkgs/go-lib { };
     dde-api = callPackage ./pkgs/dde-api { };
 
