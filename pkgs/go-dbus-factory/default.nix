@@ -7,23 +7,24 @@
 
 stdenv.mkDerivation rec {
   pname = "go-dbus-factory";
-  version = "2.0.0";
+  version = "unstable-2022-01-17";
 
   src = fetchFromGitHub {
     owner = "linuxdeepin";
     repo = pname;
-    rev = version;
-    sha256 = "sha256-OLdG7LyDMiuqcB7JQqgoDpSmvO7gPJ8hhNjegtc70hU=";
+    rev = "fab97cf936d78150ba011a7aeb8e24993ddca37d";
+    sha256 = "sha256-KvFX+l2M6wHa+l6bOEKswCTcBYqtbMl/IIxGuu0PFcU=";
   };
 
-  #nativeBuildInputs = [ go ];
-  #buildInputs = [ go-lib ]; 
+  dontBuild = true;
 
-  makeFlags = [ "PREFIX=${placeholder "out"}" ];
-
-  #buildPhase = ''
-  #  make bin
-  #'';
+  installPhase = ''
+    mkdir -p $out/src/github.com/linuxdeepin/go-dbus-factory
+    for dir in object_manager net.* org.* com.*;do\
+      mkdir -p $out/src/github.com/linuxdeepin/go-dbus-factory/$dir;\
+      cp $dir/*.go $out/src/github.com/linuxdeepin/go-dbus-factory/$dir;\
+    done
+  '';
 
   meta = with lib; {
     description = "a library containing many useful go routines for things such as glib, gettext, archive, graphic, etc";
