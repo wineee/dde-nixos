@@ -22,8 +22,8 @@ stdenv.mkDerivation rec {
 
   output = [ "out" "server" ];
 
-  nativeBuildInputs = [ 
-    qmake 
+  nativeBuildInputs = [
+    qmake
     pkgconfig
   ];
 

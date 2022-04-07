@@ -51,7 +51,7 @@ buildGoPackage rec {
     go-dbus-factory
     go-gir-generator
     go-lib
-    
+
     alsaLib
     gtk3
     libcanberra
@@ -79,7 +79,7 @@ buildGoPackage rec {
   '';
 
   installPhase = ''
-    make install DESTDIR="$out" PREFIX="/"  -C go/src/${goPackagePath}
+    make install DESTDIR="$out" PREFIX="/" -C go/src/${goPackagePath}
   '';
 
   meta = with lib; {

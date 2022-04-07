@@ -59,11 +59,11 @@ stdenv.mkDerivation rec {
 
     substituteInPlace wayland/dwayland/dwayland.pro \
       --replace "DESTDIR = \$\$_PRO_FILE_PWD_/../../bin/plugins/platforms" "DESTDIR = $out/plugins/platforms"
-   '';
+  '';
 
-   postPatch = fixXcbInstallPatch 
-              + lib.optionalString (!waylandSupport) noWaylandPatch
-              + lib.optionalString waylandSupport fixWaylandInstallPatch;
+  postPatch = fixXcbInstallPatch
+    + lib.optionalString (!waylandSupport) noWaylandPatch
+    + lib.optionalString waylandSupport fixWaylandInstallPatch;
 
   meta = with lib; {
     description = "Qt platform plugins for DDE";

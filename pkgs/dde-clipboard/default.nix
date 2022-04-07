@@ -53,7 +53,7 @@ stdenv.mkDerivation rec {
     "--prefix QT_PLUGIN_PATH : ${qt5platform-plugins}/plugins"
   ];
 
-  patches = [ ./0001-remove-support-waylandcopy-client.patch ]; 
+  patches = [ ./0001-remove-support-waylandcopy-client.patch ];
 
   postPatch = ''
     patchShebangs translate_generation.sh generate_gtest_report.sh

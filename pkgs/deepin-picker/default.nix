@@ -27,11 +27,11 @@ stdenv.mkDerivation rec {
     sha256 = "sha256-CauaeXQzBfE9EgG6WclmJ7K1nm06iZILxMtvSfqXT3U=";
   };
 
-  nativeBuildInputs = [ 
+  nativeBuildInputs = [
     qmake
     qttools
-    pkgconfig 
-    wrapQtAppsHook 
+    pkgconfig
+    wrapQtAppsHook
   ];
 
   buildInputs = [
@@ -43,7 +43,7 @@ stdenv.mkDerivation rec {
     xorg.libXtst
   ];
 
-   qmakeFlags = [ 
+  qmakeFlags = [
     "BINDIR=${placeholder "out"}/bin"
     "ICONDIR=${placeholder "out"}/share/icons/hicolor/scalable/apps"
     "APPDIR=${placeholder "out"}/share/applications"

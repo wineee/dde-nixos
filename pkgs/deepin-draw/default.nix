@@ -24,11 +24,11 @@ stdenv.mkDerivation rec {
     sha256 = "sha256-yG7XzEkp9IYtemC1LOsOWAA8Erq3EsQebmI3aAXhylU=";
   };
 
-  nativeBuildInputs = [ 
+  nativeBuildInputs = [
     cmake
     qttools
-    pkgconfig 
-    wrapQtAppsHook 
+    pkgconfig
+    wrapQtAppsHook
   ];
 
   buildInputs = [

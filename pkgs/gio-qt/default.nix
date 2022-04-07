@@ -23,7 +23,7 @@ stdenv.mkDerivation rec {
   nativeBuildInputs = [ cmake pkgconfig wrapQtAppsHook ];
 
   cmakeFlags = lib.optional (!buildDocs) [ "-DBUILD_DOCS=OFF" ];
-  
+
   buildInputs = [ glibmm ] ++ lib.optional buildDocs doxygen;
 
   meta = with lib; {

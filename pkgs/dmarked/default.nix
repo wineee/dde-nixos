@@ -25,11 +25,11 @@ stdenv.mkDerivation rec {
     sha256 = "sha256-0Zj5CmrvSBaYdfr82/mSDsh75uupZvqLODwKOYNe83c=";
   };
 
-  nativeBuildInputs = [ 
+  nativeBuildInputs = [
     qmake
     #qttools
-    pkgconfig 
-    wrapQtAppsHook 
+    pkgconfig
+    wrapQtAppsHook
   ];
 
   buildInputs = [
@@ -45,7 +45,7 @@ stdenv.mkDerivation rec {
     "--prefix QT_PLUGIN_PATH : ${qt5platform-plugins}/plugins"
   ];
 
-  qmakeFlags = [ 
+  qmakeFlags = [
     "BINDIR=${placeholder "out"}/bin"
     "APPDIR=${placeholder "out"}/share/applications"
     "DSRDIR=${placeholder "out"}/share/dmarked"

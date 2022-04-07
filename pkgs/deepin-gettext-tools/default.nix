@@ -19,13 +19,13 @@ stdenv.mkDerivation rec {
 
   nativeBuildInputs = [ python3Packages.wrapPython ];
 
-  buildInputs = [ 
+  buildInputs = [
     gettext
     perlPackages.perl
     perlPackages.ConfigTiny
     perlPackages.XMLLibXML
   ];
-  
+
   makeFlags = [
     "PREFIX=${placeholder "out"}"
   ];

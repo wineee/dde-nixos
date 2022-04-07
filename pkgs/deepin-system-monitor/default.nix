@@ -54,7 +54,7 @@ stdenv.mkDerivation rec {
     dde-qt-dbus-factory
     qtx11extras
     kwayland
-    
+
     gsettings-qt
     libpcap
     libnl
@@ -63,7 +63,7 @@ stdenv.mkDerivation rec {
     gtest
   ];
 
-  cmakeFlags = [ 
+  cmakeFlags = [
     "-DCMAKE_INSTALL_PREFIX=${placeholder "out"}"
     "-DWAYLAND_SESSION_SUPPORT=OFF"
   ];

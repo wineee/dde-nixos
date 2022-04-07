@@ -25,13 +25,13 @@ stdenv.mkDerivation rec {
     qttools
     wrapQtAppsHook
   ];
-  
+
   buildInputs = [
     qtbase
   ];
 
   qmakeFlags = [ "PREFIX=${placeholder "out"}" ];
-  
+
   patches = [ ./0001-dtk_lib-disable-examples-subdirs.patch ];
 
   postPatch = ''

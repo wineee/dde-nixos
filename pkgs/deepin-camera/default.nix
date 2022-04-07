@@ -13,7 +13,7 @@
 , cmake
 , pkgconfig
 , qttools
-, qtmultimedia 
+, qtmultimedia
 , wrapQtAppsHook
 , ffmpeg
 , ffmpegthumbnailer
