@@ -21,9 +21,9 @@ stdenv.mkDerivation rec {
   };
 
   installPhase = ''
-    mkdir -p $out/src/github.com/linuxdeepin/go-lib
-    cp -a * $out/src/github.com/linuxdeepin/go-lib
-    rm -r $out/src/github.com/linuxdeepin/go-lib/debian
+    mkdir -p $out/share/gocode/src/github.com/linuxdeepin/go-lib
+    cp -a * $out/share/gocode/src/github.com/linuxdeepin/go-lib
+    rm -r $out/share/gocode/src/github.com/linuxdeepin/go-lib/debian
   '';
 
   installCheckInputs = [
