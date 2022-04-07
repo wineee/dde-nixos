@@ -16,15 +16,7 @@ stdenv.mkDerivation rec {
     sha256 = "sha256-KvFX+l2M6wHa+l6bOEKswCTcBYqtbMl/IIxGuu0PFcU=";
   };
 
-  dontBuild = true;
-
-  installPhase = ''
-    mkdir -p $out/src/github.com/linuxdeepin/go-dbus-factory
-    for dir in object_manager net.* org.* com.*;do\
-      mkdir -p $out/src/github.com/linuxdeepin/go-dbus-factory/$dir;\
-      cp $dir/*.go $out/src/github.com/linuxdeepin/go-dbus-factory/$dir;\
-    done
-  '';
+  makeFlags = [ "PREFIX=${placeholder "out"}" ];
 
   meta = with lib; {
     description = "a library containing many useful go routines for things such as glib, gettext, archive, graphic, etc";
