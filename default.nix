@@ -43,6 +43,7 @@ let
 
     # Dtk Application
     dde-calendar = callPackage ./pkgs/dde-calendar { };
+    deepin-terminal = callPackage ./pkgs/deepin-terminal { };
 
     # break, need fix
     deepin-camera = callPackage ./pkgs/deepin-camera { };
