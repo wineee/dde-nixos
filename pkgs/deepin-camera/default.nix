@@ -10,6 +10,7 @@
 , deepin-gettext-tools
 , dde-qt-dbus-factory
 , image-editor
+, dde-api
 , cmake
 , pkgconfig
 , qttools
@@ -20,6 +21,7 @@
 , libusb1
 , portaudio
 , libv4l
+, libudev0-shim
 , gst_all_1
 }:
 
@@ -55,6 +57,7 @@ stdenv.mkDerivation rec {
     libusb1
     portaudio
     libv4l
+    dde-api
   ];
 
   qtWrapperArgs = [
@@ -64,6 +67,7 @@ stdenv.mkDerivation rec {
     "--prefix GST_PLUGIN_SYSTEM_PATH_1_0 : ${gst_all_1.gst-plugins-base}/lib/gstreamer-1.0"
     "--prefix GST_PLUGIN_SYSTEM_PATH_1_0 : ${gst_all_1.gst-plugins-good}/lib/gstreamer-1.0"
     "--prefix GST_PLUGIN_SYSTEM_PATH_1_0 : ${gst_all_1.gst-plugins-bad}/lib/gstreamer-1.0"
+    "--prefix LD_LIBRARY_PATH : ${lib.makeLibraryPath [ ffmpeg ffmpegthumbnailer dde-api libudev0-shim libusb1 portaudio libv4l ]}"
   ];
 
   patches = [
