@@ -37,10 +37,12 @@ let
     go-gir-generator = callPackage ./pkgs/go-gir-generator { };
     go-lib = callPackage ./pkgs/go-lib { };
     dde-api = callPackage ./pkgs/dde-api { };
-    #lastore-daemon
     deepin-desktop-schemas = callPackage ./pkgs/deepin-desktop-schemas { };
     #dde-daemon
     #startdde
+
+    # Dtk Application
+    dde-calendar = callPackage ./pkgs/dde-calendar { };
 
     # break, need fix
     deepin-camera = callPackage ./pkgs/deepin-camera { };
