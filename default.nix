@@ -30,6 +30,8 @@ let
     deepin-picker = callPackage ./pkgs/deepin-picker { };
     deepin-draw = callPackage ./pkgs/deepin-draw { };
     deepin-wallpapers = callPackage ./pkgs/deepin-wallpapers { };
+    # Lib
+    disomaster = callPackage ./pkgs/disomaster { };
    
 
     # Go Packages
@@ -43,6 +45,7 @@ let
 
     # Dtk Application
     dde-calendar = callPackage ./pkgs/dde-calendar { };
+    deepin-compressor = callPackage ./pkgs/deepin-compressor { };
     deepin-terminal = callPackage ./pkgs/deepin-terminal { };
 
     # break, need fix
