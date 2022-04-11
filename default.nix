@@ -47,6 +47,7 @@ let
     dde-calendar = callPackage ./pkgs/dde-calendar { };
     deepin-compressor = callPackage ./pkgs/deepin-compressor { };
     deepin-terminal = callPackage ./pkgs/deepin-terminal { };
+    deepin-editor = callPackage ./pkgs/deepin-editor { };
 
     # break, need fix
     deepin-camera = callPackage ./pkgs/deepin-camera { };
