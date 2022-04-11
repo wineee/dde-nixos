@@ -55,9 +55,9 @@ stdenv.mkDerivation rec {
 
   qtWrapperArgs = [
     "--prefix QT_PLUGIN_PATH : ${qt5integration}/plugins"
-    "--prefix QT_PLUGIN_PATH : ${qt5platform-plugins}/plugins"
+    "--prefix QT_QPA_PLATFORM_PLUGIN_PATH : ${qt5platform-plugins}/plugins"
   ];
-  
+
   postPatch = ''
     substituteInPlace CMakeLists.txt \
       --replace "/usr/share/deepin-manual/manual-assets/application/)" "share/deepin-manual/manual-assets/application/)"

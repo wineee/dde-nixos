@@ -62,7 +62,7 @@ stdenv.mkDerivation rec {
 
   qtWrapperArgs = [
     "--prefix QT_PLUGIN_PATH : ${qt5integration}/plugins"
-    "--prefix QT_PLUGIN_PATH : ${qt5platform-plugins}/plugins"
+    "--prefix QT_QPA_PLATFORM_PLUGIN_PATH : ${qt5platform-plugins}/plugins"
     "--prefix PATH : ${lib.makeBinPath [ gst_all_1.gstreamer ]}"
     "--prefix GST_PLUGIN_SYSTEM_PATH_1_0 : ${gst_all_1.gst-plugins-base}/lib/gstreamer-1.0"
     "--prefix GST_PLUGIN_SYSTEM_PATH_1_0 : ${gst_all_1.gst-plugins-good}/lib/gstreamer-1.0"

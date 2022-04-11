@@ -54,10 +54,10 @@ stdenv.mkDerivation rec {
 
   qtWrapperArgs = [
     "--prefix QT_PLUGIN_PATH : ${qt5integration}/plugins"
-    "--prefix QT_PLUGIN_PATH : ${qt5platform-plugins}/plugins"
+    "--prefix QT_QPA_PLATFORM_PLUGIN_PATH : ${qt5platform-plugins}/plugins"
   ];
-  
-  cmakeFlags = [ 
+
+  cmakeFlags = [
     "-DLIBRARY_OUTPUT_PATH=${placeholder "out"}/lib"
     "-DEXECUTABLE_OUTPUT_PATH=${placeholder "out"}/bin"
     "-DHFILES_OUTPUT_PATH=${placeholder "out"}/include"

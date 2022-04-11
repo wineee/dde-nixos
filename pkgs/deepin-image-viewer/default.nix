@@ -57,7 +57,7 @@ stdenv.mkDerivation rec {
 
   qtWrapperArgs = [
     "--prefix QT_PLUGIN_PATH : ${qt5integration}/plugins"
-    "--prefix QT_PLUGIN_PATH : ${qt5platform-plugins}/plugins"
+    "--prefix QT_QPA_PLATFORM_PLUGIN_PATH : ${qt5platform-plugins}/plugins"
   ];
 
   patches = [ ./0001-fix-fhs-path-for-nix.patch ];
