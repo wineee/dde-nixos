@@ -22,13 +22,13 @@
 
 stdenv.mkDerivation rec {
   pname = "deepin-image-viewer";
-  version = "5.8.9";
+  version = "5.8.13";
 
   src = fetchFromGitHub {
     owner = "linuxdeepin";
     repo = pname;
     rev = version;
-    sha256 = "sha256-nOyprwUPg5XWrfQhBjLsUlkqkL6Vgd9PhTwQb3JNgog=";
+    sha256 = "sha256-thV+/IsV5kkdL3aycIR+bAA8DAqjsl3WogY5AYoeV+s=";
   };
 
   nativeBuildInputs = [
@@ -62,7 +62,7 @@ stdenv.mkDerivation rec {
 
   patches = [ ./0001-fix-fhs-path-for-nix.patch ];
 
-  postPatch = ''
+  fixInstallPatch = ''
     substituteInPlace src/CMakeLists.txt \
       --replace "set(PREFIX  /usr)" "set(PREFIX  $out)" \
       --replace "/usr/share/applications" "$out/share/applications" \
@@ -70,8 +70,9 @@ stdenv.mkDerivation rec {
       --replace "/usr/share/deepin-manual/manual-assets/application/" "$out/share/deepin-manual/manual-assets/application/" \
       --replace "/usr/share/icons/hicolor/scalable/apps" "$out/share/icons/hicolor/scalable/apps" \
       --replace "/usr/share/dbus-1/services" "$out/share/dbus-1/services"
-
-    # fix code  
+  '';
+  
+  fixCodePatch = '' 
     substituteInPlace src/src/module/view/homepagewidget.cpp \
       --replace "\"../libimageviewer/image-viewer_global.h\"" "\"libimageviewer/image-viewer_global.h\"" \
       --replace "\"../libimageviewer/imageviewer.h\"" "\"libimageviewer/imageviewer.h\""
@@ -80,6 +81,8 @@ stdenv.mkDerivation rec {
       --replace "\"../libimageviewer/imageviewer.h\"" "\"libimageviewer/imageviewer.h\"" \
       --replace "\"../libimageviewer/imageengine.h\"" "\"libimageviewer/imageengine.h\""
   '';
+
+  postPatch = fixInstallPatch + fixCodePatch;
 
   meta = with lib; {
     description = "An image viewing tool with fashion interface and smooth performance";
