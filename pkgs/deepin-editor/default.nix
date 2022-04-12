@@ -1,6 +1,7 @@
 { stdenv
 , lib
 , fetchFromGitHub
+, fetchpatch
 , dtkcommon
 , dtkcore
 , dtkgui
@@ -16,19 +17,19 @@
 , syntax-highlighting
 , libchardet
 , libuchardet
+, libiconv
 , gtest
 }:
 
 stdenv.mkDerivation rec {
   pname = "deepin-editor";
-  version = "5.6.35";
-  # TODO 5.10.19 need  com_deepin_dde_daemon_dock.h 
+  version = "5.10.19";
 
   src = fetchFromGitHub {
     owner = "linuxdeepin";
     repo = pname;
     rev = version;
-    sha256 = "sha256-P0ZL3/XFZQgs37wLkY0hzh/gxpHj4XzzRpWazTOOXVk=";
+    sha256 = "sha256-Be2cxJB9wIiuNP8TS43zhhdtOMa8lXAtbVtq9klrwAI=";
   };
 
   nativeBuildInputs = [
@@ -48,6 +49,7 @@ stdenv.mkDerivation rec {
     syntax-highlighting
     libchardet
     libuchardet
+    libiconv
     gtest
   ];
 
@@ -56,9 +58,18 @@ stdenv.mkDerivation rec {
     "--prefix QT_QPA_PLATFORM_PLUGIN_PATH : ${qt5platform-plugins}/plugins"
   ];
 
+  patches = [
+    (fetchpatch {
+      url = "https://github.com/linuxdeepin/deepin-editor/commit/caa16d90dedf5106007d654897747f6f8f919439.patch";
+      sha256 = "sha256-uUDNNvJ+JVTmbVLfdTeQ2PECbW/TbbgPWaBm0W57U60=";
+      name = "do_not_include_com_deepin_dde_daemon_dock_h";
+    })
+  ];
+
   postPatch = ''
-    substituteInPlace CMakeLists.txt \
-      --replace "set(CMAKE_INSTALL_PREFIX /usr)" "set(CMAKE_INSTALL_PREFIX $out)"
+    substituteInPlace src/CMakeLists.txt \
+      --replace "set(CMAKE_INSTALL_PREFIX /usr)" "set(CMAKE_INSTALL_PREFIX $out)" \
+      --replace "/usr/share/deepin-manual/manual-assets/application/)" "$out/share/deepin-manual/manual-assets/application/)"
   '';
 
   meta = with lib; {
