@@ -3,7 +3,6 @@
 , fetchFromGitHub
 , pkgconfig
 , qmake
-, qttools
 , qtdeclarative
 , wrapQtAppsHook
 }:
