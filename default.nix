@@ -32,7 +32,7 @@ let
     deepin-wallpapers = callPackage ./pkgs/deepin-wallpapers { };
     # Lib
     disomaster = callPackage ./pkgs/disomaster { };
-   
+    qtmpris = callPackage ./pkgs/qtmpris { };
 
     # Go Packages
     go-dbus-factory = callPackage ./pkgs/go-dbus-factory { };
@@ -48,6 +48,7 @@ let
     deepin-compressor = callPackage ./pkgs/deepin-compressor { };
     deepin-terminal = callPackage ./pkgs/deepin-terminal { };
     deepin-editor = callPackage ./pkgs/deepin-editor { };
+    deepin-music = callPackage ./pkgs/deepin-music { };
 
     # break, need fix
     deepin-camera = callPackage ./pkgs/deepin-camera { };
