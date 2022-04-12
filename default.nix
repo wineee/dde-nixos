@@ -33,6 +33,7 @@ let
     # Lib
     disomaster = callPackage ./pkgs/disomaster { };
     qtmpris = callPackage ./pkgs/qtmpris { };
+    qtdbusextended = callPackage ./pkgs/qtdbusextended { };
 
     # Go Packages
     go-dbus-factory = callPackage ./pkgs/go-dbus-factory { };
