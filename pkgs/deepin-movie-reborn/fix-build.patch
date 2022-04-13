@@ -1,0 +1,123 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index d37a7ef9..56fef671 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -20,6 +20,11 @@ endif()
+ 
+ set(CMAKE_EXPORT_COMPILE_COMMANDS on)
+ 
++#匹配mpris差异
++if(NOT DEFINED _LIBMPR_)
++    add_definitions(-D_LIBMPR_)
++endif()
++
+ find_package(PkgConfig REQUIRED)
+ 
+ # Find includes in corresponding build directories
+diff --git a/debian/rules b/debian/rules
+index 4c6041f0..fc3fec52 100755
+--- a/debian/rules
++++ b/debian/rules
+@@ -10,5 +10,6 @@ override_dh_auto_configure:
+ 	dh_auto_configure -- \
+ 	  -DCMAKE_BUILD_TYPE=Release \
+ 	  -DCMAKE_INSTALL_PREFIX=/usr \
++	  -D_LIBMPR_=NO \
+       -DAPP_VERSION=$(DEB_VERSION_UPSTREAM) -DVERSION=$(DEB_VERSION_UPSTREAM) LIB_INSTALL_DIR=/usr/lib/$(DEB_HOST_MULTIARCH) DH_AUTO_ARGS = --parallel --buildsystem=cmake
+ 
+diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
+index 54979327..504f8551 100644
+--- a/src/CMakeLists.txt
++++ b/src/CMakeLists.txt
+@@ -88,13 +88,6 @@ install(FILES ${PROJECT_SOURCE_DIR}/assets/resources/icons/logo-big.svg
+     RENAME deepin-movie.svg)
+ install(DIRECTORY ${CMAKE_SOURCE_DIR}/assets/deepin-movie DESTINATION /usr/share/deepin-manual/manual-assets/application/)
+ 
+-#匹配mpris差异
+-execute_process(COMMAND dpkg -s libmpris-qt5-1 COMMAND grep -i version COMMAND cut -d\  -f2 OUTPUT_VARIABLE libmprisVersion)
+-message(${libmprisVersion})
+-if( ${libmprisVersion} MATCHES "0.1.0-" )
+-    add_definitions(-D_LIBMPR_)
+-endif()
+-
+ # 加速编译优化参数
+ if (CMAKE_HOST_SYSTEM_PROCESSOR MATCHES "mips64")
+     SET(CMAKE_CXX_FLAGS "$ENV{CXXFLAGS} -O3 -ftree-vectorize -march=loongson3a -mhard-float -mno-micromips -mno-mips16 -flax-vector-conversions -mloongson-ext2 -mloongson-mmi -Wl,--as-need -fPIE -z noexecstack")
+diff --git a/src/libdmr/CMakeLists.txt b/src/libdmr/CMakeLists.txt
+index 13eefb08..99f32ac1 100644
+--- a/src/libdmr/CMakeLists.txt
++++ b/src/libdmr/CMakeLists.txt
+@@ -3,18 +3,17 @@ project(libdmr VERSION 0.1.0)
+ set(CMAKE_AUTOMOC ON)
+ set(CMD_NAME dmr)
+ 
+-add_definitions(-D_LIBDMR_)
+ remove_definitions(-D_MOVIE_USE_)
+ 
+ pkg_check_modules(FFTHUMB REQUIRED libffmpegthumbnailer)
+ pkg_check_modules(AV REQUIRED IMPORTED_TARGET libavformat libavutil libavcodec)
+ 
+-include_directories(${CMAKE_INCLUDE_CURRENT_DIR})
+-
+ file(GLOB_RECURSE SRCS LIST_DIRECTORIES false *.cpp)
+ file(GLOB_RECURSE MPV_SRCS LIST_DIRECTORIES false ../backends/mpv/*.cpp)
+ file(GLOB_RECURSE HWDEC_SRCS ../common/hwdec_probe.cpp)
+-list(APPEND SRCS player_widget.cpp ${MPV_SRCS} ${HWDEC_SRCS})
++file(GLOB_RECURSE SETTINGS_SRCS ../common/dmr_settings.cpp)
++file(GLOB_RECURSE OPTIONS_SRCS ../common/options.cpp)
++list(APPEND SRCS player_widget.cpp ${MPV_SRCS} ${HWDEC_SRCS} ${SETTINGS_SRCS} ${OPTIONS_SRCS})
+ 
+ add_library(${CMD_NAME} SHARED ${SRCS})
+ set_target_properties(${CMD_NAME} PROPERTIES VERSION 0.1.0 SOVERSION 0.1)
+diff --git a/src/libdmr/filefilter.cpp b/src/libdmr/filefilter.cpp
+index 57516eaf..3588fa13 100644
+--- a/src/libdmr/filefilter.cpp
++++ b/src/libdmr/filefilter.cpp
+@@ -183,7 +183,7 @@ bool FileFilter::isAudio(QUrl url)
+     {
+          AVStream *in_stream = av_ctx->streams[0];
+ 
+-         if (in_stream->codec->codec_type == AVMEDIA_TYPE_AUDIO)
++         if (in_stream->codecpar->codec_type == AVMEDIA_TYPE_AUDIO)
+          {
+              bAudio = true;
+          }
+@@ -255,10 +255,10 @@ bool FileFilter::isVideo(QUrl url)
+      {
+          AVStream *in_stream = av_ctx->streams[i];
+ 
+-         if (in_stream->codec->codec_type == AVMEDIA_TYPE_VIDEO)
++         if (in_stream->codecpar->codec_type == AVMEDIA_TYPE_VIDEO)
+         {
+-             nWidth = in_stream->codec->width;
+-             nHeight = in_stream->codec->height;
++             nWidth = in_stream->codecpar->width;
++             nHeight = in_stream->codecpar->height;
+          }
+     }
+ 
+diff --git a/src/libdmr/playlist_model.cpp b/src/libdmr/playlist_model.cpp
+index e61550fc..1b5dd8af 100644
+--- a/src/libdmr/playlist_model.cpp
++++ b/src/libdmr/playlist_model.cpp
+@@ -1561,7 +1561,7 @@ static int open_codec_context(int *stream_idx,
+     st = fmt_ctx->streams[stream_index];
+ #if LIBAVFORMAT_VERSION_MAJOR >= 57
+     *dec_ctx = st->codecpar;
+-    dec = avcodec_find_decoder((*dec_ctx)->codec_id);
++    dec = avcodec_find_decoder(const_cast<AVCodec*>((*dec_ctx))->codec_id);
+ #else
+     /* find decoder for the stream */
+     dec = avcodec_find_decoder(st->codecpar->codec_id);
+diff --git a/tests/deepin-movie/stub/stub.h b/tests/deepin-movie/stub/stub.h
+index e5330028..44272e1b 100644
+--- a/tests/deepin-movie/stub/stub.h
++++ b/tests/deepin-movie/stub/stub.h
+@@ -38,7 +38,7 @@
+ #include <cstring>
+ //c++
+ #include <map>
+-
++#include <cstdint>
+ 
+ #define ADDR(CLASS_NAME,MEMBER_NAME) (&CLASS_NAME::MEMBER_NAME)

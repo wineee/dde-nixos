@@ -50,6 +50,7 @@ let
     deepin-terminal = callPackage ./pkgs/deepin-terminal { };
     deepin-editor = callPackage ./pkgs/deepin-editor { };
     deepin-music = callPackage ./pkgs/deepin-music { };
+    deepin-movie-reborn = callPackage ./pkgs/deepin-movie-reborn { };
 
     # break, need fix
     deepin-camera = callPackage ./pkgs/deepin-camera { };
