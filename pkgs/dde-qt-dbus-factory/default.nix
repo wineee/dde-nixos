@@ -10,13 +10,13 @@
 
 stdenv.mkDerivation rec {
   pname = "dde-qt-dbus-factory";
-  version = "5.5.5";
+  version = "5.5.22";
 
   src = fetchFromGitHub {
     owner = "linuxdeepin";
     repo = pname;
     rev = version;
-    sha256 = "sha256-VFqlZMi0YjySGGmHs/gBLjLlhtzabo5vb1La5Z5cAuo=";
+    sha256 = "sha256-jqk04S+i3py3rVJcHmkPKHsU+eNEN1yoUBBlfXBbcwM=";
   };
 
   nativeBuildInputs = [
@@ -37,7 +37,7 @@ stdenv.mkDerivation rec {
 
   meta = with lib; {
     description = "Repo of auto-generated D-Bus source code which DDE used";
-    homepage = "https://github.com/linuxdeepin/deepin-qt-dbus-factory";
+    homepage = "https://github.com/linuxdeepin/dde-qt-dbus-factory";
     license = licenses.gpl3Plus;
     platforms = platforms.linux;
   };
