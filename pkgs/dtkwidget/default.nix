@@ -20,13 +20,13 @@
 
 stdenv.mkDerivation rec {
   pname = "dtkwidget";
-  version = "5.5.37";
+  version = "5.5.44";
 
   src = fetchFromGitHub {
     owner = "linuxdeepin";
     repo = pname;
     rev = version;
-    sha256 = "sha256-pvn1FEbSPdOOy5qE/e0mz/g4JwPj9Om3iqxmydsjxg8=";
+    sha256 = "sha256-qvALTSnebetvyKsBDDuV/PKzRnQLBaOUa4viPSyihS8=";
   };
 
   nativeBuildInputs = [
