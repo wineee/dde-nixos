@@ -1,7 +1,6 @@
 { stdenv
 , lib
 , fetchFromGitHub
-, fetchpatch
 , qmake
 , pkgconfig
 , qtbase
@@ -15,13 +14,13 @@
 
 stdenv.mkDerivation rec {
   pname = "qt5platform-plugins";
-  version = "5.0.46";
+  version = "5.0.62";
 
   src = fetchFromGitHub {
     owner = "linuxdeepin";
     repo = pname;
     rev = version;
-    sha256 = "sha256-7zAkN6xX10XARCbSYPRl1qSn2vuuBM10CL7DvdjKEa0=";
+    sha256 = "sha256-s+RN92rZusnVed6vf49EXuDb1rj4g6A1YRqa+IqinTU=";
   };
 
   nativeBuildInputs = [ qmake pkgconfig wrapQtAppsHook ];
@@ -34,18 +33,7 @@ stdenv.mkDerivation rec {
     xorg.libSM
   ];
 
-  patches = [
-    (fetchpatch {
-      url = "https://github.com/linuxdeepin/qt5platform-plugins/commit/71bbc04210b27bcd416da667291f77b762eaea80.patch";
-      sha256 = "sha256-INuMWMPXPMLGO9IvEY9RHNAN2UnTFsTj3owUVMZRY2o=";
-      name = "Add_support_for_Qt_5_15-3_patch";
-    })
-  ];
-
-  noWaylandPatch = ''
-    rm -r wayland
-    sed -i '/wayland/d' qt5platform-plugins.pro
-  '';
+  qmakeFlags = lib.optional (!waylandSupport) [ "CONFIG+=DISABLE_WAYLAND" ];
 
   fixXcbInstallPatch = ''
     substituteInPlace xcb/xcb.pro \
@@ -62,7 +50,6 @@ stdenv.mkDerivation rec {
   '';
 
   postPatch = fixXcbInstallPatch
-    + lib.optionalString (!waylandSupport) noWaylandPatch
     + lib.optionalString waylandSupport fixWaylandInstallPatch;
 
   meta = with lib; {
