@@ -4,7 +4,6 @@
 , dtkcore
 , dtkgui
 , dtkcommon
-, dde-qt-dbus-factory
 , pkgconfig
 , qmake
 , qttools
@@ -51,7 +50,6 @@ stdenv.mkDerivation rec {
     dtkcore
     dtkgui
     dtkcommon
-    dde-qt-dbus-factory
   ];
 
   qmakeFlags = [
