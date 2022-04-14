@@ -14,8 +14,6 @@
 , cmake
 , pkgconfig
 , qttools
-, qtbase
-, qtdeclarative
 , qtx11extras
 , wrapQtAppsHook
 , gsettings-qt
@@ -26,6 +24,9 @@
 , libdvdread
 , libdvdnav
 , libva
+, glib
+, gsettings-desktop-schemas
+, wrapGAppsHook
 , gtest
 }:
 
@@ -52,8 +53,6 @@ stdenv.mkDerivation rec {
     dtkcore
     dtkgui
     dtkwidget
-    qtbase.dev
-    qtdeclarative
     qtx11extras
     qtdbusextended
     qtmpris
@@ -66,6 +65,7 @@ stdenv.mkDerivation rec {
     libdvdnav
     libva
     mpv
+    gsettings-desktop-schemas
     gtest
   ];
 
@@ -76,9 +76,10 @@ stdenv.mkDerivation rec {
   qtWrapperArgs = [
     "--prefix QT_PLUGIN_PATH : ${qt5integration}/plugins"
     "--prefix QT_QPA_PLATFORM_PLUGIN_PATH : ${qt5platform-plugins}/plugins"
+    "--prefix XDG_DATA_DIRS : ${placeholder "out"}/share/gsettings-schemas/${pname}-${version}"
   ];
 
-  postPatch = ''
+  fixCodePatch = ''
 
     substituteInPlace src/common/diskcheckthread.cpp \
       --replace "</usr/include/linux/cdrom.h>" "<linux/cdrom.h>"
@@ -89,10 +90,18 @@ stdenv.mkDerivation rec {
       --replace "find_package(gui-private)" ""
     substituteInPlace src/CMakeLists.txt \
       --replace "find_package(gui-private)" ""
+  '';
 
+  fixInstallPatch = ''
     substituteInPlace src/CMakeLists.txt \
       --replace "/usr/share/glib-2.0/schemas)" "$out/share/glib-2.0/schemas)" \
       --replace "/usr/share/deepin-manual/manual-assets/application/)" "$out/share/deepin-manual/manual-assets/application/)"
+  '';
+
+  postPatch = fixCodePatch + fixInstallPatch;
+
+  preFixup = ''
+    glib-compile-schemas ${glib.makeSchemaPath "$out" "${pname}-${version}"}
   '';
 
   meta = with lib; {
