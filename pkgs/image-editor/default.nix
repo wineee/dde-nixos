@@ -15,7 +15,7 @@
 
 stdenv.mkDerivation rec {
   pname = "image-editor";
-  version = "unstable-2022-03-16";
+  version = "1.9.10";
 
   src = fetchFromGitHub {
     owner = "linuxdeepin";
