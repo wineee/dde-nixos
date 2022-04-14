@@ -6,6 +6,7 @@
 , qtbase
 , qttools
 , wrapQtAppsHook
+, glib
 }:
 
 stdenv.mkDerivation rec {
@@ -38,6 +39,10 @@ stdenv.mkDerivation rec {
     substituteInPlace dtkcommon.pro \
         --replace '$${getQtMacroFromQMake(QT_INSTALL_LIBS)}'      $out/lib \
         --replace '$${getQtMacroFromQMake(QT_INSTALL_ARCHDATA)}'  $out
+  '';
+
+  preFixup = ''
+    glib-compile-schemas ${glib.makeSchemaPath "$out" "${pname}-${version}"}
   '';
 
   meta = with lib; {
