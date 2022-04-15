@@ -35,13 +35,16 @@ let
     qtmpris = callPackage ./pkgs/qtmpris { };
     qtdbusextended = callPackage ./pkgs/qtdbusextended { };
 
+    # Misc
+    dde-polkit-agent = callPackage ./pkgs/dde-polkit-agent { };
+
     # Go Packages
     go-dbus-factory = callPackage ./pkgs/go-dbus-factory { };
     go-gir-generator = callPackage ./pkgs/go-gir-generator { };
     go-lib = callPackage ./pkgs/go-lib { };
     dde-api = callPackage ./pkgs/dde-api { };
     deepin-desktop-schemas = callPackage ./pkgs/deepin-desktop-schemas { };
-    #dde-daemon
+    dde-daemon = callPackage ./pkgs/dde-daemon { };
     #startdde
 
     # Dtk Application
@@ -52,12 +55,14 @@ let
     deepin-music = callPackage ./pkgs/deepin-music { };
     deepin-movie-reborn = callPackage ./pkgs/deepin-movie-reborn { };
 
+
     # break, need fix
     deepin-camera = callPackage ./pkgs/deepin-camera { };
     deepin-devicemanager = callPackage ./pkgs/deepin-devicemanager { };
 
     # kde package
     libqtapt = callPackage ./pkgs/libqtapt { };
+    polkit-qt-1 = callPackage ./pkgs/polkit-qt-1 { }; # https://github.com/NixOS/nixpkgs/pull/168603
   };
 in
 makeScope newScope packages
