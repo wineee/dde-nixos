@@ -93,6 +93,10 @@ buildGoPackage rec {
   postPatch = ''
     rm -rf system/uadp
     rm -rf session/uadpagent
+
+    patchShebangs misc/etc/acpi/actions/deepin_lid.sh \
+      misc/libexec/dde-daemon/keybinding/shortcut-dde-grand-search.sh \
+      misc/dde-daemon/audio/echoCancelEnable.sh
   '';
 
   preBuild = ''
