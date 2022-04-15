@@ -90,6 +90,11 @@ buildGoPackage rec {
     ./dde-daemon.patch
   ];
 
+  # https://github.com/linuxdeepin/dde-daemon/blob/master/accounts/user.go
+  # ls misc/system-services/ misc//services/ misc//systemd//services
+  # misc/applications/deepin-toggle-desktop.desktop
+
+
   postPatch = ''
     rm -rf system/uadp
     rm -rf session/uadpagent

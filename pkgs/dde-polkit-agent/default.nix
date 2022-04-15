@@ -5,7 +5,7 @@
 , dtkcore
 , dtkgui
 , dtkwidget
-, dde-qt-dbus-factory 
+, dde-qt-dbus-factory
 , pkgconfig
 , cmake
 , qttools

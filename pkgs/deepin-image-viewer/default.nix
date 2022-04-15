@@ -71,7 +71,7 @@ stdenv.mkDerivation rec {
       --replace "/usr/share/icons/hicolor/scalable/apps" "$out/share/icons/hicolor/scalable/apps" \
       --replace "/usr/share/dbus-1/services" "$out/share/dbus-1/services"
   '';
-  
+
   fixCodePatch = '' 
     substituteInPlace src/src/module/view/homepagewidget.cpp \
       --replace "\"../libimageviewer/image-viewer_global.h\"" "\"libimageviewer/image-viewer_global.h\"" \
