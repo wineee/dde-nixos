@@ -1,10 +1,7 @@
 { stdenv
 , lib
 , fetchFromGitHub
-, dtkcore
-, dtkgui
-, dtkwidget
-, dtkcommon
+, dtk
 , qt5integration
 , qt5platform-plugins
 , dde-qt-dbus-factory
@@ -32,6 +29,8 @@ stdenv.mkDerivation rec {
     sha256 = "sha256-tmy1fQfT5zQ2va2bx0uIQGOk8Z44VKpade7qp05JYBc=";
   };
 
+  cmakeFlags = [ "-DVERSION=${version}" ];
+
   nativeBuildInputs = [
     cmake
     qttools
@@ -40,10 +39,7 @@ stdenv.mkDerivation rec {
   ];
 
   buildInputs = [
-    dtkcommon
-    dtkcore
-    dtkgui
-    dtkwidget
+    dtk
     dde-qt-dbus-factory
     qtx11extras
     at-spi2-core
