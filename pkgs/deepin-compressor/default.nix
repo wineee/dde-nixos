@@ -52,6 +52,7 @@ stdenv.mkDerivation rec {
   ];
 
   cmakeFlags = [
+    "-DVERSION=${version}"
     "-DLIBRARY_OUTPUT_PATH=${placeholder "out"}/lib"
     "-DEXECUTABLE_OUTPUT_PATH=${placeholder "out"}/bin"
     "-DHFILES_OUTPUT_PATH=${placeholder "out"}/include"
