@@ -20,7 +20,7 @@ let
     qt5platform-plugins = callPackage ./library/qt5platform-plugins { };
     qt5integration = callPackage ./library/qt5integration { };
     libqtapt = callPackage ./library/libqtapt { };
-    polkit-qt-1 = callPackage ./library/polkit-qt-1 { }; # https://github.com/NixOS/nixpkgs/pull/168603
+    polkit-qt-1 = callPackage ./library/polkit-qt-1 { }; # https://github.com/NixOS/nixapps/pull/168603
     dtk = [
       dtkcommon
       dtkcore
@@ -41,31 +41,31 @@ let
     go-gir-generator = callPackage ./go-package/go-gir-generator { };
     go-lib = callPackage ./go-package/go-lib { };
     dde-api = callPackage ./go-package/dde-api { };
-    deepin-desktop-schemas = callPackage ./pkgs/deepin-desktop-schemas { };
+    deepin-desktop-schemas = callPackage ./apps/deepin-desktop-schemas { };
     dde-daemon = callPackage ./go-package/dde-daemon { };
     #startdde
 
     #### Dtk Application
-    dde-calendar = callPackage ./pkgs/dde-calendar { };
-    dde-clipboard = callPackage ./pkgs/dde-clipboard { };
-    deepin-compressor = callPackage ./pkgs/deepin-compressor { };
-    deepin-terminal = callPackage ./pkgs/deepin-terminal { };
-    deepin-editor = callPackage ./pkgs/deepin-editor { };
-    deepin-music = callPackage ./pkgs/deepin-music { };
-    deepin-movie-reborn = callPackage ./pkgs/deepin-movie-reborn { };
-    deepin-album = callPackage ./pkgs/deepin-album { };
-    deepin-image-viewer = callPackage ./pkgs/deepin-image-viewer { };
-    deepin-boot-maker = callPackage ./pkgs/deepin-boot-maker { };
-    deepin-calculator = callPackage ./pkgs/deepin-calculator { };
-    deepin-font-manager = callPackage ./pkgs/deepin-font-manager { };
-    deepin-system-monitor = callPackage ./pkgs/deepin-system-monitor { };
-    dmarked = callPackage ./pkgs/dmarked { };
-    deepin-picker = callPackage ./pkgs/deepin-picker { };
-    deepin-draw = callPackage ./pkgs/deepin-draw { };
+    dde-calendar = callPackage ./apps/dde-calendar { };
+    dde-clipboard = callPackage ./apps/dde-clipboard { };
+    deepin-compressor = callPackage ./apps/deepin-compressor { };
+    deepin-terminal = callPackage ./apps/deepin-terminal { };
+    deepin-editor = callPackage ./apps/deepin-editor { };
+    deepin-music = callPackage ./apps/deepin-music { };
+    deepin-movie-reborn = callPackage ./apps/deepin-movie-reborn { };
+    deepin-album = callPackage ./apps/deepin-album { };
+    deepin-image-viewer = callPackage ./apps/deepin-image-viewer { };
+    deepin-boot-maker = callPackage ./apps/deepin-boot-maker { };
+    deepin-calculator = callPackage ./apps/deepin-calculator { };
+    deepin-font-manager = callPackage ./apps/deepin-font-manager { };
+    deepin-system-monitor = callPackage ./apps/deepin-system-monitor { };
+    dmarked = callPackage ./apps/dmarked { };
+    deepin-picker = callPackage ./apps/deepin-picker { };
+    deepin-draw = callPackage ./apps/deepin-draw { };
 
     # break, need fix
-    deepin-camera = callPackage ./pkgs/deepin-camera { };
-    deepin-devicemanager = callPackage ./pkgs/deepin-devicemanager { };
+    deepin-camera = callPackage ./apps/deepin-camera { };
+    deepin-devicemanager = callPackage ./apps/deepin-devicemanager { };
   };
 in
 makeScope newScope packages

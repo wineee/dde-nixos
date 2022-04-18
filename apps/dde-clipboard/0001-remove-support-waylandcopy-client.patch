@@ -1,0 +1,574 @@
+From 05112ab040089dcfb651a40973e00f17c40da683 Mon Sep 17 00:00:00 2001
+From: rewine <1758075541@qq.com>
+Date: Tue, 29 Mar 2022 21:15:41 +0800
+Subject: [PATCH] remove support waylandcopy client
+
+---
+ CMakeLists.txt                            |  11 +-
+ dde-clipboardloader/clipboardloader.cpp   |  14 +-
+ dde-clipboardloader/clipboardloader.h     |   2 -
+ dde-clipboardloader/waylandcopyclient.cpp | 319 ----------------------
+ dde-clipboardloader/waylandcopyclient.h   |  97 -------
+ 5 files changed, 4 insertions(+), 439 deletions(-)
+ delete mode 100644 dde-clipboardloader/waylandcopyclient.cpp
+ delete mode 100644 dde-clipboardloader/waylandcopyclient.h
+
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 1047d23..adb697c 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -1,6 +1,6 @@
+ cmake_minimum_required(VERSION 3.13)
+ 
+-set(BIN_NAME dde-clipboard)
++set(BIN_NAME dde-clipboard-bin)
+ 
+ project(${BIN_NAME})
+ 
+@@ -41,7 +41,6 @@ endif ()
+ # Find the library
+ find_package(PkgConfig REQUIRED)
+ find_package(DtkWidget REQUIRED)
+-find_package(KF5Wayland REQUIRED)
+ find_package(Qt5 COMPONENTS Core Widgets DBus Test REQUIRED)
+ 
+ pkg_check_modules(DFrameworkDBus REQUIRED dframeworkdbus)
+@@ -122,7 +121,7 @@ install(FILES ${SERVICE_FILE} DESTINATION share/dbus-1/services)
+ install(TARGETS ${BIN_NAME} DESTINATION bin)
+ 
+ #----------------------------dde-clipboardloader------------------------------
+-set(LOADER_NAME dde-clipboardloader)
++set(LOADER_NAME dde-clipboard-loader)
+ 
+ file(GLOB_RECURSE ClipboardLoader_SCRS
+     "dde-clipboardloader/*.h"
+@@ -138,7 +137,6 @@ add_executable(${LOADER_NAME}
+ )
+ target_include_directories(${LOADER_NAME} PUBLIC
+     ${DtkWidget_INCLUDE_DIRS}
+-    KF5::WaylandClient
+     Qt5::Core
+     Qt5::Widgets
+     Qt5::DBus
+@@ -146,7 +144,6 @@ target_include_directories(${LOADER_NAME} PUBLIC
+ 
+ target_link_libraries(${LOADER_NAME} PRIVATE
+     ${DtkWidget_LIBRARIES}
+-    KF5::WaylandClient
+     Qt5::Core
+     Qt5::Widgets
+     Qt5::DBus
+@@ -215,7 +212,6 @@ target_compile_options(${UT_BIN_NAME} PRIVATE -fprofile-arcs -ftest-coverage)
+ 
+ target_include_directories(${UT_LOADER_NAME} PUBLIC
+     ${DtkWidget_INCLUDE_DIRS}
+-    KF5::WaylandClient
+     Qt5::Core
+     Qt5::Widgets
+     Qt5::DBus
+@@ -224,7 +220,6 @@ target_include_directories(${UT_LOADER_NAME} PUBLIC
+ 
+ target_link_libraries(${UT_LOADER_NAME} PRIVATE
+     ${DtkWidget_LIBRARIES}
+-    KF5::WaylandClient
+     Qt5::Core
+     Qt5::Widgets
+     Qt5::DBus
+@@ -232,4 +227,4 @@ target_link_libraries(${UT_LOADER_NAME} PRIVATE
+     -lpthread
+     -lgcov
+     -lgtest
+-)
+\ No newline at end of file
++)
+diff --git a/dde-clipboardloader/clipboardloader.cpp b/dde-clipboardloader/clipboardloader.cpp
+index 74a287f..d9ed8a1 100644
+--- a/dde-clipboardloader/clipboardloader.cpp
++++ b/dde-clipboardloader/clipboardloader.cpp
+@@ -100,17 +100,7 @@ QString ClipboardLoader::m_pixPath;
+ 
+ ClipboardLoader::ClipboardLoader()
+     : m_board(qApp->clipboard())
+-    , m_waylandCopyClient(nullptr)
+ {
+-    if (qEnvironmentVariable("XDG_SESSION_TYPE").contains("wayland")) {
+-        m_waylandCopyClient = &WaylandCopyClient::ref();
+-        m_waylandCopyClient->init();
+-
+-        connect(m_waylandCopyClient, &WaylandCopyClient::dataChanged, this, [this] {
+-            this->doWork(WAYLAND_PROTOCOL);
+-        });
+-    }
+-
+     connect(m_board, &QClipboard::dataChanged, this, [this] {
+         this->doWork(X11_PROTOCOL);
+     });
+@@ -143,8 +133,6 @@ void ClipboardLoader::dataReborned(const QByteArray &buf)
+     }
+ 
+     m_board->setMimeData(mimeData);
+-    if (m_waylandCopyClient)
+-        m_waylandCopyClient->setMimeData(mimeData);
+ }
+ 
+ void ClipboardLoader::doWork(int protocolType)
+@@ -156,7 +144,7 @@ void ClipboardLoader::doWork(int protocolType)
+     // The pointer returned might become invalidated when the contents
+     // of the clipboard changes; either by calling one of the setter functions
+     // or externally by the system clipboard changing.
+-    const QMimeData *mimeData = protocolType == WAYLAND_PROTOCOL ? m_waylandCopyClient->mimeData() : m_board->mimeData();
++    const QMimeData *mimeData = m_board->mimeData();
+     if (!mimeData || mimeData->formats().isEmpty())
+         return;
+ 
+diff --git a/dde-clipboardloader/clipboardloader.h b/dde-clipboardloader/clipboardloader.h
+index 5c56e5f..18f75bc 100644
+--- a/dde-clipboardloader/clipboardloader.h
++++ b/dde-clipboardloader/clipboardloader.h
+@@ -22,7 +22,6 @@
+ #define WORKER_H
+ 
+ #include "constants.h"
+-#include "waylandcopyclient.h"
+ #include "iteminfo.h"
+ 
+ #include <QObject>
+@@ -61,7 +60,6 @@ private:
+     QClipboard *m_board;
+     QByteArray m_lastTimeStamp;
+     QPixmap m_lastPix;
+-    WaylandCopyClient *m_waylandCopyClient;
+ 
+     static QString m_pixPath;
+ };
+diff --git a/dde-clipboardloader/waylandcopyclient.cpp b/dde-clipboardloader/waylandcopyclient.cpp
+deleted file mode 100644
+index 9418996..0000000
+--- a/dde-clipboardloader/waylandcopyclient.cpp
++++ /dev/null
+@@ -1,319 +0,0 @@
+-/*
+- * Copyright (C) 2011 ~ 2018 Deepin Technology Co., Ltd.
+- *
+- * Author:     yinjie <yinjie@uniontech.com>
+- *
+- * Maintainer: yinjie <yinjie@uniontech.com>
+- *
+- * This program is free software: you can redistribute it and/or modify
+- * it under the terms of the GNU General Public License as published by
+- * the Free Software Foundation, either version 3 of the License, or
+- * any later version.
+- *
+- * This program is distributed in the hope that it will be useful,
+- * but WITHOUT ANY WARRANTY; without even the implied warranty of
+- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+- * GNU General Public License for more details.
+- *
+- * You should have received a copy of the GNU General Public License
+- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+- */
+-#include "waylandcopyclient.h"
+-#include "constants.h"
+-
+-#include <QEventLoop>
+-#include <QMimeData>
+-#include <QImageReader>
+-#include <QtConcurrent/QtConcurrent>
+-#include <QImageWriter>
+-#include <QMutexLocker>
+-#include <QMutex>
+-
+-#include <KF5/KWayland/Client/connection_thread.h>
+-#include <KF5/KWayland/Client/event_queue.h>
+-#include <KF5/KWayland/Client/registry.h>
+-#include <KF5/KWayland/Client/seat.h>
+-#include <KF5/KWayland/Client/datacontroldevicemanager.h>
+-#include <KF5/KWayland/Client/datacontroldevice.h>
+-#include <KF5/KWayland/Client/datacontrolsource.h>
+-#include <KF5/KWayland/Client/datacontroloffer.h>
+-
+-#include <unistd.h>
+-
+-static QStringList imageMimeFormats(const QList<QByteArray> &imageFormats)
+-{
+-    QStringList formats;
+-    formats.reserve(imageFormats.size());
+-    for (const auto &format : imageFormats)
+-        formats.append(QLatin1String("image/") + QLatin1String(format.toLower()));
+-
+-    // put png at the front because it is best
+-    int pngIndex = formats.indexOf(QLatin1String("image/png"));
+-    if (pngIndex != -1 && pngIndex != 0)
+-        formats.move(pngIndex, 0);
+-
+-    return formats;
+-}
+-
+-static inline QStringList imageReadMimeFormats()
+-{
+-    return imageMimeFormats(QImageReader::supportedImageFormats());
+-}
+-
+-static QByteArray getByteArray(QMimeData *mimeData, const QString &mimeType)
+-{
+-    QByteArray content;
+-    if (mimeType == QLatin1String("text/plain")) {
+-        content = mimeData->text().toUtf8();
+-    } else if (mimeData->hasImage()
+-               && (mimeType == QLatin1String("application/x-qt-image")
+-                   || mimeType.startsWith(QLatin1String("image/")))) {
+-        QImage image = qvariant_cast<QImage>(mimeData->imageData());
+-        if (!image.isNull()) {
+-            QBuffer buf;
+-            buf.open(QIODevice::ReadWrite);
+-            QByteArray fmt = "BMP";
+-            if (mimeType.startsWith(QLatin1String("image/"))) {
+-                QByteArray imgFmt = mimeType.mid(6).toUpper().toLatin1();
+-                if (QImageWriter::supportedImageFormats().contains(imgFmt))
+-                    fmt = imgFmt;
+-            }
+-            QImageWriter wr(&buf, fmt);
+-            wr.write(image);
+-            content = buf.buffer();
+-        }
+-    } else if (mimeType == QLatin1String("application/x-color")) {
+-        content = qvariant_cast<QColor>(mimeData->colorData()).name().toLatin1();
+-    } else if (mimeType == QLatin1String("text/uri-list")) {
+-        QList<QUrl> urls = mimeData->urls();
+-        for (int i = 0; i < urls.count(); ++i) {
+-            content.append(urls.at(i).toEncoded());
+-            content.append('\n');
+-        }
+-    } else {
+-        content = mimeData->data(mimeType);
+-    }
+-    return content;
+-}
+-
+-DMimeData::DMimeData()
+-{
+-
+-}
+-
+-DMimeData::~DMimeData()
+-{
+-
+-}
+-
+-QVariant DMimeData::retrieveData(const QString &mimeType, QVariant::Type preferredType) const
+-{
+-    QVariant data = QMimeData::retrieveData(mimeType,preferredType);
+-    if (mimeType == QLatin1String("application/x-qt-image")) {
+-        if (data.isNull() || (data.userType() == QMetaType::QByteArray && data.toByteArray().isEmpty())) {
+-            // try to find an image
+-            QStringList imageFormats = imageReadMimeFormats();
+-            for (int i = 0; i < imageFormats.size(); ++i) {
+-                data = QMimeData::retrieveData(imageFormats.at(i), preferredType);
+-                if (data.isNull() || (data.userType() == QMetaType::QByteArray && data.toByteArray().isEmpty()))
+-                    continue;
+-                break;
+-            }
+-        }
+-        int typeId = static_cast<int>(preferredType);
+-        // we wanted some image type, but all we got was a byte array. Convert it to an image.
+-        if (data.userType() == QMetaType::QByteArray
+-            && (typeId == QMetaType::QImage || typeId == QMetaType::QPixmap || typeId == QMetaType::QBitmap))
+-            data = QImage::fromData(data.toByteArray());
+-    } else if (mimeType == QLatin1String("application/x-color") && data.userType() == QMetaType::QByteArray) {
+-        QColor c;
+-        QByteArray ba = data.toByteArray();
+-        if (ba.size() == 8) {
+-            ushort * colBuf = (ushort *)ba.data();
+-            c.setRgbF(qreal(colBuf[0]) / qreal(0xFFFF),
+-                      qreal(colBuf[1]) / qreal(0xFFFF),
+-                      qreal(colBuf[2]) / qreal(0xFFFF),
+-                      qreal(colBuf[3]) / qreal(0xFFFF));
+-            data = c;
+-        } else {
+-            qWarning() << "Qt: Invalid color format";
+-        }
+-    } else {
+-        data = QMimeData::retrieveData(mimeType, preferredType);
+-    }
+-    return data;
+-}
+-
+-WaylandCopyClient::WaylandCopyClient(QObject *parent)
+-    : QObject(parent)
+-    , m_connectionThread(new QThread(this))
+-    , m_connectionThreadObject(new ConnectionThread())
+-    , m_eventQueue(nullptr)
+-    , m_dataControlDeviceManager(nullptr)
+-    , m_dataControlDevice(nullptr)
+-    , m_copyControlSource(nullptr)
+-    , m_mimeData(new DMimeData)
+-    , m_seat(nullptr)
+-{
+-
+-}
+-
+-WaylandCopyClient::~WaylandCopyClient()
+-{
+-    m_connectionThread->quit();
+-    m_connectionThread->wait();
+-    m_connectionThreadObject->deleteLater();
+-    if (m_mimeData)
+-        m_mimeData->deleteLater();
+-}
+-
+-void WaylandCopyClient::init()
+-{
+-    connect(m_connectionThreadObject, &ConnectionThread::connected, this, [this] {
+-        m_eventQueue = new EventQueue(this);
+-        m_eventQueue->setup(m_connectionThreadObject);
+-
+-        Registry *registry = new Registry(this);
+-        setupRegistry(registry);
+-    }, Qt::QueuedConnection );
+-    m_connectionThreadObject->moveToThread(m_connectionThread);
+-    m_connectionThread->start();
+-    m_connectionThreadObject->initConnection();
+-}
+-
+-void WaylandCopyClient::setupRegistry(Registry *registry)
+-{
+-    connect(registry, &Registry::seatAnnounced, this, [this, registry] (quint32 name, quint32 version) {
+-        m_seat = registry->createSeat(name, version, this);
+-    });
+-
+-    connect(registry, &Registry::dataControlDeviceManagerAnnounced, this, [this, registry] (quint32 name, quint32 version) {
+-        m_dataControlDeviceManager = registry->createDataControlDeviceManager(name, version, this);
+-        m_dataControlDevice = m_dataControlDeviceManager->getDataDevice(m_seat, this);
+-
+-        connect(m_dataControlDevice, &DataControlDeviceV1::selectionCleared, this, [&] {
+-                m_copyControlSource = nullptr;
+-                sendOffer();
+-        });
+-
+-        connect(m_dataControlDevice, &DataControlDeviceV1::dataOffered, this, &WaylandCopyClient::onDataOffered);
+-    });
+-
+-    registry->setEventQueue(m_eventQueue);
+-    registry->create(m_connectionThreadObject);
+-    registry->setup();
+-}
+-
+-void WaylandCopyClient::onDataOffered(KWayland::Client::DataControlOfferV1* offer)
+-{
+-    qDebug() << "data offered";
+-    if (!offer)
+-        return;
+-
+-    if (m_mimeData)
+-        m_mimeData = new DMimeData();
+-    m_mimeData->clear();
+-
+-    QList<QString> mimeTypeList = filterMimeType(offer->offeredMimeTypes());
+-    int mimeTypeCount = mimeTypeList.count();
+-
+-    // 将所有的数据插入到mime data中
+-    static QMutex setMimeDataMutex;
+-    static int mimeTypeIndex = 0;
+-    mimeTypeIndex = 0;
+-    for (const QString &mimeType : mimeTypeList) {
+-        int pipeFds[2];
+-        if (pipe(pipeFds) != 0) {
+-            qWarning() << "Create pipe failed.";
+-            return;
+-        }
+-
+-        // 根据mime类取数据，写入pipe中
+-        offer->receive(mimeType, pipeFds[1]);
+-        close(pipeFds[1]);
+-        // 异步从pipe中读取数据写入mime data中
+-        QtConcurrent::run([pipeFds, this, mimeType, mimeTypeCount] {
+-            QFile readPipe;
+-            if (readPipe.open(pipeFds[0], QIODevice::ReadOnly)) {
+-                if (readPipe.isReadable()) {
+-                    const QByteArray &data = readPipe.readAll();
+-                    if (!data.isEmpty()) {
+-                        // 需要加锁进行同步，否则可能会崩溃
+-                        QMutexLocker locker(&setMimeDataMutex);
+-                        m_mimeData->setData(mimeType, data);
+-                    } else {
+-                        qWarning() << "Pipe data is empty, mime type: " << mimeType;
+-                    }
+-                } else {
+-                    qWarning() << "Pipe is not readable";
+-                }
+-            } else {
+-                qWarning() << "Open pipe failed!";
+-            }
+-            close(pipeFds[0]);
+-            if (++mimeTypeIndex >= mimeTypeCount) {
+-                qDebug() << "emit dataChanged";
+-                mimeTypeIndex = 0;
+-                emit this->dataChanged();
+-            }
+-        });
+-    }
+-}
+-
+-const QMimeData* WaylandCopyClient::mimeData()
+-{
+-    return m_mimeData;
+-}
+-
+-void WaylandCopyClient::setMimeData(QMimeData *mimeData) {
+-    m_mimeData = mimeData;
+-    sendOffer();
+-}
+-
+-void WaylandCopyClient::sendOffer()
+-{
+-    m_copyControlSource = m_dataControlDeviceManager->createDataSource(this);
+-    if (!m_copyControlSource)
+-        return;
+-
+-    connect(m_copyControlSource, &DataControlSourceV1::sendDataRequested, this, &WaylandCopyClient::onSendDataRequest);
+-    for (const QString &format : m_mimeData->formats()) {
+-        // 如果是application/x-qt-image类型则需要提供image的全部类型, 比如image/png
+-        if (ApplicationXQtImageLiteral == format) {
+-            QStringList imageFormats = imageReadMimeFormats();
+-            for (int i = 0; i < imageFormats.size(); ++i) {
+-                m_copyControlSource->offer(imageFormats.at(i));
+-            }
+-            continue;
+-        }
+-        m_copyControlSource->offer(format);
+-    }
+-
+-    m_dataControlDevice->setSelection(0, m_copyControlSource);
+-    m_connectionThreadObject->flush();
+-}
+-
+-void WaylandCopyClient::onSendDataRequest(const QString &mimeType, qint32 fd) const
+-{
+-    QFile f;
+-    if (f.open(fd, QFile::WriteOnly, QFile::AutoCloseHandle)) {
+-        const QByteArray &ba = getByteArray(m_mimeData, mimeType);
+-        f.write(ba);
+-        f.close();
+-    }
+-}
+-
+-QList<QString> WaylandCopyClient::filterMimeType(const QList<QString> &mimeTypeList)
+-{
+-    QList<QString> tmpList;
+-    for (const QString &mimeType : mimeTypeList) {
+-        // 根据窗管的要求，不读取纯大写、和不含'/'的字段，因为源窗口可能没有写入这些字段的数据，导致获取数据的线程一直等待。
+-        if ((mimeType.contains("/") && mimeType.toUpper() != mimeType)
+-                || mimeType == "FROM_DEEPIN_CLIPBOARD_MANAGER"
+-                || mimeType == "TIMESTAMP") {
+-            tmpList.append(mimeType);
+-        }
+-    }
+-
+-    return tmpList;
+-}
+diff --git a/dde-clipboardloader/waylandcopyclient.h b/dde-clipboardloader/waylandcopyclient.h
+deleted file mode 100644
+index bacc484..0000000
+--- a/dde-clipboardloader/waylandcopyclient.h
++++ /dev/null
+@@ -1,97 +0,0 @@
+-/*
+- * Copyright (C) 2011 ~ 2018 Deepin Technology Co., Ltd.
+- *
+- * Author:     yinjie <yinjie@uniontech.com>
+- *
+- * Maintainer: yinjie <yinjie@uniontech.com>
+- *
+- * This program is free software: you can redistribute it and/or modify
+- * it under the terms of the GNU General Public License as published by
+- * the Free Software Foundation, either version 3 of the License, or
+- * any later version.
+- *
+- * This program is distributed in the hope that it will be useful,
+- * but WITHOUT ANY WARRANTY; without even the implied warranty of
+- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+- * GNU General Public License for more details.
+- *
+- * You should have received a copy of the GNU General Public License
+- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+- */
+-#ifndef COPYCLIENT_H
+-#define COPYCLIENT_H
+-
+-#include "iteminfo.h"
+-
+-#include <QMimeData>
+-#include <QPointer>
+-
+-#include <DSingleton>
+-
+-namespace KWayland
+-{
+-namespace Client
+-{
+-class ConnectionThread;
+-class EventQueue;
+-class Registry;
+-class Seat;
+-class DataControlDeviceManager;
+-class DataControlDeviceV1;
+-class DataControlSourceV1;
+-class DataControlOfferV1;
+-} //Client
+-} //KWayland
+-
+-using namespace KWayland::Client;
+-
+-class DMimeData : public QMimeData
+-{
+-Q_OBJECT
+-public:
+-    DMimeData();
+-    ~DMimeData();
+-    virtual QVariant retrieveData(const QString &mimeType,
+-                                      QVariant::Type preferredType) const;
+-};
+-
+-DCORE_USE_NAMESPACE
+-
+-class WaylandCopyClient : public QObject, public DSingleton<WaylandCopyClient>
+-{
+-    Q_OBJECT
+-    friend class Dtk::Core::DSingleton<WaylandCopyClient>;
+-
+-public:
+-    explicit WaylandCopyClient(QObject *parent = nullptr);
+-    virtual ~WaylandCopyClient();
+-
+-    void init();
+-    const QMimeData *mimeData();
+-    void setMimeData(QMimeData *mimeData);
+-    void sendOffer();
+-
+-private:
+-    void setupRegistry(Registry *registry);
+-    QList<QString> filterMimeType(const QList<QString> &mimeTypeList);
+-
+-Q_SIGNALS:
+-    void dataChanged();
+-
+-protected slots:
+-    void onSendDataRequest(const QString &mimeType, qint32 fd) const;
+-    void onDataOffered(DataControlOfferV1 *offer);
+-
+-private:
+-    QThread *m_connectionThread;
+-    ConnectionThread *m_connectionThreadObject;
+-    EventQueue *m_eventQueue;
+-    DataControlDeviceManager *m_dataControlDeviceManager;
+-    DataControlDeviceV1 *m_dataControlDevice;
+-    DataControlSourceV1 *m_copyControlSource;
+-    QPointer<QMimeData> m_mimeData;
+-    Seat *m_seat;
+-    ItemInfo m_itemInfo;
+-};
+-
+-#endif // COPYCLIENT_H
+-- 
+2.35.1
+
