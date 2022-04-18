@@ -47,7 +47,10 @@ stdenv.mkDerivation rec {
     libexif
   ];
 
-  cmakeFlags = [ "-DCMAKE_INSTALL_PREFIX=${placeholder "out"}" ];
+  cmakeFlags = [
+    "-DVERSION=${version}"
+    "-DCMAKE_INSTALL_PREFIX=${placeholder "out"}" 
+  ];
 
   qtWrapperArgs = [
     "--prefix QT_PLUGIN_PATH : ${qt5integration}/plugins"
