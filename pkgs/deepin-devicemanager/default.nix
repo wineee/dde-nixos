@@ -1,33 +1,31 @@
 { stdenv
 , lib
 , fetchFromGitHub
-, dtkcore
-, dtkgui
-, dtkwidget
-, dtkcommon
+, dtk
 , qt5integration
 , qt5platform-plugins
 , dde-qt-dbus-factory
 , cmake
 , qttools
 , polkit-qt
-, libqtapt
 , pkgconfig
 , qtx11extras
 , wrapQtAppsHook
+, pciutils
+, libcups
 , gtest
 , kmod
 }:
 
 stdenv.mkDerivation rec {
   pname = "deepin-devicemanager";
-  version = "5.8.1";
+  version = "5.6.32";
 
   src = fetchFromGitHub {
     owner = "linuxdeepin";
     repo = pname;
     rev = version;
-    sha256 = "sha256-wtgFyZIJI/Ar3g7VsuB25Zfzr1aunwCU1641kQiu3lk=";
+    sha256 = "sha256-vUxLZ3rx341mkLTdKrlSTBBSRFoywShWyTRO30KDccc=";
   };
 
   nativeBuildInputs = [
@@ -38,14 +36,12 @@ stdenv.mkDerivation rec {
   ];
 
   buildInputs = [
-    dtkcommon
-    dtkcore
-    dtkgui
-    dtkwidget
+    dtk
     dde-qt-dbus-factory
     polkit-qt
-    libqtapt
     kmod
+    pciutils
+    libcups
     gtest
   ];
 
@@ -65,6 +61,5 @@ stdenv.mkDerivation rec {
     homepage = "https://github.com/linuxdeepin/deepin-devicemanager";
     license = licenses.gpl3Plus;
     platforms = platforms.linux;
-    broken = true;
   };
 }

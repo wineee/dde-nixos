@@ -1,10 +1,7 @@
 { stdenv
 , lib
 , fetchFromGitHub
-, dtkcore
-, dtkgui
-, dtkwidget
-, dtkcommon
+, dtk
 , qt5integration
 , qt5platform-plugins
 , qmake
@@ -33,10 +30,7 @@ stdenv.mkDerivation rec {
   ];
 
   buildInputs = [
-    dtkcommon
-    dtkcore
-    dtkgui
-    dtkwidget
+    dtk
     qtwebengine
   ];
 

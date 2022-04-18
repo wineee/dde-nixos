@@ -34,6 +34,12 @@ let
     disomaster = callPackage ./pkgs/disomaster { };
     qtmpris = callPackage ./pkgs/qtmpris { };
     qtdbusextended = callPackage ./pkgs/qtdbusextended { };
+    dtk = [
+      dtkcommon
+      dtkcore
+      dtkgui
+      dtkwidget
+    ];
 
     # Misc
     dde-polkit-agent = callPackage ./pkgs/dde-polkit-agent { };

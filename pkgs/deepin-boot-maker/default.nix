@@ -1,10 +1,7 @@
 { stdenv
 , lib
 , fetchFromGitHub
-, dtkcommon
-, dtkcore
-, dtkgui
-, dtkwidget
+, dtk
 , qmake
 , pkgconfig
 , qtbase
@@ -38,10 +35,7 @@ stdenv.mkDerivation rec {
   ];
 
   buildInputs = [
-    dtkcore
-    dtkgui
-    dtkwidget
-    dtkcommon
+    dtk
     qtx11extras
     mtools
     p7zip

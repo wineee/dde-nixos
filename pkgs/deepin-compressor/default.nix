@@ -1,10 +1,7 @@
 { stdenv
 , lib
 , fetchFromGitHub
-, dtkcore
-, dtkgui
-, dtkwidget
-, dtkcommon
+, dtk
 , qt5integration
 , qt5platform-plugins
 , udisks2-qt5
@@ -39,10 +36,7 @@ stdenv.mkDerivation rec {
   ];
 
   buildInputs = [
-    dtkcommon
-    dtkcore
-    dtkgui
-    dtkwidget
+    dtk
     udisks2-qt5
     kcodecs
     karchive

@@ -2,10 +2,7 @@
 , lib
 , fetchFromGitHub
 , fetchpatch
-, dtkcommon
-, dtkcore
-, dtkgui
-, dtkwidget
+, dtk
 , qt5integration
 , qt5platform-plugins
 , dde-qt-dbus-factory
@@ -49,10 +46,7 @@ stdenv.mkDerivation rec {
   ];
 
   buildInputs = [
-    dtkcommon
-    dtkcore
-    dtkgui
-    dtkwidget
+    dtk
     qtx11extras
     qtdbusextended
     qtmpris

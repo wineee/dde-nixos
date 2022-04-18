@@ -1,10 +1,7 @@
 { stdenv
 , lib
 , fetchFromGitHub
-, dtkcore
-, dtkgui
-, dtkwidget
-, dtkcommon
+, dtk
 , qt5integration
 , qt5platform-plugins
 , cmake
@@ -31,12 +28,9 @@ stdenv.mkDerivation rec {
     wrapQtAppsHook
   ];
 
-  buildInputs = [
-    dtkcommon
-    dtkcore
-    dtkgui
-    dtkwidget
-  ];
+  buildInputs = [ dtk ];
+
+  cmakeFlags = [ "-DVERSION=${version}" ];
 
   qtWrapperArgs = [
     "--prefix QT_PLUGIN_PATH : ${qt5integration}/plugins"

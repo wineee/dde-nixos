@@ -1,10 +1,7 @@
 { stdenv
 , lib
 , fetchFromGitHub
-, dtkcommon
-, dtkcore
-, dtkgui
-, dtkwidget
+, dtk
 , qt5integration
 , qt5platform-plugins
 , gio-qt
@@ -39,10 +36,7 @@ stdenv.mkDerivation rec {
   ];
 
   buildInputs = [
-    dtkcommon
-    dtkcore
-    dtkgui
-    dtkwidget
+    dtk
     gio-qt
     udisks2-qt5
     image-editor

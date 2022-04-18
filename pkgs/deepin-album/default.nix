@@ -1,10 +1,7 @@
 { stdenv
 , lib
 , fetchFromGitHub
-, dtkcommon
-, dtkcore
-, dtkgui
-, dtkwidget
+, dtk
 , qt5integration
 , qt5platform-plugins
 , udisks2-qt5
@@ -35,10 +32,7 @@ stdenv.mkDerivation rec {
   nativeBuildInputs = [ cmake pkgconfig qttools wrapQtAppsHook ];
 
   buildInputs = [
-    dtkcommon
-    dtkcore
-    dtkgui
-    dtkwidget
+    dtk
     udisks2-qt5
     gio-qt
     image-editor

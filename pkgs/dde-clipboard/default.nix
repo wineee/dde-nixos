@@ -1,10 +1,7 @@
 { stdenv
 , lib
 , fetchFromGitHub
-, dtkcore
-, dtkgui
-, dtkwidget
-, dtkcommon
+, dtk
 , qt5integration
 , qt5platform-plugins
 , dde-qt-dbus-factory
@@ -37,10 +34,7 @@ stdenv.mkDerivation rec {
   ];
 
   buildInputs = [
-    dtkcore
-    dtkgui
-    dtkwidget
-    dtkcommon
+    dtk
     dde-qt-dbus-factory
     gio-qt
     kwayland
