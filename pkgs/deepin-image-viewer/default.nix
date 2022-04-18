@@ -49,7 +49,7 @@ stdenv.mkDerivation rec {
 
   cmakeFlags = [
     "-DVERSION=${version}"
-    "-DCMAKE_INSTALL_PREFIX=${placeholder "out"}" 
+    "-DCMAKE_INSTALL_PREFIX=${placeholder "out"}"
   ];
 
   qtWrapperArgs = [

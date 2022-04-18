@@ -58,6 +58,7 @@ stdenv.mkDerivation rec {
   ];
 
   cmakeFlags = [
+    "-DVERSION=${version}"
     "-DCMAKE_INSTALL_PREFIX=${placeholder "out"}"
     "-DWAYLAND_SESSION_SUPPORT=OFF"
   ];
@@ -66,8 +67,6 @@ stdenv.mkDerivation rec {
     "--prefix QT_PLUGIN_PATH : ${qt5integration}/plugins"
     "--prefix QT_QPA_PLATFORM_PLUGIN_PATH : ${qt5platform-plugins}/plugins"
   ];
-
-  #enableParallelBuilding = false;
 
   patches = [
     (fetchpatch {

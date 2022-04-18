@@ -48,6 +48,8 @@ stdenv.mkDerivation rec {
     "--prefix QT_QPA_PLATFORM_PLUGIN_PATH : ${qt5platform-plugins}/plugins"
   ];
 
+  cmakeFlags = [ "-DVERSION=${version}" ];
+
   postPatch = ''
     substituteInPlace libUnionImage/CMakeLists.txt \
       --replace "set(PREFIX /usr)" "set(PREFIX $out)" \
