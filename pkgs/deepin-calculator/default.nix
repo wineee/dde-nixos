@@ -48,6 +48,8 @@ stdenv.mkDerivation rec {
     "--prefix QT_QPA_PLATFORM_PLUGIN_PATH : ${qt5platform-plugins}/plugins"
   ];
 
+  cmakeFlags = [ "-DVERSION=${version}" ];
+
   postPatch = ''
     substituteInPlace CMakeLists.txt \
       --replace "set(CMAKE_INSTALL_PREFIX /usr)" "set(CMAKE_INSTALL_PREFIX $out)" \
