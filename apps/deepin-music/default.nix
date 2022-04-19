@@ -19,7 +19,7 @@
 , wrapQtAppsHook
 , kcodecs
 , ffmpeg
-, vlc
+, libvlc
 , libcue
 , taglib
 , gsettings-qt
@@ -56,7 +56,7 @@ stdenv.mkDerivation rec {
     qtmultimedia
     kcodecs
     ffmpeg
-    vlc
+    libvlc
     libcue
     taglib
     gsettings-qt
@@ -68,14 +68,24 @@ stdenv.mkDerivation rec {
     "--prefix QT_QPA_PLATFORM_PLUGIN_PATH : ${qt5platform-plugins}/plugins"
   ];
 
-  postPatch = ''
-    substituteInPlace src/music-player/core/vlc/MediaPlayer.cpp \
-      --replace "<vlc_common.h>" "<vlc/plugins/vlc_common.h>"
+  cmakeFlags = [ "-DVERSION=${version}" ];
+
+  fixIncludePatch = ''
+    substituteInPlace src/music-player/CMakeLists.txt \
+      --replace "include_directories(/usr/include/vlc)" "include_directories(${libvlc}/include/vlc)" \
+      --replace "include_directories(/usr/include/vlc/plugins)" "include_directories(${libvlc}/include/vlc/plugins)"
+  '';
+
+  fixInstallPatch = ''
+    substituteInPlace src/libmusic-plugin/CMakeLists.txt \
+      --replace "/usr/lib/deepin-aiassistant/serivce-plugins)" "$out/lib/deepin-aiassistant/serivce-plugins)"
 
     substituteInPlace src/music-player/CMakeLists.txt \
       --replace "set(CMAKE_INSTALL_PREFIX /usr)" "set(CMAKE_INSTALL_PREFIX $out)" \
       --replace "/usr/share/deepin-manual/manual-assets/application/)" "$out/share/deepin-manual/manual-assets/application/)"
   '';
+
+  postPatch = fixIncludePatch + fixInstallPatch;
 
   meta = with lib; {
     description = "Awesome music player with brilliant and tweakful UI Deepin-UI based";
