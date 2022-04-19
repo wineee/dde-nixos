@@ -20,13 +20,13 @@
 
 stdenv.mkDerivation rec {
   pname = "deepin-terminal";
-  version = "5.4.28";
+  version = "5.4.29";
 
   src = fetchFromGitHub {
     owner = "linuxdeepin";
     repo = pname;
     rev = version;
-    sha256 = "sha256-tmy1fQfT5zQ2va2bx0uIQGOk8Z44VKpade7qp05JYBc=";
+    sha256 = "sha256-/t1fP3hOQj9IjIfn0QPE+RM9G14cwFDa0dU+h0eF62Q=";
   };
 
   cmakeFlags = [ "-DVERSION=${version}" ];
