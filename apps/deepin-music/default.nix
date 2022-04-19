@@ -25,13 +25,16 @@
 
 stdenv.mkDerivation rec {
   pname = "deepin-music";
-  version = "6.2.12";
+  version = "unstable-2022-04-19";
+  #version = "6.2.12";
 
   src = fetchFromGitHub {
     owner = "linuxdeepin";
     repo = pname;
-    rev = version;
-    sha256 = "sha256-9b+apLmtcJJmR67ta00xBwjpugnhkQ8lenJrEWOpyck=";
+    rev = "9c4c678f0241736b41acf501dbf0a3829e83a004";
+    sha256 = "sha256-DZ6feQnbd58H/5IBixrhWCpGmN9YJutP+T6Ne9Rc6qc=";
+    #rev = version;
+    #sha256 = "sha256-9b+apLmtcJJmR67ta00xBwjpugnhkQ8lenJrEWOpyck=";
   };
 
   nativeBuildInputs = [
@@ -60,7 +63,6 @@ stdenv.mkDerivation rec {
   qtWrapperArgs = [
     "--prefix QT_PLUGIN_PATH : ${qt5integration}/plugins"
     "--prefix QT_QPA_PLATFORM_PLUGIN_PATH : ${qt5platform-plugins}/plugins"
-     "--prefix LD_LIBRARY_PATH : ${lib.makeLibraryPath [ libvlc ]}"
   ];
 
   makeFlags =  [ "CFLAGS+=-Og" "CFLAGS+=-ggdb" ];
