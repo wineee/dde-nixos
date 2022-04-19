@@ -2,10 +2,7 @@
 , lib
 , fetchFromGitHub
 , fetchpatch
-, dtkcommon
-, dtkcore
-, dtkgui
-, dtkwidget
+, dtk
 , qt5integration
 , qt5platform-plugins
 , dde-qt-dbus-factory
@@ -45,10 +42,7 @@ stdenv.mkDerivation rec {
   ];
 
   buildInputs = [
-    dtkcommon
-    dtkcore
-    dtkgui
-    dtkwidget
+    dtk
     dde-qt-dbus-factory
     udisks2-qt5
     qtmpris
@@ -66,14 +60,32 @@ stdenv.mkDerivation rec {
   qtWrapperArgs = [
     "--prefix QT_PLUGIN_PATH : ${qt5integration}/plugins"
     "--prefix QT_QPA_PLATFORM_PLUGIN_PATH : ${qt5platform-plugins}/plugins"
+     "--prefix LD_LIBRARY_PATH : ${lib.makeLibraryPath [ libvlc ]}"
   ];
 
-  cmakeFlags = [ "-DVERSION=${version}" ];
+  makeFlags =  [ "CFLAGS+=-Og" "CFLAGS+=-ggdb" ];
+
+  cmakeFlags = [
+    "-DVERSION=${version}"
+    "-DCMAKE_BUILD_TYPE=Debug"
+  ];
 
   fixIncludePatch = ''
     substituteInPlace src/music-player/CMakeLists.txt \
       --replace "include_directories(/usr/include/vlc)" "include_directories(${libvlc}/include/vlc)" \
       --replace "include_directories(/usr/include/vlc/plugins)" "include_directories(${libvlc}/include/vlc/plugins)"
+  '';
+
+  fixLoadLibPatch = ''
+    substituteInPlace src/music-player/core/vlc/vlcdynamicinstance.cpp \
+      --replace 'libPath(libvlccore);'  '"${libvlc}/lib/libvlccore.so";' \
+      --replace 'libPath(libvlc);'      '"${libvlc}/lib/libvlc.so";' \
+      --replace 'libPath(libcodec);'    '"${ffmpeg.out}/lib/libavcodec.so";' \
+      --replace 'libPath(libformate);'  '"${ffmpeg.out}/lib/libavformat.so";'
+
+    substituteInPlace src/libdmusic/ffmpegdynamicinstance.cpp \
+      --replace 'libPath(libcodec);'    '"${ffmpeg.out}/lib/libavcodec.so";' \
+      --replace 'libPath(libformate);'  '"${ffmpeg.out}/lib/libavformat.so";'
   '';
 
   fixInstallPatch = ''
@@ -85,7 +97,7 @@ stdenv.mkDerivation rec {
       --replace "/usr/share/deepin-manual/manual-assets/application/)" "$out/share/deepin-manual/manual-assets/application/)"
   '';
 
-  postPatch = fixIncludePatch + fixInstallPatch;
+  postPatch = fixIncludePatch + fixLoadLibPatch + fixInstallPatch;
 
   meta = with lib; {
     description = "Awesome music player with brilliant and tweakful UI Deepin-UI based";
