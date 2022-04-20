@@ -49,7 +49,7 @@ stdenv.mkDerivation rec {
     "--prefix QT_QPA_PLATFORM_PLUGIN_PATH : ${qt5platform-plugins}/plugins"
   ];
 
-  #TODO: deepin-font-preview-plugin need dde-file-manger
+  ### TODO: deepin-font-preview-plugin need dde-file-manger
   postPatch = ''
     substituteInPlace CMakeLists.txt \
       --replace "ADD_SUBDIRECTORY(deepin-font-preview-plugin)" " " \

@@ -44,9 +44,6 @@ stdenv.mkDerivation rec {
     ./fix_in_non_deepin.patch
   ];
 
-  postPatch = ''
-  '';
-
   meta = with lib; {
     description = "PolicyKit agent for Deepin Desktop Environment";
     homepage = https://github.com/linuxdeepin/dde-polkit-agent;

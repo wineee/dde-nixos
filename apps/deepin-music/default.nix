@@ -100,7 +100,7 @@ stdenv.mkDerivation rec {
 
   postPatch = fixIncludePatch + fixLoadLibPatch + fixInstallPatch;
 
-  ##TODO: why we should do this to load libqsqlite.so
+  ### TODO: why we need do this to load libqsqlite.so
   preFixup = ''
     patchelf --add-needed ${qtbase.bin}/${qtbase.qtPluginPrefix}/sqldrivers/libqsqlite.so $out/bin/deepin-music
   '';

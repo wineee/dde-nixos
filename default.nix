@@ -41,7 +41,7 @@ let
     go-gir-generator = callPackage ./go-package/go-gir-generator { };
     go-lib = callPackage ./go-package/go-lib { };
     dde-api = callPackage ./go-package/dde-api { };
-    deepin-desktop-schemas = callPackage ./apps/deepin-desktop-schemas { };
+    deepin-desktop-schemas = callPackage ./go-package/deepin-desktop-schemas { };
     dde-daemon = callPackage ./go-package/dde-daemon { };
     #startdde
 
