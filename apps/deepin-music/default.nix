@@ -2,6 +2,7 @@
 , lib
 , fetchFromGitHub
 , fetchpatch
+, patchelf
 , dtk
 , qt5integration
 , qt5platform-plugins
@@ -11,6 +12,7 @@
 , qtdbusextended
 , cmake
 , pkgconfig
+, qtbase
 , qtmultimedia
 , qttools
 , wrapQtAppsHook
@@ -26,15 +28,12 @@
 stdenv.mkDerivation rec {
   pname = "deepin-music";
   version = "unstable-2022-04-19";
-  #version = "6.2.12";
 
   src = fetchFromGitHub {
     owner = "linuxdeepin";
     repo = pname;
     rev = "9c4c678f0241736b41acf501dbf0a3829e83a004";
     sha256 = "sha256-DZ6feQnbd58H/5IBixrhWCpGmN9YJutP+T6Ne9Rc6qc=";
-    #rev = version;
-    #sha256 = "sha256-9b+apLmtcJJmR67ta00xBwjpugnhkQ8lenJrEWOpyck=";
   };
 
   nativeBuildInputs = [
@@ -65,11 +64,11 @@ stdenv.mkDerivation rec {
     "--prefix QT_QPA_PLATFORM_PLUGIN_PATH : ${qt5platform-plugins}/plugins"
   ];
 
-  makeFlags =  [ "CFLAGS+=-Og" "CFLAGS+=-ggdb" ];
+  #makeFlags =  [ "CFLAGS+=-Og" "CFLAGS+=-ggdb" ];
 
   cmakeFlags = [
     "-DVERSION=${version}"
-    "-DCMAKE_BUILD_TYPE=Debug"
+    #"-DCMAKE_BUILD_TYPE=Debug"
   ];
 
   fixIncludePatch = ''
@@ -100,6 +99,11 @@ stdenv.mkDerivation rec {
   '';
 
   postPatch = fixIncludePatch + fixLoadLibPatch + fixInstallPatch;
+
+  ##TODO: why we should do this to load libqsqlite.so
+  preFixup = ''
+    patchelf --add-needed ${qtbase.bin}/${qtbase.qtPluginPrefix}/sqldrivers/libqsqlite.so $out/bin/deepin-music
+  '';
 
   meta = with lib; {
     description = "Awesome music player with brilliant and tweakful UI Deepin-UI based";
