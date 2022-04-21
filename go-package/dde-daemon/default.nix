@@ -35,7 +35,7 @@
 
 buildGoPackage rec {
   pname = "dde-daemon";
-  version = "6.0.0";
+  version = "5.14.18";
 
   goPackagePath = "github.com/linuxdeepin/dde-daemon";
 
@@ -43,7 +43,7 @@ buildGoPackage rec {
     owner = "linuxdeepin";
     repo = pname;
     rev = version;
-    sha256 = "sha256-uzkEubgHcEhcUZsW6VFASnafealogUNUWMbc6IXCNhY=";
+    sha256 = "sha256-pTzdIfGqtKdjKKeWCq7qocTsDclgCiRjBkL0Bn2uP7M=";
   };
 
   goDeps = ./deps.nix;
@@ -95,14 +95,29 @@ buildGoPackage rec {
   # misc/applications/deepin-toggle-desktop.desktop
 
 
-  postPatch = ''
+  rmUadpPatch = ''
     rm -rf system/uadp
     rm -rf session/uadpagent
+  '';
 
+  fixShebangsPatch = ''
     patchShebangs misc/etc/acpi/actions/deepin_lid.sh \
       misc/libexec/dde-daemon/keybinding/shortcut-dde-grand-search.sh \
       misc/dde-daemon/audio/echoCancelEnable.sh
   '';
+
+  fixPathPatch = ''
+    for file in misc/system-services/* misc/services/* misc/systemd/services/*
+    do
+      substituteInPlace $file \
+        --replace "Exec=/usr/lib/deepin-daemon" "Exec=$out/lib/deepin-daemon"
+    done
+
+    substituteInPlace misc/systemd/services/deepin-accounts-daemon.service \
+      --replace "ExecStart=/usr/lib/deepin-daemon" "ExecStart=$out/lib/deepin-daemon"
+  '';
+
+  postPatch = rmUadpPatch + fixShebangsPatch + fixPathPatch;
 
   preBuild = ''
     cp -r ${go-lib}/share/gocode/* go/
