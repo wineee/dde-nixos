@@ -91,9 +91,6 @@ buildGoPackage rec {
   ];
 
   # https://github.com/linuxdeepin/dde-daemon/blob/master/accounts/user.go
-  # ls misc/system-services/ misc//services/ misc//systemd//services
-  # misc/applications/deepin-toggle-desktop.desktop
-
 
   rmUadpPatch = ''
     rm -rf system/uadp
@@ -110,11 +107,21 @@ buildGoPackage rec {
     for file in misc/system-services/* misc/services/* misc/systemd/services/*
     do
       substituteInPlace $file \
-        --replace "Exec=/usr/lib/deepin-daemon" "Exec=$out/lib/deepin-daemon"
+        --replace "/usr/lib/deepin-daemon" "$out/lib/deepin-daemon"
     done
 
-    substituteInPlace misc/systemd/services/deepin-accounts-daemon.service \
-      --replace "ExecStart=/usr/lib/deepin-daemon" "ExecStart=$out/lib/deepin-daemon"
+    substituteInPlace misc/udev-rules/80-deepin-fprintd.rules \
+      --replace "/usr/bin/dbus-send" "dbus-send"
+
+    substituteInPlace misc/dde-daemon/keybinding/system_actions.json \
+      --replace "/usr/lib/deepin-daemon/"        "$out/lib/deepin-daemon/" \
+      --replace "/usr/bin/deepin-system-monitor" "deepin-system-monitor" \
+      --replace "/usr/bin/setxkbmap"             "setxkbmap"\
+      --replace "/usr/bin/xdotool"               "xdotool"
+
+    substituteInPlace misc/applications/deepin-toggle-desktop.desktop \
+      --replace "/usr/lib/deepin-daemon/desktop-toggle" "$out/lib/deepin-daemon/desktop-toggle
+"
   '';
 
   postPatch = rmUadpPatch + fixShebangsPatch + fixPathPatch;

@@ -59,13 +59,13 @@ let
     deepin-calculator = callPackage ./apps/deepin-calculator { };
     deepin-font-manager = callPackage ./apps/deepin-font-manager { };
     deepin-system-monitor = callPackage ./apps/deepin-system-monitor { };
-    dmarked = callPackage ./apps/dmarked { };
+    #dmarked = callPackage ./apps/dmarked { };
     deepin-picker = callPackage ./apps/deepin-picker { };
     deepin-draw = callPackage ./apps/deepin-draw { };
 
     # break, need fix
     deepin-camera = callPackage ./apps/deepin-camera { };
-    deepin-devicemanager = callPackage ./apps/deepin-devicemanager { };
+    #deepin-devicemanager = callPackage ./apps/deepin-devicemanager { };
   };
 in
 makeScope newScope packages
