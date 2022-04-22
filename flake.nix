@@ -29,5 +29,40 @@
            }
         ) deepin;
       }
-    );
+    ) // {
+      overlay = self: super: {
+        deepin = (import ./packages { pkgs = super.pkgs; });
+      };
+      nixosModule = { config, lib, pkgs, ... }:
+        with lib;
+        let
+          xcfg = config.services.xserver;
+          cfg = xcfg.desktopManager.deepin;
+        in
+        {
+          options = {
+            services.xserver.desktopManager.deepin.enable = mkOption {
+              type = types.bool;
+              default = false;
+              description = "Enable Deepin desktop manager";
+            };
+          };
+          config = mkIf cfg.enable {
+            services.xserver.displayManager.sessionPackages = [ pkgs.deepin.core ];
+            ## services.xserver.displayManager.lightdm.theme = mkDefault "deepin";
+            ## services.accounts-daemon.enable = true;
+
+            environment.pathsToLink = [ "/share" ];
+            environment.systemPackages =
+              let
+                deepinPkgs = with pkgs.deepin; [
+                  calculator
+                ];
+                plasmaPkgs = with pkgs.libsForQt5; [
+                  kwin
+                ];
+              in deepinPkgs ++ plasmaPkgs;
+          };
+      };
+    };
 }
