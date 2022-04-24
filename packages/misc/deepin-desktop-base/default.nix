@@ -5,16 +5,14 @@
 
 stdenv.mkDerivation rec {
   pname = "deepin-desktop-base";
-  version = "2021.11.08";
+  version = "2022.03.07";
 
   src = fetchFromGitHub {
     owner = "linuxdeepin";
     repo = pname;
     rev = version;
-    sha256 = "sha256-oGv7aTjjRQ/hF2T6lnNNXFWWb7w9ciQNCWpOB//Y38U=";
+    sha256 = "sha256-joAduRI9jUtPA4lNsEhgOZlci8j/cvD8rJThqvj6a8A=";
   };
-
-  # nativeBuildInputs = [  ];
 
   makeFlags = [
     "DESTDIR=${placeholder "out"}"
