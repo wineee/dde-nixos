@@ -2,7 +2,6 @@
 , lib
 , fetchFromGitHub
 , fetchpatch
-, patchelf
 , dtk
 , qt5integration
 , qt5platform-plugins
@@ -99,11 +98,6 @@ stdenv.mkDerivation rec {
   '';
 
   postPatch = fixIncludePatch + fixLoadLibPatch + fixInstallPatch;
-
-  ### TODO: why we need do this to load libqsqlite.so
-  preFixup = ''
-    patchelf --add-needed ${qtbase.bin}/${qtbase.qtPluginPrefix}/sqldrivers/libqsqlite.so $out/bin/deepin-music
-  '';
 
   meta = with lib; {
     description = "Awesome music player with brilliant and tweakful UI Deepin-UI based";
