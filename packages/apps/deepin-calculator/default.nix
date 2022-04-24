@@ -18,13 +18,13 @@
 
 stdenv.mkDerivation rec {
   pname = "deepin-calculator";
-  version = "5.7.12";
+  version = "5.7.21";
 
   src = fetchFromGitHub {
     owner = "linuxdeepin";
     repo = pname;
     rev = version;
-    sha256 = "sha256-RUDXvipjDE5xAVAQToRCKhY/MioUrwGV3sjC+MoHrFc=";
+    sha256 = "sha256-uM8qtlNMBL/XS/PTgNMwDo+iREvOrp07DaRZvPvpb2s=";
   };
 
   nativeBuildInputs = [
