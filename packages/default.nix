@@ -20,7 +20,6 @@ let
     qt5platform-plugins = callPackage ./library/qt5platform-plugins { };
     qt5integration = callPackage ./library/qt5integration { };
     libqtapt = callPackage ./library/libqtapt { };
-    polkit-qt-1 = callPackage ./library/polkit-qt-1 { }; # https://github.com/NixOS/nixapps/pull/168603
     dtk = [
       dtkcommon
       dtkcore

@@ -10,7 +10,7 @@
 , cmake
 , qttools
 , wrapQtAppsHook
-, polkit-qt-1
+, polkit-qt
 }:
 
 stdenv.mkDerivation rec {
@@ -37,7 +37,7 @@ stdenv.mkDerivation rec {
     dtkgui
     dtkwidget
     dde-qt-dbus-factory
-    polkit-qt-1
+    polkit-qt
   ];
 
   patches = [
