@@ -20,13 +20,13 @@
 
 stdenv.mkDerivation rec {
   pname = "deepin-editor";
-  version = "5.10.19";
+  version = "5.10.20";
 
   src = fetchFromGitHub {
     owner = "linuxdeepin";
     repo = pname;
     rev = version;
-    sha256 = "sha256-Be2cxJB9wIiuNP8TS43zhhdtOMa8lXAtbVtq9klrwAI=";
+    sha256 = "sha256-5fEcNFslihmGBPhlAZnGttxJdwc3XcbZDCabzj3CgNo=";
   };
 
   nativeBuildInputs = [
