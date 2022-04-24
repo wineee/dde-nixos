@@ -46,23 +46,37 @@
               default = false;
               description = "Enable Deepin desktop manager";
             };
-          };
-          config = mkIf cfg.enable {
-            services.xserver.displayManager.sessionPackages = [ pkgs.deepin.core ];
-            ## services.xserver.displayManager.lightdm.theme = mkDefault "deepin";
-            ## services.accounts-daemon.enable = true;
 
-            environment.pathsToLink = [ "/share" ];
-            environment.systemPackages =
-              let
-                deepinPkgs = with pkgs.deepin; [
-                  calculator
-                ];
-                plasmaPkgs = with pkgs.libsForQt5; [
-                  kwin
-                ];
-              in deepinPkgs ++ plasmaPkgs;
+            services.deepin.dde-daemon = {
+              enable = mkEnableOption "dde daemon";
+            };
           };
+
+          config = mkMerge [
+
+            ### TODO
+            (mkIf cfg.enable {
+              services.xserver.displayManager.sessionPackages = [ pkgs.deepin.core ];
+              services.xserver.displayManager.lightdm.theme = mkDefault "deepin";
+              services.accounts-daemon.enable = true;
+
+              ## environment.pathsToLink = [ "/share" ];
+              environment.systemPackages =
+                let
+                  deepinPkgs = with pkgs.deepin; [
+                    calculator
+                  ];
+                  plasmaPkgs = with pkgs.libsForQt5; [
+                    kwin
+                  ];
+                in deepinPkgs ++ plasmaPkgs;
+            })
+
+            (mkIf config.services.deepin.dde-daemon.enable {
+              environment.systemPackages = [ pkgs.deepin.dde-daemon ];
+              systemd.packages = [ pkgs.deepin.dde-daemon ];
+            })
+          ];
       };
     };
 }
