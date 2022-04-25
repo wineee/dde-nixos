@@ -1,6 +1,7 @@
 { stdenv
 , lib
 , fetchFromGitHub
+, fetchpatch
 , dtkcommon
 , dtkcore
 , dtkgui
@@ -23,6 +24,7 @@
 , libv4l
 , libudev0-shim
 , gst_all_1
+, systemd
 }:
 
 stdenv.mkDerivation rec {
@@ -64,15 +66,46 @@ stdenv.mkDerivation rec {
     "--prefix QT_PLUGIN_PATH : ${qt5integration}/plugins"
     "--prefix QT_QPA_PLATFORM_PLUGIN_PATH : ${qt5platform-plugins}/plugins"
     "--prefix PATH : ${lib.makeBinPath [ gst_all_1.gstreamer ]}"
+    "--prefix GST_PLUGIN_SYSTEM_PATH_1_0 : ${gst_all_1.gstreamer.out}/lib/gstreamer-1.0"
     "--prefix GST_PLUGIN_SYSTEM_PATH_1_0 : ${gst_all_1.gst-plugins-base}/lib/gstreamer-1.0"
     "--prefix GST_PLUGIN_SYSTEM_PATH_1_0 : ${gst_all_1.gst-plugins-good}/lib/gstreamer-1.0"
     "--prefix GST_PLUGIN_SYSTEM_PATH_1_0 : ${gst_all_1.gst-plugins-bad}/lib/gstreamer-1.0"
-    "--prefix LD_LIBRARY_PATH : ${lib.makeLibraryPath [ ffmpeg ffmpegthumbnailer dde-api libudev0-shim libusb1 portaudio libv4l ]}"
+    "--prefix LD_LIBRARY_PATH : ${lib.makeLibraryPath [ ffmpeg ffmpegthumbnailer libudev0-shim libusb1 portaudio libv4l ]}"
   ];
 
   patches = [
     ./0001-fix-libusb-import.patch
     ./0002-CMakeLists-use-cmake-install-prefix.patch
+    (fetchpatch {
+      name = "fix_missing_include_in_windowstatethread_h";
+      url = "https://github.com/linuxdeepin/deepin-camera/commit/1a1e7d86e44933de46f9e62c1e42953c8c63f794.patch";
+      sha256 = "sha256-JGDaPAQciw/A1RG5Fc+ttDsa7XBlwAdQy85MRYWZA3o=";
+    })
+  ];
+
+  fixLoadLibPatch = ''
+    substituteInPlace src/src/mainwindow.cpp \
+      --replace 'libPath("libavcodec.so")'            'QString("${ffmpeg.out}/lib/libavcodec.so")' \
+      --replace 'libPath("libavformat.so")'           'QString("${ffmpeg.out}/lib/libavformat.so")' \
+      --replace 'libPath("libavutil.so")'             'QString("${ffmpeg.out}/lib/libavutil.so")' \
+      --replace 'libPath("libudev.so")'               'QString("${lib.getLib systemd}/lib/libudev.so")' \
+      --replace 'libPath("libusb-1.0.so")'            'QString("${libusb1.out}/lib/libusb-1.0.so")' \
+      --replace 'libPath("libportaudio.so")'          'QString("${portaudio.out}/lib/libportaudio.so")' \
+      --replace 'libPath("libv4l2.so")'               'QString("${libv4l.out}/lib/libv4l2.so")' \
+      --replace 'libPath("libffmpegthumbnailer.so")'  'QString("${ffmpegthumbnailer.out}/lib/libffmpegthumbnailer.so")' \
+      --replace 'libPath("libswscale.so")'            'QString("${ffmpeg.out}/lib/libswscale.so")' \
+      --replace 'libPath("libswresample.so")'         'QString("${ffmpeg.out}/lib/libswresample.so")'
+  '';
+
+  fixLurDirPatch = ''
+    substituteInPlace src/CMakeLists.txt \
+      --replace "/usr/share/libimagevisualresult/filter_cube" "${image-editor}/share/libimagevisualresult/filter_cube"
+  '';
+
+  postPatch = fixLoadLibPatch + fixLurDirPatch;
+
+  cmakeFlags = [
+    "-DVERSION=${version}"
   ];
 
   meta = with lib; {
