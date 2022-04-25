@@ -28,13 +28,13 @@ let
 in
 stdenv.mkDerivation rec {
   pname = "deepin-camera";
-  version = "1.3.8.3";
+  version = "1.3.9";
 
   src = fetchFromGitHub {
     owner = "linuxdeepin";
     repo = pname;
     rev = version;
-    sha256 = "sha256-ZOS5Sgf5GL/YRM9X7OT5Sfn0BiqI4RDs+QeUqj/HAng=";
+    sha256 = "sha256-KkmZ/sN2rWOmBH3RELcdJnQ5PWOnKI/LYyFYUgcu9XQ=";
   };
 
   nativeBuildInputs = [
@@ -56,7 +56,10 @@ stdenv.mkDerivation rec {
     portaudio
     libv4l
     dde-api
-  ];
+  ] ++ (with gst_all_1 ; [
+    gstreamer 
+    gst-plugins-base 
+  ]);
 
   qtWrapperArgs = [
     "--prefix QT_PLUGIN_PATH : ${qt5integration}/plugins"
