@@ -2,10 +2,7 @@
 , lib
 , fetchFromGitHub
 , fetchpatch
-, dtkcommon
-, dtkcore
-, dtkgui
-, dtkwidget
+, dtk
 , qt5integration
 , qt5platform-plugins
 , deepin-gettext-tools
@@ -22,11 +19,13 @@
 , libusb1
 , portaudio
 , libv4l
-, libudev0-shim
 , gst_all_1
 , systemd
 }:
 
+let
+  gstPluginPath = lib.makeSearchPathOutput "lib" "lib/gstreamer-1.0" (with gst_all_1; [ gstreamer gst-plugins-base gst-plugins-good gst-plugins-bad ]);
+in
 stdenv.mkDerivation rec {
   pname = "deepin-camera";
   version = "1.3.8.3";
@@ -47,10 +46,7 @@ stdenv.mkDerivation rec {
   ];
 
   buildInputs = [
-    dtkcommon
-    dtkcore
-    dtkgui
-    dtkwidget
+    dtk
     dde-qt-dbus-factory
     image-editor
     qtmultimedia
@@ -65,12 +61,7 @@ stdenv.mkDerivation rec {
   qtWrapperArgs = [
     "--prefix QT_PLUGIN_PATH : ${qt5integration}/plugins"
     "--prefix QT_QPA_PLATFORM_PLUGIN_PATH : ${qt5platform-plugins}/plugins"
-    "--prefix PATH : ${lib.makeBinPath [ gst_all_1.gstreamer ]}"
-    "--prefix GST_PLUGIN_SYSTEM_PATH_1_0 : ${gst_all_1.gstreamer.out}/lib/gstreamer-1.0"
-    "--prefix GST_PLUGIN_SYSTEM_PATH_1_0 : ${gst_all_1.gst-plugins-base}/lib/gstreamer-1.0"
-    "--prefix GST_PLUGIN_SYSTEM_PATH_1_0 : ${gst_all_1.gst-plugins-good}/lib/gstreamer-1.0"
-    "--prefix GST_PLUGIN_SYSTEM_PATH_1_0 : ${gst_all_1.gst-plugins-bad}/lib/gstreamer-1.0"
-    "--prefix LD_LIBRARY_PATH : ${lib.makeLibraryPath [ ffmpeg ffmpegthumbnailer libudev0-shim libusb1 portaudio libv4l ]}"
+    "--prefix GST_PLUGIN_SYSTEM_PATH_1_0 : ${gstPluginPath}"
   ];
 
   patches = [
@@ -104,9 +95,7 @@ stdenv.mkDerivation rec {
 
   postPatch = fixLoadLibPatch + fixLurDirPatch;
 
-  cmakeFlags = [
-    "-DVERSION=${version}"
-  ];
+  cmakeFlags = [ "-DVERSION=${version}" ];
 
   meta = with lib; {
     description = "Tool to view camera, take photo and video";
