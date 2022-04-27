@@ -61,6 +61,7 @@ let
     #dmarked = callPackage ./apps/dmarked { };
     deepin-picker = callPackage ./apps/deepin-picker { };
     deepin-draw = callPackage ./apps/deepin-draw { };
+    dde-control-center = callPackage ./apps/dde-control-center { };
 
     # break, need fix
     deepin-camera = callPackage ./apps/deepin-camera { };
