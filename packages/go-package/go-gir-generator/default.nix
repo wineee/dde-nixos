@@ -10,7 +10,7 @@
 
 stdenv.mkDerivation rec {
   pname = "go-gir-generator";
-  version = "3.0.0";
+  version = "2.1.0";
 
   src = fetchFromGitHub {
     owner = "linuxdeepin";
