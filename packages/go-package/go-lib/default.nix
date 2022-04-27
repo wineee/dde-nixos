@@ -35,17 +35,6 @@ stdenv.mkDerivation rec {
     mobile-broadband-provider-info
   ];
 
-  doInstallCheck = false;
-
-  # FIXME go get can't access web
-  installCheckPhase = ''
-    export GOPROXY=https://goproxy.cn
-    export GOPATH="$out/share/gocode"
-    cd $out/share/gocode/src/pkg.deepin.io/lib
-    go get github.com/smartystreets/goconvey github.com/howeyc/fsnotify gopkg.in/check.v1 github.com/linuxdeepin/go-x11-client
-    go test -v $(go list ./... | grep -v -e lib/pulse -e lib/users/passwd -e lib/users/group -e lib/timer -e lib/log -e lib/dbus -e lib/shell)
-  '';
-
   meta = with lib; {
     description = "a library containing many useful go routines for things such as glib, gettext, archive, graphic, etc";
     homepage = "https://github.com/linuxdeepin/dde-api";
