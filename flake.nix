@@ -18,7 +18,7 @@
       rec {
         defaultPackage = pkgs.stdenv.mkDerivation {
           name = "deepin-meta";
-          buildInputs = nixpkgs.lib.attrsets.attrValues packages.deepin;
+          buildInputs = nixpkgs.lib.attrsets.attrValues deepin;
         };
         packages = deepin;
         devShells = builtins.mapAttrs (
