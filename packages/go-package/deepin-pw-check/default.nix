@@ -3,30 +3,17 @@
 , fetchFromGitHub
 , buildGoPackage
 , pkgconfig
-, alsaLib
-, bc
-, blur-effect
 , deepin-gettext-tools
-, fontconfig
 , go
 , go-dbus-factory
 , go-gir-generator
 , go-lib
 , gtk3
-, libcanberra
-, libgudev
-, librsvg
-, poppler
-, pulseaudio
-, utillinux
-, xcur2png
-, gdk-pixbuf-xlib
-, gdk-pixbuf
+, glib
+, gettext
 , iniparser
 , cracklib
 , linux-pam
-, gettext
-, glib
 }:
 
 buildGoPackage rec {
@@ -61,8 +48,6 @@ buildGoPackage rec {
     iniparser
     cracklib
     linux-pam
-    gdk-pixbuf
-    gdk-pixbuf-xlib
   ];
 
   postPatch = ''
