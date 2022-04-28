@@ -22,9 +22,10 @@
 , polkit-qt
 , pcre
 , xorg
-, mount
+, util-linux
+, libselinux
+, libsepol
 , gtest
-, breakpointHook
 }:
 
 stdenv.mkDerivation rec {
@@ -43,7 +44,6 @@ stdenv.mkDerivation rec {
     qttools
     pkgconfig
     wrapQtAppsHook
-    breakpointHook
   ];
 
   buildInputs = [
@@ -61,7 +61,9 @@ stdenv.mkDerivation rec {
     polkit-qt
     pcre
     xorg.libXdmcp
-    mount
+    util-linux
+    libselinux
+    libsepol
     gtest
   ];
 
@@ -77,6 +79,8 @@ stdenv.mkDerivation rec {
     })
   ];
 
+  ### TODO include/widgets/utils.h abrecovery/main.cpp dde-control-center-autostart.desktop com.deepin.dde.ControlCenter.service src/frame/window/protocolfile.cpp ...
+
   fixInstallPatch = ''
     substituteInPlace src/frame/CMakeLists.txt \
       --replace 'set(CMAKE_INSTALL_PREFIX /usr)' 'set(CMAKE_INSTALL_PREFIX $out)'
@@ -86,8 +90,8 @@ stdenv.mkDerivation rec {
 
     substituteInPlace abrecovery/CMakeLists.txt \
       --replace 'set(CMAKE_INSTALL_PREFIX /usr)' 'set(CMAKE_INSTALL_PREFIX $out)' \
-      --replace '/usr/bin)' '$out/bin)'
-      --replace '/etc/xdg/autostart)' '$out/etc/xdg/autostart)'
+      --replace '/usr/bin)' 'bin)' \
+      --replace '/etc/xdg/autostart)' 'etc/xdg/autostart)'
 
     substituteInPlace src/reboot-reminder-dialog/CMakeLists.txt \
       --replace 'set(CMAKE_INSTALL_PREFIX /usr)' 'set(CMAKE_INSTALL_PREFIX $out)'
