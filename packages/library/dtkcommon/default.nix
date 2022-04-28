@@ -37,8 +37,14 @@ stdenv.mkDerivation rec {
 
   postPatch = ''
     substituteInPlace dtkcommon.pro \
-        --replace '$${getQtMacroFromQMake(QT_INSTALL_LIBS)}'      $out/lib \
-        --replace '$${getQtMacroFromQMake(QT_INSTALL_ARCHDATA)}'  $out
+      --replace '$${getQtMacroFromQMake(QT_INSTALL_LIBS)}'      $out/lib \
+      --replace '$${getQtMacroFromQMake(QT_INSTALL_ARCHDATA)}'  $out
+    substituteInPlace cmake/Dtk/DtkInstallDConfigConfig.cmake \
+      --replace '/usr/share/dsg' 'share/dsg' \
+      --replace '/opt/apps'      'opt/apps'
+    substituteInPlace features/dtk_install_dconfig.prf \
+      --replace '/usr/share/dsg' 'share/dsg' \
+      --replace '/opt/apps'      'opt/apps'
   '';
 
   preFixup = ''
