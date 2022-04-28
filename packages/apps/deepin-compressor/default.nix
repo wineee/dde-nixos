@@ -62,11 +62,20 @@ stdenv.mkDerivation rec {
     ./0001-support-use-DCMAKE_INSTALL_PREFIX-flag.patch
   ];
 
-  postPatch = ''
+  fixPluginLoadPatch = ''
+    substituteInPlace src/source/common/pluginmanager.cpp \
+      --replace "/usr/lib/" "$out/lib/"
+  '';
+
+  fixInstallPatch = ''
     substituteInPlace src/CMakeLists.txt \
       --replace "/usr/share/applications/context-menus/)" "$out/share/applications/context-menus/)" \
       --replace "/usr/share/deepin-manual/manual-assets/application/)" "$out/share/deepin-manual/manual-assets/application/)"
+    substituteInPlace CMakeLists.txt \
+      --replace "/usr/lib/deepin-compressor/plugins" "$out/lib/deepin-compressor/plugins"
   '';
+
+  postPatch = fixPluginLoadPatch + fixInstallPatch;
 
   meta = with lib; {
     description = "A fast and lightweight application for creating and extracting archives";
