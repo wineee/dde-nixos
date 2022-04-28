@@ -42,6 +42,7 @@ let
     dde-api = callPackage ./go-package/dde-api { };
     deepin-desktop-schemas = callPackage ./go-package/deepin-desktop-schemas { };
     dde-daemon = callPackage ./go-package/dde-daemon { };
+    deepin-pw-check = callPackage ./go-package/deepin-pw-check { };
     #startdde
 
     #### Dtk Application
@@ -61,7 +62,7 @@ let
     #dmarked = callPackage ./apps/dmarked { };
     deepin-picker = callPackage ./apps/deepin-picker { };
     deepin-draw = callPackage ./apps/deepin-draw { };
-    dde-control-center = callPackage ./apps/dde-control-center { };
+    #dde-control-center = callPackage ./apps/dde-control-center { };
 
     # break, need fix
     deepin-camera = callPackage ./apps/deepin-camera { };
