@@ -34,6 +34,7 @@ let
     deepin-icon-theme = callPackage ./misc/deepin-icon-theme { };
     deepin-anything = callPackage ./misc/deepin-anything { };
     deepin-wallpapers = callPackage ./misc/deepin-wallpapers { };
+    deepin-sound-theme = callPackage ./misc/deepin-sound-theme { };
     
     #### Go Packages
     go-dbus-factory = callPackage ./go-package/go-dbus-factory { };
@@ -62,7 +63,7 @@ let
     #dmarked = callPackage ./apps/dmarked { };
     deepin-picker = callPackage ./apps/deepin-picker { };
     deepin-draw = callPackage ./apps/deepin-draw { };
-    #dde-control-center = callPackage ./apps/dde-control-center { };
+    dde-control-center = callPackage ./apps/dde-control-center { };
 
     # break, need fix
     deepin-camera = callPackage ./apps/deepin-camera { };
