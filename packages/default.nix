@@ -20,12 +20,16 @@ let
     qt5platform-plugins = callPackage ./library/qt5platform-plugins { };
     qt5integration = callPackage ./library/qt5integration { };
     libqtapt = callPackage ./library/libqtapt { };
+    docparser = callPackage ./library/docparser { };
     dtk = [
       dtkcommon
       dtkcore
       dtkgui
       dtkwidget
     ];
+
+    ## TMP
+    lucenecpp = callPackage ./library/lucenecpp { };
 
     #### MISC
     dde-polkit-agent = callPackage ./misc/dde-polkit-agent { };
