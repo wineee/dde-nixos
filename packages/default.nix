@@ -29,6 +29,7 @@ let
 
     #### MISC
     dde-polkit-agent = callPackage ./misc/dde-polkit-agent { };
+    dpa-ext-gnomekeyring = callPackage ./misc/dpa-ext-gnomekeyring { };
     deepin-desktop-base = callPackage ./misc/deepin-desktop-base { };
     deepin-gettext-tools = callPackage ./misc/deepin-gettext-tools { };
     deepin-icon-theme = callPackage ./misc/deepin-icon-theme { };
@@ -64,8 +65,6 @@ let
     deepin-picker = callPackage ./apps/deepin-picker { };
     deepin-draw = callPackage ./apps/deepin-draw { };
     dde-control-center = callPackage ./apps/dde-control-center { };
-
-    # break, need fix
     deepin-camera = callPackage ./apps/deepin-camera { };
     #deepin-devicemanager = callPackage ./apps/deepin-devicemanager { };
   };
