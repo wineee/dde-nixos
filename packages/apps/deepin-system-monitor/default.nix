@@ -7,7 +7,6 @@
 , qt5platform-plugins
 , deepin-gettext-tools
 , dde-qt-dbus-factory
-, gio-qt
 , udisks2-qt5
 , image-editor
 , cmake

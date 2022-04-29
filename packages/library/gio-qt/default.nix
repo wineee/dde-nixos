@@ -24,7 +24,9 @@ stdenv.mkDerivation rec {
 
   cmakeFlags = lib.optional (!buildDocs) [ "-DBUILD_DOCS=OFF" ];
 
-  buildInputs = [ glibmm ] ++ lib.optional buildDocs doxygen;
+  buildInputs = lib.optional buildDocs doxygen;
+
+  propagatedBuildInputs = [ glibmm ];
 
   meta = with lib; {
     description = "Gio wrapper for Qt applications";
