@@ -66,6 +66,7 @@ let
     deepin-draw = callPackage ./apps/deepin-draw { };
     dde-control-center = callPackage ./apps/dde-control-center { };
     deepin-camera = callPackage ./apps/deepin-camera { };
+    deepin-file-manager = callPackage ./apps/deepin-file-manager { };
     #deepin-devicemanager = callPackage ./apps/deepin-devicemanager { };
   };
 in
