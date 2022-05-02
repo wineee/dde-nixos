@@ -1,10 +1,7 @@
 { stdenv
 , lib
 , fetchFromGitHub
-, dtkcore
-, dtkgui
-, dtkwidget
-, dtkcommon
+, dtk
 , cmake
 , qttools
 , pkgconfig
@@ -15,22 +12,19 @@
 
 stdenv.mkDerivation rec {
   pname = "image-editor";
-  version = "1.9.10";
+  version = "1.0.13";
 
   src = fetchFromGitHub {
     owner = "linuxdeepin";
     repo = pname;
     rev = version;
-    sha256 = "sha256-6NRjSkOOGIYghSoibf8moJKRMiepytHk+pn+zjD04mU=";
+    sha256 = "sha256-lqr70Vn1yO3Vvzib1HqCVNRDsD+SAfEKh5+ynQgzzlU=";
   };
 
   nativeBuildInputs = [ cmake pkgconfig qttools wrapQtAppsHook ];
 
   buildInputs = [
-    dtkcommon
-    dtkcore
-    dtkgui
-    dtkwidget
+    dtk
     opencv
     freeimage
   ];
