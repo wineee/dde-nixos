@@ -19,7 +19,6 @@ let
     dde-qt-dbus-factory = callPackage ./library/dde-qt-dbus-factory { };
     qt5platform-plugins = callPackage ./library/qt5platform-plugins { };
     qt5integration = callPackage ./library/qt5integration { };
-    libqtapt = callPackage ./library/libqtapt { };
     docparser = callPackage ./library/docparser { };
     dtk = [
       dtkcommon
