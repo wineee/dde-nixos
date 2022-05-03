@@ -20,13 +20,13 @@
 
 stdenv.mkDerivation rec {
   pname = "deepin-album";
-  version = "5.9.6";
+  version = "5.9.10";
 
   src = fetchFromGitHub {
     owner = "linuxdeepin";
     repo = pname;
     rev = version;
-    sha256 = "sha256-FPO7tKSCF7P5Rq7D5etxTb2PowYcCrtCL5bnIcruHPo=";
+    sha256 = "sha256-miZR8BHZUjfD3pLV/cCPmdNNEdEUvZlIfUl6Gv/4bVE=";
   };
 
   nativeBuildInputs = [ cmake pkgconfig qttools wrapQtAppsHook ];
