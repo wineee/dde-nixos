@@ -1,12 +1,10 @@
 { stdenv
 , lib
 , fetchFromGitHub
+, dtk
 , qmake
 , pkgconfig
 , wrapQtAppsHook
-, dtkcore
-, dtkgui
-, dtkwidget
 , qtx11extras
 , qt5platform-plugins
 , lxqt
@@ -28,14 +26,12 @@ stdenv.mkDerivation rec {
   nativeBuildInputs = [ qmake pkgconfig wrapQtAppsHook ];
 
   buildInputs = [
-    dtkcore
-    dtkgui
-    dtkwidget
+    dtk
     qtx11extras
     qt5platform-plugins
     mtdev
-    gtest
     lxqt.libqtxdg
+    gtest
   ];
 
   installPhase = ''
