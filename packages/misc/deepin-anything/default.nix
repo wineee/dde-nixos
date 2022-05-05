@@ -21,7 +21,7 @@ stdenv.mkDerivation rec {
     sha256 = "sha256-1GX/gemRTMhP8ZixYzB3mwQrWonjEPNYWY6zutTnLqw=";
   };
 
-  output = [ "out" "server" ];
+  outputs = [ "out" "server" ];
 
   nativeBuildInputs = [
     qmake
@@ -42,9 +42,7 @@ stdenv.mkDerivation rec {
   # TODO: sysusers
   fixServerPatch = ''
     substituteInPlace server/backend/backend.pro \
-      --replace '/usr/share/dbus-1/interfaces' '$server/share/dbus-1/interfaces' \
-      --replace '/etc/dbus-1/system.d' '$server/etc/dbus-2/system.d' \
-      --replace 'INSTALLS += target includes readme' 'INSTALLS += target includes'
+      --replace '/usr/share/dbus-1/interfaces' '/share/dbus-1/interfaces'
   '';
 
   postPatch = fixServerPatch;
@@ -52,11 +50,12 @@ stdenv.mkDerivation rec {
   buildPhase = ''
     make -C library all
     cd server 
-    qmake -makefile -nocache QMAKE_STRIP=: PREFIX=$server LIB_INSTALL_DIR=$server/lib deepin-anything-backend.pro 
+    qmake -makefile -nocache QMAKE_STRIP=: PREFIX=/ LIB_INSTALL_DIR=/lib deepin-anything-backend.pro 
     make all
     cd ..
   '';
 
+  # FIXME out/usr/lib/modules-load.d/anything.conf ?
   installPhase = ''
     mkdir -p $out/lib
     cp library/bin/release/* $out/lib
@@ -68,7 +67,7 @@ stdenv.mkDerivation rec {
     cp -r library/inc/* $out/usr/include/deepin-anything
     cp -r kernelmod/vfs_change_uapi.h $out/usr/include/deepin-anything
     cp -r kernelmod/vfs_change_consts.h $out/usr/include/deepin-anything
-    #make -C server install INSTALL_ROOT=$server
+    make -C server install INSTALL_ROOT=${placeholder "server"}
   '';
 
   meta = with lib; {
