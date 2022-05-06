@@ -8,6 +8,7 @@
 , utillinux
 , pcre
 , breakpointHook
+, tree
 }:
 
 stdenv.mkDerivation rec {
@@ -27,6 +28,7 @@ stdenv.mkDerivation rec {
     qmake
     pkgconfig
     breakpointHook
+    tree
   ];
 
   buildInputs = [
@@ -59,21 +61,26 @@ stdenv.mkDerivation rec {
   installPhase = ''
     mkdir -p $out/lib
     cp library/bin/release/* $out/lib
-    mkdir -p $out/usr/src/deepin-anything-${version}
-    cp -r kernelmod/* $out/usr/src/deepin-anything-${version}
-    mkdir -p $out/usr/lib/modules-load.d
-    echo "" | tee $out/usr/lib/modules-load.d/anything.conf
-    mkdir -p $out/usr/include/deepin-anything
-    cp -r library/inc/* $out/usr/include/deepin-anything
-    cp -r kernelmod/vfs_change_uapi.h $out/usr/include/deepin-anything
-    cp -r kernelmod/vfs_change_consts.h $out/usr/include/deepin-anything
+    
+    mkdir -p $out/src/deepin-anything-${version}
+    cp -r kernelmod/* $out/src/deepin-anything-${version}
+    mkdir -p $out/lib/modules-load.d
+    echo "" | tee $out/lib/modules-load.d/anything.conf
+    mkdir -p $out/include/deepin-anything
+    cp -r library/inc/* $out/include/deepin-anything
+    cp -r kernelmod/vfs_change_uapi.h $out/include/deepin-anything
+    cp -r kernelmod/vfs_change_consts.h $out/include/deepin-anything
+
     make -C server install INSTALL_ROOT=${placeholder "server"}
   '';
+
+  dontFixup = true;
 
   meta = with lib; {
     description = "Deepin Anything file search tool";
     homepage = "https://github.com/linuxdeepin/deepin-anything";
     license = licenses.gpl3Plus;
     platforms = platforms.linux;
+    outputsToInstall = [ "out" "server" ];
   };
 }

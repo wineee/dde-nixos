@@ -50,6 +50,7 @@
             services.deepin.dde-daemon = {
               enable = mkEnableOption "dde daemon";
             };
+            ## TODO: deepin-anything
           };
 
           config = mkMerge [
