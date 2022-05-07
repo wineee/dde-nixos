@@ -32,8 +32,9 @@
 , boost
 }:
 let
-  rpstr = a: b: " --replace ${a} ${b}";
+  commonRp = [ ["/usr"] ["$out"] ];
 
+  rpstr = a: b: " --replace ${a} ${b}";
   rpstrL = l: if lib.length l == 2 then rpstr (lib.head l) (lib.last l) else (throw "${l} must be a 2-tuple");
 
   rpfile = filePath: replaceLists:
@@ -42,12 +43,11 @@ let
   rpfilesL = l: lib.mapAttrsToList (name: value: rpfile name value) l;
 
   getPatchFrom = x: lib.pipe x [
+    (x: map (lib.mapAttrs (name: value: value++commonRp)) x)
     (x: map rpfilesL x)
     lib.concatLists
     (lib.concatStringsSep "\n")
   ];
-
-  usr_bin = ["/usr/bin/"  "$out/bin"];
 
   patchlist = [
     ## BUILD
@@ -59,49 +59,24 @@ let
     ];}
     ## INSTALL
     {"src/dde-file-manager/dde-file-manager.pro" = [
-      usr_bin
-      ["/usr/share/deepin-manual/manual-assets/application" "$out/share/deepin-manual/manual-assets/application"] 
       ["/etc/xdg/autostart" "$out/etc/xdg/autostart"]
     ];}
-    {"src/dde-select-dialog-x11/dde-select-dialog-x11.pro" = [
-      usr_bin
-      ["/usr/share/dbus-1/services" "$out/share/dbus-1/services"]
-    ];}
-    {"src/dde-dock-plugins/disk-mount/disk-mount.pro" = [ 
-      ["/usr" "$out"]
+    {"src/dde-select-dialog-x11/dde-select-dialog-x11.pro" = [ ];}
+    {"src/dde-dock-plugins/disk-mount/disk-mount.pro" = [
       # ["/usr/include/dde-dock" "${dde-dock}/include/dde-dock"]
     ];}
-    {"src/gschema/gschema.pro" = [
-      ["/usr" "$out"]
-    ];}
-    {"src/common/common.pri" = [
-      ["/usr" "$out"]
-    ];}
+    {"src/gschema/gschema.pro" = [ ];}
+    {"src/common/common.pri" = [ ];}
     {"src/dde-file-manager-daemon/dde-file-manager-daemon.pro" = [
-      usr_bin
-      ["/etc/dbus-1/system.d" "$out/etc/dbus-1/system.d" ]
+      ["/etc/dbus-1/system.d" "$out/etc/dbus-1/system.d" ] 
     ];}
-    {"src/dde-select-dialog-wayland/dde-select-dialog-wayland.pro" = [
-      usr_bin
-      ["/usr/share/dbus-1/services" "$out/share/dbus-1/services"]
-    ];}
-    {"src/dde-desktop/development.pri" = [
-      ["/usr" "$out"]
-      ["/usr/share/applications/" "$out/share/applications/"]
-      ["/usr/share/dbus-1/services" "$out/share/dbus-1/services"]
-    ];}
+    {"src/dde-select-dialog-wayland/dde-select-dialog-wayland.pro" = [ ];}
+    {"src/dde-desktop/development.pri" = [ ];}
     {"src/dde-file-manager-lib/dde-file-manager-lib.pro" = [
       # /usr/include/boost/
-      ["/usr/share/applications/context-menus" "$out/share/applications/context-menus"]
     ];}
-    {"src/dde-desktop/dbus/filedialog/filedialog.pri" = [
-      ["/usr/share/dbus-1/interfaces" "$out/share/dbus-1/interfaces"]
-      ["/usr/share/dbus-1/services" "$out/share/dbus-1/services"]
-    ];}
-    {"src/dde-desktop/dbus/filemanager1/filemanager1.pri" = [
-      ["/usr/share/dbus-1/interfaces" "$out/share/dbus-1/interfaces"]
-      ["/usr/share/dbus-1/services" "$out/share/dbus-1/services"]
-    ];}
+    {"src/dde-desktop/dbus/filedialog/filedialog.pri" = [ ];}
+    {"src/dde-desktop/dbus/filemanager1/filemanager1.pri" = [ ];}
   ];
 in
 stdenv.mkDerivation rec {
@@ -154,13 +129,9 @@ stdenv.mkDerivation rec {
   fixShebangsPatch = ''
     patchShebangs src/dde-file-manager-lib/generate_translations.sh src/dde-file-manager-lib/update_translations.sh
     patchShebangs src/dde-file-manager/translate_ts2desktop.sh src/dde-file-manager/translate_desktop2ts.sh src/dde-file-manager/generate_translations.sh
-    substituteInPlace src/dde-desktop/dbus/filedialog/filedialog.pri \
-      --replace "/usr/" "$out/"
-    cat src/dde-desktop/dbus/filedialog/filedialog.pri
-    fwef
   '';
 
-  postPatch = fixShebangsPatch;# + getPatchFrom patchlist;
+  postPatch = fixShebangsPatch + getPatchFrom patchlist;
 
   qmakeFlags = [
     "filemanager.pro"
