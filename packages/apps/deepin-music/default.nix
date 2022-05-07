@@ -26,7 +26,7 @@
 
 stdenv.mkDerivation rec {
   pname = "deepin-music";
-  version = "unstable-2022-04-19";
+  version = "6.2.13";
 
   src = fetchFromGitHub {
     owner = "linuxdeepin";
