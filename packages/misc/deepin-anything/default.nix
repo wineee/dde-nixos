@@ -7,8 +7,6 @@
 , udisks2-qt5
 , utillinux
 , pcre
-, breakpointHook
-, tree
 }:
 
 stdenv.mkDerivation rec {
@@ -27,8 +25,6 @@ stdenv.mkDerivation rec {
   nativeBuildInputs = [
     qmake
     pkgconfig
-    breakpointHook
-    tree
   ];
 
   buildInputs = [
@@ -52,10 +48,10 @@ stdenv.mkDerivation rec {
   buildPhase = ''
     sed 's|@@VERSION@@|${version}|g' debian/deepin-anything-dkms.dkms.in | tee debian/deepin-anything-dkms.dkms
     make -C library all
-    cd server 
-    qmake -makefile -nocache QMAKE_STRIP=: PREFIX=/ LIB_INSTALL_DIR=/lib deepin-anything-backend.pro 
-    make all
-    cd ..
+    (cd server 
+      qmake -makefile -nocache QMAKE_STRIP=: PREFIX=/ LIB_INSTALL_DIR=/lib deepin-anything-backend.pro 
+      make all
+    )
   '';
 
   # FIXME out/usr/lib/modules-load.d/anything.conf ?
