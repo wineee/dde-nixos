@@ -7,12 +7,12 @@
 
 stdenv.mkDerivation rec {
   pname = "go-dbus-factory";
-  version = "unstable-2022-01-17";
+  version = "1.10.9";
 
   src = fetchFromGitHub {
     owner = "linuxdeepin";
     repo = pname;
-    rev = "fab97cf936d78150ba011a7aeb8e24993ddca37d";
+    rev = version;
     sha256 = "sha256-KvFX+l2M6wHa+l6bOEKswCTcBYqtbMl/IIxGuu0PFcU=";
   };
 
