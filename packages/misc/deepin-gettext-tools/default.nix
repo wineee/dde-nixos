@@ -8,12 +8,12 @@
 
 stdenv.mkDerivation rec {
   pname = "deepin-gettext-tools";
-  version = "unstable-2021-11-09";
+  version = "1.0.10";
 
   src = fetchFromGitHub {
     owner = "linuxdeepin";
     repo = pname;
-    rev = "c913e2d7f9ea6ee394e3640dfca807d802806607";
+    rev = version;
     sha256 = "sha256-5Dd2QU6JYwuktusssNDfA7IHa6HbFcWo9sZf5PS7NtI=";
   };
 
