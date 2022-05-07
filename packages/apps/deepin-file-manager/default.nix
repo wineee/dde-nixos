@@ -32,10 +32,10 @@
 , boost
 }:
 let
-  commonRp = [ ["/usr"] ["$out"] ];
+  commonRp = [ ["/usr" "$out"] ];
 
   rpstr = a: b: " --replace ${a} ${b}";
-  rpstrL = l: if lib.length l == 2 then rpstr (lib.head l) (lib.last l) else (throw "${l} must be a 2-tuple");
+  rpstrL = l: if lib.length l == 2 then rpstr (lib.head l) (lib.last l) else (throw "input must be a 2-tuple");
 
   rpfile = filePath: replaceLists:
     "substituteInPlace ${filePath}" + lib.concatMapStrings rpstrL replaceLists;
@@ -43,41 +43,40 @@ let
   rpfilesL = l: lib.mapAttrsToList (name: value: rpfile name value) l;
 
   getPatchFrom = x: lib.pipe x [
-    (x: map (lib.mapAttrs (name: value: value++commonRp)) x)
-    (x: map rpfilesL x)
-    lib.concatLists
+    (x: lib.mapAttrs (name: value: value++commonRp) x)
+    (x: rpfilesL x)
     (lib.concatStringsSep "\n")
   ];
 
-  patchlist = [
+  patchlist = {
     ## BUILD
-    {"src/dde-file-manager/translate_ts2desktop.sh" = [
+    "src/dde-file-manager/translate_ts2desktop.sh" = [
       ["/usr/bin/deepin-desktop-ts-convert" "${deepin-gettext-tools}/bin/deepin-desktop-ts-convert"]
-    ];}
-    {"src/dde-file-manager-lib/dbusinterface/dbusinterface.pri" = [
+    ];
+    "src/dde-file-manager-lib/dbusinterface/dbusinterface.pri" = [
       ["/usr/share/dbus-1/interfaces/com.deepin.anything.xml" "${deepin-anything.server}/share/dbus-1/interfaces/com.deepin.anything.xml"]
-    ];}
+    ];
     ## INSTALL
-    {"src/dde-file-manager/dde-file-manager.pro" = [
+    "src/dde-file-manager/dde-file-manager.pro" = [
       ["/etc/xdg/autostart" "$out/etc/xdg/autostart"]
-    ];}
-    {"src/dde-select-dialog-x11/dde-select-dialog-x11.pro" = [ ];}
-    {"src/dde-dock-plugins/disk-mount/disk-mount.pro" = [
+    ];
+    "src/dde-select-dialog-x11/dde-select-dialog-x11.pro" = [ ];
+    "src/dde-dock-plugins/disk-mount/disk-mount.pro" = [
       # ["/usr/include/dde-dock" "${dde-dock}/include/dde-dock"]
-    ];}
-    {"src/gschema/gschema.pro" = [ ];}
-    {"src/common/common.pri" = [ ];}
-    {"src/dde-file-manager-daemon/dde-file-manager-daemon.pro" = [
+    ];
+    "src/gschema/gschema.pro" = [ ];
+    "src/common/common.pri" = [ ];
+    "src/dde-file-manager-daemon/dde-file-manager-daemon.pro" = [
       ["/etc/dbus-1/system.d" "$out/etc/dbus-1/system.d" ] 
-    ];}
-    {"src/dde-select-dialog-wayland/dde-select-dialog-wayland.pro" = [ ];}
-    {"src/dde-desktop/development.pri" = [ ];}
-    {"src/dde-file-manager-lib/dde-file-manager-lib.pro" = [
+    ];
+    "src/dde-select-dialog-wayland/dde-select-dialog-wayland.pro" = [ ];
+    "src/dde-desktop/development.pri" = [ ];
+    "src/dde-file-manager-lib/dde-file-manager-lib.pro" = [
       # /usr/include/boost/
-    ];}
-    {"src/dde-desktop/dbus/filedialog/filedialog.pri" = [ ];}
-    {"src/dde-desktop/dbus/filemanager1/filemanager1.pri" = [ ];}
-  ];
+    ];
+    "src/dde-desktop/dbus/filedialog/filedialog.pri" = [ ];
+    "src/dde-desktop/dbus/filemanager1/filemanager1.pri" = [ ];
+  };
 in
 stdenv.mkDerivation rec {
   pname = "dde-file-manager";
