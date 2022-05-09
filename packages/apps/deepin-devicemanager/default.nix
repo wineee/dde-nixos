@@ -12,7 +12,8 @@
 , qtx11extras
 , wrapQtAppsHook
 , pciutils
-, libcups
+, cups
+, czmq
 , gtest
 , kmod
 }:
@@ -41,7 +42,8 @@ stdenv.mkDerivation rec {
     polkit-qt
     kmod
     pciutils
-    libcups
+    cups
+    czmq
     gtest
   ];
 
@@ -54,6 +56,16 @@ stdenv.mkDerivation rec {
     substituteInPlace CMakeLists.txt \
       --replace "set(CMAKE_INSTALL_PREFIX /usr)" "set(CMAKE_INSTALL_PREFIX $out)" \
       --replace "/usr/share/deepin-manual/manual-assets/application/)" "share/deepin-manual/manual-assets/application/)"
+
+    substituteInPlace deepin-devicemanager/CMakeLists.txt \
+      --replace "/usr/include/cups/" "${cups.dev}/include/cups/" \
+      --replace "set(CMAKE_INSTALL_PREFIX /usr)" "set(CMAKE_INSTALL_PREFIX $out)" \
+      --replace "/usr/share/icons/hicolor/scalable/apps)" "$out/share/icons/hicolor/scalable/apps)" \
+      --replace "/usr/share/deepin-manual/manual-assets/application/)" "$out/share/deepin-manual/manual-assets/application/)"
+
+    substituteInPlace deepin-devicemanager-server/CMakeLists.txt \
+      --replace "/lib/systemd/system)" "$out/lib/systemd/system)" \
+      --replace "/etc/dbus-1/system.d)" "$out/etc/dbus-1/system.d)" 
   '';
 
   meta = with lib; {
