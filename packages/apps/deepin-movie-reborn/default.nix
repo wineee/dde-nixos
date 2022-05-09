@@ -26,7 +26,8 @@
 , wrapGAppsHook
 , gtest
 , libpulseaudio
-, cudaSupport ? false, cudaPackages
+, cudaSupport ? false
+, cudaPackages
 }:
 let
   replaceLibPath = filePath: ''
@@ -91,7 +92,7 @@ stdenv.mkDerivation rec {
 
   #makeFlags =  [ "CFLAGS+=-Og" "CFLAGS+=-ggdb" ];
 
-  cmakeFlags = [ 
+  cmakeFlags = [
     "-DVERSION=${version}"
     #"-DCMAKE_BUILD_TYPE=Debug"
   ];
@@ -113,7 +114,7 @@ stdenv.mkDerivation rec {
       --replace "/usr/share/glib-2.0/schemas)" "$out/share/glib-2.0/schemas)" \
       --replace "/usr/share/deepin-manual/manual-assets/application/)" "$out/share/deepin-manual/manual-assets/application/)"
   '';
-  
+
   fixLoadLibPatch = lib.concatMapStrings replaceLibPath [
     "src/libdmr/playlist_model.cpp"
     "src/libdmr/filefilter.cpp"

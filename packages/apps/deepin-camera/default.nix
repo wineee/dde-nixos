@@ -57,8 +57,8 @@ stdenv.mkDerivation rec {
     libv4l
     dde-api
   ] ++ (with gst_all_1 ; [
-    gstreamer 
-    gst-plugins-base 
+    gstreamer
+    gst-plugins-base
   ]);
 
   qtWrapperArgs = [

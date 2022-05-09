@@ -24,8 +24,15 @@ stdenv.mkDerivation rec {
     cp $src/src/contrib/include/*h $out/include/lucene++/
   '';
 
+  postFixup = ''
+    substituteInPlace $out/lib/pkgconfig/liblucene++.pc \
+      --replace "libdir=" "libdir=$out/lib"
+    substituteInPlace $out/lib/pkgconfig/liblucene++-contrib.pc \
+      --replace "libdir=" "libdir=$out/lib"
+  '';
+
   doCheck = false;
-  
+
   checkPhase = ''
     runHook preCheck
     LD_LIBRARY_PATH=$PWD/src/contrib:$PWD/src/core \

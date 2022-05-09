@@ -1,9 +1,9 @@
-{ pkgs ? import <nixpkgs> {} }:
-let 
+{ pkgs ? import <nixpkgs> { } }:
+let
   makeScope = pkgs.lib.makeScope;
 
   newScope = pkgs.libsForQt5.newScope;
-  
+
   packages = self: with self; {
     #### LIBRARIES
     dtkcommon = callPackage ./library/dtkcommon { };
@@ -39,7 +39,7 @@ let
     deepin-anything = callPackage ./misc/deepin-anything { };
     deepin-wallpapers = callPackage ./misc/deepin-wallpapers { };
     deepin-sound-theme = callPackage ./misc/deepin-sound-theme { };
-    
+
     #### Go Packages
     go-dbus-factory = callPackage ./go-package/go-dbus-factory { };
     go-gir-generator = callPackage ./go-package/go-gir-generator { };

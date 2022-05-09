@@ -98,8 +98,8 @@ stdenv.mkDerivation rec {
 
     substituteInPlace src/reset-password-dialog/CMakeLists.txt \
       --replace 'set(CMAKE_INSTALL_PREFIX /usr)' 'set(CMAKE_INSTALL_PREFIX $out)'
-   '';
-  
+  '';
+
   fixPolicyPatch = ''
     substituteInPlace com.deepin.controlcenter.develop.policy \
       --replace '/usr/lib/dde-control-center/develop-tool' 'out/lib/dde-control-center/develop-tool'
