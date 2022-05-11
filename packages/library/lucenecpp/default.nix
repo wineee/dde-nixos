@@ -26,9 +26,11 @@ stdenv.mkDerivation rec {
 
   postFixup = ''
     substituteInPlace $out/lib/pkgconfig/liblucene++.pc \
-      --replace "libdir=" "libdir=$out/lib"
+      --replace "libdir=" "libdir=\''${prefix}/lib" \
+      --replace "Libs: -L " "Libs: -L \''${libdir} "
     substituteInPlace $out/lib/pkgconfig/liblucene++-contrib.pc \
-      --replace "libdir=" "libdir=$out/lib"
+      --replace "libdir=" "libdir=\''${prefix}/lib" \
+      --replace "Libs: -L " "Libs: -L \''${libdir} "
   '';
 
   doCheck = false;
