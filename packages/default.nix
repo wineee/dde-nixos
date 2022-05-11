@@ -70,7 +70,8 @@ let
     dde-control-center = callPackage ./apps/dde-control-center { };
     deepin-camera = callPackage ./apps/deepin-camera { };
     deepin-file-manager = callPackage ./apps/deepin-file-manager { };
-    #deepin-devicemanager = callPackage ./apps/deepin-devicemanager { };
+    deepin-devicemanager = callPackage ./apps/deepin-devicemanager { };
+    deepin-screen-recorder = callPackage ./apps/deepin-screen-recorder { };
   };
 in
 makeScope newScope packages
