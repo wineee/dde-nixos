@@ -53,6 +53,8 @@ stdenv.mkDerivation rec {
     sha256 = "sha256-crTAXTuStA3euPvq/h97wzuG+wTz83biqXgvxkERLRg=";
   };
 
+  outputs = [ "out" "dev" ];
+
   nativeBuildInputs = [
     cmake
     pkgconfig
@@ -128,10 +130,21 @@ stdenv.mkDerivation rec {
     "src/backends/mpv/mpv_glwidget.cpp"
   ];
 
-  postPatch = fixCodePatch + fixInstallPatch + fixLoadLibPatch;
+  fixDevFilesPatch = ''
+    substituteInPlace src/libdmr/libdmr.pc.in \
+      --replace "prefix=/usr" "prefix=$dev" \
+      --replace "@CMAKE_INSTALL_LIBDIR@" "lib" \
+      --replace "@PROJECT_VERSION@" "${version}"
+  '';
+
+  postPatch = fixCodePatch + fixInstallPatch + fixLoadLibPatch + fixDevFilesPatch;
 
   preFixup = ''
     glib-compile-schemas ${glib.makeSchemaPath "$out" "${pname}-${version}"}
+  '';
+
+  postFixup = ''
+    ln -sf $out/lib/libdmr.so $dev/lib/libdmr.so
   '';
 
   meta = with lib; {
