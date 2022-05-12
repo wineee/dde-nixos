@@ -11,6 +11,7 @@
 , disomaster
 , deepin-anything
 , deepin-gettext-tools
+, deepin-movie-reborn
 , qmake
 , qttools
 , qtx11extras
@@ -30,25 +31,26 @@
 , libzen
 , lucenecpp # todo
 , boost
+, taglib
 }:
 let
-  commonRp = [ [ "/usr" "$out" ] ];
+  rpstr = a: b: " --replace \"${a}\" \"${b}\"";
 
-  rpstr = a: b: " --replace ${a} ${b}";
   rpstrL = l: if lib.length l == 2 then rpstr (lib.head l) (lib.last l) else (throw "input must be a 2-tuple");
 
   rpfile = filePath: replaceLists:
     "substituteInPlace ${filePath}" + lib.concatMapStrings rpstrL replaceLists;
 
-  rpfilesL = l: lib.mapAttrsToList (name: value: rpfile name value) l;
-
+  commonRp = [ [ "/usr" "$out" ] ];
+  
   getPatchFrom = x: lib.pipe x [
     (x: lib.mapAttrs (name: value: value ++ commonRp) x)
-    (x: rpfilesL x)
+    (x: lib.mapAttrsToList (name: value: rpfile name value) x)
     (lib.concatStringsSep "\n")
+    (s: s + "\n")
   ];
 
-  patchlist = {
+  patchList = {
     ## BUILD
     "src/dde-file-manager/translate_ts2desktop.sh" = [
       [ "/usr/bin/deepin-desktop-ts-convert" "${deepin-gettext-tools}/bin/deepin-desktop-ts-convert" ]
@@ -56,6 +58,14 @@ let
     "src/dde-file-manager-lib/dbusinterface/dbusinterface.pri" = [
       [ "/usr/share/dbus-1/interfaces/com.deepin.anything.xml" "${deepin-anything.server}/share/dbus-1/interfaces/com.deepin.anything.xml" ]
     ];
+
+    "src/dde-desktop/translate_ts2desktop.sh" = [
+      [ "/usr/bin/deepin-desktop-ts-convert" "${deepin-gettext-tools}/bin/deepin-desktop-ts-convert" ]
+    ];
+
+    ## TODO dde-dock-plugins
+    "src/dde-dock-plugins/dde-dock-plugins.pro" = [ [ "SUBDIRS += disk-mount" "" ] ];
+
     ## INSTALL
     "src/dde-file-manager/dde-file-manager.pro" = [
       [ "/etc/xdg/autostart" "$out/etc/xdg/autostart" ]
@@ -77,6 +87,21 @@ let
     "src/dde-desktop/dbus/filedialog/filedialog.pri" = [ ];
     "src/dde-desktop/dbus/filemanager1/filemanager1.pri" = [ ];
   };
+
+  getShebangsPatchFrom = x: "patchShebangs " + lib.concatStringsSep " " x + "\n";
+
+  shebangsList = [
+    "src/dde-file-manager-lib/generate_translations.sh"
+    "src/dde-file-manager-lib/update_translations.sh"
+    "src/dde-file-manager/translate_ts2desktop.sh"
+    "src/dde-file-manager/translate_desktop2ts.sh"
+    "src/dde-file-manager/generate_translations.sh"
+    "src/dde-file-manager-plugins/generate_translations.sh"
+    "src/dde-file-manager-plugins/update_translations.sh"
+    "src/dde-desktop/translate_generation.sh"
+    "src/dde-desktop/translate_ts2desktop.sh"
+  ];
+
 in
 stdenv.mkDerivation rec {
   pname = "dde-file-manager";
@@ -105,6 +130,8 @@ stdenv.mkDerivation rec {
     gio-qt
     docparser
     deepin-anything
+    deepin-anything.server
+    deepin-movie-reborn.dev
     qtx11extras
     qtmultimedia
     kcodecs
@@ -122,18 +149,18 @@ stdenv.mkDerivation rec {
     libzen # libmediainfo
     lucenecpp
     boost # lucenepp
+    taglib
   ];
-  enableParallelBuilding = false;
 
-  fixShebangsPatch = ''
-    patchShebangs src/dde-file-manager-lib/generate_translations.sh src/dde-file-manager-lib/update_translations.sh
-    patchShebangs src/dde-file-manager/translate_ts2desktop.sh src/dde-file-manager/translate_desktop2ts.sh src/dde-file-manager/generate_translations.sh
-  '';
+  postPatch = getShebangsPatchFrom shebangsList + getPatchFrom patchList;
 
-  postPatch = fixShebangsPatch + getPatchFrom patchlist;
+  enableParallelBuilding = true;
+
+  installFlags = [ "DESTDIR=$(out)" ];
 
   qmakeFlags = [
     "filemanager.pro"
+    "PREFIX=${placeholder "out"}"
     "LIB_INSTALL_DIR=${placeholder "out"}/lib"
     "INCLUDE_INSTALL_DIR=${placeholder "out"}/include"
   ];
