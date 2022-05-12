@@ -8,16 +8,15 @@
 , utillinux
 , pcre
 }:
-
 stdenv.mkDerivation rec {
   pname = "deepin-anything";
-  version = "6.0.0";
+  version = "unstable-2022-04-26";
 
   src = fetchFromGitHub {
     owner = "linuxdeepin";
     repo = pname;
-    rev = version;
-    sha256 = "sha256-1GX/gemRTMhP8ZixYzB3mwQrWonjEPNYWY6zutTnLqw=";
+    rev = "28d03f19fc97c101a49601afce2a24bcccc9b695";
+    sha256 = "sha256-VGn17H8rfY+fGxW9f+nVvETIOVz4iVATlKei7o3VJ9Y=";
   };
 
   outputs = [ "out" "server" "dkms" ];
@@ -56,6 +55,7 @@ stdenv.mkDerivation rec {
 
   # FIXME out/usr/lib/modules-load.d/anything.conf ?
   installPhase = ''
+    runHook preInstall
     mkdir -p $out/lib
     cp library/bin/release/* $out/lib
     
@@ -73,7 +73,23 @@ stdenv.mkDerivation rec {
     cp -r kernelmod/vfs_change_consts.h $out/include/deepin-anything
 
     make -C server install INSTALL_ROOT=${placeholder "server"}
-    # install -D debian/deepin-anything-server.service ${placeholder "server"}/share/dbus-1//system-services/
+    runHook postInstall
+  '';
+
+  deepin_anything_backend_pc = ''
+    prefix=${placeholder "server"}
+    exec_prefix=''${prefix}
+    libdir=''${prefix}/lib
+    includedir=''${prefix}/include/deepin-anything-server-lib
+    Name: deepin-anything-server-lib
+    Description: Deepin anything backend library
+    Version: ${version}
+    Libs: -L''${libdir} -ldeepin-anything-server-lib
+    Cflags: -I''${includedir}
+  '';
+
+  postInstall = ''
+    echo -e ${lib.strings.escapeShellArg deepin_anything_backend_pc} > ${placeholder "server"}/lib/pkgconfig/deepin-anything-server-lib.pc
   '';
 
   dontFixup = true;
