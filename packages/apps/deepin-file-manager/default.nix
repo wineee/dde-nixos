@@ -45,7 +45,7 @@ let
     "substituteInPlace ${filePath}" + lib.concatMapStrings rpstrL replaceLists;
 
   commonRp = [ [ "/usr" "$out" ] ];
-  
+
   getPatchFrom = x: lib.pipe x [
     (x: lib.mapAttrs (name: value: value ++ commonRp) x)
     (x: lib.mapAttrsToList (name: value: rpfile name value) x)
@@ -78,7 +78,9 @@ let
       # ["/usr/include/dde-dock" "${dde-dock}/include/dde-dock"]
     ];
     "src/gschema/gschema.pro" = [ ];
-    "src/common/common.pri" = [ ];
+    "src/common/common.pri" = [
+      [ "LIB_INSTALL_DIR = \\$\\$[QT_INSTALL_LIBS]" "" ]
+    ];
     "src/dde-file-manager-daemon/dde-file-manager-daemon.pro" = [
       [ "/etc/dbus-1/system.d" "$out/etc/dbus-1/system.d" ]
     ];
@@ -89,6 +91,9 @@ let
     ];
     "src/dde-desktop/dbus/filedialog/filedialog.pri" = [ ];
     "src/dde-desktop/dbus/filemanager1/filemanager1.pri" = [ ];
+    "src/deepin-anything-server-plugins/dde-anythingmonitor/dde-anythingmonitor.pro" = [
+      [ "\\$\\$system(\\$\\$PKG_CONFIG --variable libdir deepin-anything-server-lib)/deepin-anything-server-lib/plugins/handlers" "$out/lib/deepin-anything-server-lib/plugins/handlers" ]
+    ];
 
     ### DESKTOP
     "src/dde-desktop/data/applications/dde-home.desktop" = [ ];
@@ -160,17 +165,11 @@ stdenv.mkDerivation rec {
     polkit
 
     lucenecpp
-    boost # lucenepp
+    boost
     taglib
   ];
 
-  postPatch = getShebangsPatchFrom shebangsList + getPatchFrom patchList + ''
-    substituteInPlace src/common/common.pri \
-      --replace 'LIB_INSTALL_DIR = $$[QT_INSTALL_LIBS]' ""
-    substituteInPlace src/deepin-anything-server-plugins/dde-anythingmonitor/dde-anythingmonitor.pro \
-      --replace '$$system($$PKG_CONFIG --variable libdir deepin-anything-server-lib)/deepin-anything-server-lib/plugins/handlers' "$out/lib/deepin-anything-server-lib/plugins/handlers"
-  '';
-  ## TODO Use isEmpty(LIB_INSTALL_DIR)
+  postPatch = getShebangsPatchFrom shebangsList + getPatchFrom patchList;
 
   enableParallelBuilding = true;
 
