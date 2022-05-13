@@ -18,7 +18,7 @@ stdenv.mkDerivation rec {
     owner = "linuxdeepin";
     repo = pname;
     rev = version;
-    sha256 = "";
+    sha256 = "sha256-ZOJc8R82R9q87Qpf/J4CXE+xL6nvbsXRIs0boNY+2uk=";
   };
 
   nativeBuildInputs = [
@@ -38,12 +38,8 @@ stdenv.mkDerivation rec {
   ];
 
   fixInstallPatch = ''
-    substituteInPlace CMakeLists.txt \
-      --replace "set(PREFIX /usr)" "set(PREFIX $out)"
-
-    substituteInPlace src/deepin-draw/CMakeLists.txt \
-      --replace "/usr/lib" "$out/lib" \
-      --replace "/usr/bin" "$out/bin"
+  #  substituteInPlace CMakeLists.txt \
+  #    --replace "set(PREFIX /usr)" "set(PREFIX $out)"
   '';
 
   postPatch = fixInstallPatch;
