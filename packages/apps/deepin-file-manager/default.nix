@@ -32,6 +32,7 @@
 , lucenecpp # todo
 , boost
 , taglib
+, glib
 }:
 let
   rpstr = a: b: " --replace \"${a}\" \"${b}\"";
@@ -152,14 +153,21 @@ stdenv.mkDerivation rec {
     taglib
   ];
 
-  postPatch = getShebangsPatchFrom shebangsList + getPatchFrom patchList;
+  postPatch = getShebangsPatchFrom shebangsList + getPatchFrom patchList + ''
+    substituteInPlace src/common/common.pri \
+      --replace 'LIB_INSTALL_DIR = $$[QT_INSTALL_LIBS]' ""
+    substituteInPlace src/deepin-anything-server-plugins/dde-anythingmonitor/dde-anythingmonitor.pro \
+      --replace '$$system($$PKG_CONFIG --variable libdir deepin-anything-server-lib)/deepin-anything-server-lib/plugins/handlers' "$out/lib/deepin-anything-server-lib/plugins/handlers"
+  '';
+  ## TODO Use isEmpty(LIB_INSTALL_DIR)
 
   enableParallelBuilding = true;
 
-  installFlags = [ "DESTDIR=$(out)" ];
+  #installFlags = [ "DESTDIR=$(out)" ];
 
   qmakeFlags = [
     "filemanager.pro"
+    "VERSION=${version}"
     "PREFIX=${placeholder "out"}"
     "LIB_INSTALL_DIR=${placeholder "out"}/lib"
     "INCLUDE_INSTALL_DIR=${placeholder "out"}/include"
@@ -169,6 +177,10 @@ stdenv.mkDerivation rec {
     "--prefix QT_PLUGIN_PATH : ${qt5integration}/plugins"
     "--prefix QT_QPA_PLATFORM_PLUGIN_PATH : ${qt5platform-plugins}/plugins"
   ];
+
+  preFixup = ''
+    glib-compile-schemas ${glib.makeSchemaPath "$out" "${pname}-${version}"}
+  '';
 
   meta = with lib; {
     description = "File manager for deepin desktop environment";
