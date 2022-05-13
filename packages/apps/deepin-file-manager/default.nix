@@ -12,6 +12,7 @@
 , deepin-anything
 , deepin-gettext-tools
 , deepin-movie-reborn
+, deepin-desktop-schemas
 , qmake
 , qttools
 , qtx11extras
@@ -23,13 +24,14 @@
 , libsecret
 , libmediainfo
 , mediainfo
+, libzen
 , lxqt
 , poppler
 , polkit-qt
 , polkit
 , wrapQtAppsHook
-, libzen
-, lucenecpp # todo
+, wrapGAppsHook
+, lucenecpp
 , boost
 , taglib
 , glib
@@ -87,6 +89,11 @@ let
     ];
     "src/dde-desktop/dbus/filedialog/filedialog.pri" = [ ];
     "src/dde-desktop/dbus/filemanager1/filemanager1.pri" = [ ];
+
+    ### DESKTOP
+    "src/dde-desktop/data/applications/dde-home.desktop" = [ ];
+    "src/dde-file-manager/dde-file-manager.desktop" = [ ];
+    "src/dde-file-manager/dde-open.desktop" = [ ];
   };
 
   getShebangsPatchFrom = x: "patchShebangs " + lib.concatStringsSep " " x + "\n";
@@ -121,7 +128,10 @@ stdenv.mkDerivation rec {
     pkgconfig
     deepin-gettext-tools
     wrapQtAppsHook
+    wrapGAppsHook
   ];
+
+  dontWrapGApps = true;
 
   buildInputs = [
     dtk
@@ -133,11 +143,13 @@ stdenv.mkDerivation rec {
     deepin-anything
     deepin-anything.server
     deepin-movie-reborn.dev
+    deepin-desktop-schemas
     qtx11extras
     qtmultimedia
     kcodecs
     jemalloc
     ffmpegthumbnailer
+    libzen
     libsecret
     libmediainfo
     mediainfo
@@ -147,7 +159,6 @@ stdenv.mkDerivation rec {
     polkit-qt
     polkit
 
-    libzen # libmediainfo
     lucenecpp
     boost # lucenepp
     taglib
@@ -163,8 +174,6 @@ stdenv.mkDerivation rec {
 
   enableParallelBuilding = true;
 
-  #installFlags = [ "DESTDIR=$(out)" ];
-
   qmakeFlags = [
     "filemanager.pro"
     "VERSION=${version}"
@@ -174,6 +183,7 @@ stdenv.mkDerivation rec {
   ];
 
   qtWrapperArgs = [
+    "\${gappsWrapperArgs[@]}"
     "--prefix QT_PLUGIN_PATH : ${qt5integration}/plugins"
     "--prefix QT_QPA_PLATFORM_PLUGIN_PATH : ${qt5platform-plugins}/plugins"
   ];
