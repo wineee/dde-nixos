@@ -73,6 +73,7 @@ let
     deepin-devicemanager = callPackage ./apps/deepin-devicemanager { };
     deepin-screen-recorder = callPackage ./apps/deepin-screen-recorder { };
     deepin-clone = callPackage ./apps/deepin-clone { };
+    deepin-shortcut-viewer = callPackage ./apps/deepin-shortcut-viewer { };
   };
 in
 makeScope newScope packages
