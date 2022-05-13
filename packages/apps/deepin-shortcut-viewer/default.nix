@@ -40,6 +40,11 @@ stdenv.mkDerivation rec {
     "--prefix QT_QPA_PLATFORM_PLUGIN_PATH : ${qt5platform-plugins}/plugins"
   ];
 
+  postPatch = ''
+    substituteInPlace view/shortcutscene.cpp \
+      --replace "/usr/share/deepin-shortcut-viewer\n" "$out/share/deepin-shortcut-viewer\n"
+  '';
+
   meta = with lib; {
     description = "Deepin Shortcut Viewer";
     homepage = "https://github.com/linuxdeepin/deepin-shortcut-viewer";
