@@ -4,6 +4,7 @@
 , dtk
 , qt5integration
 , qt5platform-plugins
+, deepin-file-manager
 , cmake
 , qttools
 , pkgconfig
@@ -28,7 +29,10 @@ stdenv.mkDerivation rec {
     wrapQtAppsHook
   ];
 
-  buildInputs = [ dtk ];
+  buildInputs = [
+    dtk
+    deepin-file-manager
+  ];
 
   cmakeFlags = [ "-DVERSION=${version}" ];
 
@@ -38,8 +42,8 @@ stdenv.mkDerivation rec {
   ];
 
   fixInstallPatch = ''
-  #  substituteInPlace CMakeLists.txt \
-  #    --replace "set(PREFIX /usr)" "set(PREFIX $out)"
+    #  substituteInPlace CMakeLists.txt \
+    #    --replace "set(PREFIX /usr)" "set(PREFIX $out)"
   '';
 
   postPatch = fixInstallPatch;
