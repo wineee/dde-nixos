@@ -30,7 +30,7 @@ stdenv.mkDerivation rec {
 
   buildInputs = [ dtk ];
 
-  qmakeFlags = [ 
+  qmakeFlags = [
     "VERSION=${version}"
     "PREFIX=${placeholder "out"}"
   ];
