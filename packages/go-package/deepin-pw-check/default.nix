@@ -18,7 +18,7 @@
 
 buildGoPackage rec {
   pname = "deepin-pw-check";
-  version = "5.1.8";
+  version = "5.1.11";
 
   goPackagePath = "github.com/linuxdeepin/deepin-pw-check";
 
@@ -26,7 +26,7 @@ buildGoPackage rec {
     owner = "linuxdeepin";
     repo = pname;
     rev = version;
-    sha256 = "sha256-2JJmpxsG8gQQt2ASqbmoEZRzaUve4EQGHsEDqC/f/Zs=";
+    sha256 = "sha256-h+zW7uyTWep+nCbc4RvIgWddsqpO5ZbXvXDPiZ6z6gY=";
   };
 
   goDeps = ./deps.nix;
@@ -50,8 +50,13 @@ buildGoPackage rec {
     linux-pam
   ];
 
+  hardeningDisable = [ "all" ]; ## FIXME
+
   postPatch = ''
     sed -i 's|iniparser/||' */*.c
+    substituteInPlace misc/pkgconfig/libdeepin_pw_check.pc \
+      --replace "/usr" "$out" \
+      --replace "Version: 0.0.0.1" "Version: ${version}"
   '';
 
   preBuild = ''
@@ -67,7 +72,8 @@ buildGoPackage rec {
   '';
 
   installPhase = ''
-    make install DESTDIR="$out" PREFIX="/" -C go/src/${goPackagePath}
+    make install DESTDIR="$out" PREFIX="/" PKG_FILE_DIR="/lib/pkgconfig" -C go/src/${goPackagePath}
+    ln -s $out/lib/libdeepin_pw_check.so $out/lib/libdeepin_pw_check.so.1
   '';
 
   meta = with lib; {
