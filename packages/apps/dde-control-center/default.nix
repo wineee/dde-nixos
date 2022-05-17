@@ -7,6 +7,7 @@
 , qt5platform-plugins
 , dde-qt-dbus-factory
 , deepin-pw-check
+, deepin-desktop-schemas
 , udisks2-qt5
 , cmake
 , qttools
@@ -15,6 +16,7 @@
 , qtx11extras
 , qtmultimedia
 , wrapQtAppsHook
+, wrapGAppsHook
 , gsettings-qt
 , wayland
 , kwayland
@@ -25,6 +27,7 @@
 , util-linux
 , libselinux
 , libsepol
+, glib
 , gtest
 }:
 
@@ -44,13 +47,17 @@ stdenv.mkDerivation rec {
     qttools
     pkgconfig
     wrapQtAppsHook
+    wrapGAppsHook
   ];
+
+  dontWrapGApps = true;
 
   buildInputs = [
     dtk
     qtbase.dev
     dde-qt-dbus-factory
     deepin-pw-check
+    deepin-desktop-schemas
     qtx11extras
     qtmultimedia
     gsettings-qt
@@ -114,6 +121,11 @@ stdenv.mkDerivation rec {
     "-DINCLUDE_INSTALL_DIR=include"
     #"-DDCMAKE_INSTALL_COMPONENT=false"
   ];
+
+  preFixup = ''
+    glib-compile-schemas ${glib.makeSchemaPath "$out" "${pname}-${version}"}
+    qtWrapperArgs+=("''${gappsWrapperArgs[@]}")
+  '';
 
   meta = with lib; {
     description = "Control panel of Deepin Desktop Environment";
