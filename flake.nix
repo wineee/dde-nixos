@@ -25,15 +25,15 @@
           name: value: 
             pkgs.mkShell {
               nativeBuildInputs = deepin.${name}.nativeBuildInputs;
-              buildInputs = deepin.${name}.buildInputs;
+              buildInputs = deepin.${name}.buildInputs ++ deepin.${name}.propagatedBuildInputs;
            }
         ) deepin;
       }
     ) // {
-      overlay = final: prev: {
+      overlays.default = final: prev: {
         deepin = (import ./packages { pkgs = prev.pkgs; });
       };
-      nixosModule = { config, lib, pkgs, ... }:
+      nixosModules.default = { config, lib, pkgs, ... }:
         with lib;
         let
           xcfg = config.services.xserver;
@@ -61,16 +61,13 @@
               services.xserver.displayManager.lightdm.theme = mkDefault "deepin";
               services.accounts-daemon.enable = true;
 
-              ## environment.pathsToLink = [ "/share" ];
+              environment.pathsToLink = [ "/share" ];
               environment.systemPackages =
                 let
                   deepinPkgs = with pkgs.deepin; [
                     calculator
                   ];
-                  plasmaPkgs = with pkgs.libsForQt5; [
-                    kwin
-                  ];
-                in deepinPkgs ++ plasmaPkgs;
+                in deepinPkgs;
             })
 
             (mkIf config.services.deepin.dde-daemon.enable {
