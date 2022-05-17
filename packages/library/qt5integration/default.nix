@@ -38,8 +38,6 @@ stdenv.mkDerivation rec {
     cp -r bin $out
   '';
 
-  dontFixup = true; #FIXME why?
-
   meta = with lib; {
     description = "Qt platform theme integration plugins for DDE";
     homepage = "https://github.com/linuxdeepin/qt5integration";

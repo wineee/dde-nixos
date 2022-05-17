@@ -18,7 +18,7 @@ let
     udisks2-qt5 = callPackage ./library/udisks2-qt5 { };
     dde-qt-dbus-factory = callPackage ./library/dde-qt-dbus-factory { };
     qt5platform-plugins = callPackage ./library/qt5platform-plugins { };
-    qt5integration = callPackage ./library/qt5integration { };
+    qt5integration = callPackage ./library/qt5integration { stdenv = pkgs.stdenvAdapters.keepDebugInfo pkgs.stdenv; };
     docparser = callPackage ./library/docparser { };
     dtk = [
       dtkcommon
