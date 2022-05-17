@@ -1,6 +1,8 @@
 { stdenv
 , lib
 , fetchFromGitHub
+, fetchpatch
+, deepin-desktop-base
 , pkgconfig
 , qmake
 , gsettings-qt
@@ -8,7 +10,6 @@
 , wrapQtAppsHook
 , lshw
 , dtkcommon
-, deepin-desktop-base
 }:
 
 stdenv.mkDerivation rec {
@@ -35,6 +36,19 @@ stdenv.mkDerivation rec {
     dtkcommon
     deepin-desktop-base
   ];
+
+  patches = [
+    (fetchpatch {
+      name = "Add_NixOS_for_DSysInfo";
+      url = "https://github.com/linuxdeepin/dtkcore/commit/d76a55035f64977986a47455cc90ad26eb634eef.patch";
+      sha256 = "sha256-p2TDNwX+vyAMk3uuOBgQmpF1IM1S4dzp3z4G2SnPG0A=";
+    })
+  ];
+
+  postPatch = ''
+    substituteInPlace src/dsysinfo.cpp \
+      --replace "/usr/share/deepin/distribution.info" "${deepin-desktop-base}/usr/share/deepin/distribution.info"
+  '';
 
   qmakeFlags = [
     "LIB_INSTALL_DIR=${placeholder "out"}/lib"
