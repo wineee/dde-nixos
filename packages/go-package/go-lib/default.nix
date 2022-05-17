@@ -11,13 +11,13 @@
 
 stdenv.mkDerivation rec {
   pname = "go-lib";
-  version = "6.0.0";
+  version = "5.8.10";
 
   src = fetchFromGitHub {
     owner = "linuxdeepin";
     repo = pname;
     rev = version;
-    sha256 = "sha256-9u/dstjsL/hcd+JYYiQnR4S4Jcu6BKxeBgl963jyJc0=";
+    sha256 = "sha256-/qDJ0hS6PN4La3E7HHdxw+uQdeME1ZcFnEoGCBj9ZWQ=";
   };
 
   installPhase = ''
@@ -26,7 +26,7 @@ stdenv.mkDerivation rec {
     rm -r $out/share/gocode/src/github.com/linuxdeepin/go-lib/debian
   '';
 
-  installCheckInputs = [
+  propagatedBuildInputs = [
     go
     glib
     xorg.libX11
