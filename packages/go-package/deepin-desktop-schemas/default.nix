@@ -4,6 +4,7 @@
 , buildGoPackage
 , go
 , go-lib
+, glib
 }:
 
 buildGoPackage rec {
@@ -19,6 +20,7 @@ buildGoPackage rec {
     sha256 = "sha256-fCI9u0eotgaay/Ci8/3bzr4MZ95GN5fH0LBXFKHJlF8=";
   };
 
+  nativeBuildInputs = [ glib ];
   buildInputs = [ go-lib ];
 
   preBuild = ''
@@ -33,6 +35,10 @@ buildGoPackage rec {
 
   installPhase = ''
     make install DESTDIR="$out" PREFIX="/" -C go/src/${goPackagePath}
+  '';
+
+  preFixup = ''
+    glib-compile-schemas ${glib.makeSchemaPath "$out" "${pname}-${version}"}
   '';
 
   meta = with lib; {
