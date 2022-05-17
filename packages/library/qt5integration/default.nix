@@ -14,13 +14,13 @@
 
 stdenv.mkDerivation rec {
   pname = "qt5integration";
-  version = "5.5.20";
+  version = "unstable-2022-05-18";
 
   src = fetchFromGitHub {
     owner = "linuxdeepin";
     repo = pname;
-    rev = version;
-    sha256 = "sha256-w1Thxpn8METjpAtrhkjNXOjH5CAkEEystucNnJ39Cow=";
+    rev = "2f7c2ff2bad491883ae05e0cc52568823f3b2009";
+    sha256 = "sha256-BG+5jJstA4D6Hz066kzZxQD3ludNTjBJhh1YEpj3pSI=";
   };
 
   nativeBuildInputs = [ qmake pkgconfig wrapQtAppsHook ];
@@ -37,6 +37,8 @@ stdenv.mkDerivation rec {
   installPhase = ''
     cp -r bin $out
   '';
+
+  dontFixup = true; #FIXME why?
 
   meta = with lib; {
     description = "Qt platform theme integration plugins for DDE";
