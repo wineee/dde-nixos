@@ -1,6 +1,7 @@
 { stdenv
 , lib
 , fetchFromGitHub
+, fetchpatch
 , dtk
 , qt5integration
 , qt5platform-plugins
@@ -19,13 +20,13 @@
 
 stdenv.mkDerivation rec {
   pname = "deepin-compressor";
-  version = "5.12.5";
+  version = "unstable-2022-02-20";
 
   src = fetchFromGitHub {
     owner = "linuxdeepin";
     repo = pname;
-    rev = version;
-    sha256 = "sha256-8Qp7Y3HQtHFJzjabXtg8z6J0d+fm/Zv86phlM6aKvAs=";
+    rev = "f38fbcc1d6db4de2c15450be163aa734b85eeb5d";
+    sha256 = "sha256-im1TXsuoLDM4BYfNpvg8yvARykuaIWnytmjzPMHqRrU=";
   };
 
   nativeBuildInputs = [
@@ -59,7 +60,11 @@ stdenv.mkDerivation rec {
   ];
 
   patches = [
-    ./0001-support-use-DCMAKE_INSTALL_PREFIX-flag.patch
+    (fetchpatch {
+      url = "https://github.com/linuxdeepin/deepin-compressor/commit/c0a371d76f69bc92aedcdc0d49a590617399ce44.patch";
+      sha256 = "sha256-iD+QkhncKaCJ6z1ZR/1OqYQADaFdvo3HZNkybFcHwPg=";
+      name = "support_use_DCMAKE_INSTALL_PREFIX_flag_patch";
+    })
   ];
 
   fixPluginLoadPatch = ''
