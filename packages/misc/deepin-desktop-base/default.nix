@@ -23,9 +23,9 @@ stdenv.mkDerivation rec {
     Name=NixOS
     WebsiteName=www.nixos.org
     Website=https://www.nixos.org
-    Logo=nix-snowflake.svg
-    LogoLight=nix-snowflake-white.svg
-    LogoTransparent=nix-snowflake.svg
+    Logo=nix-snowflake
+    LogoLight=nix-snowflake-white
+    LogoTransparent=nix-snowflake
   '';
 
   postInstall = ''

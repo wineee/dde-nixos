@@ -11,7 +11,6 @@
 , dde-api
 , deepin-desktop-schemas
 , deepin-wallpapers
-, deepin-desktop-base
 , alsaLib
 , glib
 , gtk3
@@ -67,7 +66,7 @@ buildGoPackage rec {
 
     alsaLib
     dde-api
-    deepin-desktop-base
+    #deepin-desktop-base
     deepin-desktop-schemas
     deepin-wallpapers
     glib
