@@ -12,13 +12,13 @@
 
 stdenv.mkDerivation rec {
   pname = "deepin-draw";
-  version = "5.10.6";
+  version = "5.11.1";
 
   src = fetchFromGitHub {
     owner = "linuxdeepin";
     repo = pname;
     rev = version;
-    sha256 = "sha256-yG7XzEkp9IYtemC1LOsOWAA8Erq3EsQebmI3aAXhylU=";
+    sha256 = "sha256-1d6VHQK3ZnhE2gXcrvMOUSRCS+psYBT18EAG3uGvGLo=";
   };
 
   nativeBuildInputs = [
