@@ -118,7 +118,7 @@ let
 in
 stdenv.mkDerivation rec {
   pname = "dde-file-manager";
-  version = "5.5.10";
+  version = "5.6.5";
 
   src = fetchFromGitHub {
     owner = "linuxdeepin";

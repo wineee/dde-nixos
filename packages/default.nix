@@ -18,7 +18,7 @@ let
     udisks2-qt5 = callPackage ./library/udisks2-qt5 { };
     dde-qt-dbus-factory = callPackage ./library/dde-qt-dbus-factory { };
     qt5platform-plugins = callPackage ./library/qt5platform-plugins { };
-    qt5integration = callPackage ./library/qt5integration { stdenv = pkgs.stdenvAdapters.keepDebugInfo pkgs.stdenv; };
+    qt5integration = callPackage ./library/qt5integration { };
     docparser = callPackage ./library/docparser { };
     dtk = [
       dtkcommon
@@ -69,7 +69,7 @@ let
     deepin-draw = callPackage ./apps/deepin-draw { };
     dde-control-center = callPackage ./apps/dde-control-center { };
     deepin-camera = callPackage ./apps/deepin-camera { };
-    deepin-file-manager = callPackage ./apps/deepin-file-manager { };
+    dde-file-manager = callPackage ./apps/dde-file-manager { };
     deepin-devicemanager = callPackage ./apps/deepin-devicemanager { };
     deepin-screen-recorder = callPackage ./apps/deepin-screen-recorder { };
     deepin-clone = callPackage ./apps/deepin-clone { };
