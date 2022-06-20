@@ -4,7 +4,7 @@
 , dtk
 , qt5integration
 , qt5platform-plugins
-, deepin-file-manager
+, dde-file-manager
 , cmake
 , qttools
 , pkgconfig
@@ -31,7 +31,7 @@ stdenv.mkDerivation rec {
 
   buildInputs = [
     dtk
-    deepin-file-manager
+    dde-file-manager
   ];
 
   cmakeFlags = [ "-DVERSION=${version}" ];
