@@ -15,13 +15,13 @@
 
 stdenv.mkDerivation rec {
   pname = "deepin-picker";
-  version = "5.0.24";
+  version = "5.0.28";
 
   src = fetchFromGitHub {
     owner = "linuxdeepin";
     repo = pname;
     rev = version;
-    sha256 = "sha256-CauaeXQzBfE9EgG6WclmJ7K1nm06iZILxMtvSfqXT3U=";
+    sha256 = "sha256-b463PqrCpt/DQqint5Xb0cRT66iHNPavj0lsTMv801k=";
   };
 
   nativeBuildInputs = [
