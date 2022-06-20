@@ -9,6 +9,7 @@
 , qt5platform-plugins
 , lxqt
 , mtdev
+, xorg
 , gtest
 }:
 
@@ -31,6 +32,7 @@ stdenv.mkDerivation rec {
     qt5platform-plugins
     mtdev
     lxqt.libqtxdg
+    xorg.xcbutilrenderutil
     gtest
   ];
 
