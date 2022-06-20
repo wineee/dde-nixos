@@ -11,7 +11,6 @@
 , qtdbusextended
 , cmake
 , pkgconfig
-, qtbase
 , qtmultimedia
 , qttools
 , wrapQtAppsHook
@@ -26,7 +25,7 @@
 
 stdenv.mkDerivation rec {
   pname = "deepin-music";
-  version = "6.2.13";
+  version = "6.2.16";
 
   src = fetchFromGitHub {
     owner = "linuxdeepin";
@@ -63,11 +62,8 @@ stdenv.mkDerivation rec {
     "--prefix QT_QPA_PLATFORM_PLUGIN_PATH : ${qt5platform-plugins}/plugins"
   ];
 
-  #makeFlags =  [ "CFLAGS+=-Og" "CFLAGS+=-ggdb" ];
-
   cmakeFlags = [
     "-DVERSION=${version}"
-    #"-DCMAKE_BUILD_TYPE=Debug"
   ];
 
   fixIncludePatch = ''
