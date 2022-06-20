@@ -18,13 +18,13 @@
 
 stdenv.mkDerivation rec {
   pname = "deepin-boot-maker";
-  version = "5.7.6";
+  version = "5.7.8";
 
   src = fetchFromGitHub {
     owner = "linuxdeepin";
     repo = pname;
     rev = version;
-    sha256 = "sha256-UpbU1mFQGCNnf2jusa6Q5wJyMzOQLa1z0txuSqxJRH0=";
+    sha256 = "sha256-Ks35LDZrldilCRu+U41n2b03vFpqgIaJSvKqphzp6gM=";
   };
 
   nativeBuildInputs = [
