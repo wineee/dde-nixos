@@ -1,5 +1,4 @@
 [
-  # 1
   {
     goPackagePath = "gopkg.in/alecthomas/kingpin.v2";
     fetch = {
@@ -9,7 +8,6 @@
       sha256 = "sha256-uViE2kPj7tMrGYVjjdLOl2jFDmmu+3P7GvnZBse2zVY=";
     };
   }
-  # 2
   {
     goPackagePath = "github.com/disintegration/imaging";
     fetch = {
@@ -19,7 +17,6 @@
       sha256 = "sha256-pSeMTPvSkxlthh65LjNYYhPLvCZDkBgVgAGYWW0Aguo=";
     };
   }
-  # 3
   {
     goPackagePath = "github.com/linuxdeepin/go-x11-client";
     fetch = {
@@ -29,7 +26,6 @@
       sha256 = "sha256-xXNaXpFFHJN1fCFLoVrQFCXQ4ya+Kga55QWcJL/InkA=";
     };
   }
-  # 4
   {
     goPackagePath = "github.com/mattn/go-sqlites";
     fetch = {
@@ -39,7 +35,6 @@
       sha256 = "sha256-SLW1FyyfJGPUid1epgmJHZGJebI77Wg5WMAPiz1GcYs=";
     };
   }
-  # 5
   {
     goPackagePath = "github.com/godbus/dbus";
     fetch = {
@@ -49,7 +44,6 @@
       sha256 = "sha256-JSPtmkGEStBEVrKGszeLCb7P38SzQKgMiDC3eDppXs0=";
     };
   }
-  # 6
   {
     goPackagePath = "github.com/fsnotify/fsnotify";
     fetch = {
@@ -59,7 +53,6 @@
       sha256 = "sha256-B8kZ8yiWgallT7R2j1kSRJcJkSGFVf9ise+TpXa+7XY=";
     };
   }
-  # 7
   {
     goPackagePath = "golang.org/x/sys";
     fetch = {
@@ -69,7 +62,6 @@
       sha256 = "sha256-AzS/J3OocI7mA0xsIfQzyskNKVija7F2yvuts+EFJBs=";
     };
   }
-  # 8
   {
     goPackagePath = "github.com/stretchr/testify";
     fetch = {
@@ -79,7 +71,6 @@
       sha256 = "sha256-disUVIHiIDSj/go3APtJH8awSl8QwKRRFLKI7LRnl0w=";
     };
   }
-  # 9
   {
     goPackagePath = "github.com/davecgh/go-spew";
     fetch = {
@@ -89,7 +80,6 @@
       sha256 = "sha256-nhzSUrE1fCkN0+RL04N4h8jWmRFPPPWbCuDc7Ss0akI=";
     };
   }
-  # 10
   {
     goPackagePath = "github.com/pmezard/go-difflib";
     fetch = {
@@ -99,7 +89,6 @@
       sha256 = "sha256-XA4Oj1gdmdV/F/+8kMI+DBxKPthZ768hbKsO3d9Gx90=";
     };
   }
-  # 11
   {
     goPackagePath = "github.com/stretchr/objx";
     fetch = {
@@ -109,7 +98,6 @@
       sha256 = "sha256-T753/EiD5Cpk6H2JFhd+s1gFvpNptG2XlEHxZF6dQaw=";
     };
   }
-  # 12
   {
     goPackagePath = "gopkg.in/yaml.v3";
     fetch = {
@@ -119,7 +107,6 @@
       sha256 = "sha256-j8yDji+vqsitpRZirpb4w/Em8nstgf28wpwkcrOlxBk=";
     };
   }
-  # 13
   {
     goPackagePath = "golang.org/x/image";
     fetch = {
@@ -129,7 +116,6 @@
       sha256 = "sha256-gtRGCsCe8tKLsZWhKLL8c5whz9rCMoCHfH13rcSW/OM=";
     };
   }
-  # 14
   {
     goPackagePath = "github.com/alecthomas/units";
     fetch = {
@@ -139,7 +125,6 @@
       sha256 = "sha256-uriYmwxT69xbmWKO/5OAyeMa2lFBOJDrU2KtQh/+ZjY=";
     };
   }
-  # 15
   {
     goPackagePath = "github.com/alecthomas/template";
     fetch = {
@@ -149,7 +134,6 @@
       sha256 = "sha256-RsS4qxdRQ3q+GejA8D9Iu31A/mZNms4LbJ7518jWiu4=";
     };
   }
-  # 16
   {
     goPackagePath = "github.com/cryptix/wav";
     fetch = {
@@ -159,7 +143,6 @@
       sha256 = "sha256-psUCHRFGEOpN3obFbCvSfW0AGEFSI29d0q4MFsHG3qI=";
     };
   }
-  # 17
   {
     goPackagePath = "github.com/fogleman/gg";
     fetch = {
@@ -169,7 +152,6 @@
       sha256 = "sha256-Fs2JI0FmF4N5EzXJzGAPZMxZxo6wKyebkN/iBZ9sdNo=";
     };
   }
-  # 18
   {
     goPackagePath = "github.com/golang/freetype";
     fetch = {
@@ -179,7 +161,6 @@
       sha256 = "sha256-rOOsv1sNLbYEKnwXZtUlB2CXVkFANyzZy2E7w2QbnKQ=";
     };
   }
-  # 19
   {
     goPackagePath = "github.com/gosexy/gettext";
     fetch = {
@@ -189,7 +170,6 @@
       sha256 = "sha256-8U2oSi446U13c3uqcbg/14okypxKmckRuvWfZlGHVys=";
     };
   }
-  # 20
   {
     goPackagePath = "github.com/nfnt/resize";
     fetch = {
@@ -197,6 +177,33 @@
       url = "https://github.com/nfnt/resize";
       rev = "83c6a9932646f83e3267f353373d47347b6036b2";
       sha256 = "sha256-yvPV+HlDOyJsiwAcVHQkmtw8DHSXyw+cXHkigXm8rAA=";
+    };
+  }
+  {
+    goPackagePath = "github.com/youpy/go-wav";
+    fetch = {
+      type = "git";
+      url = "https://github.com/youpy/go-wav";
+      rev = "v0.3.2";
+      sha256 = "sha256-jNqXW3F3fcgjT47+d2MVXauWkA7+1KfYVu3ZZpRCTkM=";
+    };
+  }
+  {
+    goPackagePath = "github.com/zaf/g711";
+    fetch = {
+      type = "git";
+      url = "https://github.com/zaf/g711";
+      rev = "v1.2";
+      sha256 = "sha256-G+0cgGw/fcOUFVn32AeqUE0YjyOS82Z5MTcn6IANhCY=";
+    };
+  }
+  {
+    goPackagePath = "github.com/youpy/go-riff";
+    fetch = {
+      type = "git";
+      url = "https://github.com/youpy/go-riff";
+      rev = "v0.1.0";
+      sha256 = "sha256-d/3rkxDeRTPveZblArKc61gB4LJVV08n7g0THieuhx8=";
     };
   }
 ]
