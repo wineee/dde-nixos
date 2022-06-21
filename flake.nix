@@ -14,13 +14,20 @@
         pkgs = nixpkgs.legacyPackages.${system};
         deepinPkgs = import ./packages { inherit pkgs; };
         deepin = flake-utils.lib.flattenTree deepinPkgs;
+        deepinDbg = with pkgs.lib.attrsets; mapAttrs' (
+          name: value: nameValuePair
+            (name+"-dbg")
+            (value.override {
+              stdenv = pkgs.stdenvAdapters.keepDebugInfo pkgs.stdenv;
+            })
+        ) deepin;
       in
       rec {
         defaultPackage = pkgs.stdenv.mkDerivation {
           name = "deepin-meta";
           buildInputs = nixpkgs.lib.attrsets.attrValues deepin;
         };
-        packages = deepin;
+        packages = deepinDbg;
         devShells = builtins.mapAttrs (
           name: value: 
             pkgs.mkShell {
