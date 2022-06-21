@@ -1,7 +1,6 @@
 { stdenv
 , lib
 , fetchFromGitHub
-, fetchpatch
 , dtk
 , qt5integration
 , qt5platform-plugins
@@ -15,18 +14,17 @@
 , minizip
 , libzip
 , libarchive
-, gtest
 }:
 
 stdenv.mkDerivation rec {
   pname = "deepin-compressor";
-  version = "unstable-2022-02-20";
+  version = "5.12.6";
 
   src = fetchFromGitHub {
-    owner = "linuxdeepin";
+    owner = "wineee";
     repo = pname;
-    rev = "f38fbcc1d6db4de2c15450be163aa734b85eeb5d";
-    sha256 = "sha256-im1TXsuoLDM4BYfNpvg8yvARykuaIWnytmjzPMHqRrU=";
+    rev = "75f3d3fbdd3291613acd934472ccdccb1cb44daf";
+    sha256 = "sha256-8Bji+7ZHYVyQmMptm24tUuOSfWzssmHKiNka6ZBxRrQ=";
   };
 
   nativeBuildInputs = [
@@ -44,7 +42,6 @@ stdenv.mkDerivation rec {
     minizip
     libzip
     libarchive
-    gtest
   ];
 
   qtWrapperArgs = [
@@ -54,17 +51,7 @@ stdenv.mkDerivation rec {
 
   cmakeFlags = [
     "-DVERSION=${version}"
-    "-DLIBRARY_OUTPUT_PATH=${placeholder "out"}/lib"
-    "-DEXECUTABLE_OUTPUT_PATH=${placeholder "out"}/bin"
-    "-DHFILES_OUTPUT_PATH=${placeholder "out"}/include"
-  ];
-
-  patches = [
-    (fetchpatch {
-      url = "https://github.com/linuxdeepin/deepin-compressor/commit/c0a371d76f69bc92aedcdc0d49a590617399ce44.patch";
-      sha256 = "sha256-iD+QkhncKaCJ6z1ZR/1OqYQADaFdvo3HZNkybFcHwPg=";
-      name = "support_use_DCMAKE_INSTALL_PREFIX_flag_patch";
-    })
+    "-DUSE_TEST=OFF"
   ];
 
   fixPluginLoadPatch = ''
@@ -72,15 +59,7 @@ stdenv.mkDerivation rec {
       --replace "/usr/lib/" "$out/lib/"
   '';
 
-  fixInstallPatch = ''
-    substituteInPlace src/CMakeLists.txt \
-      --replace "/usr/share/applications/context-menus/)" "$out/share/applications/context-menus/)" \
-      --replace "/usr/share/deepin-manual/manual-assets/application/)" "$out/share/deepin-manual/manual-assets/application/)"
-    substituteInPlace CMakeLists.txt \
-      --replace "/usr/lib/deepin-compressor/plugins" "$out/lib/deepin-compressor/plugins"
-  '';
-
-  postPatch = fixPluginLoadPatch + fixInstallPatch;
+  postPatch = fixPluginLoadPatch;
 
   meta = with lib; {
     description = "A fast and lightweight application for creating and extracting archives";
