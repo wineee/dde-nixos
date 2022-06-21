@@ -29,6 +29,7 @@
 , poppler
 , polkit-qt
 , polkit
+, pcre
 , wrapQtAppsHook
 , wrapGAppsHook
 , lucenecpp
@@ -124,7 +125,7 @@ stdenv.mkDerivation rec {
     owner = "linuxdeepin";
     repo = pname;
     rev = version;
-    sha256 = "sha256-YfX1T6peoX9EttodTbsAAofUEOMacpTtdQb5gKdMaUE=";
+    sha256 = "sha256-/MK1oOvY7D4DOKMRO1h7cWjveKUtVBQOrW7r9l1wTcM=";
   };
 
   nativeBuildInputs = [
@@ -163,6 +164,7 @@ stdenv.mkDerivation rec {
     poppler
     polkit-qt
     polkit
+    pcre
 
     lucenecpp
     boost
