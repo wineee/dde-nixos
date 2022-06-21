@@ -27,7 +27,7 @@
           name = "deepin-meta";
           buildInputs = nixpkgs.lib.attrsets.attrValues deepin;
         };
-        packages = deepinDbg;
+        packages = deepin // deepinDbg;
         devShells = builtins.mapAttrs (
           name: value: 
             pkgs.mkShell {

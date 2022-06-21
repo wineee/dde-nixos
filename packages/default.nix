@@ -74,8 +74,6 @@ let
     deepin-screen-recorder = callPackage ./apps/deepin-screen-recorder { };
     deepin-clone = callPackage ./apps/deepin-clone { };
     deepin-shortcut-viewer = callPackage ./apps/deepin-shortcut-viewer { };
-    
-    qt5integration-debug = qt5integration.override { stdenv = pkgs.stdenvAdapters.keepDebugInfo pkgs.stdenv; };
   };
 in
 makeScope newScope packages
