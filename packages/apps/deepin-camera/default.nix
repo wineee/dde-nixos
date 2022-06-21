@@ -28,13 +28,13 @@ let
 in
 stdenv.mkDerivation rec {
   pname = "deepin-camera";
-  version = "1.3.9";
+  version = "1.4.1"; #"1.3.9";
 
   src = fetchFromGitHub {
     owner = "linuxdeepin";
     repo = pname;
     rev = version;
-    sha256 = "sha256-KkmZ/sN2rWOmBH3RELcdJnQ5PWOnKI/LYyFYUgcu9XQ=";
+    sha256 = "sha256-XEv/TBKDLMlE4JEIphKfOBmyo1pyhK8SlxDrclQQfTI=";
   };
 
   nativeBuildInputs = [
@@ -57,7 +57,7 @@ stdenv.mkDerivation rec {
     libv4l
     dde-api
   ] ++ (with gst_all_1 ; [
-    gstreamer
+    gstreamer.dev
     gst-plugins-base
   ]);
 
