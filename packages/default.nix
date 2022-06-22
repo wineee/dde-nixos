@@ -74,6 +74,7 @@ let
     deepin-screen-recorder = callPackage ./apps/deepin-screen-recorder { };
     deepin-clone = callPackage ./apps/deepin-clone { };
     deepin-shortcut-viewer = callPackage ./apps/deepin-shortcut-viewer { };
+    deepin-downloader = callPackage ./apps/deepin-downloader { };
     deepin-gomoku = callPackage ./apps/deepin-gomoku { };
     deepin-lianliankan = callPackage ./apps/deepin-lianliankan { };
   };
