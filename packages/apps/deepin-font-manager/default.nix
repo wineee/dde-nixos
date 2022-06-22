@@ -18,13 +18,13 @@
 
 stdenv.mkDerivation rec {
   pname = "deepin-font-manager";
-  version = "5.9.6";
+  version = "5.9.11";
 
   src = fetchFromGitHub {
     owner = "linuxdeepin";
     repo = pname;
     rev = version;
-    sha256 = "sha256-C5Wj4s5JG9k2BKMKEMS6WO2bYU6G7xwWYk4lxUzjkHA=";
+    sha256 = "sha256-S8WhHNNggutwVNrFnxnrU50B9QNmzt7cMPgH5mi0I18=";
   };
 
   nativeBuildInputs = [
@@ -43,6 +43,8 @@ stdenv.mkDerivation rec {
     freetype
     gtest
   ];
+
+  cmakeFlags = [ "-DVERSION=${version}" ];
 
   qtWrapperArgs = [
     "--prefix QT_PLUGIN_PATH : ${qt5integration}/plugins"
