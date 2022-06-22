@@ -75,6 +75,7 @@ let
     deepin-clone = callPackage ./apps/deepin-clone { };
     deepin-shortcut-viewer = callPackage ./apps/deepin-shortcut-viewer { };
     deepin-gomoku = callPackage ./apps/deepin-gomoku { };
+    deepin-lianliankan = callPackage ./apps/deepin-lianliankan { };
   };
 in
 makeScope newScope packages
