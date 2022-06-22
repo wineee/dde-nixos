@@ -14,20 +14,26 @@
 , qtx11extras
 , wrapQtAppsHook
 , gsettings-qt
+, elfutils
 , ffmpeg
 , ffmpegthumbnailer
 , mpv
 , xorg
+, pcre
 , libdvdread
 , libdvdnav
+, libunwind
 , libva
+, zstd
 , glib
+, gst_all_1
 , gsettings-desktop-schemas
 , wrapGAppsHook
 , gtest
 , libpulseaudio
 , cudaSupport ? false
 , cudaPackages
+, breakpointHook
 }:
 let
   replaceLibPath = filePath: ''
@@ -44,12 +50,14 @@ let
 in
 stdenv.mkDerivation rec {
   pname = "deepin-movie-reborn";
+  # version = "5.10.2";
   version = "5.9.14";
 
   src = fetchFromGitHub {
     owner = "linuxdeepin";
     repo = pname;
     rev = version;
+    # sha256 = "sha256-247dOKfNq8A3Ngxshy6q9mlgy32kpmpAOS/I2u0Vgzo=";
     sha256 = "sha256-crTAXTuStA3euPvq/h97wzuG+wTz83biqXgvxkERLRg=";
   };
 
@@ -68,18 +76,23 @@ stdenv.mkDerivation rec {
     qtdbusextended
     qtmpris
     gsettings-qt
+    elfutils.dev
     ffmpeg
     ffmpegthumbnailer
     xorg.libXtst
     xorg.libXdmcp
+    pcre.dev
     libdvdread
     libdvdnav
+    libunwind
     libva
+    zstd.dev
     mpv
     gsettings-desktop-schemas
     gtest
     xorg.xcbproto
     libpulseaudio
+    gst_all_1.gstreamer
   ] ++ lib.optional cudaSupport [ cudaPackages.cudatoolkit ];
 
   patches = [
@@ -92,11 +105,8 @@ stdenv.mkDerivation rec {
     "--prefix XDG_DATA_DIRS : ${placeholder "out"}/share/gsettings-schemas/${pname}-${version}"
   ];
 
-  #makeFlags =  [ "CFLAGS+=-Og" "CFLAGS+=-ggdb" ];
-
   cmakeFlags = [
     "-DVERSION=${version}"
-    #"-DCMAKE_BUILD_TYPE=Debug"
   ];
 
   fixCodePatch = ''
