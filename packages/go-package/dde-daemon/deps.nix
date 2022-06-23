@@ -197,5 +197,31 @@
       sha256 = "sha256-Ji13ckPyZUBAovhK2hRHgf2LB1ieglX/XrIJBxVcsXc=";
     };
   }
+  {
+    goPackagePath = "github.com/youpy/go-wav";
+    fetch = {
+      type = "git";
+      url = "https://github.com/youpy/go-wav";
+      rev = "v0.3.2";
+      sha256 = "sha256-jNqXW3F3fcgjT47+d2MVXauWkA7+1KfYVu3ZZpRCTkM=";
+    };
+  }
+  {
+    goPackagePath = "github.com/zaf/g711";
+    fetch = {
+      type = "git";
+      url = "https://github.com/zaf/g711";
+      rev = "v1.2";
+      sha256 = "sha256-G+0cgGw/fcOUFVn32AeqUE0YjyOS82Z5MTcn6IANhCY=";
+    };
+  }
+  {
+    goPackagePath = "github.com/youpy/go-riff";
+    fetch = {
+      type = "git";
+      url = "https://github.com/youpy/go-riff";
+      rev = "v0.1.0";
+      sha256 = "sha256-d/3rkxDeRTPveZblArKc61gB4LJVV08n7g0THieuhx8=";
+    };
+  }
 ]
-
