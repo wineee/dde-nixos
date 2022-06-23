@@ -64,7 +64,7 @@ let
     deepin-calculator = callPackage ./apps/deepin-calculator { };
     deepin-font-manager = callPackage ./apps/deepin-font-manager { };
     deepin-system-monitor = callPackage ./apps/deepin-system-monitor { };
-    #dmarked = callPackage ./apps/dmarked { };
+    dmarked = callPackage ./apps/dmarked { };
     deepin-picker = callPackage ./apps/deepin-picker { };
     deepin-draw = callPackage ./apps/deepin-draw { };
     dde-control-center = callPackage ./apps/dde-control-center { };

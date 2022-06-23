@@ -16,15 +16,16 @@ stdenv.mkDerivation rec {
   version = "0.2.0";
 
   src = fetchFromGitHub {
-    owner = "wineee";
+    owner = pname;
     repo = pname;
-    rev = "v${version}";
-    sha256 = "sha256-0Zj5CmrvSBaYdfr82/mSDsh75uupZvqLODwKOYNe83c=";
+    fetchSubmodules = true;
+    rev = "d3eb1ed77a0b1f8af0a7f2ce4c24226925755592";
+    sha256 = "sha256-d3oTzNC/h4RZqu7Q7PTCtop79+EHeypp8vYenJL9YcE=";
   };
 
   nativeBuildInputs = [
     qmake
-    #qttools
+    qttools
     pkgconfig
     wrapQtAppsHook
   ];
@@ -40,20 +41,13 @@ stdenv.mkDerivation rec {
   ];
 
   qmakeFlags = [
-    "BINDIR=${placeholder "out"}/bin"
-    "APPDIR=${placeholder "out"}/share/applications"
-    "DSRDIR=${placeholder "out"}/share/dmarked"
+    "PREFIX=${placeholder "out"}"
+    "LIBS_PREFIX=${placeholder "out"}"
   ];
 
-  postPatch = ''
-    #substituteInPlace CMakeLists.txt \
-    #  --replace "set(CMAKE_INSTALL_PREFIX /usr)" "set(CMAKE_INSTALL_PREFIX $out)" \
-    #  --replace "/usr/share/deepin-manual/manual-assets/application/)" "share/deepin-manual/manual-assets/application/)"
-  '';
-
   meta = with lib; {
-    description = "An easy to use calculator for ordinary users";
-    homepage = "https://github.com/linuxdeepin/deepin-calculator";
+    description = "dtk based markdown editor";
+    homepage = "https://github.com/DMarked/DMarked";
     license = licenses.gpl3Plus;
     platforms = platforms.linux;
   };
