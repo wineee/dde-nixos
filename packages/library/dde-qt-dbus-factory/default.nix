@@ -35,6 +35,11 @@ stdenv.mkDerivation rec {
     "LIB_INSTALL_DIR=${placeholder "out"}/lib"
   ];
 
+  postPatch = ''
+    substituteInPlace libdframeworkdbus/libdframeworkdbus.pro \
+     --replace "/usr" ""
+  '';
+
   meta = with lib; {
     description = "Repo of auto-generated D-Bus source code which DDE used";
     homepage = "https://github.com/linuxdeepin/dde-qt-dbus-factory";
