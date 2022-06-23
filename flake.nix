@@ -31,8 +31,15 @@
         devShells = builtins.mapAttrs (
           name: value: 
             pkgs.mkShell {
-              nativeBuildInputs = deepin.${name}.nativeBuildInputs;
-              buildInputs = deepin.${name}.buildInputs ++ deepin.${name}.propagatedBuildInputs;
+              nativeBuildInputs = [ pkgs.qtcreator ]
+                      ++ deepin.${name}.nativeBuildInputs;
+              buildInputs = deepin.${name}.buildInputs
+                      ++ deepin.${name}.propagatedBuildInputs;
+              shellHook = ''
+                # export QT_LOGGING_RULES=*.debug=true
+                export QT_PLUGIN_PATH="$QT_PLUGIN_PATH:${deepin.qt5integration}/plugins"
+                export QT_QPA_PLATFORM_PLUGIN_PATH="${deepin.qt5platform-plugins}/plugins"
+              '';
            }
         ) deepin;
       }
