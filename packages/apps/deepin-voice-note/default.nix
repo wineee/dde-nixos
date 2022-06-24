@@ -24,8 +24,8 @@ stdenv.mkDerivation rec {
   src = fetchFromGitHub {
     owner = "wineee";
     repo = pname;
-    rev = "09dedc34a28d8f8a49994f2042ccd4bdb215f0d5";
-    sha256 = "sha256-Gn8bX1xh7jyjldLygM2L/a8zKENLxShVicZlrSrHBR4=";
+    rev = version;
+    sha256 = "sha256-TYKX3FcvVBKq3ijVIpbPGbfC6PhfDgUXyAeEaWZahlA=";
   };
 
   nativeBuildInputs = [
@@ -46,6 +46,8 @@ stdenv.mkDerivation rec {
   ];
 
   cmakeFlags = [ "-DVERSION=${version}" ];
+
+  NIX_CFLAGS_COMPILE = "-I${dde-qt-dbus-factory}/include/libdframeworkdbus-2.0";
 
   qtWrapperArgs = [
     "--prefix QT_PLUGIN_PATH : ${qt5integration}/plugins"
