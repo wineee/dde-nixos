@@ -1,6 +1,8 @@
 { stdenv
 , lib
 , fetchFromGitHub
+, getShebangsPatchFrom
+, getPatchFrom
 , dtk
 , qt5integration
 , qt5platform-plugins
@@ -38,22 +40,6 @@
 , glib
 }:
 let
-  rpstr = a: b: " --replace \"${a}\" \"${b}\"";
-
-  rpstrL = l: if lib.length l == 2 then rpstr (lib.head l) (lib.last l) else (throw "input must be a 2-tuple");
-
-  rpfile = filePath: replaceLists:
-    "substituteInPlace ${filePath}" + lib.concatMapStrings rpstrL replaceLists;
-
-  commonRp = [ [ "/usr" "$out" ] ];
-
-  getPatchFrom = x: lib.pipe x [
-    (x: lib.mapAttrs (name: value: value ++ commonRp) x)
-    (x: lib.mapAttrsToList (name: value: rpfile name value) x)
-    (lib.concatStringsSep "\n")
-    (s: s + "\n")
-  ];
-
   patchList = {
     ## BUILD
     "src/dde-file-manager/translate_ts2desktop.sh" = [
@@ -101,8 +87,6 @@ let
     "src/dde-file-manager/dde-file-manager.desktop" = [ ];
     "src/dde-file-manager/dde-open.desktop" = [ ];
   };
-
-  getShebangsPatchFrom = x: "patchShebangs " + lib.concatStringsSep " " x + "\n";
 
   shebangsList = [
     "src/dde-file-manager-lib/generate_translations.sh"
