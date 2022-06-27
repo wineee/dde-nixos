@@ -53,6 +53,7 @@ let
     deepin-anything = callPackage ./misc/deepin-anything { };
     deepin-wallpapers = callPackage ./misc/deepin-wallpapers { };
     deepin-sound-theme = callPackage ./misc/deepin-sound-theme { };
+    deepin-gtk-theme = callPackage ./misc/deepin-gtk-theme { };
 
     #### Go Packages
     go-dbus-factory = callPackage ./go-package/go-dbus-factory { };
