@@ -61,6 +61,11 @@ stdenv.mkDerivation rec {
     gst-plugins-base
   ]);
 
+  NIX_CFLAGS_COMPILE = [
+    "-I${gst_all_1.gstreamer.dev}/include/gstreamer-1.0"
+    "-I${gst_all_1.gst-plugins-base.dev}/include/gstreamer-1.0"
+  ];
+
   qtWrapperArgs = [
     "--prefix QT_PLUGIN_PATH : ${qt5integration}/plugins"
     "--prefix QT_QPA_PLATFORM_PLUGIN_PATH : ${qt5platform-plugins}/plugins"
