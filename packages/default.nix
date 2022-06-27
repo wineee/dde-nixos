@@ -63,7 +63,7 @@ let
     deepin-desktop-schemas = callPackage ./go-package/deepin-desktop-schemas { };
     dde-daemon = callPackage ./go-package/dde-daemon { };
     deepin-pw-check = callPackage ./go-package/deepin-pw-check { };
-    #startdde
+    startdde = callPackage ./go-package/startdde { };
 
     #### Dtk Application
     dde-calendar = callPackage ./apps/dde-calendar { };
