@@ -27,19 +27,20 @@
 , util-linux
 , libselinux
 , libsepol
+, networkmanager-qt
 , glib
 , gtest
 }:
 
 stdenv.mkDerivation rec {
   pname = "dde-control-center";
-  version = "unstable-2022-04-26";
+  version = "unstable-2022-06-24";
 
   src = fetchFromGitHub {
     owner = "linuxdeepin";
     repo = pname;
-    rev = "5d3beacccb64f5f0806071041d1d9b0e7cd1aa85";
-    sha256 = "sha256-DEB4tlc7FV1+dxb8vyIseLEuaK+AEFfZdyfV2US2oyU=";
+    rev = "62e3b7a2ff62574442170075280f764320700f1f";
+    sha256 = "sha256-J/Zv9Qq562TQUGy3dt8+e9VuBmazvHRpxzQO3z6A8RE=";
   };
 
   nativeBuildInputs = [
@@ -71,6 +72,7 @@ stdenv.mkDerivation rec {
     util-linux
     libselinux
     libsepol
+    networkmanager-qt
     gtest
   ];
 
@@ -116,7 +118,10 @@ stdenv.mkDerivation rec {
 
   cmakeFlags = [
     "-DVERSION=${version}"
-    "-DDISABLE_AUTHENTICATION=true"
+    "-DDISABLE_AUTHENTICATION=YES"
+    "-DDISABLE_ACTIVATOR=YES"
+    "-DDISABLE_SYS_UPDATE=YES" 
+    "-DDISABLE_RECOVERY=YES"
     "-DCMAKE_INSTALL_LIBDIR=lib"
     "-DINCLUDE_INSTALL_DIR=include"
     #"-DDCMAKE_INSTALL_COMPONENT=false"
