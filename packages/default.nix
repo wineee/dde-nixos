@@ -54,6 +54,7 @@ let
     deepin-wallpapers = callPackage ./misc/deepin-wallpapers { };
     deepin-sound-theme = callPackage ./misc/deepin-sound-theme { };
     deepin-gtk-theme = callPackage ./misc/deepin-gtk-theme { };
+    deepin-turbo = callPackage ./misc/deepin-turbo { };
 
     #### Go Packages
     go-dbus-factory = callPackage ./go-package/go-dbus-factory { };
