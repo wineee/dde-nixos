@@ -68,6 +68,7 @@ let
     dde-calendar = callPackage ./apps/dde-calendar { };
     dde-clipboard = callPackage ./apps/dde-clipboard { };
     dde-dock = callPackage ./apps/dde-dock { };
+    dde-device-formatter = callPackage ./apps/dde-device-formatter { };
     deepin-compressor = callPackage ./apps/deepin-compressor { };
     deepin-terminal = callPackage ./apps/deepin-terminal { };
     deepin-editor = callPackage ./apps/deepin-editor { };
