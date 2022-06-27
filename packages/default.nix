@@ -39,12 +39,7 @@ let
     qt5platform-plugins = callPackage ./library/qt5platform-plugins { };
     qt5integration = callPackage ./library/qt5integration { };
     docparser = callPackage ./library/docparser { };
-    dtk = [
-      dtkcommon
-      dtkcore
-      dtkgui
-      dtkwidget
-    ];
+    dtk = [ dtkcommon dtkcore dtkgui dtkwidget ];
 
     ## TMP
     lucenecpp = callPackage ./library/lucenecpp { };
@@ -88,6 +83,7 @@ let
     deepin-picker = callPackage ./apps/deepin-picker { };
     deepin-draw = callPackage ./apps/deepin-draw { };
     dde-control-center = callPackage ./apps/dde-control-center { };
+    dde-launcher = callPackage ./apps/dde-launcher { };
     deepin-camera = callPackage ./apps/deepin-camera { };
     dde-file-manager = callPackage ./apps/dde-file-manager { };
     deepin-devicemanager = callPackage ./apps/deepin-devicemanager { };
