@@ -20,7 +20,6 @@ let
       (concatStringsSep "\n")
       (s: s + "\n")
     ];
-
   };
 
   packages = self: with self; functions // {
@@ -55,6 +54,7 @@ let
     deepin-sound-theme = callPackage ./misc/deepin-sound-theme { };
     deepin-gtk-theme = callPackage ./misc/deepin-gtk-theme { };
     deepin-turbo = callPackage ./misc/deepin-turbo { };
+    dde-session-shell = callPackage ./misc/dde-session-shell { };
 
     #### Go Packages
     go-dbus-factory = callPackage ./go-package/go-dbus-factory { };
