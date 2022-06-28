@@ -23,10 +23,6 @@
         ) deepin;
       in
       rec {
-        defaultPackage = pkgs.stdenv.mkDerivation {
-          name = "deepin-meta";
-          buildInputs = nixpkgs.lib.attrsets.attrValues deepin;
-        };
         packages = deepin // deepinDbg;
         devShells = builtins.mapAttrs (
           name: value: 
@@ -89,6 +85,38 @@
               systemd.packages = [ pkgs.deepin.dde-daemon ];
             })
           ];
+      } // {
+      nixosConfigurations.vm = nixpkgs.lib.nixosSystem {
+        inherit system;
+        modules = [{
+          imports = [ "${inputs.nixpkgs}/nixos/modules/virtualisation/qemu-vm.nix" ];
+          environment.enableDebugInfo = true;
+          services.xserver = {
+            enable = true;
+            desktopManager.deepin = {
+              enable = true;
+              debug = true;
+            };
+          };
+          users.users.test = {
+            isNormalUser = true;
+            uid = 1000;
+            extraGroups = [ "wheel" "networkmanager" ];
+            password = "test";
+          };
+          virtualisation = {
+            qemu.options = [ "-device intel-hda -device hda-duplex" ];
+            memorySize = 2048;
+            diskSize = 8192;
+          };
+          system.stateVersion = "22.11";
+        }];
+      };
+      packages.${system}.default = self.nixosConfigurations.vm.config.system.build.vm;
+      apps.${system}.default = {
+        type = "app";
+        program = "${self.packages.${system}.default}/bin/run-nixos-vm";
       };
     };
+  };
 }
