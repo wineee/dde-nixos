@@ -56,6 +56,7 @@ let
     deepin-turbo = callPackage ./misc/deepin-turbo { };
     dde-session-shell = callPackage ./misc/dde-session-shell { };
     dde-session-ui = callPackage ./misc/dde-session-ui { };
+    dde-account-faces = callPackage ./misc/dde-account-faces { };
 
     #### Go Packages
     go-dbus-factory = callPackage ./go-package/go-dbus-factory { };
