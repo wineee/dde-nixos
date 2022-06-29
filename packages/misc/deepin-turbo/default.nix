@@ -10,9 +10,9 @@
 let
   ## TODO src/launcherlib/booster.cpp ...
   patchList = {
-    "src/booster-dtkwidget/CMakeLists.txt" = [];
-    "src/booster-desktop/CMakeLists.txt" = [];
-    "src/booster-generic/CMakeLists.txt" = [];
+    "src/booster-dtkwidget/CMakeLists.txt" = [ ];
+    "src/booster-desktop/CMakeLists.txt" = [ ];
+    "src/booster-generic/CMakeLists.txt" = [ ];
   };
 in
 stdenv.mkDerivation rec {

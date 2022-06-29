@@ -8,18 +8,18 @@ let
     getShebangsPatchFrom = x: "patchShebangs " + concatStringsSep " " x + "\n";
 
     getPatchFrom = let
-      rpstr = a: b: " --replace \"${a}\" \"${b}\"";
-      rpstrL = l: if length l == 2 then rpstr (head l) (last l) else (throw "input must be a 2-tuple");
-      rpfile = filePath: replaceLists:
-        "substituteInPlace ${filePath}" + concatMapStrings rpstrL replaceLists;
-      commonRp = [ [ "/usr" "$out" ] ];
-    in
-    x: pipe x [
-      (x: mapAttrs (name: value: value ++ commonRp) x)
-      (x: mapAttrsToList (name: value: rpfile name value) x)
-      (concatStringsSep "\n")
-      (s: s + "\n")
-    ];
+        rpstr = a: b: " --replace \"${a}\" \"${b}\"";
+        rpstrL = l: if length l == 2 then rpstr (head l) (last l) else (throw "input must be a 2-tuple");
+        rpfile = filePath: replaceLists:
+          "substituteInPlace ${filePath}" + concatMapStrings rpstrL replaceLists;
+        commonRp = [ [ "/usr" "$out" ] ];
+      in
+      x: pipe x [
+        (x: mapAttrs (name: value: value ++ commonRp) x)
+        (x: mapAttrsToList (name: value: rpfile name value) x)
+        (concatStringsSep "\n")
+        (s: s + "\n")
+      ];
   };
 
   packages = self: with self; functions // {

@@ -12,8 +12,8 @@ let
   patchList = {
     "CMakeLists.txt" = [
       # TODO
-      ["/usr/include/KWaylandServer" "${kwayland.dev}/include/KWaylandServer"]
-      ["/usr/local/include/KWaylandServer" ""]
+      [ "/usr/include/KWaylandServer" "${kwayland.dev}/include/KWaylandServer" ]
+      [ "/usr/local/include/KWaylandServer" "" ]
     ];
     "configures/CMakeLists.txt" = [
       [ "/etc/xdg" "$out/etc/xdg" ]

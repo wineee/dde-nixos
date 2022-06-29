@@ -19,7 +19,7 @@
 let
   patchList = {
     ## INSTALL
-    "CMakeLists.txt" = [ ["/etc" "$out/etc"] ];
+    "CMakeLists.txt" = [ [ "/etc" "$out/etc" ] ];
     "cmake/DdeSessionShellConfig.cmake" = [ ];
     ## TODO patch code
   };

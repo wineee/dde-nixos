@@ -31,7 +31,7 @@ stdenv.mkDerivation rec {
     wrapQtAppsHook
   ];
 
-  buildInputs = [ 
+  buildInputs = [
     dtk
     qtwebengine
     qtwebsockets

@@ -88,7 +88,7 @@
       rev = "v0.3.0";
       sha256 = "sha256-T753/EiD5Cpk6H2JFhd+s1gFvpNptG2XlEHxZF6dQaw=";
     };
-  }  
+  }
   {
     goPackagePath = "github.com/pmezard/go-difflib";
     fetch = {

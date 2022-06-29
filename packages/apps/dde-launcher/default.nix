@@ -37,7 +37,7 @@ stdenv.mkDerivation rec {
     wrapQtAppsHook
   ];
 
-  buildInputs = [ 
+  buildInputs = [
     dtk
     dde-qt-dbus-factory
     qtx11extras
@@ -53,7 +53,7 @@ stdenv.mkDerivation rec {
   ];
 
   postPatch = getPatchFrom patchList;
-  
+
   meta = with lib; {
     description = "Deepin desktop-environment - Launcher module";
     homepage = "https://github.com/linuxdeepin/dde-launcher";

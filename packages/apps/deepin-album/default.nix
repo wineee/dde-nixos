@@ -26,7 +26,7 @@ stdenv.mkDerivation rec {
     owner = "linuxdeepin";
     repo = pname;
     rev = version;
-    sha256 = "sha256-F3s+smjKwY2ypGVsuA5OwR+a+ZnC7f4C7zpT3bTxtpw=";  
+    sha256 = "sha256-F3s+smjKwY2ypGVsuA5OwR+a+ZnC7f4C7zpT3bTxtpw=";
   };
 
   nativeBuildInputs = [ cmake pkgconfig qttools wrapQtAppsHook ];
