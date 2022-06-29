@@ -69,6 +69,7 @@ let
     startdde = callPackage ./go-package/startdde { };
 
     #### Dtk Application
+    dde-kwin = callPackage ./apps/dde-kwin { };
     dde-calendar = callPackage ./apps/dde-calendar { };
     dde-clipboard = callPackage ./apps/dde-clipboard { };
     dde-dock = callPackage ./apps/dde-dock { };
