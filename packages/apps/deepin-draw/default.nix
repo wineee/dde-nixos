@@ -47,6 +47,7 @@ stdenv.mkDerivation rec {
   '';
 
   postPatch = fixInstallPatch;
+  #separateDebugInfo = true;
 
   meta = with lib; {
     description = "An easy to use calculator for ordinary users";
