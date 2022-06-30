@@ -7,7 +7,8 @@ let
   functions = with pkgs.lib; {
     getShebangsPatchFrom = x: "patchShebangs " + concatStringsSep " " x + "\n";
 
-    getPatchFrom = let
+    getPatchFrom =
+      let
         rpstr = a: b: " --replace \"${a}\" \"${b}\"";
         rpstrL = l: if length l == 2 then rpstr (head l) (last l) else (throw "input must be a 2-tuple");
         rpfile = filePath: replaceLists:
