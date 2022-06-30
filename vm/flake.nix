@@ -23,8 +23,8 @@
         };
         virtualisation = {
           qemu.options = [ "-device intel-hda -device hda-duplex" ];
-          memorySize = 2048;
-          diskSize = 8192;
+          memorySize = 4096;
+          diskSize = 16384;
         };
         system.stateVersion = "22.11";
       }];
