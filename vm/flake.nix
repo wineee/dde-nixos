@@ -6,11 +6,11 @@
       modules = [{
         imports = [ "${nixpkgs}/nixos/modules/virtualisation/qemu-vm.nix" ];
         environment.enableDebugInfo = true;
-        displayManager = {
-          sddm.enable = true;
-        };
         services.xserver = {
           enable = true;
+          displayManager = {
+            lightdm.enable = true;
+          };
           desktopManager.plasma5 = {
             enable = true;
           };
