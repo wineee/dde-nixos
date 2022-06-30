@@ -1,13 +1,9 @@
 {
-  inputs = {
-    nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
-    dde-nixos = {
-      url = "..";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-  };
+  inputs.dde-nixos.url = "..";
 
-  outputs = inputs@{ self, nixpkgs, dde-nixos }: {
+  outputs = inputs@{ self, dde-nixos }: let 
+    nixpkgs = dde-nixos.inputs.nixpkgs;
+  in {
     nixosConfigurations.vm = nixpkgs.lib.nixosSystem {
       system = "x86_64-linux";
       modules = [{

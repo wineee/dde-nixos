@@ -3,18 +3,16 @@
     "dde-nixos": {
       "inputs": {
         "flake-utils": "flake-utils",
-        "nixpkgs": [
-          "nixpkgs"
-        ]
+        "nixpkgs": "nixpkgs"
       },
       "locked": {
         "lastModified": 0,
-        "narHash": "sha256-/2WJ/4LS/foN9Twd/t6rWjlFW6qD96iKmjZB3lRQQw4=",
-        "path": "/nix/store/18w71fhwz07mb2f4hmd3d7ncwnxkcz5h-source",
+        "narHash": "sha256-KKcxdrjf3VLnPMvK3OIbinTzJn1FTtzqibq7wkTXbP0=",
+        "path": "/nix/store/9sql8gp58dxzscc18kpncrf48fjnxfi2-source",
         "type": "path"
       },
       "original": {
-        "path": "/nix/store/18w71fhwz07mb2f4hmd3d7ncwnxkcz5h-source",
+        "path": "/nix/store/9sql8gp58dxzscc18kpncrf48fjnxfi2-source",
         "type": "path"
       }
     },
@@ -51,8 +49,7 @@
     },
     "root": {
       "inputs": {
-        "dde-nixos": "dde-nixos",
-        "nixpkgs": "nixpkgs"
+        "dde-nixos": "dde-nixos"
       }
     }
   },
