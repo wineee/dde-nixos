@@ -41,56 +41,54 @@
           #       '';
           #    }
           # ) deepinPkgs;
-        }
-      ) // {
 
-      overlays.default = final: prev: {
-        dde = (import ./packages { pkgs = prev.pkgs; });
-      };
+#          overlays.default = final: prev: {
+#            repoOverrides = { dde = (import ./packages { pkgs = prev.pkgs; }); };
+#          };
 
-      nixosModules.default = { config, lib, pkgs, ... }:
-        with lib;
-        let
-          xcfg = config.services.xserver;
-          cfg = xcfg.desktopManager.deepin;
-        in
-        {
-          options = {
-            services.xserver.desktopManager.deepin.enable = mkOption {
-              type = types.bool;
-              default = false;
-              description = "Enable Deepin desktop manager";
+          nixosModules = { config, lib, pkgs, ... }:
+            with lib;
+            let
+              xcfg = config.services.xserver;
+              cfg = xcfg.desktopManager.deepin;
+            in
+            {
+              options = {
+                services.xserver.desktopManager.deepin.enable = mkOption {
+                  type = types.bool;
+                  default = false;
+                  description = "Enable Deepin desktop manager";
+                };
+
+                #services.deepin.dde-daemon = {
+                #  enable = mkEnableOption "dde daemon";
+                #};
+                ## TODO: deepin-anything
+              };
+
+              config = mkMerge [
+
+                ### TODO
+                (mkIf cfg.enable {
+                  #services.xserver.displayManager.sessionPackages = [ pkgs.deepin.core ];
+                  #services.xserver.displayManager.lightdm.theme = mkDefault "deepin";
+                  #services.accounts-daemon.enable = true;
+
+                  environment.pathsToLink = [ "/share" ];
+                  environment.systemPackages =
+                    let
+                      deepinPkgs = with packages; [
+                        deepin-terminal
+                      ];
+                    in
+                    deepinPkgs;
+                })
+
+                #(mkIf config.services.deepin.dde-daemon.enable {
+                #  environment.systemPackages = [ pkgs.deepin.dde-daemon ];
+                #  systemd.packages = [ pkgs.deepin.dde-daemon ];
+                #})
+              ];
             };
-
-            #services.deepin.dde-daemon = {
-            #  enable = mkEnableOption "dde daemon";
-            #};
-            ## TODO: deepin-anything
-          };
-
-          config = mkMerge [
-
-            ### TODO
-            (mkIf cfg.enable {
-              #services.xserver.displayManager.sessionPackages = [ pkgs.deepin.core ];
-              #services.xserver.displayManager.lightdm.theme = mkDefault "deepin";
-              services.accounts-daemon.enable = true;
-
-              environment.pathsToLink = [ "/share" ];
-              environment.systemPackages =
-                let
-                  deepinPkgs = with pkgs.dde; [
-                    deepin-terminal
-                  ];
-                in
-                deepinPkgs;
-            })
-
-            #(mkIf config.services.deepin.dde-daemon.enable {
-            #  environment.systemPackages = [ pkgs.deepin.dde-daemon ];
-            #  systemd.packages = [ pkgs.deepin.dde-daemon ];
-            #})
-          ];
-        };
-    };
+        });
 }
