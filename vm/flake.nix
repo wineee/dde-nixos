@@ -7,8 +7,8 @@
     nixosConfigurations.vm = nixpkgs.lib.nixosSystem {
       system = "x86_64-linux";
       modules = [
-        dde-nixos.nixosModules.default
-        
+        dde-nixos #.nixosModules.default
+
         {
         imports = [ "${nixpkgs}/nixos/modules/virtualisation/qemu-vm.nix" ];
         environment.enableDebugInfo = true;

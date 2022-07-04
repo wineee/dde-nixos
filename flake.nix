@@ -12,36 +12,36 @@
     flake-utils.lib.eachSystem [ "x86_64-linux" ] (system:
       let
         pkgs = nixpkgs.legacyPackages.${system};
-        deepinPkgs = import ./packages { inherit pkgs; };
-        deepin = flake-utils.lib.flattenTree deepinPkgs;
-        deepinDbg = with pkgs.lib.attrsets; mapAttrs' (
+        deepinScope = import ./packages { inherit pkgs; };
+        deepinPkgs = flake-utils.lib.flattenTree deepinScope;
+        deepinPkgsDbg = with pkgs.lib.attrsets; mapAttrs' (
           name: value: nameValuePair
             (name+"-dbg")
             (value.override {
               stdenv = pkgs.stdenvAdapters.keepDebugInfo pkgs.stdenv;
             })
-        ) deepin;
+        ) deepinPkgs;
       in
       rec {
-        packages = deepin // deepinDbg;
+        packages = deepinPkgs // deepinPkgsDbg;
         devShells = builtins.mapAttrs (
           name: value: 
             pkgs.mkShell {
               nativeBuildInputs = [ pkgs.qtcreator ]
-                      ++ deepin.${name}.nativeBuildInputs;
-              buildInputs = deepin.${name}.buildInputs
-                      ++ deepin.${name}.propagatedBuildInputs;
+                      ++ deepinPkgs.${name}.nativeBuildInputs;
+              buildInputs = deepinPkgs.${name}.buildInputs
+                      ++ deepinPkgs.${name}.propagatedBuildInputs;
               shellHook = ''
                 # export QT_LOGGING_RULES=*.debug=true
-                export QT_PLUGIN_PATH="$QT_PLUGIN_PATH:${deepin.qt5integration}/plugins"
-                export QT_QPA_PLATFORM_PLUGIN_PATH="${deepin.qt5platform-plugins}/plugins"
+                export QT_PLUGIN_PATH="$QT_PLUGIN_PATH:${deepinPkgs.qt5integration}/plugins"
+                export QT_QPA_PLATFORM_PLUGIN_PATH="${deepinPkgs.qt5platform-plugins}/plugins"
               '';
            }
-        ) deepin;
+        ) deepinPkgs;
       }
     ) // {
       overlays.default = final: prev: {
-        deepin = (import ./packages { pkgs = prev.pkgs; });
+        dde = (import ./packages { pkgs = prev.pkgs; });
       };
 
       nixosModules.default = { config, lib, pkgs, ... }:
@@ -52,7 +52,7 @@
         in
         {
           options = {
-            services.xserver.desktopManager.deepin.enable = mkOption {
+            services.xserver.desktopManager.dde.enable = mkOption {
               type = types.bool;
               default = false;
               description = "Enable Deepin desktop manager";
@@ -68,7 +68,7 @@
 
             ### TODO
             (mkIf cfg.enable {
-              services.xserver.displayManager.sessionPackages = [ pkgs.deepin.core ];
+              #services.xserver.displayManager.sessionPackages = [ pkgs.deepin.core ];
               services.xserver.displayManager.lightdm.theme = mkDefault "deepin";
               services.accounts-daemon.enable = true;
 
