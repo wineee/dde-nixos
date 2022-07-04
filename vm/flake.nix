@@ -6,7 +6,10 @@
   in {
     nixosConfigurations.vm = nixpkgs.lib.nixosSystem {
       system = "x86_64-linux";
-      modules = [{
+      modules = [
+        dde-nixos.nixosModules.default
+        
+        {
         imports = [ "${nixpkgs}/nixos/modules/virtualisation/qemu-vm.nix" ];
         environment.enableDebugInfo = true;
         services.xserver = {
@@ -15,6 +18,9 @@
             lightdm.enable = true;
           };
           desktopManager.plasma5 = {
+            enable = true;
+          };
+          desktopManager.dde = {
             enable = true;
           };
         };
