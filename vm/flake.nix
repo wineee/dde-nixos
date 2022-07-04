@@ -7,7 +7,7 @@
     nixosConfigurations.vm = nixpkgs.lib.nixosSystem {
       system = "x86_64-linux";
       modules = [
-        dde-nixos #.nixosModules.default
+        dde-nixos.nixosModules.default
 
         {
         imports = [ "${nixpkgs}/nixos/modules/virtualisation/qemu-vm.nix" ];
@@ -20,7 +20,7 @@
           desktopManager.plasma5 = {
             enable = true;
           };
-          desktopManager.dde = {
+          desktopManager.deepin = {
             enable = true;
           };
         };
