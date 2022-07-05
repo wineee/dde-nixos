@@ -15,15 +15,13 @@
           pkgs = nixpkgs.legacyPackages.${system};
           deepinScope = import ./packages { inherit pkgs; };
           deepinPkgs = flake-utils.lib.flattenTree deepinScope;
-          deepinPkgsDbg = with pkgs.lib.attrsets; mapAttrs'
-            (
-              name: value: nameValuePair
+          getDbgVersion = name: value:
+              (pkgs.lib.attrsets.nameValuePair
                 (name + "-dbg")
                 (value.override {
                   stdenv = pkgs.stdenvAdapters.keepDebugInfo pkgs.stdenv;
-                })
-            )
-            deepinPkgs;
+                }));
+          deepinPkgsDbg = with pkgs.lib.attrsets; mapAttrs' getDbgVersion deepinPkgs;
         in
         rec {
           packages = deepinPkgs // deepinPkgsDbg;
@@ -75,13 +73,53 @@
                   #services.accounts-daemon.enable = true;
 
                   environment.pathsToLink = [ "/share" ];
-                  environment.systemPackages =
-                    let
-                      deepinPkgs = with packages; [
-                        deepin-terminal
-                      ];
-                    in
-                    deepinPkgs;
+                  environment.systemPackages = with packages; [
+                    deepin-terminal-dbg
+                    deepin-album-dbg
+                    deepin-image-viewer-dbg
+                    deepin-calculator-dbg
+                    deepin-editor-dbg
+                    deepin-music-dbg
+                    deepin-movie-reborn-dbg
+                    dde-file-manager-dbg
+                    dde-launcher-dbg
+                    dde-calendar-dbg 
+                    deepin-camera-dbg
+                    dde-dock-dbg
+                    dde-session-ui-dbg
+                    dde-session-shell-dbg
+
+                    deepin-downloader-dbg
+                    deepin-draw-dbg
+                    deepin-boot-maker-dbg
+                    deepin-gomoku-dbg
+                    deepin-lianliankan-dbg
+                  ];
+
+                  users.groups.deepin-sound-player = { };
+
+                  users.users.deepin-sound-player = {
+                    description = "Deepin sound player";
+                    group = "deepin-sound-player";
+                    isSystemUser = true;
+                  };
+
+                  users.groups.deepin-daemon = { };
+
+                  users.users.deepin-daemon = {
+                    description = "Deepin daemon user";
+                    group = "deepin-daemon";
+                    isSystemUser = true;
+                  };
+
+                  users.groups.deepin_anything_server = { };
+
+                  users.users.deepin_anything_server = {
+                    description = "Deepin Anything Server";
+                    group = "deepin_anything_server";
+                    isSystemUser = true;
+                  };
+
                 })
 
                 #(mkIf config.services.deepin.dde-daemon.enable {
