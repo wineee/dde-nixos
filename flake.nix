@@ -89,7 +89,20 @@
                     dde-dock-dbg
                     dde-session-ui-dbg
                     dde-session-shell-dbg
+                    deepin-system-monitor-dbg
+                    dde-control-center-dbg
+                    deepin-picker-dbg
+                    deepin-shortcut-viewer-dbg
+                    dde-daemon-dbg
+                    startdde-dbg
 
+                    deepin-voice-note-dbg
+                    deepin-turbo-dbg
+                    deepin-icon-theme-dbg
+                    deepin-sound-theme-dbg
+                    deepin-wallpapers-dbg
+                    deepin-reader-dbg
+                    dmarked-dbg
                     deepin-downloader-dbg
                     deepin-draw-dbg
                     deepin-boot-maker-dbg
