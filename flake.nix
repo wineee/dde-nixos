@@ -58,9 +58,10 @@
                   description = "Enable Deepin desktop manager";
                 };
 
-                #services.deepin.dde-daemon = {
-                #  enable = mkEnableOption "dde daemon";
-                #};
+                services.dde = {
+                  dde-daemon.enable = mkEnableOption "A daemon for handling Deepin Desktop Environment session settings";
+                };
+
                 ## TODO: deepin-anything
               };
 
@@ -120,12 +121,20 @@
                     isSystemUser = true;
                   };
 
+                  services.dde.dde-daemon.enable = true;
                 })
 
-                #(mkIf config.services.deepin.dde-daemon.enable {
-                #  environment.systemPackages = [ pkgs.deepin.dde-daemon ];
-                #  systemd.packages = [ pkgs.deepin.dde-daemon ];
-                #})
+                (mkIf config.services.dde.dde-daemon.enable {
+                  environment.systemPackages = [ packages.dde-daemon-dbg ];
+                  services.dbus.packages = [ packages.dde-daemon-dbg ];
+                  systemd.packages = [ packages.dde-daemon-dbg ];
+                  users.groups.dde-daemon = { };
+                  users.users.dde-daemon = {
+                    description = "Deepin daemon user";
+                    group = "dde-daemon";
+                    isSystemUser = true;
+                  };
+               })
               ];
             };
         });
