@@ -1,5 +1,6 @@
 result
 vm/nixos.qcow2
+vm/flake.lock
 dde
 a
 b
