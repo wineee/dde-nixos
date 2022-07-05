@@ -97,6 +97,26 @@
                     deepin-lianliankan-dbg
                   ];
 
+                  services.dbus.packages = with packages; [
+                    dde-api-dbg
+                    dde-calendar-dbg
+                    dde-control-center-dbg
+                    dde-daemon-dbg
+                    dde-dock-dbg
+                    dde-launcher-dbg
+                    dde-file-manager-dbg
+                    dde-session-ui-dbg
+                    deepin-anything-dbg
+                    deepin-image-viewer-dbg
+                  ];
+
+                  systemd.packages = with packages; [
+                    dde-api-dbg
+                    dde-daemon-dbg
+                    dde-file-manager-dbg
+                    deepin-anything-dbg
+                  ];
+
                   users.groups.deepin-sound-player = { };
 
                   users.users.deepin-sound-player = {
