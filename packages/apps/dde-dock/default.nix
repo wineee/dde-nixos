@@ -16,6 +16,7 @@
 , gsettings-qt
 , libdbusmenu
 , xorg
+, glib
 , gtest
 }:
 let
@@ -100,6 +101,10 @@ stdenv.mkDerivation rec {
   ];
 
   postPatch = getPatchFrom patchList;
+
+  preFixup = ''
+    glib-compile-schemas ${glib.makeSchemaPath "$out" "${pname}-${version}"}
+  '';
 
   meta = with lib; {
     description = "Deepin desktop-environment - dock module";
