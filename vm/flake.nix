@@ -32,8 +32,8 @@
         };
         virtualisation = {
           qemu.options = [ "-device intel-hda -device hda-duplex" ];
-          cores = 4;
-          memorySize = 4096;
+          cores = 6;
+          memorySize = 8192;
           diskSize = 16384;
           resolution = { x = 1024; y = 768; };
         };
