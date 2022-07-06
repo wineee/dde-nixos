@@ -104,6 +104,7 @@ stdenv.mkDerivation rec {
 
   preFixup = ''
     glib-compile-schemas ${glib.makeSchemaPath "$out" "${pname}-${version}"}
+    ln -s ${glib.makeSchemaPath "$out" "${pname}-${version}"} $out/share/glib-2.0/schemas
   '';
 
   meta = with lib; {
