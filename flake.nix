@@ -25,20 +25,20 @@
         in
         rec {
           packages = deepinPkgs // deepinPkgsDbg;
-          # devShells = builtins.mapAttrs (
-          #   name: value: 
-          #     pkgs.mkShell {
-          #       nativeBuildInputs = [ pkgs.qtcreator ]
-          #               ++ deepinPkgs.${name}.nativeBuildInputs;
-          #       buildInputs = deepinPkgs.${name}.buildInputs
-          #               ++ deepinPkgs.${name}.propagatedBuildInputs;
-          #       shellHook = ''
-          #         # export QT_LOGGING_RULES=*.debug=true
-          #         export QT_PLUGIN_PATH="$QT_PLUGIN_PATH:${deepinPkgs.qt5integration}/plugins"
-          #         export QT_QPA_PLATFORM_PLUGIN_PATH="${deepinPkgs.qt5platform-plugins}/plugins"
-          #       '';
-          #    }
-          # ) deepinPkgs;
+          devShells = builtins.mapAttrs (
+            name: value: 
+              pkgs.mkShell {
+                nativeBuildInputs = [ pkgs.qtcreator ]
+                        ++ deepinPkgs.${name}.nativeBuildInputs;
+                buildInputs = deepinPkgs.${name}.buildInputs
+                        ++ deepinPkgs.${name}.propagatedBuildInputs;
+                shellHook = ''
+                  # export QT_LOGGING_RULES=*.debug=true
+                  export QT_PLUGIN_PATH="$QT_PLUGIN_PATH:${deepinPkgs.qt5integration}/plugins"
+                  export QT_QPA_PLATFORM_PLUGIN_PATH="${deepinPkgs.qt5platform-plugins}/plugins"
+                '';
+             }
+          ) deepinPkgs;
 
 #          overlays.default = final: prev: {
 #            repoOverrides = { dde = (import ./packages { pkgs = prev.pkgs; }); };
