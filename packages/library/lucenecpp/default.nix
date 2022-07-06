@@ -17,20 +17,18 @@ stdenv.mkDerivation rec {
   postPatch = ''
     substituteInPlace src/test/CMakeLists.txt \
       --replace "add_subdirectory(gtest)" ""
+    
+    substituteInPlace src/config/core/liblucene++.pc.in \
+      --replace "libdir=@LIB_DESTINATION@" "libdir=\''${prefix}/lib" \
+      --replace "-L@LIB_DESTINATION@" "-L\''${libdir}"
+    substituteInPlace src/config/contrib/liblucene++-contrib.pc.in \
+      --replace "libdir=@LIB_DESTINATION@" "libdir=\''${prefix}/lib" \
+      --replace "-L@LIB_DESTINATION@" "-L\''${libdir}"
   '';
 
   postInstall = ''
     mv $out/include/pkgconfig $out/lib/
     cp $src/src/contrib/include/*h $out/include/lucene++/
-  '';
-
-  postFixup = ''
-    substituteInPlace $out/lib/pkgconfig/liblucene++.pc \
-      --replace "libdir=" "libdir=\''${prefix}/lib" \
-      --replace "Libs: -L " "Libs: -L\''${libdir} "
-    substituteInPlace $out/lib/pkgconfig/liblucene++-contrib.pc \
-      --replace "libdir=" "libdir=\''${prefix}/lib" \
-      --replace "Libs: -L " "Libs: -L\''${libdir} "
   '';
 
   meta = {
