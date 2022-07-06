@@ -66,14 +66,11 @@ buildGoPackage rec {
 
   GOFLAGS = [ "-buildmode=pie" "-trimpath" "-mod=readonly" "-modcacherw" ];
 
-  preBuild = ''
-    cp -r ${go-lib}/share/gocode/* go/
-    cp -r ${go-dbus-factory}/share/gocode/* go/
-    cp -r ${go-gir-generator}/share/gocode/* go/
-  '';
-
   buildPhase = ''
     runHook preBuild
+    GOPATH="$GOPATH:${go-dbus-factory}/share/gocode"
+    GOPATH="$GOPATH:${go-gir-generator}/share/gocode"
+    GOPATH="$GOPATH:${go-lib}/share/gocode"
     make -C go/src/${goPackagePath}
     runHook postBuild
   '';

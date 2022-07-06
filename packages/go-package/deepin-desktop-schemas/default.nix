@@ -23,12 +23,9 @@ buildGoPackage rec {
   nativeBuildInputs = [ glib ];
   buildInputs = [ go-lib ];
 
-  preBuild = ''
-    cp -r ${go-lib}/share/gocode/* go/
-  '';
-
   buildPhase = ''
     runHook preBuild
+    GOPATH="$GOPATH:${go-lib}/share/gocode"
     make ARCH=${stdenv.targetPlatform.linuxArch} -C go/src/${goPackagePath}
     runHook postBuild
   '';
