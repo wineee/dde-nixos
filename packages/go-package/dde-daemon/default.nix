@@ -1,6 +1,7 @@
 { stdenv
 , lib
 , fetchFromGitHub
+, getPatchFrom
 , buildGoPackage
 , pkgconfig
 , go-dbus-factory
@@ -31,10 +32,14 @@
 , xkeyboard_config
 , wrapGAppsHook
 }:
+let
+  goCodePatchs = {
 
+  };
+in
 buildGoPackage rec {
   pname = "dde-daemon";
-  version = "5.14.18";
+  version = "5.14.44";
 
   goPackagePath = "github.com/linuxdeepin/dde-daemon";
 
@@ -42,7 +47,7 @@ buildGoPackage rec {
     owner = "linuxdeepin";
     repo = pname;
     rev = version;
-    sha256 = "sha256-pTzdIfGqtKdjKKeWCq7qocTsDclgCiRjBkL0Bn2uP7M=";
+    sha256 = "sha256-Enikmyt+CsBb00YwqxbA/id1n/PUYoZ7LykB74PToYc=";
   };
 
   goDeps = ./deps.nix;
@@ -103,43 +108,51 @@ buildGoPackage rec {
   '';
 
   fixPathPatch = ''
-        for file in misc/system-services/* misc/services/* misc/systemd/services/*
-        do
-          substituteInPlace $file \
-            --replace "/usr/lib/deepin-daemon" "$out/lib/deepin-daemon"
-        done
+    for file in misc/system-services/* misc/services/* misc/systemd/services/*
+    do
+      substituteInPlace $file \
+        --replace "/usr/lib/deepin-daemon" "$out/lib/deepin-daemon"
+    done
 
-        substituteInPlace misc/udev-rules/80-deepin-fprintd.rules \
-          --replace "/usr/bin/dbus-send" "dbus-send"
+    substituteInPlace misc/udev-rules/80-deepin-fprintd.rules \
+      --replace "/usr/bin/dbus-send" "dbus-send"
 
-        substituteInPlace misc/dde-daemon/keybinding/system_actions.json \
-          --replace "/usr/lib/deepin-daemon/"        "$out/lib/deepin-daemon/" \
-          --replace "/usr/bin/deepin-system-monitor" "deepin-system-monitor" \
-          --replace "/usr/bin/setxkbmap"             "setxkbmap"\
-          --replace "/usr/bin/xdotool"               "xdotool"
+    substituteInPlace misc/dde-daemon/keybinding/system_actions.json \
+      --replace "/usr/lib/deepin-daemon/"        "$out/lib/deepin-daemon/" \
+      --replace "/usr/bin/deepin-system-monitor" "deepin-system-monitor" \
+      --replace "/usr/bin/setxkbmap"             "setxkbmap"\
+      --replace "/usr/bin/xdotool"               "xdotool"
 
-        substituteInPlace misc/applications/deepin-toggle-desktop.desktop \
-          --replace "/usr/lib/deepin-daemon/desktop-toggle" "$out/lib/deepin-daemon/desktop-toggle
-    "
+    substituteInPlace misc/applications/deepin-toggle-desktop.desktop \
+      --replace "/usr/lib/deepin-daemon/desktop-toggle" "$out/lib/deepin-daemon/desktop-toggle"
+
+    substituteInPlace misc/etc/acpi/events/deepin_lid \
+      --replace "/etc/acpi/actions/deepin_lid.sh" "$out/etc/acpi/actions/deepin_lid.sh"
   '';
 
   postPatch = rmUadpPatch + fixShebangsPatch + fixPathPatch;
 
-  preBuild = ''
-    cp -r ${go-lib}/share/gocode/* go/
-    cp -r ${go-dbus-factory}/share/gocode/* go/
-    cp -r ${go-gir-generator}/share/gocode/* go/
-    cp -r ${dde-api}/share/gocode/* go/
-  '';
-
   buildPhase = ''
     runHook preBuild
+    GOPATH="$GOPATH:${go-dbus-factory}/share/gocode"
+    GOPATH="$GOPATH:${go-gir-generator}/share/gocode"
+    GOPATH="$GOPATH:${go-lib}/share/gocode"
+    GOPATH="$GOPATH:${dde-api}/share/gocode"
     make -C go/src/${goPackagePath}
     runHook postBuild
   '';
 
   installPhase = ''
     make install DESTDIR="$out" PREFIX="/" -C go/src/${goPackagePath}
+  '';
+
+  postFixup = ''
+    for f in "$out"/lib/deepin-daemon/*; do
+      echo "Wrapping $f"
+      wrapProgram "$f" \
+        "''${gappsWrapperArgs[@]}" \
+        "''${qtWrapperArgs[@]}"
+    done
   '';
 
   meta = with lib; {
