@@ -3,6 +3,7 @@
 , fetchFromGitHub
 , getShebangsPatchFrom
 , getPatchFrom
+, runtimeShell
 , dtk
 , qt5integration
 , qt5platform-plugins
@@ -15,6 +16,7 @@
 , deepin-gettext-tools
 , deepin-movie-reborn
 , deepin-desktop-schemas
+, deepin-wallpapers
 , qmake
 , qttools
 , qtx11extras
@@ -86,6 +88,97 @@ let
     "src/dde-desktop/data/applications/dde-home.desktop" = [ ];
     "src/dde-file-manager/dde-file-manager.desktop" = [ ];
     "src/dde-file-manager/dde-open.desktop" = [ ];
+
+    ### CODE
+
+    "src/dde-zone/mainwindow.h" = [
+      ["/usr/lib/deepin-daemon/desktop-toggle" "desktop-toggle"] ## TODO
+    ];
+    # SW_64 ...
+    "src/dde-file-manager-lib/sw_label/filemanagerlibrary.h" = [ ];
+    "src/dde-file-manager-lib/sw_label/llsdeepinlabellibrary.h" = [ ];
+    
+    "src/dde-file-manager-lib/shutil/dsqlitehandle.h" = [
+      #["/usr/share/dde-file-manager/database" ] ## TODO
+    ];
+    "src/dde-file-manager-lib/shutil/mimesappsmanager.cpp" = [
+      #"/usr/share/applications" ## TODO
+    ];
+
+    "src/dde-file-manager-lib/shutil/fileutils.cpp" = [
+      #["/usr/share/applications"] ## TODO
+      #["/usr/share/pixmaps"]
+      #["/usr/lib/deepin-daemon"]
+      ["/usr/bin/mountavfs" "mountavfs"]
+      ["/usr/bin/umountavfs" "umountavfs"]
+      #["/etc/fstab"]
+    ];
+
+    "src/dde-file-manager-lib/vault/vaultglobaldefine.h" = [
+      #["grep /usr/bin/deepin-compressor"]
+    ];
+
+    "src/dde-file-manager-lib/gvfs/networkmanager.cpp" = [
+      #["/usr/lib/gvfs/gvfsd"]
+    ];
+
+    "src/dde-file-manager-lib/interfaces/dfilemenumanager.cpp" = [
+      ## /usr/share/applications/dde-open.desktop 
+    ];
+
+    ## PLUGINS
+    "src/dde-file-manager-lib/plugins/dfmadditionalmenu.cpp" = [
+      ## /usr/share/deepin/dde-file-manager/oem-menuextensions/
+    ];
+    "src/dde-file-manager-lib/plugins/schemepluginmanager.cpp" = [
+      ## /usr/lib/dde-file-manager/addons
+    ];
+
+    "src/dde-desktop/view/backgroundmanager.cpp" = [
+      ["/usr/share/backgrounds/default_background.jpg" "${deepin-wallpapers}/share/wallpapers/deepin/desktop.jpg"]
+    ];
+
+    "src/dde-file-manager-lib/interfaces/customization/dcustomactiondefine.h" = [
+    ## /usr/share/applications/context-menus
+    ];
+    "src/dde-desktop/view/canvasgridview.cpp" = [
+    ## /usr/share/deepin/dde-desktop-watermask.json
+    ];
+    "src/dde-file-manager-daemon/accesscontrol/accesscontrolmanager.cpp" = [
+    ## "/usr/bin/dmcg" << "/usr/bin/dde-file-manager"
+      ["/etc/deepin" "$out/etc/deepin"]
+    # "/etc/deepin/devAccessConfig.json" "/etc/deepin/vaultAccessConfig.json"
+    ];
+    "src/dde-wallpaper-chooser/frame.cpp" = [
+      ["/usr/share/backgrounds/default_background.jpg" "${deepin-wallpapers}/share/wallpapers/deepin/desktop.jpg"]
+    ];
+    "src/dde-file-manager-daemon/usershare/usersharemanager.cpp" = [
+      ["/usr/sbin/groupadd" "groupadd"]
+    ];
+    "src/dde-file-manager-daemon/vault/vaultbruteforceprevention.cpp" = [
+      # {"/usr/bin/dde-file-manager", "/usr/bin/dde-desktop", "/usr/bin/dde-select-dialog-wayland", "/usr/bin/dde-select-dialog-x11"};
+    ];
+
+    "src/utils/utils.cpp" = [
+      ["/bin/bash" "${runtimeShell}" ]
+    ];
+    "src/dde-file-manager-lib/controllers/fileeventprocessor.cpp" = [
+      ["/bin/bash" "${runtimeShell}" ]
+    ];
+    "src/dde-advanced-property-plugin/dadvancedinfowidget.cpp" = [
+      ["/bin/bash" "${runtimeShell}" ]
+    ];
+
+    "src/dde-file-manager-lib/shutil/danythingmonitorfilter.cpp" = [
+      ["/etc/passwd" "passwd"]
+    ];
+    "src/dde-file-manager-lib/interfaces/dfmsettings.cpp" = [
+      ["/etc/xdg" "xdg"] ## TODO
+    ];
+    ## src/dde-file-manager-lib/models/dfmrootfileinfo.cpp "/etc/%1/ab-recovery.json"
+
+    # src/dde-file-manager-daemon/usershare/usersharemanager.cpp
+    # ln -sf /lib/systemd/system/smbd.service /etc/systemd/system/multi-user.target.wants/smbd.service
   };
 
   shebangsList = [
