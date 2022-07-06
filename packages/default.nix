@@ -21,6 +21,17 @@ let
         (concatStringsSep "\n")
         (s: s + "\n")
       ];
+
+    fetchFromDeepin = { pname }:
+      let
+        v = builtins.fromJSON (builtins.readFile ../release/tags/${pname}.json);
+      in
+      pkgs.fetchFromGitHub {
+        owner = "linuxdeepin";
+        repo = pname;
+        rev = v.tag;
+        sha256 = v.sha;
+      };
   };
 
   packages = self: with self; functions // {
