@@ -1,0 +1,9 @@
+{
+    "version": {
+        "sha": "3ecea3b455f29125a2ffc004f95998dcd446083c",
+        "tag": "5.5.22",
+        "description": "feat: 支持无标题、窗口圆角、系统菜单",
+        "author": "AlexOne",
+        "email": "<wangpenga@uniontech.com>"
+    }
+}

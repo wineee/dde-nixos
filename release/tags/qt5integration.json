@@ -1,0 +1,9 @@
+{
+    "version": {
+        "sha": "dacb95165e04b0f80a5a072fb14cc227e41ceea9",
+        "tag": "5.5.20",
+        "description": "fix: 画板保存崩溃问题",
+        "author": "ck",
+        "email": "<chenke@uniontech.com>"
+    }
+}

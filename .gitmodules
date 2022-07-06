@@ -1,4 +1,0 @@
-[submodule "release"]
-        path = packages/release
-        url = https://github.com/linuxdeepin/release
-
