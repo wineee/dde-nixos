@@ -1,6 +1,7 @@
 { stdenv
 , lib
-, fetchFromGitHub
+, fetchFromDeepin
+, readVersion
 , cmake
 , pkgconfig
 , wrapQtAppsHook
@@ -11,12 +12,10 @@
 
 stdenv.mkDerivation rec {
   pname = "gio-qt";
-  version = "0.0.11";
+  version = readVersion pname;
 
-  src = fetchFromGitHub {
-    owner = "linuxdeepin";
-    repo = pname;
-    rev = version;
+  src = fetchFromDeepin {
+    inherit pname;
     sha256 = "sha256-dlY1CTlXywgGZUonBBe3cDwx8h2xXrPY6Ft/D59nlug=";
   };
 
