@@ -95,12 +95,12 @@
                     deepin-shortcut-viewer
                     dde-daemon
                     startdde
+                    deepin-screen-recorder
 
                     deepin-voice-note
                     deepin-turbo
                     deepin-icon-theme
                     deepin-sound-theme
-                    deepin-wallpapers
                     deepin-reader
                     dmarked
                     deepin-downloader
