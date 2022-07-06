@@ -75,59 +75,59 @@
 
                   environment.pathsToLink = [ "/share" ];
                   environment.systemPackages = with packages; [
-                    deepin-terminal-dbg
-                    deepin-album-dbg
-                    deepin-image-viewer-dbg
-                    deepin-calculator-dbg
-                    deepin-editor-dbg
-                    deepin-music-dbg
-                    deepin-movie-reborn-dbg
-                    dde-file-manager-dbg
-                    dde-launcher-dbg
-                    dde-calendar-dbg 
-                    deepin-camera-dbg
-                    dde-dock-dbg
-                    dde-session-ui-dbg
-                    dde-session-shell-dbg
-                    deepin-system-monitor-dbg
-                    dde-control-center-dbg
-                    deepin-picker-dbg
-                    deepin-shortcut-viewer-dbg
-                    dde-daemon-dbg
-                    startdde-dbg
+                    deepin-terminal
+                    deepin-album
+                    deepin-image-viewer
+                    deepin-calculator
+                    deepin-editor
+                    deepin-music
+                    deepin-movie-reborn
+                    dde-file-manager
+                    dde-launcher
+                    dde-calendar 
+                    deepin-camera
+                    dde-dock
+                    dde-session-ui
+                    dde-session-shell
+                    deepin-system-monitor
+                    dde-control-center
+                    deepin-picker
+                    deepin-shortcut-viewer
+                    dde-daemon
+                    startdde
 
-                    deepin-voice-note-dbg
-                    deepin-turbo-dbg
-                    deepin-icon-theme-dbg
-                    deepin-sound-theme-dbg
-                    deepin-wallpapers-dbg
-                    deepin-reader-dbg
-                    dmarked-dbg
-                    deepin-downloader-dbg
-                    deepin-draw-dbg
-                    deepin-boot-maker-dbg
-                    deepin-gomoku-dbg
-                    deepin-lianliankan-dbg
+                    deepin-voice-note
+                    deepin-turbo
+                    deepin-icon-theme
+                    deepin-sound-theme
+                    deepin-wallpapers
+                    deepin-reader
+                    dmarked
+                    deepin-downloader
+                    deepin-draw
+                    deepin-boot-maker
+                    deepin-gomoku
+                    deepin-lianliankan
                   ];
 
                   services.dbus.packages = with packages; [
-                    dde-api-dbg
-                    dde-calendar-dbg
-                    dde-control-center-dbg
-                    dde-daemon-dbg
-                    dde-dock-dbg
-                    dde-launcher-dbg
-                    dde-file-manager-dbg
-                    dde-session-ui-dbg
-                    deepin-anything-dbg
-                    deepin-image-viewer-dbg
+                    dde-api
+                    dde-calendar
+                    dde-control-center
+                    dde-daemon
+                    dde-dock
+                    dde-launcher
+                    dde-file-manager
+                    dde-session-ui
+                    deepin-anything
+                    deepin-image-viewer
                   ];
 
                   systemd.packages = with packages; [
-                    dde-api-dbg
-                    dde-daemon-dbg
-                    dde-file-manager-dbg
-                    deepin-anything-dbg
+                    dde-api
+                    dde-daemon
+                    dde-file-manager
+                    deepin-anything
                   ];
 
                   users.groups.deepin-sound-player = { };
@@ -158,9 +158,9 @@
                 })
 
                 (mkIf config.services.dde.dde-daemon.enable {
-                  environment.systemPackages = [ packages.dde-daemon-dbg ];
-                  services.dbus.packages = [ packages.dde-daemon-dbg ];
-                  systemd.packages = [ packages.dde-daemon-dbg ];
+                  environment.systemPackages = [ packages.dde-daemon ];
+                  services.dbus.packages = [ packages.dde-daemon ];
+                  systemd.packages = [ packages.dde-daemon ];
                   users.groups.dde-daemon = { };
                   users.users.dde-daemon = {
                     description = "Deepin daemon user";
