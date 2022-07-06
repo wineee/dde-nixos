@@ -1,15 +1,19 @@
 { stdenv
 , lib
 , fetchFromDeepin
+, readVersion
 , gtk3
 , xcursorgen
 }:
 
 stdenv.mkDerivation rec {
   pname = "deepin-icon-theme";
-  version = "2021.11.24";
+  version = readVersion pname;
 
-  src = fetchFromDeepin { inherit pname; };
+  src = fetchFromDeepin { 
+    inherit pname;
+    sha256 = "sha256-UC3PbqolcCbVrIEDqMovfJ4oeofMUGJag1A6u7X3Ml8=";
+  };
 
   nativeBuildInputs = [ gtk3 xcursorgen ];
 

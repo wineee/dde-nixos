@@ -22,16 +22,22 @@ let
         (s: s + "\n")
       ];
 
-    fetchFromDeepin = { pname }:
+    fetchFromDeepin = { pname, sha256 }:
       let
-        v = builtins.fromJSON (builtins.readFile ../release/tags/${pname}.json);
+        v = with builtins; fromJSON (readFile ../release/tags/${pname}.json);
       in
       pkgs.fetchFromGitHub {
+        inherit sha256;
         owner = "linuxdeepin";
         repo = pname;
-        rev = v.tag;
-        sha256 = v.sha;
+        rev = v.version.tag;
       };
+
+    readVersion = pname:
+      let
+        v = with builtins; fromJSON (readFile ../release/tags/${pname}.json);
+      in
+      v.version.tag;
   };
 
   packages = self: with self; functions // {
