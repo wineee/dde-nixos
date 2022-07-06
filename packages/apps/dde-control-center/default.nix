@@ -34,13 +34,13 @@
 
 stdenv.mkDerivation rec {
   pname = "dde-control-center";
-  version = "unstable-2022-06-24";
+  version = "unstable-2022-07-06";
 
   src = fetchFromGitHub {
     owner = "linuxdeepin";
     repo = pname;
-    rev = "62e3b7a2ff62574442170075280f764320700f1f";
-    sha256 = "sha256-J/Zv9Qq562TQUGy3dt8+e9VuBmazvHRpxzQO3z6A8RE=";
+    rev = "5214b2756a13a8a27fe414280d1ab8e3d990454f";
+    sha256 = "sha256-aB2vH8Uz06zqBsW9KBlzr8Z7S5HxDS7bZ2qxg95lSuY=";
   };
 
   nativeBuildInputs = [
