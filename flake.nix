@@ -97,10 +97,12 @@
                     startdde
                     deepin-screen-recorder
 
+                    dde-account-faces
                     deepin-voice-note
                     deepin-turbo
                     deepin-icon-theme
                     deepin-sound-theme
+                    deepin-wallpapers
                     deepin-reader
                     dmarked
                     deepin-downloader
@@ -111,27 +113,30 @@
                   ];
 
                   services.dbus.packages = with packages; [
+                    dde-launcher
+                    dde-session-ui
+                    dde-session-shell
                     dde-api
+                    deepin-image-viewer
+                    dde-daemon
+
                     dde-calendar
                     dde-control-center
-                    dde-daemon
                     dde-dock
-                    dde-launcher
                     dde-file-manager
-                    dde-session-ui
                     deepin-anything
-                    deepin-image-viewer
                   ];
 
                   systemd.packages = with packages; [
+                    dde-launcher
                     dde-api
+
                     dde-daemon
                     dde-file-manager
                     deepin-anything
                   ];
 
                   users.groups.deepin-sound-player = { };
-
                   users.users.deepin-sound-player = {
                     description = "Deepin sound player";
                     group = "deepin-sound-player";
@@ -139,7 +144,6 @@
                   };
 
                   users.groups.deepin-daemon = { };
-
                   users.users.deepin-daemon = {
                     description = "Deepin daemon user";
                     group = "deepin-daemon";
@@ -147,14 +151,13 @@
                   };
 
                   users.groups.deepin_anything_server = { };
-
                   users.users.deepin_anything_server = {
                     description = "Deepin Anything Server";
                     group = "deepin_anything_server";
                     isSystemUser = true;
                   };
 
-                  services.dde.dde-daemon.enable = true;
+                  #services.dde.dde-daemon.enable = true;
                 })
 
                 (mkIf config.services.dde.dde-daemon.enable {
