@@ -18,7 +18,7 @@
 , pcre
 , libselinux
 , libsepol
-, wrapGAppsHook
+, wrapQtAppsHook
 , gtest
 }:
 let
@@ -42,7 +42,7 @@ stdenv.mkDerivation rec {
     pkg-config
     qttools
     deepin-gettext-tools
-    wrapGAppsHook
+    wrapQtAppsHook
   ];
 
   buildInputs = [
@@ -67,15 +67,17 @@ stdenv.mkDerivation rec {
 
   preFixup = ''
     glib-compile-schemas ${glib.makeSchemaPath "$out" "${pname}-${version}"}
-    gappsWrapperArgs+=(
-      "''${qtWrapperArgs[@]}"
+    ln -s ${glib.makeSchemaPath "$out" "${pname}-${version}"} $out/share/glib-2.0/schemas
+
+    qtWrapperArgs+=(
+      "''${gappsWrapperArgs[@]}"
     )
   '';
 
   postFixup = ''
     # wrapGAppsHook or wrapQtAppsHook does not work with binaries outside of $out/bin or $out/libexec
     for binary in $out/lib/deepin-daemon/*; do
-      wrapProgram $binary "''${gappsWrapperArgs[@]}"
+      wrapProgram $binary "''${qtWrapperArgs[@]}"
     done
   '';
 
