@@ -73,7 +73,10 @@
                   #services.xserver.displayManager.lightdm.theme = mkDefault "deepin";
                   #services.accounts-daemon.enable = true;
 
-                  environment.pathsToLink = [ "/share" ];
+                  environment.pathsToLink = [
+                    #"/share"
+                    "/share/dsg"
+                  ];
                   environment.systemPackages = with packages; [
                     deepin-terminal
                     deepin-album
@@ -96,6 +99,7 @@
                     dde-daemon
                     startdde
                     deepin-screen-recorder
+                    dde-app-services
 
                     dde-account-faces
                     deepin-voice-note
@@ -119,6 +123,7 @@
                     dde-api
                     deepin-image-viewer
                     dde-daemon
+                    dde-app-services
 
                     dde-calendar
                     dde-control-center
