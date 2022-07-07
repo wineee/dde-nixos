@@ -16,6 +16,10 @@
           enable = true;
           displayManager = {
             lightdm.enable = true;
+            autoLogin = {
+              enable = true;
+              user = "test";
+            };
           };
           desktopManager.plasma5 = {
             enable = true;
