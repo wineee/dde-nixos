@@ -17,7 +17,29 @@
 }:
 let
   patchList = {
+    ### INSTALL
     "CMakeLists.txt" = [ ];
+
+    ### MISC
+    "dde-launcher.desktop" = [
+      [ "/usr/bin/dde-launcher" "$out/bin/dde-launcher" ]
+    ];
+    "dde-launcher-wapper" = [
+      [ "/usr/share/applications/dde-launcher.desktop" "/run/current-system/sw/share/applications/dde-launcher.desktop" ]
+    ];
+
+    "src/dbusservices/com.deepin.dde.Launcher.service" = [
+      [ "/usr/bin/dde-launcher-wapper" "$out/bin/dde-launcher-wapper" ]
+    ];
+
+    ### CODE
+    "src/boxframe/backgroundmanager.cpp" = [
+      [ "/usr/share/backgrounds/default_background.jpg" "${deepin-wallpapers}/share/wallpapers/deepin/desktop.jpg" ]
+    ];
+    "src/boxframe/boxframe.cpp" = [
+      [ "/usr/share/backgrounds/default_background.jpg" "${deepin-wallpapers}/share/wallpapers/deepin/desktop.jpg" ]
+    ];
+
   };
 in
 stdenv.mkDerivation rec {
