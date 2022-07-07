@@ -96,11 +96,15 @@
                     dde-control-center
                     deepin-picker
                     deepin-shortcut-viewer
-                    dde-daemon
                     startdde
                     deepin-screen-recorder
                     dde-app-services
+                    
+                    deepin-desktop-schemas
+                    dde-api
+                    dde-daemon
 
+                    dde-polkit-agent
                     dde-account-faces
                     deepin-voice-note
                     deepin-turbo
@@ -124,20 +128,20 @@
                     deepin-image-viewer
                     dde-daemon
                     dde-app-services
+                    dde-file-manager
+                    dde-control-center
 
                     dde-calendar
-                    dde-control-center
                     dde-dock
-                    dde-file-manager
                     deepin-anything
                   ];
 
                   systemd.packages = with packages; [
                     dde-launcher
                     dde-api
-
                     dde-daemon
                     dde-file-manager
+
                     deepin-anything
                   ];
 
