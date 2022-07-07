@@ -14,6 +14,7 @@
 , linux-pam
 , xorg
 , kwayland
+, glib
 , gtest
 }:
 let
@@ -57,6 +58,16 @@ stdenv.mkDerivation rec {
   ];
 
   postPatch = getPatchFrom patchList;
+
+  preFixup = ''
+    glib-compile-schemas ${glib.makeSchemaPath "$out" "${pname}-${version}"}
+    ln -s ${glib.makeSchemaPath "$out" "${pname}-${version}"} $out/share/glib-2.0/schemas
+
+    qtWrapperArgs+=(
+      "''${gappsWrapperArgs[@]}"
+    )
+  '';
+
 
   meta = with lib; {
     description = "Deepin desktop-environment - session-shell module";
