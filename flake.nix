@@ -130,8 +130,8 @@
                     dde-app-services
                     dde-file-manager
                     dde-control-center
-
                     dde-calendar
+
                     dde-dock
                     deepin-anything
                   ];
@@ -141,6 +141,7 @@
                     dde-api
                     dde-daemon
                     dde-file-manager
+                    dde-calendar
 
                     deepin-anything
                   ];
