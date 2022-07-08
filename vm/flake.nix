@@ -4,6 +4,7 @@
   outputs = inputs@{ self, dde-nixos }: let 
     nixpkgs = dde-nixos.inputs.nixpkgs;
     system = "x86_64-linux";
+    pkgs = import nixpkgs { inherit system; };
   in {
     nixosConfigurations.vm = nixpkgs.lib.nixosSystem {
       inherit system;
@@ -13,6 +14,12 @@
         {
         imports = [ "${nixpkgs}/nixos/modules/virtualisation/qemu-vm.nix" ];
         environment.enableDebugInfo = true;
+        environment.systemPackages = with pkgs; [
+          htop
+          firefox
+          neovim
+          gdb
+        ];
         services.xserver = {
           enable = true;
           displayManager = {
