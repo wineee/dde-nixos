@@ -23,7 +23,58 @@
 }:
 let
   patchList = {
-    ## TODO patch code
+    ### MISC
+    "dmemory-warning-dialog/com.deepin.dde.MemoryWarningDialog.service" = [
+      [ "/usr/bin/dmemory-warning-dialog" "dmemory-warning-dialog" ]
+    ];
+    "dde-warning-dialog/com.deepin.dde.WarningDialog.service" = [
+      #?
+      [ "/usr/lib/deepin-daemon/dde-warning-dialog" "dde-warning-dialog" ]
+    ];
+    "dde-welcome/com.deepin.dde.welcome.service" = [
+      #?
+      [ "/usr/lib/deepin-daemon/dde-welcome" "dde-welcome" ]
+    ];
+    "dde-osd/files/com.deepin.dde.freedesktop.Notification.service" = [
+      #?
+      [ "/usr/lib/deepin-daemon/dde-osd" "dde-osd" ]
+    ];
+    "dde-osd/files/com.deepin.dde.Notification.service" = [
+      [ "/usr/lib/deepin-daemon/dde-osd" "dde-osd" ]
+    ];
+    "dde-osd/files/com.deepin.dde.osd.service" = [
+      [ "/usr/lib/deepin-daemon/dde-osd" "dde-osd" ]
+    ];
+    ### CODE
+    "widgets/fullscreenbackground.cpp" = [
+      [ "/usr/share" "/run/current-system/sw/share"]
+      #[ "/usr/share/wallpapers/deepin/desktop.jpg" ]
+      #[ "/usr/share/backgrounds/default_background.jpg" ]
+    ];
+    "dde-lowpower/main.cpp" = [
+      #"/usr/share/dde-session-ui/translations/dde-session-ui_" 
+    ];
+    "dmemory-warning-dialog/main.cpp" = [
+      # /usr/share/dde-session-ui/translations/dde-session-ui_
+    ];
+    "dde-touchscreen-dialog/main.cpp" = [ ];
+    "global_util/xkbparser.h" = [
+      #? /usr/share/X11/xkb/rules/base.xml 
+    ];
+    "dnetwork-secret-dialog/main.cpp" = [ ];
+    "dde-suspend-dialog/main.cpp" = [ ];
+    "dde-warning-dialog/main.cpp" =[ ];
+    "dde-bluetooth-dialog/main.cpp" = [ ];
+    "dde-welcome/main.cpp" = [ ];
+    "dde-hints-dialog/main.cpp" = [ ];
+    "dde-osd/main.cpp" = [ ];
+    "dde-wm-chooser/main.cpp" = [ ];
+    "dde-license-dialog/content.cpp" = [ ];
+    "dde-license-dialog/main.cpp" = [ ];
+    "dde-osd/notification/bubbletool.cpp" = [
+      [ "/usr/share" "/run/current-system/sw/share"]
+      # "/usr/share/applications/" + name + ".desktop"
+    ];
   };
 in
 stdenv.mkDerivation rec {
