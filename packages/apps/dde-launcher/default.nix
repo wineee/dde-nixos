@@ -13,6 +13,7 @@
 , wrapQtAppsHook
 , gsettings-qt
 , glib
+, deepin-wallpapers
 , gtest
 }:
 let
