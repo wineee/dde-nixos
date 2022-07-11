@@ -64,13 +64,14 @@ let
 in
 stdenv.mkDerivation rec {
   pname = "dde-dock";
-  version = "5.5.51";
+  version = "5.5.38"; # "5.5.51";
 
   src = fetchFromGitHub {
     owner = "linuxdeepin";
     repo = pname;
     rev = version;
-    sha256 = "sha256-eTfLdGeNa0S0TuXAI2Q8m/D73tWHKgjoBpt76+FEyaY=";
+    #sha256 = "sha256-eTfLdGeNa0S0TuXAI2Q8m/D73tWHKgjoBpt76+FEyaY=";
+    sha256 = "sha256-RugU6jVIgTl+XKnqaENPKCBFndP9zDSe8vkdisG3tmk=";
   };
 
   nativeBuildInputs = [
@@ -102,9 +103,11 @@ stdenv.mkDerivation rec {
 
   postPatch = getPatchFrom patchList;
 
-  preFixup = ''
-    glib-compile-schemas ${glib.makeSchemaPath "$out" "${pname}-${version}"}
-    ln -s ${glib.makeSchemaPath "$out" "${pname}-${version}"} $out/share/glib-2.0/schemas
+  postInstall = ''
+    #glib-compile-schemas ${glib.makeSchemaPath "$out" "${pname}-${version}"}
+    #ln -s ${glib.makeSchemaPath "$out" "${pname}-${version}"} $out/share/glib-2.0/schemas
+    glib-compile-schemas  $out/share/glib-2.0/schemas
+    ln -s $out/share/glib-2.0/schemas ${glib.makeSchemaPath "$out" "${pname}-${version}"}
   '';
 
   meta = with lib; {
