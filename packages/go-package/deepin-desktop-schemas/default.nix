@@ -6,7 +6,7 @@
 , go-lib
 , glib
 }:
-
+# TODO PATCH CODE
 buildGoPackage rec {
   pname = "deepin-desktop-schemas";
   version = "5.10.6";
