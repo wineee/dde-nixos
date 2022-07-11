@@ -11,6 +11,7 @@
 , qtx11extras
 , pkgconfig
 , wrapQtAppsHook
+, wrapGAppsHook
 , gsettings-qt
 , glib
 , deepin-wallpapers
@@ -59,7 +60,9 @@ stdenv.mkDerivation rec {
     qttools
     pkgconfig
     wrapQtAppsHook
+    wrapGAppsHook
   ];
+  dontWrapGApps = true;
 
   buildInputs = [
     dtk
@@ -80,6 +83,7 @@ stdenv.mkDerivation rec {
 
   preFixup = ''
     glib-compile-schemas ${glib.makeSchemaPath "$out" "${pname}-${version}"}
+    qtWrapperArgs+=("''${gappsWrapperArgs[@]}")
   '';
 
   meta = with lib; {
