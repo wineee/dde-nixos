@@ -49,13 +49,30 @@
             let
               xcfg = config.services.xserver;
               cfg = xcfg.desktopManager.deepin;
+
+              nixos-gsettings-desktop-schemas = packages.nixos-gsettings-schemas.override {
+                extraGSettingsOverridePackages = cfg.extraGSettingsOverridePackages;
+                extraGSettingsOverrides = cfg.extraGSettingsOverrides;
+              };
             in
             {
               options = {
-                services.xserver.desktopManager.deepin.enable = mkOption {
-                  type = types.bool;
-                  default = false;
-                  description = "Enable Deepin desktop manager";
+                services.xserver.desktopManager.deepin = {
+                  enable = mkOption {
+                    type = types.bool;
+                    default = false;
+                    description = "Enable Deepin desktop manager";
+                  };
+                  extraGSettingsOverrides = mkOption {
+                    default = "";
+                    type = types.lines;
+                    description = "Additional gsettings overrides.";
+                  };
+                  extraGSettingsOverridePackages = mkOption {
+                    default = [];
+                    type = types.listOf types.path;
+                    description = "List of packages for which gsettings are overridden.";
+                  };
                 };
 
                 services.dde = {
@@ -63,6 +80,7 @@
                 };
 
                 ## TODO: deepin-anything
+                
               };
 
               config = mkMerge [
@@ -71,13 +89,20 @@
                 (mkIf cfg.enable {
                   #services.xserver.displayManager.sessionPackages = [ pkgs.deepin.core ];
                   #services.xserver.displayManager.lightdm.theme = mkDefault "deepin";
-                  #services.accounts-daemon.enable = true;
+                  hardware.bluetooth.enable = mkDefault true;
+                  hardware.pulseaudio.enable = mkDefault true;
                   security.polkit.enable = true;
+                  services.accounts-daemon.enable = true;
+                  environment.sessionVariables.NIX_GSETTINGS_OVERRIDES_DIR = "${nixos-gsettings-desktop-schemas}/share/gsettings-schemas/nixos-gsettings-overrides/glib-2.0/schemas";
 
                   environment.pathsToLink = [
-                    #"/share"
-                    "/share/dsg"
+                    "/share"
+                    #"/share/dsg"
                   ];
+
+                  # Override GSettings schemas
+                  #environment.sessionVariables.NIX_GSETTINGS_OVERRIDES_DIR = "${nixos-gsettings-overrides}/share/gsettings-schemas/nixos-gsettings-overrides/glib-2.0/schemas";
+
                   environment.systemPackages = with packages; [
                     deepin-terminal
                     deepin-album
@@ -183,6 +208,8 @@
                     isSystemUser = true;
                   };
                })
+
+               
               ];
             };
         });
