@@ -76,6 +76,7 @@ let
     dde-session-ui = callPackage ./misc/dde-session-ui { };
     dde-account-faces = callPackage ./misc/dde-account-faces { };
     dde-app-services = callPackage ./misc/dde-app-services { };
+    nixos-gsettings-schemas = callPackage ./misc/nixos-gsettings-schemas { };
 
     #### Go Packages
     go-dbus-factory = callPackage ./go-package/go-dbus-factory { };

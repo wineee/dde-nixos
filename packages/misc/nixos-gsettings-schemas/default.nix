@@ -1,15 +1,33 @@
 { lib
+, stdenv
 , runCommand
 , glib
 , gtk3
 , gsettings-desktop-schemas
+, dtkcommon
+, dde-dock
+, dde-launcher
+, dde-session-shell
+, dde-session-ui
+, dde-control-center
+, deepin-movie-reborn
+, dde-file-manager
+, deepin-desktop-schemas
 , extraGSettingsOverrides ? ""
 , extraGSettingsOverridePackages ? []
 }:
 
 let
-
   gsettingsOverridePackages = [
+    dtkcommon
+    dde-dock
+    dde-launcher
+    dde-session-shell
+    dde-session-ui
+    dde-control-center
+    deepin-movie-reborn
+    dde-file-manager
+    deepin-desktop-schemas
     gsettings-desktop-schemas
   ] ++ extraGSettingsOverridePackages;
 
@@ -23,10 +41,9 @@ runCommand "nixos-gsettings-desktop-schemas" {}
 
      mkdir -p $schema_dir
 
-     ${concatMapStrings (pkg: "cp -rf ${glib.getSchemaPath pkg}/{*.xml, *.gschema.override} $schema_dir\n") gsettingsOverridePackages}
+     ${concatMapStrings (pkg: "cp -rvf ${glib.getSchemaPath pkg}/* $schema_dir\n") gsettingsOverridePackages}
 
      chmod -R a+w $out/share/gsettings-schemas/nixos-gsettings-overrides
-     cp ${glib.getSchemaPath elementary-default-settings}/* $schema_dir
 
      cat - > $schema_dir/nixos-defaults.gschema.override <<- EOF
      ${extraGSettingsOverrides}
