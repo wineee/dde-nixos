@@ -1,6 +1,6 @@
-result
-vm/nixos.qcow2
+result*
 vm/flake.lock
+vm/nixos.qcow2
 dde
 a
 b
