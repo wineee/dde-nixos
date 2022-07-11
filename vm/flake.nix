@@ -42,6 +42,13 @@
           supportedLocales = [ "zh_CN.UTF-8/UTF-8" "en_US.UTF-8/UTF-8" ];
           inputMethod.enabled = "fcitx";
         };
+        fonts = {
+          fonts = with pkgs; [
+            noto-fonts
+            noto-fonts-cjk
+            noto-fonts-emoji
+          ];
+        };
         users.users.test = {
           isNormalUser = true;
           uid = 1000;

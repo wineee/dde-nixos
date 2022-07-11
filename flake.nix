@@ -72,6 +72,7 @@
                   #services.xserver.displayManager.sessionPackages = [ pkgs.deepin.core ];
                   #services.xserver.displayManager.lightdm.theme = mkDefault "deepin";
                   #services.accounts-daemon.enable = true;
+                  security.polkit.enable = true;
 
                   environment.pathsToLink = [
                     #"/share"
@@ -118,6 +119,7 @@
                     deepin-boot-maker
                     deepin-gomoku
                     deepin-lianliankan
+                    deepin-font-manager
                   ];
 
                   services.dbus.packages = with packages; [
