@@ -114,15 +114,11 @@ stdenv.mkDerivation rec {
 
   postPatch = getPatchFrom patchList;
 
-  dontWrapQtApps = true;
+  #dontWrapQtApps = true;
 
   preFixup = ''
     glib-compile-schemas ${glib.makeSchemaPath "$out" "${pname}-${version}"}
-    ln -s ${glib.makeSchemaPath "$out" "${pname}-${version}"} $out/share/glib-2.0/schemas
-
-    qtWrapperArgs+=(
-      "''${gappsWrapperArgs[@]}"
-    )
+    qtWrapperArgs+=("''${gappsWrapperArgs[@]}")
   '';
 
   postFixup = ''
