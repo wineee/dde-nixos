@@ -16,6 +16,15 @@ let
 
     ### MISC
     "dconfig-center/dde-dconfig-daemon/services/org.desktopspec.ConfigManager.service" = [ ];
+
+    ### CODE
+    "dconfig-center/dde-dconfig-editor/oemdialog.cpp" = [
+      [ "/etc/dsg" "/run/current-system/sw/share/dsg" ]
+    ];
+    "dconfig-center/dde-dconfig-daemon/dconfig_global.h" = [
+      [ "/etc/dsg" "/run/current-system/sw/share/dsg" ]
+      [ "/usr/share/dsg" "/run/current-system/sw/share/dsg" ]
+    ];
   };
 in
 stdenv.mkDerivation rec {
