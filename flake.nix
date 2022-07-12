@@ -93,15 +93,14 @@
                   hardware.pulseaudio.enable = mkDefault true;
                   security.polkit.enable = true;
                   services.accounts-daemon.enable = true;
+                  programs.dconf.enable = true;
+
                   environment.sessionVariables.NIX_GSETTINGS_OVERRIDES_DIR = "${nixos-gsettings-desktop-schemas}/share/gsettings-schemas/nixos-gsettings-overrides/glib-2.0/schemas";
 
                   environment.pathsToLink = [
                     "/share"
                     #"/share/dsg"
                   ];
-
-                  # Override GSettings schemas
-                  #environment.sessionVariables.NIX_GSETTINGS_OVERRIDES_DIR = "${nixos-gsettings-overrides}/share/gsettings-schemas/nixos-gsettings-overrides/glib-2.0/schemas";
 
                   environment.systemPackages = with packages; [
                     deepin-terminal
@@ -145,7 +144,9 @@
                     deepin-gomoku
                     deepin-lianliankan
                     deepin-font-manager
-                  ];
+                  ] ++ (with pkgs; [
+                    socat
+                  ]);
 
                   services.dbus.packages = with packages; [
                     dde-launcher
@@ -172,6 +173,11 @@
 
                     deepin-anything
                   ];
+
+                  services.udev.packages = [];
+
+                  programs.dconf.packages = [];
+                  services.xserver.updateDbusEnvironment = true;
 
                   users.groups.deepin-sound-player = { };
                   users.users.deepin-sound-player = {
