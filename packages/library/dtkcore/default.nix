@@ -45,7 +45,11 @@ stdenv.mkDerivation rec {
     })
   ];
 
+  # DEFINES += PREFIX=\\\"$$INSTALL_PREFIX\\\" 
   postPatch = ''
+    substituteInPlace src/filesystem/filesystem.pri \
+      --replace '$$INSTALL_PREFIX' "'/run/current-system/sw'"
+
     substituteInPlace src/dsysinfo.cpp \
       --replace "/usr/share/deepin/distribution.info" "${deepin-desktop-base}/usr/share/deepin/distribution.info"
   '';
