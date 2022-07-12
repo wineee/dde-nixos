@@ -19,7 +19,15 @@
           firefox
           neovim
           gdb
+          neofetch
           gnome.dconf-editor
+          plank
+          qtcreator
+          gcc
+          libsForQt5.full
+          gsettings-qt
+          fzf
+          fd
         ];
         services.xserver = {
           enable = true;
