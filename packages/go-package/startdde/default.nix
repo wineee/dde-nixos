@@ -17,6 +17,7 @@
 , jq
 , glib
 , wrapGAppsHook
+, runtimeShell
 }:
 let
   patchList = {
@@ -83,6 +84,7 @@ let
     ];
     "display/manager.go" = [
       [ "/usr/lib/deepin-daemon/dde-touchscreen-dialog" "dde-touchscreen-dialog" ]
+      [ "/bin/bash" "${runtimeShell}" ]
     ];
     "display/wayland.go" = [
       [ "/usr/bin/dde_wloutput" "dde_wloutput" ]
@@ -127,6 +129,7 @@ in buildGoPackage rec {
   postPatch = getPatchFrom patchList + ''
     substituteInPlace "startmanager.go"\
       --replace "/usr/share/startdde/app_startup.conf" "$out/share/startdde/app_startup.conf"
+    substituteInPlace misc/xsessions/deepin.desktop.in --subst-var-by PREFIX $out
   '';
 
   buildPhase = ''
