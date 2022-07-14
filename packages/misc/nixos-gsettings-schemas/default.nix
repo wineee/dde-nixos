@@ -6,6 +6,7 @@
 , gsettings-desktop-schemas
 , dtkcommon
 , dde-dock
+, startdde
 , dde-launcher
 , dde-session-shell
 , dde-session-ui
@@ -21,6 +22,7 @@ let
   gsettingsOverridePackages = [
     dtkcommon
     dde-dock
+    startdde
     dde-launcher
     dde-session-shell
     dde-session-ui
