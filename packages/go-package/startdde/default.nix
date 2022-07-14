@@ -1,36 +1,97 @@
 { stdenv
 , lib
 , fetchFromGitHub
+, getPatchFrom
 , buildGoPackage
 , pkgconfig
 , go-dbus-factory
 , go-gir-generator
 , go-lib
-, deepin-gettext-tools
 , gettext
 , dde-api
-, deepin-desktop-schemas
-, alsaLib
-, glib
+, libgnome-keyring
 , gtk3
+, alsa-lib
 , libgudev
-, libinput
-, libnl
-, librsvg
-, linux-pam
-, pulseaudio
-, python3
-, glibc
-, gdk-pixbuf-xlib
-, tzdata
-, go
-, xkeyboard_config
+, libsecret
+, jq
+, glib
 , wrapGAppsHook
 }:
-# TODO fix path in code
-buildGoPackage rec {
+let
+  patchList = {
+    "main.go" = [
+      [ "/usr/bin/kwin_no_scale" "kwin_no_scale" ]
+      [ "/usr/lib/deepin-daemon/dde-session-daemon" "dde-session-daemon" ]
+      [ "/usr/bin/dde-dock" "dde-dock" ]
+      [ "/usr/bin/dde-desktop" "dde-desktop" ]
+      [ "/usr/libexec/deepin/login-reminder-helper" "login-reminder-helper" ]
+      [ "/usr/bin/dde-hints-dialog" "dde-hints-dialog" ]
+    ];
+    "session.go" = [
+      [ "/usr/share/applications/dde-lock.desktop" "/run/current-system/sw/share/applications/dde-lock.desktop" ]
+      [ "/usr/bin/dde-shutdown" "dde-shutdown" ]
+      [ "/usr/lib/deepin-daemon/langselector" "langselector" ]
+      [ "/usr/bin/dde-lock" "dde-lock" ]
+      [ "/usr/lib/deepin-daemon/dde-osd" "dde-osd" ]
+      [ "/usr/bin/gnome-keyring-daemon" "gnome-keyring-daemon" ]
+      #? [ "/usr/share/deepin-default-settings/fontconfig.json"  ] 
+    ];
+    "main_test.go" = [
+      [ "/usr/bin/kwin_no_scale" "kwin_no_scale" ]
+    ];
+    "misc/lightdm.conf" = [
+      [ "/usr/sbin/deepin-fix-xauthority-perm" "deepin-fix-xauthority-perm" ]
+    ];
+    "misc/Xsession.d/00deepin-dde-env" = [
+       [ "/usr/bin/startdde" "$out/bin/startdde" ]
+    ];
+    "misc/auto_launch/chinese.json" = [
+      [ "/usr/bin/dde-file-manager" "dde-file-manager" ]
+      [ "/usr/lib/polkit-1-dde/dde-polkit-agent" "dde-polkit-agent" ] #? 
+      [ "/usr/bin/dde-shutdown" "dde-shutdown" ]
+    ];
+    "misc/auto_launch/default.json" = [
+      [ "/usr/lib/polkit-1-dde/dde-polkit-agent" "dde-polkit-agent" ] #?
+    ];
+    "utils.go" = [
+      [ "/usr/lib/deepin-daemon/dde-welcome" "dde-welcome" ]
+    ];
+    "launch_group.go" = [
+      # "/usr/share/startdde/auto_launch.json" 
+    ];
+    "watchdog/deepinid_daemon.go" = [
+      [ "/usr/lib/deepin-deepinid-daemon/deepin-deepinid-daemon" "deepin-deepinid-daemon" ]
+    ];
+    "watchdog/watchdog_test.go" = [
+       [ "/usr/bin/kwin_no_scale" "kwin_no_scale" ]
+    ];
+    "watchdog/dde_polkit_agent.go" = [
+      [ "/usr/lib/polkit-1-dde/dde-polkit-agent" "dde-polkit-agent" ]
+    ];
+    "launch_group_test.go" = [
+      [ "/usr/lib/polkit-1-dde/dde-polkit-agent" "dde-polkit-agent" ]
+    ];
+    "testdata/auto_launch/auto_launch.json" = [
+      [ "/usr/lib/polkit-1-dde/dde-polkit-agent" "dde-polkit-agent" ]
+    ];
+    "testdata/desktop/dde-file-manager.desktop" = [
+      [ "/usr/bin/dde-file-manager" "dde-file-manager" ]
+    ];
+    "memchecker/config.go" = [
+      # /usr/share/startdde/memchecker.json 
+    ];
+    "display/manager.go" = [
+      [ "/usr/lib/deepin-daemon/dde-touchscreen-dialog" "dde-touchscreen-dialog" ]
+    ];
+    "display/wayland.go" = [
+      [ "/usr/bin/dde_wloutput" "dde_wloutput" ]
+    ];
+    #?  "memanalyzer/config_test.go" 
+  };
+in buildGoPackage rec {
   pname = "startdde";
-  version = "5.9.44";
+  version = "5.9.32";
 
   goPackagePath = "github.com/linuxdeepin/startdde";
 
@@ -38,37 +99,35 @@ buildGoPackage rec {
     owner = "linuxdeepin";
     repo = pname;
     rev = version;
-    sha256 = "sha256-pTzdIfGqtKdjKKeWCq7qocTsDclgCiRjBkL0Bn2uP7M=";
+    sha256 = "sha256-Tv1V2IZjOyqOeuYitxMeFJw+PMFixX/9ZV28i1U1xVk=";
   };
 
   goDeps = ./deps.nix;
 
   nativeBuildInputs = [
-    deepin-gettext-tools
     gettext
     pkgconfig
-    python3
+    jq
     wrapGAppsHook
+    glib
   ];
 
   buildInputs = [
     go-dbus-factory
     go-gir-generator
     go-lib
-    linux-pam
-    alsaLib
     dde-api
-    deepin-desktop-schemas
-    glib
-    libgudev
+    libgnome-keyring
     gtk3
-    gdk-pixbuf-xlib
-    libinput
-    libnl
-    librsvg
-    tzdata
-    xkeyboard_config
+    alsa-lib
+    libgudev
+    libsecret
   ];
+
+  # postPatch = getPatchFrom patchList + ''
+  #   substituteInPlace "startmanager.go"\
+  #     --replace "/usr/share/startdde/app_startup.conf" "$out/share/startdde/app_startup.conf"
+  # '';
 
   buildPhase = ''
     runHook preBuild
@@ -82,6 +141,10 @@ buildGoPackage rec {
 
   installPhase = ''
     make install DESTDIR="$out" PREFIX="/" -C go/src/${goPackagePath}
+  '';
+
+  preFixup = ''
+    glib-compile-schemas ${glib.makeSchemaPath "$out" "${pname}-${version}"}
   '';
 
   meta = with lib; {
