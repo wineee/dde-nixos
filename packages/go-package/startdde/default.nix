@@ -124,10 +124,10 @@ in buildGoPackage rec {
     libsecret
   ];
 
-  # postPatch = getPatchFrom patchList + ''
-  #   substituteInPlace "startmanager.go"\
-  #     --replace "/usr/share/startdde/app_startup.conf" "$out/share/startdde/app_startup.conf"
-  # '';
+  postPatch = getPatchFrom patchList + ''
+    substituteInPlace "startmanager.go"\
+      --replace "/usr/share/startdde/app_startup.conf" "$out/share/startdde/app_startup.conf"
+  '';
 
   buildPhase = ''
     runHook preBuild
