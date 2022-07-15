@@ -21,13 +21,19 @@
           gdb
           neofetch
           gnome.dconf-editor
+          dfeet
+
           plank
-          qtcreator
           gcc
+          gnumake
+          cmake
           libsForQt5.full
+          qtcreator
           gsettings-qt
           fzf
           fd
+          rg
+          ranger
         ];
         services.xserver = {
           enable = true;
@@ -38,9 +44,9 @@
               user = "test";
             };
           };
-          desktopManager.plasma5 = {
-            enable = true;
-          };
+          desktopManager.plasma5.enable = true;
+          #desktopManager.xfce.enable = true;
+
           desktopManager.deepin = {
             enable = true;
           };
