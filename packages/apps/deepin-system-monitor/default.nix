@@ -8,7 +8,6 @@
 , deepin-gettext-tools
 , dde-qt-dbus-factory
 , udisks2-qt5
-, image-editor
 , cmake
 , pkgconfig
 , qttools
