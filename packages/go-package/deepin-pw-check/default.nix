@@ -31,8 +31,6 @@ buildGoPackage rec {
 
   goDeps = ./deps.nix;
 
-  ### TODO dbus-1 services
-
   nativeBuildInputs = [
     pkgconfig
     gettext
@@ -57,6 +55,9 @@ buildGoPackage rec {
     substituteInPlace misc/pkgconfig/libdeepin_pw_check.pc \
       --replace "/usr" "$out" \
       --replace "Version: 0.0.0.1" "Version: ${version}"
+    
+    substituteInPlace misc/system-services/com.deepin.daemon.PasswdConf.service \
+      --replace "/usr/lib/deepin-pw-check/deepin-pw-check" "$out/lib/deepin-pw-check/deepin-pw-check"
   '';
 
   buildPhase = ''
