@@ -38,6 +38,9 @@ stdenv.mkDerivation rec {
   postPatch = ''
     substituteInPlace libdframeworkdbus/libdframeworkdbus.pro \
      --replace "/usr" ""
+
+    substituteInPlace libdframeworkdbus/DFrameworkdbusConfig.in \
+      --replace "/usr/include" "$out/include"
   '';
 
   meta = with lib; {
