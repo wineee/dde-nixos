@@ -2,6 +2,7 @@
 , lib
 , fetchFromGitHub
 , buildGoPackage
+, getPatchFrom
 , pkgconfig
 , alsaLib
 , bc
@@ -22,10 +23,66 @@
 , xcur2png
 , gdk-pixbuf-xlib
 }:
+let
+  patchList = {
+    ### CODE
+    "lunar-calendar/huangli.go" = [
+      # /usr/share/dde-api/data/huangli*
+    ];
+    "lunar-calendar/main.go" = [
+      #? /usr/lib/deepin-api/lunar-calendar
+    ];
+    "locale-helper/main.go" = [
+      [ "/usr/local/sbin:" "PATH:/usr/local/sbin" ]
+      #?
+    ];
 
+    "theme_thumb/gtk/gtk.go" = [
+      # /usr/lib/deepin-api/gtk-thumbnailer
+    ];
+    "device/main.go" = [
+      [ "/usr/local/sbin:" "PATH:/usr/local/sbin" ]
+    ];
+    "thumbnails/gtk/gtk.go" = [
+      # /usr/lib/deepin-api/gtk-thumbnailer
+    ];
+    "i18n_dependent/i18n_dependent.go" = [
+      [ "/usr/share" "/run/current-system/sw/share" ]
+      #? /usr/share/i18n/i18n_dependent.json
+    ];
+    "adjust-grub-theme/main.go" = [
+      # "/usr/share/dde-api/data/grub-themes/"
+    ];
+    "language_support/lang_support.go" = [
+      #? dpkg
+    ];
+    "sound-theme-player/main.go" = [
+      ["/usr/sbin/alsactl" "alsactl"]
+    ];
+    "themes/theme.go" = [
+      [ "/usr/share" "/run/current-system/sw/share" ]
+    ];
+    "themes/settings.go" = [
+      [ "/usr/share" "/run/current-system/sw/share" ]
+    ];
+    "lang_info/lang_info.go" = [
+      [ "/usr/share" "/run/current-system/sw/share" ]
+      #? /usr/share/i18n/language_info.json
+    ];
+
+    ### MISC
+    "misc/systemd/system/deepin-login-sound.service" = [
+      [ "/usr/bin/dbus-send" "dbus-send" ]
+    ];
+    "misc/systemd/system/deepin-shutdown-sound.service" = [
+      [ "/usr/bin/true" "true" ]
+      # /usr/lib/deepin-api/deepin-shutdown-sound
+    ];
+  };
+in
 buildGoPackage rec {
   pname = "dde-api";
-  version = "5.5.12";
+  version = "5.5.25";
 
   goPackagePath = "github.com/linuxdeepin/dde-api";
 
@@ -33,7 +90,7 @@ buildGoPackage rec {
     owner = "linuxdeepin";
     repo = pname;
     rev = version;
-    sha256 = "sha256-dC9pIkmTRqrQRagGQ6HWJopvOoA01g3ujTjNo6TmRe8=";
+    sha256 = "sha256-0W3KmXuqbNy2XrEr5LlJCI6YlFyDpWG6KsyJTFO2PQE";
   };
 
   goDeps = ./deps.nix;
@@ -63,6 +120,14 @@ buildGoPackage rec {
   ];
 
   dontWrapQtApps = true;
+
+  postPatch = getPatchFrom patchList + ''
+   for file in misc/system-services/* misc/services/*
+    do
+      substituteInPlace $file \
+        --replace "/usr/lib/deepin-api" "$out/lib/deepin-api"
+    done
+  '';
 
   GOFLAGS = [ "-buildmode=pie" "-trimpath" "-mod=readonly" "-modcacherw" ];
 
