@@ -1,12 +1,41 @@
 { stdenv
 , lib
 , fetchFromGitHub
+, getPatchFrom
 , buildGoPackage
 , go
 , go-lib
 , glib
 }:
-# TODO PATCH CODE
+let
+  sw_share = [ "/usr/share" "/run/current-system/sw/share"];
+  patchList = {
+    "schemas/com.deepin.dde.appearance.gschema.xml" = [
+      sw_share
+      # "/usr/share/backgrounds/default_background.jpg"
+    ];
+    "schemas/wrap/com.deepin.wrap.gnome.desktop.background.gschema.xml" = [
+      sw_share
+      # /usr/share/backgrounds/gnome/adwaita-timed.xml
+    ];
+    "schemas/wrap/com.deepin.wrap.gnome.desktop.screensaver.gschema.xml" = [
+      sw_share
+      # /usr/share/backgrounds/gnome/adwaita-lock.jpg
+    ];
+    "schemas/wrap/com.deepin.wrap.gnome.desktop.app-folders.gschema.xml" = [
+      sw_share
+      # /usr/share/desktop-directories.
+    ];
+    "overrides/mips/appearance.override" = [
+      sw_share
+      # /usr/share/wallpapers/deepin/desktop.bmp
+    ];
+    "overrides/common/com.deepin.wrap.gnome.desktop.override" = [
+      sw_share
+      # /usr/share/backgrounds/default_background.jpg
+    ];
+  };
+in
 buildGoPackage rec {
   pname = "deepin-desktop-schemas";
   version = "5.10.6";
@@ -22,6 +51,8 @@ buildGoPackage rec {
 
   nativeBuildInputs = [ glib ];
   buildInputs = [ go-lib ];
+
+  postPatch = getPatchFrom patchList;
 
   buildPhase = ''
     runHook preBuild
