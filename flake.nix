@@ -95,21 +95,27 @@
                   services.accounts-daemon.enable = true;
                   programs.dconf.enable = true;
                   services.gnome.gnome-keyring.enable = true;
+                  
 
                   services.udev.packages = [];
-                  programs.dconf.packages = [];
+                  # pkg/etc/udev/rules.d and pkg/lib/udev/rules.d
+
+                  #programs.dconf.packages = [];
+                  # /etc/dconf /etc/dconf/profiles/
                   
                   services.xserver.updateDbusEnvironment = true;
                   services.udisks2.enable = true;
                   services.upower.enable = true;
                   services.power-profiles-daemon.enable = true;
-
+                  networking.networkmanager.enable = mkDefault true;
 
                   environment.sessionVariables.NIX_GSETTINGS_OVERRIDES_DIR = "${nixos-gsettings-desktop-schemas}/share/gsettings-schemas/nixos-gsettings-overrides/glib-2.0/schemas";
 
                   environment.pathsToLink = [
+                    "/lib/deepin-daemon"
+                    "/share/dsg"
+                    # TODO
                     "/share"
-                    #"/share/dsg"
                   ];
 
                   environment.systemPackages = with packages; [
@@ -156,7 +162,9 @@
                     deepin-font-manager
                   ] ++ (with pkgs; [
                     socat
-                    glib
+                    glib # for gsettings program
+                    gtk3.out # for gtk-launch program
+                    xdg-user-dirs # Update user dirs as described in http://freedesktop.org/wiki/Software/xdg-user-dirs/
                   ]);
 
                   services.dbus.packages = with packages; [
@@ -170,6 +178,7 @@
                     dde-file-manager
                     dde-control-center
                     dde-calendar
+                    deepin-picker
 
                     dde-dock
                     deepin-anything
@@ -219,9 +228,7 @@
                     group = "dde-daemon";
                     isSystemUser = true;
                   };
-               })
-
-               
+               })               
               ];
             };
         });
