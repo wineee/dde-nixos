@@ -50,6 +50,11 @@ stdenv.mkDerivation rec {
     "--prefix QT_QPA_PLATFORM_PLUGIN_PATH : ${qt5platform-plugins}/plugins"
   ];
 
+  postPatch = ''
+    substituteInPlace com.deepin.Picker.service \
+      --replace "/usr/bin/deepin-picker" "$out/bin/deepin-picker"
+  '';
+
   meta = with lib; {
     description = "Color picker application";
     homepage = "https://github.com/linuxdeepin/deepin-picker";
