@@ -1,6 +1,7 @@
 { stdenv
 , lib
 , fetchFromGitHub
+, fetchpatch
 , dtk
 , qt5integration
 , qt5platform-plugins
@@ -49,6 +50,14 @@ stdenv.mkDerivation rec {
   ];
 
   cmakeFlags = [ "-DVERSION=${version}" ];
+
+  patches = [
+    (fetchpatch {
+      name = "use_pkgconfig_to_find_libimageviewer";
+      url = "https://github.com/linuxdeepin/deepin-album/commit/8a8ba283129e336b9598531505840ebf7f915e17.patch";
+      sha256 = "sha256-YY1VahcXRgmbuUts6Oa5agyKznnf7bnaADA6iWj5rn4=";
+    })
+  ];
 
   postPatch = ''
     substituteInPlace libUnionImage/CMakeLists.txt \
