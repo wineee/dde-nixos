@@ -31,6 +31,7 @@
 , makeWrapper
 , xkeyboard_config
 , wrapGAppsHook
+, wrapQtAppsHook
 , runtimeShell
 }:
 let
@@ -291,6 +292,7 @@ buildGoPackage rec {
     python3
     makeWrapper
     wrapGAppsHook
+    wrapQtAppsHook
   ];
 
   buildInputs = [
@@ -316,8 +318,6 @@ buildGoPackage rec {
     tzdata
     xkeyboard_config
   ];
-
-  dontWrapQtApps = true;
 
   patches = [
     ./remove-tc.patch
