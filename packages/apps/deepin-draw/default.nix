@@ -12,13 +12,13 @@
 
 stdenv.mkDerivation rec {
   pname = "deepin-draw";
-  version = "5.11.1";
+  version = "5.11.2";
 
   src = fetchFromGitHub {
     owner = "linuxdeepin";
     repo = pname;
     rev = version;
-    sha256 = "sha256-1d6VHQK3ZnhE2gXcrvMOUSRCS+psYBT18EAG3uGvGLo=";
+    sha256 = "sha256-oPbOnWwktR0FA9lJRXs7qxKRBABf5HymtMeI92ZHIdU";
   };
 
   nativeBuildInputs = [
@@ -46,7 +46,12 @@ stdenv.mkDerivation rec {
       --replace "/usr/bin" "$out/bin"
   '';
 
-  postPatch = fixInstallPatch;
+  fixServicePatch = ''
+    substituteInPlace com.deepin.Draw.service \
+      --replace "/usr/bin/deepin-draw" "deepin-draw"
+  '';
+
+  postPatch = fixInstallPatch + fixServicePatch;
   #separateDebugInfo = true;
 
   meta = with lib; {
