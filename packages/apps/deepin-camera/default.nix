@@ -28,7 +28,7 @@ let
 in
 stdenv.mkDerivation rec {
   pname = "deepin-camera";
-  version = "1.4.1"; #"1.3.9";
+  version = "1.4.1";
 
   src = fetchFromGitHub {
     owner = "linuxdeepin";
@@ -101,7 +101,12 @@ stdenv.mkDerivation rec {
       --replace "/usr/share/libimagevisualresult/filter_cube" "${image-editor}/share/libimagevisualresult/filter_cube"
   '';
 
-  postPatch = fixLoadLibPatch + fixLurDirPatch;
+  postPatch = fixLoadLibPatch + fixLurDirPatch + ''
+    substituteInPlace src/com.deepin.Camera.service \
+      --replace "/usr/bin/qdbus" "qdbus" \
+      --replace "/usr/share/applications/deepin-camera.desktop" "$out/share/applications/deepin-camera.desktop"
+  '';
+  ## qtchooser: /usr/bin/qdbus
 
   cmakeFlags = [ "-DVERSION=${version}" ];
 
