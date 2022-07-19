@@ -183,6 +183,7 @@
                     deepin-picker
                     deepin-draw
                     deepin-image-viewer
+                    deepin-screen-recorder
                     deepin-boot-maker
                     deepin-camera
 
