@@ -113,6 +113,7 @@
 
                   environment.pathsToLink = [
                     "/lib/deepin-daemon"
+                    "/lib/deepin-api"
                     "/share/dsg"
                     # TODO
                     "/share"
@@ -168,17 +169,22 @@
                   ]);
 
                   services.dbus.packages = with packages; [
+                    dde-api
+                    dde-daemon
+                    deepin-pw-check
+
                     dde-launcher
                     dde-session-ui
                     dde-session-shell
-                    dde-api
-                    deepin-image-viewer
-                    dde-daemon
                     dde-app-services
                     dde-file-manager
                     dde-control-center
                     dde-calendar
                     deepin-picker
+                    deepin-draw
+                    deepin-image-viewer
+                    deepin-boot-maker
+                    deepin-camera
 
                     dde-dock
                     deepin-anything
