@@ -57,6 +57,9 @@ stdenv.mkDerivation rec {
       --replace "/usr/share/deepin-boot-maker/translations" "$out/share/deepin-boot-maker/translations"
     substituteInPlace deepin-boot-maker.pro \
       --replace "/usr/share/deepin-manual/manual-assets/application" "$out/share/deepin-manual/manual-assets/application"
+    
+    substituteInPlace src/service/data/com.deepin.bootmaker.service \
+      --replace "/usr/lib/deepin-daemon/deepin-boot-maker-service" "/run/current-system/sw/lib/deepin-daemon/deepin-boot-maker-service"
   '';
 
   meta = with lib; {
