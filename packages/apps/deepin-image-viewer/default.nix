@@ -77,6 +77,9 @@ stdenv.mkDerivation rec {
     substituteInPlace src/src/mainwindow/mainwindow.cpp \
       --replace "\"../libimageviewer/imageviewer.h\"" "\"libimageviewer/imageviewer.h\"" \
       --replace "\"../libimageviewer/imageengine.h\"" "\"libimageviewer/imageengine.h\""
+    
+    substituteInPlace src/com.deepin.ImageViewer.service \
+      --replace "/usr/bin/deepin-image-viewer" "$out/bin/deepin-image-viewer"
   '';
 
   postPatch = fixInstallPatch + fixCodePatch;
