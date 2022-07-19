@@ -28,24 +28,49 @@
 let
   gstPluginPath = lib.makeSearchPathOutput "lib" "lib/gstreamer-1.0" (with gst_all_1; [ gstreamer gst-plugins-base gst-plugins-good gst-plugins-bad ]);
   patchList = {
+
+    ###MISC
     "deepin-screen-recorder.desktop" = [ ];
+     "assets/screenRecorder.json" = [
+      # /usr/share/deepin-screen-recorder/tablet_resources/fast-icon_recording_normal.svg
+    ];
     "com.deepin.Screenshot.service" = [
       [ "/usr/bin/dbus-send" "dbus-send" ]
       # /usr/share/applications/deepin-screen-recorder.desktop
-    ];
-    "src/recordertablet.cpp" = [
-      #/usr/share/deepin-screen-recorder/tablet_resources
     ];
     "src/dbusservice/com.deepin.Screenshot.service" = [
       [ "/usr/bin/deepin-turbo-invoker" "deepin-turbo-invoker" ]
       # /usr/bin/deepin-screenshot
     ];
-    "src/main.cpp" = [
-      #? /usr/bin/ffmpeg why not "which ffmpeg"
-    ];
     "src/pin_screenshots/com.deepin.PinScreenShots.service" = [
       [ "/usr/bin/dbus-send" "dbus-send" ]
       # /usr/bin/deepin-pin-screenshots
+    ];
+    "assets/com.deepin.Screenshot.service" = [
+      [ "/usr/bin/dbus-send" "dbus-send" ]
+      #/usr/bin/deepin-screen-recorder
+    ];
+    "assets/com.deepin.ScreenRecorder.service" = [
+      # /usr/bin/deepin-screen-recorder
+    ];
+    "com.deepin.ScreenRecorder.service" = [
+        [ "/usr/bin/dbus-send" "dbus-send" ]
+    ];
+  
+    ### CODE
+    "src/recordertablet.cpp" = [
+      #/usr/share/deepin-screen-recorder/tablet_resources
+    ];
+    "src/pin_screenshots/mainwindow.cpp" = [
+      #? QFile("/usr/bin/dde-file-manager").exists()
+    ];
+    
+    "src/main.cpp" = [
+      #? /usr/bin/ffmpeg why not "which ffmpeg"
+    ];
+   
+    "src/main_window.cpp" = [
+      #? QFile("/usr/bin/deepin-album").exists() ..
     ];
   };
 in
@@ -125,7 +150,7 @@ stdenv.mkDerivation rec {
       --replace "PKGCONFIG +=xcb xcb-util dframeworkdbus gobject-2.0" "PKGCONFIG +=xcb xcb-util dframeworkdbus gobject-2.0 gstreamer-app-1.0"
   '';
 
-  postPatch = fixInstallPatch + rmddedockPatch + fixPkgconfigPatch +  getPatchFrom patchList;
+  postPatch = fixInstallPatch + rmddedockPatch + fixPkgconfigPatch + getPatchFrom patchList;
 
   meta = with lib; {
     description = "screen recorder application for dde";
