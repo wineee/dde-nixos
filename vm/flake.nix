@@ -32,7 +32,7 @@
           gsettings-qt
           fzf
           fd
-          rg
+          ripgrep
           ranger
         ];
         services.xserver = {
