@@ -1,34 +1,63 @@
 { stdenv
 , lib
 , fetchFromGitHub
+, getPatchFrom
 , dtk
 , qt5integration
 , qt5platform-plugins
 , dde-qt-dbus-factory
+, image-editor
 , gsettings-qt
 , qmake
 , qttools
-, polkit-qt
 , pkgconfig
 , qtmultimedia
 , qtx11extras
 , wrapQtAppsHook
 , xorg
 , gst_all_1
+, libusb1
+, ffmpeg
+, ffmpegthumbnailer
+, portaudio
+, libv4l
 , kwayland
 }:
 # TODO
 # src/main.cpp : ffmpeg
-
+let
+  gstPluginPath = lib.makeSearchPathOutput "lib" "lib/gstreamer-1.0" (with gst_all_1; [ gstreamer gst-plugins-base gst-plugins-good gst-plugins-bad ]);
+  patchList = {
+    "deepin-screen-recorder.desktop" = [ ];
+    "com.deepin.Screenshot.service" = [
+      [ "/usr/bin/dbus-send" "dbus-send" ]
+      # /usr/share/applications/deepin-screen-recorder.desktop
+    ];
+    "src/recordertablet.cpp" = [
+      #/usr/share/deepin-screen-recorder/tablet_resources
+    ];
+    "src/dbusservice/com.deepin.Screenshot.service" = [
+      [ "/usr/bin/deepin-turbo-invoker" "deepin-turbo-invoker" ]
+      # /usr/bin/deepin-screenshot
+    ];
+    "src/main.cpp" = [
+      #? /usr/bin/ffmpeg why not "which ffmpeg"
+    ];
+    "src/pin_screenshots/com.deepin.PinScreenShots.service" = [
+      [ "/usr/bin/dbus-send" "dbus-send" ]
+      # /usr/bin/deepin-pin-screenshots
+    ];
+  };
+in
 stdenv.mkDerivation rec {
   pname = "deepin-screen-recorder";
-  version = "5.11.2";
+  version = "5.11.4";
 
   src = fetchFromGitHub {
     owner = "linuxdeepin";
     repo = pname;
     rev = version;
-    sha256 = "sha256-K5/xnfmtDWO01fl6RVGFoH6O/Jd1movUZGbhrbmpzEw=";
+    sha256 = "sha256-0i1mpvNlaiYPQ6QObefXVjHiiX0fK9VzZghHPfuaCUc=";
   };
 
   nativeBuildInputs = [
@@ -41,6 +70,7 @@ stdenv.mkDerivation rec {
   buildInputs = [
     dtk
     dde-qt-dbus-factory
+    image-editor
     #polkit-qt
     gsettings-qt
     qtmultimedia
@@ -50,6 +80,11 @@ stdenv.mkDerivation rec {
     xorg.libXcursor.dev
     gst_all_1.gst-plugins-base.dev
     kwayland
+    libusb1
+    libv4l.dev
+    ffmpeg.dev
+    ffmpegthumbnailer
+    portaudio
   ];
 
   qmakeFlags = [
@@ -65,19 +100,8 @@ stdenv.mkDerivation rec {
   qtWrapperArgs = [
     "--prefix QT_PLUGIN_PATH : ${qt5integration}/plugins"
     "--prefix QT_QPA_PLATFORM_PLUGIN_PATH : ${qt5platform-plugins}/plugins"
+    "--prefix GST_PLUGIN_SYSTEM_PATH_1_0 : ${gstPluginPath}"
   ];
-
-  cmakePatch = ''
-    substituteInPlace CMakeLists.txt \
-      --replace "add_subdirectory(src/dde-dock-plugins)" ""
-    substituteInPlace src/CMakeLists.txt \
-      --replace "screen_shot_event.h" "" \
-      --replace "lib/GifH/gif.h" "" \
-      --replace "xgifrecord.h" "" \
-      --replace "screen_shot_event.cpp" ""\
-      --replace "xgifrecord.cpp" ""\
-      --replace "/usr/share/deepin-manual/manual-assets/application)" "$out/share/deepin-manual/manual-assets/application)"
-  '';
 
   fixInstallPatch = ''
     substituteInPlace screen_shot_recorder.pro \
@@ -101,7 +125,7 @@ stdenv.mkDerivation rec {
       --replace "PKGCONFIG +=xcb xcb-util dframeworkdbus gobject-2.0" "PKGCONFIG +=xcb xcb-util dframeworkdbus gobject-2.0 gstreamer-app-1.0"
   '';
 
-  postPatch = fixInstallPatch + rmddedockPatch + fixPkgconfigPatch;
+  postPatch = fixInstallPatch + rmddedockPatch + fixPkgconfigPatch +  getPatchFrom patchList;
 
   meta = with lib; {
     description = "screen recorder application for dde";
