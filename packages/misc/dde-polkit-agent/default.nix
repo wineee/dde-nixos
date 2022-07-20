@@ -15,14 +15,18 @@
 
 stdenv.mkDerivation rec {
   pname = "dde-polkit-agent";
-  version = "5.5.7";
+  version = "5.5.19";
 
   src = fetchFromGitHub {
     owner = "linuxdeepin";
     repo = pname;
     rev = version;
-    sha256 = "sha256-zh1tK9jhEvKWyCcriYFOL2ko9E7nA/6Mte9fJL1b+hA=";
+    sha256 = "sha256-jVzwzTejaFgmTzkEEVoLXWdPX43EgwTC90dUurH57q8=";
   };
+
+  patches = [
+    ./fix_in_non_deepin.patch
+  ];
 
   nativeBuildInputs = [
     cmake
@@ -40,9 +44,9 @@ stdenv.mkDerivation rec {
     polkit-qt
   ];
 
-  patches = [
-    ./fix_in_non_deepin.patch
-  ];
+  postFixup = ''
+    wrapQtApp $out/lib/polkit-1-dde/dde-polkit-agent
+  '';
 
   meta = with lib; {
     description = "PolicyKit agent for Deepin Desktop Environment";
