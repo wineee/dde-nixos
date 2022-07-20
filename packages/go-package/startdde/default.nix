@@ -18,12 +18,14 @@
 , glib
 , wrapGAppsHook
 , runtimeShell
+, dde-daemon
+, dde-polkit-agent
 }:
 let
   patchList = {
     "main.go" = [
-      [ "/usr/bin/kwin_no_scale" "kwin_no_scale" ]
-      [ "/usr/lib/deepin-daemon/dde-session-daemon" "dde-session-daemon" ]
+      [ "/usr/bin/kwin_no_scale" "kwin_no_scale" ] ### TODO dde-kwine 
+      [ "/usr/lib/deepin-daemon/dde-session-daemon" "${dde-daemon}/lib/deepin-daemon/dde-session-daemon" ]
       [ "/usr/bin/dde-dock" "dde-dock" ]
       [ "/usr/bin/dde-desktop" "dde-desktop" ]
       [ "/usr/libexec/deepin/login-reminder-helper" "login-reminder-helper" ]
@@ -49,11 +51,11 @@ let
     ];
     "misc/auto_launch/chinese.json" = [
       [ "/usr/bin/dde-file-manager" "dde-file-manager" ]
-      [ "/usr/lib/polkit-1-dde/dde-polkit-agent" "dde-polkit-agent" ] #? 
+      [ "/usr/lib/polkit-1-dde/dde-polkit-agent" "${dde-polkit-agent}/lib/polkit-1-dde/dde-polkit-agent" ] 
       [ "/usr/bin/dde-shutdown" "dde-shutdown" ]
     ];
     "misc/auto_launch/default.json" = [
-      [ "/usr/lib/polkit-1-dde/dde-polkit-agent" "dde-polkit-agent" ] #?
+      [ "/usr/lib/polkit-1-dde/dde-polkit-agent" "${dde-polkit-agent}/lib/polkit-1-dde/dde-polkit-agent" ] 
     ];
     "utils.go" = [
       [ "/usr/lib/deepin-daemon/dde-welcome" "dde-welcome" ]
@@ -68,13 +70,13 @@ let
       [ "/usr/bin/kwin_no_scale" "kwin_no_scale" ]
     ];
     "watchdog/dde_polkit_agent.go" = [
-      [ "/usr/lib/polkit-1-dde/dde-polkit-agent" "dde-polkit-agent" ]
+      [ "/usr/lib/polkit-1-dde/dde-polkit-agent" "${dde-polkit-agent}/lib/polkit-1-dde/dde-polkit-agent" ] 
     ];
     "launch_group_test.go" = [
-      [ "/usr/lib/polkit-1-dde/dde-polkit-agent" "dde-polkit-agent" ]
+      [ "/usr/lib/polkit-1-dde/dde-polkit-agent" "${dde-polkit-agent}/lib/polkit-1-dde/dde-polkit-agent" ] 
     ];
     "testdata/auto_launch/auto_launch.json" = [
-      [ "/usr/lib/polkit-1-dde/dde-polkit-agent" "dde-polkit-agent" ]
+      [ "/usr/lib/polkit-1-dde/dde-polkit-agent" "${dde-polkit-agent}/lib/polkit-1-dde/dde-polkit-agent" ] 
     ];
     "testdata/desktop/dde-file-manager.desktop" = [
       [ "/usr/bin/dde-file-manager" "dde-file-manager" ]
@@ -105,6 +107,12 @@ buildGoPackage rec {
     sha256 = "sha256-qS7r7CeK8ogrxqiNJh4/fYAaLo2j3f+N4S9a6jiur+U=";
   };
 
+  postPatch = getPatchFrom patchList + ''
+    substituteInPlace "startmanager.go"\
+      --replace "/usr/share/startdde/app_startup.conf" "$out/share/startdde/app_startup.conf"
+    substituteInPlace misc/xsessions/deepin.desktop.in --subst-var-by PREFIX $out
+  '';
+
   goDeps = ./deps.nix;
 
   nativeBuildInputs = [
@@ -126,12 +134,6 @@ buildGoPackage rec {
     libgudev
     libsecret
   ];
-
-  postPatch = getPatchFrom patchList + ''
-    substituteInPlace "startmanager.go"\
-      --replace "/usr/share/startdde/app_startup.conf" "$out/share/startdde/app_startup.conf"
-    substituteInPlace misc/xsessions/deepin.desktop.in --subst-var-by PREFIX $out
-  '';
 
   buildPhase = ''
     runHook preBuild
