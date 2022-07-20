@@ -47,7 +47,7 @@ let
     ];
     ### CODE
     "widgets/fullscreenbackground.cpp" = [
-      [ "/usr/share" "/run/current-system/sw/share"]
+      [ "/usr/share" "/run/current-system/sw/share" ]
       #[ "/usr/share/wallpapers/deepin/desktop.jpg" ]
       #[ "/usr/share/backgrounds/default_background.jpg" ]
     ];
@@ -63,7 +63,7 @@ let
     ];
     "dnetwork-secret-dialog/main.cpp" = [ ];
     "dde-suspend-dialog/main.cpp" = [ ];
-    "dde-warning-dialog/main.cpp" =[ ];
+    "dde-warning-dialog/main.cpp" = [ ];
     "dde-bluetooth-dialog/main.cpp" = [ ];
     "dde-welcome/main.cpp" = [ ];
     "dde-hints-dialog/main.cpp" = [ ];
@@ -72,7 +72,7 @@ let
     "dde-license-dialog/content.cpp" = [ ];
     "dde-license-dialog/main.cpp" = [ ];
     "dde-osd/notification/bubbletool.cpp" = [
-      [ "/usr/share" "/run/current-system/sw/share"]
+      [ "/usr/share" "/run/current-system/sw/share" ]
       # "/usr/share/applications/" + name + ".desktop"
     ];
   };

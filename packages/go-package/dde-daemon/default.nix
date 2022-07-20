@@ -40,11 +40,11 @@ let
       #? ["/usr/share/X11/xkb/rules/base.xml"]
     ];
     "inputdevices/keyboard.go" = [
-      ["/usr/bin/setxkbmap" "setxkbmap"]
+      [ "/usr/bin/setxkbmap" "setxkbmap" ]
       #? "/etc/default/keyboard"
     ];
     "grub2/modify_manger.go" = [
-      #? ["/usr/lib/deepin-api/adjust-grub-theme"]
+      [ "/usr/lib/deepin-api/adjust-grub-theme" "/run/current-system/sw/lib/deepin-api/adjust-grub-theme" ]
       ## FIXE setENV ??
       ## os.Setenv("PATH", "/usr/local/sbin:
     ];
@@ -55,70 +55,70 @@ let
       # "/usr/share/dde-daemon/gesture.json"
     ];
     "appearance/fsnotify.go" = [
-      ["/usr/share" "/run/current-system/sw/share"]
+      [ "/usr/share" "/run/current-system/sw/share" ]
       # /usr/share/themes"
       # /usr/share/icons
     ];
     "appearance/background/list.go" = [
-      ["/usr/share/wallpapers/deepin" "/run/current-system/sw/share/wallpapers/deepin"]
+      [ "/usr/share/wallpapers/deepin" "/run/current-system/sw/share/wallpapers/deepin" ]
     ];
     "apps/utils.go" = [
-      ["/usr/share" "/run/current-system/sw/share"]
+      [ "/usr/share" "/run/current-system/sw/share" ]
       # return []string{"/usr/share", "/usr/local/share"}
     ];
     "appearance/background/custom_wallpapers.go" = [
-      ["/usr/share/wallpapers/deepin/desktop.bmp" "/run/current-system/sw/share/wallpapers/deepin/desktop.bmp"]
+      [ "/usr/share/wallpapers/deepin/desktop.bmp" "/run/current-system/sw/share/wallpapers/deepin/desktop.bmp" ]
     ];
     "timedate/zoneinfo/zone.go" = [
-      ["usr/share/zoneinfo" "/etc/zoneinfo"]
+      [ "usr/share/zoneinfo" "/etc/zoneinfo" ]
     ];
     "appearance/ifc.go" = [ ];
     "appearance/manager.go" = [
-      ["usr/share/zoneinfo" "/etc/zoneinfo"]
+      [ "usr/share/zoneinfo" "/etc/zoneinfo" ]
     ];
     "launcher/manager.go" = [
-      ["/usr/share" "/run/current-system/sw/share"]
+      [ "/usr/share" "/run/current-system/sw/share" ]
       ## ddeDataDir = /usr/share/dde/data/
     ];
     "launcher/manager_init.go" = [
-      ["/usr/share" "/run/current-system/sw/share"]
+      [ "/usr/share" "/run/current-system/sw/share" ]
       # "/usr/share/applications"
     ];
     "launcher/manager_ifc.go" = [
-      ["/usr/bin/dde-launcher" "dde-launcher"]
+      [ "/usr/bin/dde-launcher" "dde-launcher" ]
     ];
     "launcher/manager_uninstall.go" = [
       #? "/usr/share/deepin-flatpak/app/"
     ];
     "audio/audio_config.go" = [
-      ["/bin/sh" "${runtimeShell}"]
+      [ "/bin/sh" "${runtimeShell}" ]
       # "/usr/share/dde-daemon/audio/echoCancelEnable.sh"
     ];
     "bin/dde-authority/fprint_transaction.go" = [
       #? "/usr/lib/fprintd/fprintd"
     ];
     "system/power_manager/utils.go" = [
-      ["/usr/bin/systemd-detect-virt" "systemd-detect-virt"]
+      [ "/usr/bin/systemd-detect-virt" "systemd-detect-virt" ]
     ];
     "system/gesture/config.go" = [
       ## TODO
-      
+
       #/etc/
       # ?
     ];
     "system/systeminfo/manager.go" = [
-      ["/usr/bin/getconf" "getconf"]
+      [ "/usr/bin/getconf" "getconf" ]
     ];
     "bin/search/main.go" = [
-      # /usr/lib/deepin-daemon/search
+      # "/usr/lib/deepin-daemon/search"
     ];
     "system/power/manager_lmt.go" = [
-      ["/usr/sbin/laptop_mode" "laptop_mode"]
+      [ "/usr/sbin/laptop_mode" "laptop_mode" ]
       #? "/etc/laptop-mode/laptop-mode.conf"
     ];
     "bin/user-config/config_datas.go" = [
       #TODO
-      ["/usr/share" "/run/current-system/sw/share"]
+      [ "/usr/share" "/run/current-system/sw/share" ]
       # "/usr/share/doc/deepin-manuals"
       # "/usr/share/deepin-default-settings"
       # "/usr/share/deepin-sample-music"
@@ -126,14 +126,14 @@ let
       #? /etc/skel.locale
     ];
     "bin/dde-system-daemon/wallpaper.go" = [
-      ["/usr/share" "/run/current-system/sw/share"]
+      [ "/usr/share" "/run/current-system/sw/share" ]
       #"/usr/share/wallpapers/custom-wallpapers/
     ];
     "bin/dde-system-daemon/virtual.go" = [
-      #"/usr/share/dde-daemon/supportVirsConf.ini"
+      # "/usr/share/dde-daemon/supportVirsConf.ini"
     ];
-    "system/display/displaycfg.go" =[
-      ["/usr/bin/lightdm-deepin-greeter" "lightdm-deepin-greeter"]
+    "system/display/displaycfg.go" = [
+      [ "/usr/bin/lightdm-deepin-greeter" "lightdm-deepin-greeter" ]
     ];
     "bin/dde-system-daemon/main.go" = [
       #? os.Setenv("PATH", "/usr/local/sbin
@@ -141,14 +141,14 @@ let
     ];
     "service_trigger/manager.go" = [
       # "/usr/lib/deepin-daemon/"
-      ["/etc/deepin-daemon/" "$out/etc/deepin-daemon/"]
+      [ "/etc/deepin-daemon/" "$out/etc/deepin-daemon/" ]
     ];
     "bluetooth/utils_notify.go" = [
-      ["/usr/lib/deepin-daemon/dde-bluetooth-dialog" "dde-bluetooth-dialog"]
+      [ "/usr/lib/deepin-daemon/dde-bluetooth-dialog" "dde-bluetooth-dialog" ]
     ];
     "keybinding/special_keycode.go" = [
-      ["/usr/bin/setxkbmap" "setxkbmap" ]
-      ["/usr/bin/xdotool" "xdotool"]
+      [ "/usr/bin/setxkbmap" "setxkbmap" ]
+      [ "/usr/bin/xdotool" "xdotool" ]
     ];
     "mime/app_info.go" = [
       # /usr/share /usr/local/share
@@ -161,13 +161,13 @@ let
       #? ["/etc/NetworkManager/VPN"] 
     ];
     "dock/identify_window.go" = [
-      ["/usr/share" "/run/current-system/sw/share"]
+      [ "/usr/share" "/run/current-system/sw/share" ]
       # "/usr/share/applications/"
     ];
-    "keybinding/shortcuts/system_shortcut.go"= [
-      ["/usr/bin/setxkbmap" "setxkbmap"]
-      ["/usr/bin/xdotool" "xdotool"]
-      ["/usr/bin/deepin-system-monitor" "deepin-system-monitor"]
+    "keybinding/shortcuts/system_shortcut.go" = [
+      [ "/usr/bin/setxkbmap" "setxkbmap" ]
+      [ "/usr/bin/xdotool" "xdotool" ]
+      [ "/usr/bin/deepin-system-monitor" "deepin-system-monitor" ]
       ## TODO
     ];
     "accounts/users/display_manager.go" = [
@@ -175,8 +175,8 @@ let
     ];
     "accounts/user.go" = [
       # /usr/lib/deepin-daemon
-      ["/usr/bin/dde-control-center" "dde-control-center"]
-      ["/usr/share" "/run/current-system/sw/share"]
+      [ "/usr/bin/dde-control-center" "dde-control-center" ]
+      [ "/usr/share" "/run/current-system/sw/share" ]
       #/usr/share/wallpapers/deepin/
       #/usr/share/xsessions
     ];
@@ -188,17 +188,17 @@ let
       [ "/usr/lib/deepin-api/image-blur-helper" "image-blur-helper" ]
     ];
     "dock/desktop_file_path.go" = [
-      ["/usr/share" "/run/current-system/sw/share"]
+      [ "/usr/share" "/run/current-system/sw/share" ]
       # "/usr/share/applications/"
     ];
     "accounts/user_chpwd_union_id.go" = [
-      ["/usr/lib/dde-control-center/reset-password-dialog" "reset-password-dialog"]
-      ["/usr/bin/dde-control-center" "dde-control-center"]
-      ["/usr/bin/dde-lock" "dde-lock"]
-      ["/usr/bin/lightdm-deepin-greeter" "lightdm-deepin-greeter"]
+      [ "/usr/lib/dde-control-center/reset-password-dialog" "reset-password-dialog" ]
+      [ "/usr/bin/dde-control-center" "dde-control-center" ]
+      [ "/usr/bin/dde-lock" "dde-lock" ]
+      [ "/usr/bin/lightdm-deepin-greeter" "lightdm-deepin-greeter" ]
     ];
     "dock/dock_manager_init.go" = [
-      ["/usr/share" "/run/current-system/sw/share"]
+      [ "/usr/share" "/run/current-system/sw/share" ]
       #? ddeDataDir     = "/usr/share/dde/data"
     ];
     "accounts/users/list.go" = [
@@ -220,7 +220,7 @@ let
       [ "/usr/bin/getconf" "getconf" ]
     ];
     "session/power/constant.go" = [
-      [ "/usr/lib/deepin-daemon/dde-lowpower" "dde-lowpower"]
+      [ "/usr/lib/deepin-daemon/dde-lowpower" "dde-lowpower" ]
     ];
     "audio/util.go" = [
       #? "/etc/pulse/default.pa"
@@ -234,7 +234,7 @@ let
     # "grub_common/common.go" = [
     #   /etc/default/grub
     # ];
-    "system/timedated/manager.go" =[
+    "system/timedated/manager.go" = [
       #? /etc/systemd/timesyncd.conf.d/deepin.conf
     ];
     "bin/dde-system-daemon/network.go" = [

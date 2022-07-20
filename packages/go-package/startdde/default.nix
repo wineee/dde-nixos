@@ -45,7 +45,7 @@ let
       [ "/usr/sbin/deepin-fix-xauthority-perm" "deepin-fix-xauthority-perm" ]
     ];
     "misc/Xsession.d/00deepin-dde-env" = [
-       [ "/usr/bin/startdde" "$out/bin/startdde" ]
+      [ "/usr/bin/startdde" "$out/bin/startdde" ]
     ];
     "misc/auto_launch/chinese.json" = [
       [ "/usr/bin/dde-file-manager" "dde-file-manager" ]
@@ -65,7 +65,7 @@ let
       [ "/usr/lib/deepin-deepinid-daemon/deepin-deepinid-daemon" "deepin-deepinid-daemon" ]
     ];
     "watchdog/watchdog_test.go" = [
-       [ "/usr/bin/kwin_no_scale" "kwin_no_scale" ]
+      [ "/usr/bin/kwin_no_scale" "kwin_no_scale" ]
     ];
     "watchdog/dde_polkit_agent.go" = [
       [ "/usr/lib/polkit-1-dde/dde-polkit-agent" "dde-polkit-agent" ]
@@ -91,9 +91,10 @@ let
     ];
     #?  "memanalyzer/config_test.go" 
   };
-in buildGoPackage rec {
+in
+buildGoPackage rec {
   pname = "startdde";
-  version = "5.9.32";
+  version = "5.9.44";
 
   goPackagePath = "github.com/linuxdeepin/startdde";
 
@@ -101,7 +102,7 @@ in buildGoPackage rec {
     owner = "linuxdeepin";
     repo = pname;
     rev = version;
-    sha256 = "sha256-Tv1V2IZjOyqOeuYitxMeFJw+PMFixX/9ZV28i1U1xVk=";
+    sha256 = "sha256-qS7r7CeK8ogrxqiNJh4/fYAaLo2j3f+N4S9a6jiur+U=";
   };
 
   goDeps = ./deps.nix;

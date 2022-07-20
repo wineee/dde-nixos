@@ -27,7 +27,7 @@ let
     ### INSTALL
     "CMakeLists.txt" = [ ];
     "plugins/keyboard-layout/CMakeLists.txt" = [ rpetc ];
-    
+
     ### RUN
     "plugins/dcc-dock-plugin/settings_module.cpp" = [ ];
     "plugins/overlay-warning/overlay-warning-plugin.cpp" = [
@@ -50,13 +50,13 @@ let
     "plugins/tray/indicatortray.cpp" = [ rpetc ];
     "plugins/tray/trayplugin.cpp" = [ rpetc ];
     "frame/controller/dockpluginscontroller.cpp" = [ ];
-    "frame/window/components/desktop_widget.cpp" = [ 
+    "frame/window/components/desktop_widget.cpp" = [
       [ "/usr/lib/deepin-daemon/desktop-toggle" "${dde-daemon}/lib/deepin-daemon/desktop-toggle" ]
-     ];
-    
+    ];
+
     "frame/util/utils.h" = [
-     rpetc # TODO
-     # /etc/deepin/icbc.conf 
+      rpetc # TODO
+      # /etc/deepin/icbc.conf 
     ];
 
     ### OTHER
@@ -105,8 +105,8 @@ stdenv.mkDerivation rec {
   qtWrapperArgs = [
     "--prefix QT_PLUGIN_PATH : ${qt5integration}/plugins"
     "--prefix QT_QPA_PLATFORM_PLUGIN_PATH : ${qt5platform-plugins}/plugins"
-    "--prefix XDG_DATA_DIRS : ${glib.makeSchemaPath "${deepin-desktop-schemas}" "${deepin-desktop-schemas.name}"}"
-    "--prefix DSG_DATA_DIRS : ${placeholder "out"}"
+    #"--prefix XDG_DATA_DIRS : ${glib.makeSchemaPath "${deepin-desktop-schemas}" "${deepin-desktop-schemas.name}"}"
+    #"--prefix DSG_DATA_DIRS : ${placeholder "out"}"
   ];
 
   postPatch = getPatchFrom patchList;

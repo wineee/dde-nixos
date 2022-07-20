@@ -28,36 +28,36 @@ let
     "deepin-system-monitor-daemon/com.deepin.SystemMonitor.Daemon.service" = [ ];
     "deepin-system-monitor-plugin-popup/com.deepin.SystemMonitorPluginPopup.service" = [ ];
     "deepin-system-monitor-main/translations/policy/com.deepin.pkexec.deepin-system-monitor.policy" = [
-      ["/usr/bin/renice" "renice"]
-      ["/usr/bin/kill" "kill"]
-      ["/usr/bin/systemctl" "systemctl"]
+      [ "/usr/bin/renice" "renice" ]
+      [ "/usr/bin/kill" "kill" ]
+      [ "/usr/bin/systemctl" "systemctl" ]
     ];
     "deepin-system-monitor-daemon/deepin-system-monitor-daemon.desktop" = [ ];
     "deepin-system-monitor-plugin-popup/deepin-system-monitor-plugin-popup.desktop" = [ ];
 
-    "deepin-system-monitor-plugin/deepin-system-monitor-plugin.pc.in" = [];
+    "deepin-system-monitor-plugin/deepin-system-monitor-plugin.pc.in" = [ ];
 
-    "deepin-system-monitor-daemon/systemmonitorservice.cpp" =[ ];
-    "deepin-system-monitor-daemon/main.cpp" = [];
+    "deepin-system-monitor-daemon/systemmonitorservice.cpp" = [ ];
+    "deepin-system-monitor-daemon/main.cpp" = [ ];
     "deepin-system-monitor-main/process/priority_controller.cpp" = [
-      ["/usr/bin/pkexec" "pkexec"]
-      ["/usr/bin/renice" "renice"]
+      [ "/usr/bin/pkexec" "pkexec" ]
+      [ "/usr/bin/renice" "renice" ]
     ];
     "deepin-system-monitor-main/process/desktop_entry_cache.cpp" = [
       [ "/usr/share" "/run/current-system/sw/share" ]
     ];
     "deepin-system-monitor-main/process/process_controller.cpp" = [
-      ["/usr/bin/pkexec" "pkexec"]
-      ["/usr/bin/kill" "kill"]
+      [ "/usr/bin/pkexec" "pkexec" ]
+      [ "/usr/bin/kill" "kill" ]
     ];
     "deepin-system-monitor-main/service/service_manager.cpp" = [
-      ["/usr/bin/systemctl" "systemctl"]
-      ["/usr/bin/pkexec" "pkexec"]
+      [ "/usr/bin/systemctl" "systemctl" ]
+      [ "/usr/bin/pkexec" "pkexec" ]
     ];
     "deepin-system-monitor-main/common/common.cpp" = [
       [ "/usr/bin" "/run/current-system/sw/bin" ]
     ];
-    "deepin-system-monitor-main/gui/dialog/systemprotectionsetting.cpp" = [];
+    "deepin-system-monitor-main/gui/dialog/systemprotectionsetting.cpp" = [ ];
     "deepin-system-monitor-plugin/gui/monitor_plugin.cpp" = [ ];
   };
 in

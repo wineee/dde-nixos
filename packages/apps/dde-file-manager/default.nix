@@ -92,12 +92,12 @@ let
     ### CODE
 
     "src/dde-zone/mainwindow.h" = [
-      ["/usr/lib/deepin-daemon/desktop-toggle" "desktop-toggle"] ## TODO
+      [ "/usr/lib/deepin-daemon/desktop-toggle" "desktop-toggle" ] ## TODO
     ];
     # SW_64 ...
     "src/dde-file-manager-lib/sw_label/filemanagerlibrary.h" = [ ];
     "src/dde-file-manager-lib/sw_label/llsdeepinlabellibrary.h" = [ ];
-    
+
     "src/dde-file-manager-lib/shutil/dsqlitehandle.h" = [
       #["/usr/share/dde-file-manager/database" ] ## TODO
     ];
@@ -109,8 +109,8 @@ let
       #["/usr/share/applications"] ## TODO
       #["/usr/share/pixmaps"]
       #["/usr/lib/deepin-daemon"]
-      ["/usr/bin/mountavfs" "mountavfs"]
-      ["/usr/bin/umountavfs" "umountavfs"]
+      [ "/usr/bin/mountavfs" "mountavfs" ]
+      [ "/usr/bin/umountavfs" "umountavfs" ]
       #["/etc/fstab"]
     ];
 
@@ -135,45 +135,45 @@ let
     ];
 
     "src/dde-desktop/view/backgroundmanager.cpp" = [
-      ["/usr/share/backgrounds/default_background.jpg" "${deepin-wallpapers}/share/wallpapers/deepin/desktop.jpg"]
+      [ "/usr/share/backgrounds/default_background.jpg" "${deepin-wallpapers}/share/wallpapers/deepin/desktop.jpg" ]
     ];
 
     "src/dde-file-manager-lib/interfaces/customization/dcustomactiondefine.h" = [
-    ## /usr/share/applications/context-menus
+      ## /usr/share/applications/context-menus
     ];
     "src/dde-desktop/view/canvasgridview.cpp" = [
-    ## /usr/share/deepin/dde-desktop-watermask.json
+      ## /usr/share/deepin/dde-desktop-watermask.json
     ];
     "src/dde-file-manager-daemon/accesscontrol/accesscontrolmanager.cpp" = [
-    ## "/usr/bin/dmcg" << "/usr/bin/dde-file-manager"
-      ["/etc/deepin" "$out/etc/deepin"]
-    # "/etc/deepin/devAccessConfig.json" "/etc/deepin/vaultAccessConfig.json"
+      ## "/usr/bin/dmcg" << "/usr/bin/dde-file-manager"
+      [ "/etc/deepin" "$out/etc/deepin" ]
+      # "/etc/deepin/devAccessConfig.json" "/etc/deepin/vaultAccessConfig.json"
     ];
     "src/dde-wallpaper-chooser/frame.cpp" = [
-      ["/usr/share/backgrounds/default_background.jpg" "${deepin-wallpapers}/share/wallpapers/deepin/desktop.jpg"]
+      [ "/usr/share/backgrounds/default_background.jpg" "${deepin-wallpapers}/share/wallpapers/deepin/desktop.jpg" ]
     ];
     "src/dde-file-manager-daemon/usershare/usersharemanager.cpp" = [
-      ["/usr/sbin/groupadd" "groupadd"]
+      [ "/usr/sbin/groupadd" "groupadd" ]
     ];
     "src/dde-file-manager-daemon/vault/vaultbruteforceprevention.cpp" = [
       # {"/usr/bin/dde-file-manager", "/usr/bin/dde-desktop", "/usr/bin/dde-select-dialog-wayland", "/usr/bin/dde-select-dialog-x11"};
     ];
 
     "src/utils/utils.cpp" = [
-      ["/bin/bash" "${runtimeShell}" ]
+      [ "/bin/bash" "${runtimeShell}" ]
     ];
     "src/dde-file-manager-lib/controllers/fileeventprocessor.cpp" = [
-      ["/bin/bash" "${runtimeShell}" ]
+      [ "/bin/bash" "${runtimeShell}" ]
     ];
     "src/dde-advanced-property-plugin/dadvancedinfowidget.cpp" = [
-      ["/bin/bash" "${runtimeShell}" ]
+      [ "/bin/bash" "${runtimeShell}" ]
     ];
 
     "src/dde-file-manager-lib/shutil/danythingmonitorfilter.cpp" = [
-      ["/etc/passwd" "passwd"]
+      [ "/etc/passwd" "passwd" ]
     ];
     "src/dde-file-manager-lib/interfaces/dfmsettings.cpp" = [
-      ["/etc/xdg" "xdg"] ## TODO
+      [ "/etc/xdg" "xdg" ] ## TODO
     ];
     ## src/dde-file-manager-lib/models/dfmrootfileinfo.cpp "/etc/%1/ab-recovery.json"
 

@@ -10,7 +10,7 @@ stdenv.mkDerivation rec {
   pname = "deepin-icon-theme";
   version = readVersion pname;
 
-  src = fetchFromDeepin { 
+  src = fetchFromDeepin {
     inherit pname;
     sha256 = "sha256-UC3PbqolcCbVrIEDqMovfJ4oeofMUGJag1A6u7X3Ml8=";
   };

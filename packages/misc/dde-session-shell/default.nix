@@ -22,16 +22,16 @@ let
     ### INSTALL
     "CMakeLists.txt" = [ [ "/etc" "$out/etc" ] ];
     "cmake/DdeSessionShellConfig.cmake" = [ ];
-    
+
     ### MISC
     "files/com.deepin.dde.shutdownFront.service" = [
       [ "/usr/bin/dbus-send" "dbus-send" ]
-      [ "/usr/share" "/run/current-system/sw/share"]
+      [ "/usr/share" "/run/current-system/sw/share" ]
       #/usr/share/applications/dde-lock.desktop
     ];
 
     "files/lightdm-deepin-greeter.conf" = [
-      ["/usr/share" "/run/current-system/sw/share"]
+      [ "/usr/share" "/run/current-system/sw/share" ]
       # /usr/share/icons/bloom
     ];
 
@@ -53,15 +53,15 @@ let
     ### CODE
     "scripts/lightdm-deepin-greeter" = [
       # TODO ["/usr/lib/deepin-daemon/greeter-display-daemon"]
-      ["/usr/bin/lightdm-deepin-greeter" "lightdm-deepin-greeter"]
+      [ "/usr/bin/lightdm-deepin-greeter" "lightdm-deepin-greeter" ]
     ];
 
     "src/widgets/shutdownwidget.cpp" = [
-      ["/usr/bin/deepin-system-monitor" "deepin-system-monitor" ]
+      [ "/usr/bin/deepin-system-monitor" "deepin-system-monitor" ]
     ];
 
     "src/lightdm-deepin-greeter/greeterworker.cpp" = [
-      ["/usr/sbin/lightdm" "lightdm"]
+      [ "/usr/sbin/lightdm" "lightdm" ]
       # /etc/deepin/no_suspend
     ];
     "src/session-widgets/userinfo.cpp" = [
@@ -104,9 +104,9 @@ let
     "src/global_util/constants.h" = [
       [ "/usr/share/icons" "/run/current-system/sw/share/icons" ]
       #"/usr/share/icons/default/index.theme"
-      
+
       #"/usr/share/dde-session-shell/dde-session-shell.conf",
-      
+
       #"/usr/share/dde-session-ui/dde-session-ui.conf"
       #"/usr/share/dde-session-ui/dde-shutdown.conf
     ];

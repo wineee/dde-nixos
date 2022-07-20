@@ -8,7 +8,7 @@
 , glib
 }:
 let
-  sw_share = [ "/usr/share" "/run/current-system/sw/share"];
+  sw_share = [ "/usr/share" "/run/current-system/sw/share" ];
   patchList = {
     "schemas/com.deepin.dde.appearance.gschema.xml" = [
       sw_share

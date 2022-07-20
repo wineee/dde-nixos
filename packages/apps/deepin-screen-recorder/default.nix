@@ -32,7 +32,7 @@ let
 
     ###MISC
     "deepin-screen-recorder.desktop" = [ ];
-     "assets/screenRecorder.json" = [
+    "assets/screenRecorder.json" = [
       # /usr/share/deepin-screen-recorder/tablet_resources/fast-icon_recording_normal.svg
     ];
     "com.deepin.Screenshot.service" = [
@@ -55,9 +55,9 @@ let
       # /usr/bin/deepin-screen-recorder
     ];
     "com.deepin.ScreenRecorder.service" = [
-        [ "/usr/bin/dbus-send" "dbus-send" ]
+      [ "/usr/bin/dbus-send" "dbus-send" ]
     ];
-  
+
     ### CODE
     "src/recordertablet.cpp" = [
       #/usr/share/deepin-screen-recorder/tablet_resources
@@ -65,11 +65,11 @@ let
     "src/pin_screenshots/mainwindow.cpp" = [
       #? QFile("/usr/bin/dde-file-manager").exists()
     ];
-    
+
     "src/main.cpp" = [
       #? /usr/bin/ffmpeg why not "which ffmpeg"
     ];
-   
+
     "src/main_window.cpp" = [
       #? QFile("/usr/bin/deepin-album").exists() ..
     ];

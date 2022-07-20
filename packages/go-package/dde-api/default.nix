@@ -57,7 +57,7 @@ let
       #? dpkg
     ];
     "sound-theme-player/main.go" = [
-      ["/usr/sbin/alsactl" "alsactl"]
+      [ "/usr/sbin/alsactl" "alsactl" ]
     ];
     "themes/theme.go" = [
       [ "/usr/share" "/run/current-system/sw/share" ]
@@ -122,11 +122,11 @@ buildGoPackage rec {
   dontWrapQtApps = true;
 
   postPatch = getPatchFrom patchList + ''
-   for file in misc/system-services/* misc/services/*
-    do
-      substituteInPlace $file \
-        --replace "/usr/lib/deepin-api" "$out/lib/deepin-api"
-    done
+    for file in misc/system-services/* misc/services/*
+     do
+       substituteInPlace $file \
+         --replace "/usr/lib/deepin-api" "$out/lib/deepin-api"
+     done
   '';
 
   GOFLAGS = [ "-buildmode=pie" "-trimpath" "-mod=readonly" "-modcacherw" ];

@@ -91,7 +91,7 @@ stdenv.mkDerivation rec {
       --replace "set(CMAKE_INSTALL_PREFIX /usr)" "set(CMAKE_INSTALL_PREFIX $out)" \
       --replace "/usr/share/deepin-manual/manual-assets/application/)" "$out/share/deepin-manual/manual-assets/application/)"
   '';
-  
+
   fixDesktopPatch = ''
     substituteInPlace src/music-player/data/deepin-music.desktop \
       --replace "/usr/bin/deepin-music" "$out/bin/deepin-music"
