@@ -9,6 +9,7 @@
 , qttools
 , pkgconfig
 , wrapQtAppsHook
+, runtimeShell
 , gtest
 }:
 
@@ -23,6 +24,44 @@ stdenv.mkDerivation rec {
     sha256 = "sha256-2J8AvXugOhcsipMvkqJ0SsgIQcXqLe2KgJIDNQC3dzI=";
   };
 
+  fixInstallPatch = ''
+    substituteInPlace CMakeLists.txt \
+      --replace "set(CMAKE_INSTALL_PREFIX /usr)" "set(CMAKE_INSTALL_PREFIX /)" \
+      --replace "ADD_SUBDIRECTORY(tests)" ""
+
+    substituteInPlace calendar-client/CMakeLists.txt \
+      --replace "set(CMAKE_INSTALL_PREFIX /usr)" "set(CMAKE_INSTALL_PREFIX /)" \
+      --replace "/usr/share/deepin-manual/manual-assets/application/)" "share/deepin-manual/manual-assets/application/)"
+
+    substituteInPlace calendar-service/CMakeLists.txt \
+      --replace "set(CMAKE_INSTALL_PREFIX /usr)" "set(CMAKE_INSTALL_PREFIX /)"
+  '';
+
+  fixServicePath = ''
+    substituteInPlace calendar-service/assets/data/com.dde.calendarserver.calendar.service \
+      --replace "/bin/bash" "${runtimeShell}"
+    substituteInPlace calendar-service/assets/dde-calendar-service.desktop \
+      --replace "/bin/bash" "${runtimeShell}"
+
+    substituteInPlace calendar-service/assets/data/com.deepin.dataserver.Calendar.service \
+      --replace "/usr/lib/deepin-daemon/dde-calendar-service" "$out/lib/deepin-daemon/dde-calendar-service" 
+    substituteInPlace calendar-client/assets/dbus/com.deepin.Calendar.service \
+      --replace "/usr/bin/dde-calendar" "$out/bin/dde-calendar"
+  '';
+
+  fixCodePath = ''
+    substituteInPlace calendar-service/src/dbmanager/huanglidatabase.cpp \
+      --replace "/usr/share/dde-calendar/data/huangli.db" "$out/share/dde-calendar/data/huangli.db"
+    substituteInPlace calendar-service/src/main.cpp \
+      --replace "/usr/share/dde-calendar/translations" "$out/share/dde-calendar/translations"
+    substituteInPlace calendar-service/src/csystemdtimercontrol.cpp \
+      --replace "/bin/bash" "${runtimeShell}"
+    substituteInPlace calendar-service/src/jobremindmanager.cpp \
+      --replace "/bin/bash" "${runtimeShell}"
+  '';
+
+  postPatch = fixInstallPatch + fixServicePath + fixCodePath;
+
   nativeBuildInputs = [
     cmake
     qttools
@@ -36,26 +75,14 @@ stdenv.mkDerivation rec {
     gtest
   ];
 
+  cmakeFlags = [ "-DVERSION=${version}" ];
+
+  installFlags = [ "DESTDIR=$(out)" ];
+
   qtWrapperArgs = [
     "--prefix QT_PLUGIN_PATH : ${qt5integration}/plugins"
     "--prefix QT_QPA_PLATFORM_PLUGIN_PATH : ${qt5platform-plugins}/plugins"
   ];
-
-  postPatch = ''
-    substituteInPlace CMakeLists.txt \
-      --replace "set(CMAKE_INSTALL_PREFIX /usr)" "set(CMAKE_INSTALL_PREFIX /)" \
-      --replace "ADD_SUBDIRECTORY(calendar-client)" "" \
-      --replace "ADD_SUBDIRECTORY(tests)" ""
-    
-    substituteInPlace calendar-client/CMakeLists.txt \
-      --replace "set(CMAKE_INSTALL_PREFIX /usr)" "set(CMAKE_INSTALL_PREFIX /)" \
-      --replace "/usr/share/deepin-manual/manual-assets/application/)" "share/deepin-manual/manual-assets/application/)"
-
-    substituteInPlace calendar-service/CMakeLists.txt \
-      --replace "set(CMAKE_INSTALL_PREFIX /usr)" "set(CMAKE_INSTALL_PREFIX /)"
-  '';
-
-  installFlags = [ "DESTDIR=$(out)" ];
 
   meta = with lib; {
     description = "Calendar for Deepin Desktop Environment";
