@@ -21,6 +21,7 @@
 , ffmpegthumbnailer
 , portaudio
 , libv4l
+, udev
 , kwayland
 }:
 # TODO
@@ -76,13 +77,13 @@ let
 in
 stdenv.mkDerivation rec {
   pname = "deepin-screen-recorder";
-  version = "5.11.4";
+  version = "5.11.2";
 
   src = fetchFromGitHub {
     owner = "linuxdeepin";
     repo = pname;
     rev = version;
-    sha256 = "sha256-0i1mpvNlaiYPQ6QObefXVjHiiX0fK9VzZghHPfuaCUc=";
+    sha256 = "sha256-K5/xnfmtDWO01fl6RVGFoH6O/Jd1movUZGbhrbmpzEw=";
   };
 
   nativeBuildInputs = [
@@ -110,6 +111,7 @@ stdenv.mkDerivation rec {
     ffmpeg.dev
     ffmpegthumbnailer
     portaudio
+    udev
   ];
 
   qmakeFlags = [
