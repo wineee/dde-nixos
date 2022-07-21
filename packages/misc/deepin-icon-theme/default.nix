@@ -4,6 +4,7 @@
 , readVersion
 , gtk3
 , xcursorgen
+, hicolor-icon-theme
 }:
 
 stdenv.mkDerivation rec {
@@ -15,10 +16,22 @@ stdenv.mkDerivation rec {
     sha256 = "sha256-UC3PbqolcCbVrIEDqMovfJ4oeofMUGJag1A6u7X3Ml8=";
   };
 
-  nativeBuildInputs = [ gtk3 xcursorgen ];
-
   postPatch = ''
     substituteInPlace Makefile --replace "PREFIX = /usr" "PREFIX = $out"
+  '';
+
+  nativeBuildInputs = [ gtk3 xcursorgen ];
+
+  propagatedBuildInputs = [
+    hicolor-icon-theme
+  ];
+
+  dontDropIconThemeCache = true;
+
+  postFixup = ''
+    for theme in $out/share/icons/*; do
+      gtk-update-icon-cache $theme
+    done
   '';
 
   meta = with lib; {
