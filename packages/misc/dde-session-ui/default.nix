@@ -20,6 +20,7 @@
 , libsepol
 , wrapQtAppsHook
 , gtest
+, xkeyboard_config
 }:
 let
   patchList = {
@@ -59,7 +60,7 @@ let
     ];
     "dde-touchscreen-dialog/main.cpp" = [ ];
     "global_util/xkbparser.h" = [
-      #? /usr/share/X11/xkb/rules/base.xml 
+      [ "/usr/share/X11/xkb/rules/base.xml" "${xkeyboard_config}/share/X11/xkb/rules/base.xml" ]
     ];
     "dnetwork-secret-dialog/main.cpp" = [ ];
     "dde-suspend-dialog/main.cpp" = [ ];
