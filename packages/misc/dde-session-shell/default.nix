@@ -16,6 +16,7 @@
 , kwayland
 , glib
 , gtest
+, xkeyboard_config
 }:
 let
   patchList = {
@@ -99,7 +100,7 @@ let
       # /usr/lib/dde-session-shell/modules
     ];
     "src/global_util/xkbparser.h" = [
-      #? /usr/share/X11/xkb/rules/base.xml
+      [ "/usr/share/X11/xkb/rules/base.xml" "${xkeyboard_config}/share/X11/xkb/rules/base.xml" ]
     ];
     "src/global_util/constants.h" = [
       [ "/usr/share/icons" "/run/current-system/sw/share/icons" ]
