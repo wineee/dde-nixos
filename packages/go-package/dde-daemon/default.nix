@@ -33,14 +33,19 @@
 , wrapGAppsHook
 , wrapQtAppsHook
 , runtimeShell
+, fprintd
+, xorg
+, xdotool
 }:
 let
   goCodePatchs = {
     "inputdevices/layout_list.go" = [
-      #? ["/usr/share/X11/xkb/rules/base.xml"]
+      ## setxkbmap
+      ## xkeyboard-config
+      [ "/usr/share/X11/xkb/rules/base.xml" "${xkeyboard_config}/share/X11/xkb/rules/base.xml" ]
     ];
     "inputdevices/keyboard.go" = [
-      [ "/usr/bin/setxkbmap" "setxkbmap" ]
+      [ "/usr/bin/setxkbmap" "${xorg.setxkbmap}/bin/setxkbmap" ]
       #? "/etc/default/keyboard"
     ];
     "grub2/modify_manger.go" = [
@@ -70,11 +75,11 @@ let
       [ "/usr/share/wallpapers/deepin/desktop.bmp" "/run/current-system/sw/share/wallpapers/deepin/desktop.bmp" ]
     ];
     "timedate/zoneinfo/zone.go" = [
-      [ "usr/share/zoneinfo" "/etc/zoneinfo" ]
+      [ "usr/share/zoneinfo" "${tzdata}/share/zoneinfo" ]
     ];
     "appearance/ifc.go" = [ ];
     "appearance/manager.go" = [
-      [ "usr/share/zoneinfo" "/etc/zoneinfo" ]
+      [ "usr/share/zoneinfo" "${tzdata}/share/zoneinfo" ]
     ];
     "launcher/manager.go" = [
       [ "/usr/share" "/run/current-system/sw/share" ]
@@ -95,7 +100,9 @@ let
       # "/usr/share/dde-daemon/audio/echoCancelEnable.sh"
     ];
     "bin/dde-authority/fprint_transaction.go" = [
-      #? "/usr/lib/fprintd/fprintd"
+      #? fprintd 0.8 in deepin but 1.9in nixos
+      # services.fprintd.enable
+      [ "/usr/lib/fprintd/fprintd" "${fprintd}/libexec/fprintd" ]
     ];
     "system/power_manager/utils.go" = [
       [ "/usr/bin/systemd-detect-virt" "systemd-detect-virt" ]
@@ -147,7 +154,7 @@ let
       [ "/usr/lib/deepin-daemon/dde-bluetooth-dialog" "dde-bluetooth-dialog" ]
     ];
     "keybinding/special_keycode.go" = [
-      [ "/usr/bin/setxkbmap" "setxkbmap" ]
+      [ "/usr/bin/setxkbmap" "${xorg.setxkbmap}/bin/setxkbmap" ]
       [ "/usr/bin/xdotool" "xdotool" ]
     ];
     "mime/app_info.go" = [
@@ -157,16 +164,16 @@ let
       [ "/usr/bin/kwin_no_scale" "kwin_no_scale" ]
     ];
     "network/manager.go" = [
-      #? ["/usr/lib/NetworkManager/VPN" ]
-      #? ["/etc/NetworkManager/VPN"] 
+      ["/usr/lib/NetworkManager/VPN" "/run/current-system/lib/NetworkManager/VPN" ]
+      # ["/etc/NetworkManager/VPN"] 
     ];
     "dock/identify_window.go" = [
       [ "/usr/share" "/run/current-system/sw/share" ]
       # "/usr/share/applications/"
     ];
     "keybinding/shortcuts/system_shortcut.go" = [
-      [ "/usr/bin/setxkbmap" "setxkbmap" ]
-      [ "/usr/bin/xdotool" "xdotool" ]
+      [ "/usr/bin/setxkbmap" "${xorg.setxkbmap}/bin/setxkbmap" ]
+      [ "/usr/bin/xdotool" "${xdotool}/bin/xdotool" ]
       [ "/usr/bin/deepin-system-monitor" "deepin-system-monitor" ]
       ## TODO
     ];
@@ -181,8 +188,8 @@ let
       #/usr/share/xsessions
     ];
     "network/nm_setting_vpn.go" = [
-      #? "/etc/NetworkManager/VPN"
-      #? "/usr/lib/NetworkManager/VPN"
+      ["/usr/lib/NetworkManager/VPN" "/run/current-system/lib/NetworkManager/VPN" ]
+      # "/etc/NetworkManager/VPN"
     ];
     "accounts/image_blur.go" = [
       [ "/usr/lib/deepin-api/image-blur-helper" "image-blur-helper" ]
@@ -281,6 +288,47 @@ buildGoPackage rec {
     sha256 = "sha256-Enikmyt+CsBb00YwqxbA/id1n/PUYoZ7LykB74PToYc=";
   };
 
+  patches = [
+    ./remove-tc.patch
+    ./dde-daemon.patch
+  ];
+
+  rmUadpPatch = ''
+    rm -rf system/uadp
+    rm -rf session/uadpagent
+  '';
+
+  fixShebangsPatch = ''
+    patchShebangs misc/etc/acpi/actions/deepin_lid.sh \
+      misc/libexec/dde-daemon/keybinding/shortcut-dde-grand-search.sh \
+      misc/dde-daemon/audio/echoCancelEnable.sh
+  '';
+
+  fixPathPatch = ''
+    for file in misc/system-services/* misc/services/* misc/systemd/services/*
+    do
+      substituteInPlace $file \
+        --replace "/usr/lib/deepin-daemon" "$out/lib/deepin-daemon"
+    done
+
+    substituteInPlace misc/udev-rules/80-deepin-fprintd.rules \
+      --replace "/usr/bin/dbus-send" "dbus-send"
+
+    substituteInPlace misc/dde-daemon/keybinding/system_actions.json \
+      --replace "/usr/lib/deepin-daemon/"        "$out/lib/deepin-daemon/" \
+      --replace "/usr/bin/deepin-system-monitor" "deepin-system-monitor" \
+      --replace "/usr/bin/setxkbmap"             "${xorg.setxkbmap}/bin/setxkbmap" \
+      --replace "/usr/bin/xdotool"               "${xdotool}/bin/xdotool"
+
+    substituteInPlace misc/applications/deepin-toggle-desktop.desktop \
+      --replace "/usr/lib/deepin-daemon/desktop-toggle" "$out/lib/deepin-daemon/desktop-toggle"
+
+    substituteInPlace misc/etc/acpi/events/deepin_lid \
+      --replace "/etc/acpi/actions/deepin_lid.sh" "$out/etc/acpi/actions/deepin_lid.sh"
+  '';
+
+  postPatch = rmUadpPatch + fixShebangsPatch + fixPathPatch + getPatchFrom goCodePatchs;
+
   goDeps = ./deps.nix;
 
   nativeBuildInputs = [
@@ -318,49 +366,6 @@ buildGoPackage rec {
     tzdata
     xkeyboard_config
   ];
-
-  patches = [
-    ./remove-tc.patch
-    ./dde-daemon.patch
-  ];
-
-  # https://github.com/linuxdeepin/dde-daemon/blob/master/accounts/user.go
-
-  rmUadpPatch = ''
-    rm -rf system/uadp
-    rm -rf session/uadpagent
-  '';
-
-  fixShebangsPatch = ''
-    patchShebangs misc/etc/acpi/actions/deepin_lid.sh \
-      misc/libexec/dde-daemon/keybinding/shortcut-dde-grand-search.sh \
-      misc/dde-daemon/audio/echoCancelEnable.sh
-  '';
-
-  fixPathPatch = ''
-    for file in misc/system-services/* misc/services/* misc/systemd/services/*
-    do
-      substituteInPlace $file \
-        --replace "/usr/lib/deepin-daemon" "$out/lib/deepin-daemon"
-    done
-
-    substituteInPlace misc/udev-rules/80-deepin-fprintd.rules \
-      --replace "/usr/bin/dbus-send" "dbus-send"
-
-    substituteInPlace misc/dde-daemon/keybinding/system_actions.json \
-      --replace "/usr/lib/deepin-daemon/"        "$out/lib/deepin-daemon/" \
-      --replace "/usr/bin/deepin-system-monitor" "deepin-system-monitor" \
-      --replace "/usr/bin/setxkbmap"             "setxkbmap"\
-      --replace "/usr/bin/xdotool"               "xdotool"
-
-    substituteInPlace misc/applications/deepin-toggle-desktop.desktop \
-      --replace "/usr/lib/deepin-daemon/desktop-toggle" "$out/lib/deepin-daemon/desktop-toggle"
-
-    substituteInPlace misc/etc/acpi/events/deepin_lid \
-      --replace "/etc/acpi/actions/deepin_lid.sh" "$out/etc/acpi/actions/deepin_lid.sh"
-  '';
-
-  postPatch = rmUadpPatch + fixShebangsPatch + fixPathPatch + getPatchFrom goCodePatchs;
 
   buildPhase = ''
     runHook preBuild
