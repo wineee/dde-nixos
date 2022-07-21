@@ -97,7 +97,10 @@
                   services.gnome.gnome-keyring.enable = true;
                   
 
-                  services.udev.packages = [];
+                  services.udev.packages = with packages; [
+                    #dde-daemon
+
+                  ];
                   # pkg/etc/udev/rules.d and pkg/lib/udev/rules.d
 
                   #programs.dconf.packages = [];
@@ -145,6 +148,7 @@
                     deepin-desktop-schemas
                     dde-api
                     dde-daemon
+                    dpa-ext-gnomekeyring # 这个怎么搞
 
                     dde-polkit-agent
                     dde-account-faces
@@ -163,6 +167,7 @@
                     deepin-font-manager
                   ] ++ (with pkgs; [
                     socat
+                    xdotool
                     glib # for gsettings program
                     gtk3.out # for gtk-launch program
                     xdg-user-dirs # Update user dirs as described in http://freedesktop.org/wiki/Software/xdg-user-dirs/
@@ -184,6 +189,7 @@
                     deepin-draw
                     deepin-image-viewer
                     deepin-screen-recorder
+                    deepin-system-monitor
                     deepin-boot-maker
                     deepin-camera
 
