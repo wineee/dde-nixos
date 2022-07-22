@@ -1,5 +1,6 @@
 { stdenv
 , lib
+, writeText
 , fetchFromGitHub
 }:
 stdenv.mkDerivation rec {
@@ -15,7 +16,7 @@ stdenv.mkDerivation rec {
 
   makeFlags = [ "DESTDIR=${placeholder "out"}" ];
 
-  distribution_info = ''
+  distribution_info = writeText "distribution.info" ''
     [Distribution]
     Name=NixOS
     WebsiteName=www.nixos.org
@@ -32,11 +33,12 @@ stdenv.mkDerivation rec {
     rm -r $out/usr/share/plymouth
     rm -r $out/usr/share/distro-info
     mv $out/usr/* $out/
+    rm -r $out/usr
 
     install -D ${./nixos.svg} $out/share/pixmaps/nixos.svg
     install -D ${./nixos-white.svg} $out/share/pixmaps/nixos-white.svg
 
-    echo -e ${lib.escapeShellArg distribution_info} > $out/share/deepin/distribution.info
+    ln -s ${distribution_info} $out/share/deepin/distribution.info
     ln -s $out/lib/deepin/desktop-version $out/etc/deepin-version
   '';
 
