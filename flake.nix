@@ -122,6 +122,8 @@
                     "/share"
                   ];
 
+                  environment.etc."deepin-version".source = "${packages.deepin-desktop-base}/etc/deepin-version";
+
                   environment.systemPackages = with packages; [
                     deepin-terminal
                     deepin-album
