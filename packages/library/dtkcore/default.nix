@@ -1,7 +1,6 @@
 { stdenv
 , lib
 , fetchFromGitHub
-, deepin-desktop-base
 , pkgconfig
 , qmake
 , gsettings-qt
@@ -9,6 +8,7 @@
 , wrapQtAppsHook
 , lshw
 , dtkcommon
+, deepin-desktop-base
 }:
 
 stdenv.mkDerivation rec {
@@ -36,13 +36,13 @@ stdenv.mkDerivation rec {
     deepin-desktop-base
   ];
 
-  # DEFINES += PREFIX=\\\"$$INSTALL_PREFIX\\\" 
+  # DEFINES += PREFIX=\\\"$$INSTALL_PREFIX\\\"  path of dsg
   postPatch = ''
     substituteInPlace src/filesystem/filesystem.pri \
       --replace '$$INSTALL_PREFIX' "'/run/current-system/sw'"
 
     substituteInPlace src/dsysinfo.cpp \
-      --replace "/usr/share/deepin/distribution.info" "${deepin-desktop-base}/usr/share/deepin/distribution.info"
+      --replace "/usr/share/deepin/distribution.info" "${deepin-desktop-base}/share/deepin/distribution.info"
   '';
 
   qmakeFlags = [
