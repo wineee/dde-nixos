@@ -35,7 +35,7 @@ stdenv.mkDerivation rec {
   meta = with lib; {
     description = "deepin-wallpapers provides wallpapers of dde";
     homepage = "https://github.com/linuxdeepin/deepin-wallpapers";
-    license = licenses.gpl3Plus;
+    license = with licenses; [ gpl3Plus  cc-by-sa-30 ]; # cc-by-nc-30 TODO: remove deepin-wallpapers from buildinput
     platforms = platforms.linux;
   };
 }
