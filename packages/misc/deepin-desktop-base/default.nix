@@ -1,7 +1,6 @@
 { stdenv
 , lib
 , fetchFromGitHub
-, nixos-icons
 }:
 stdenv.mkDerivation rec {
   pname = "deepin-desktop-base";
@@ -14,8 +13,6 @@ stdenv.mkDerivation rec {
     sha256 = "sha256-joAduRI9jUtPA4lNsEhgOZlci8j/cvD8rJThqvj6a8A=";
   };
 
-  propagatedBuildInputs = [ nixos-icons ];
-
   makeFlags = [ "DESTDIR=${placeholder "out"}" ];
 
   distribution_info = ''
@@ -23,20 +20,24 @@ stdenv.mkDerivation rec {
     Name=NixOS
     WebsiteName=www.nixos.org
     Website=https://www.nixos.org
-    Logo=nix-snowflake
-    LogoLight=nix-snowflake-white
-    LogoTransparent=nix-snowflake
+    Logo=${placeholder "out"}/share/pixmaps/nixos.svg
+    LogoLight=${placeholder "out"}/share/pixmaps/nixos.svg
+    LogoTransparent=${placeholder "out"}/share/pixmaps/nixos-white.svg
   '';
 
   postInstall = ''
-    # Remove Deepin distro's lsb-release
     rm $out/etc/lsb-release
-    # Don't override systemd timeouts
     rm -r $out/etc/systemd
     rm -r $out/usr/share/python-apt
     rm -r $out/usr/share/plymouth
     rm -r $out/usr/share/distro-info
-    echo -e ${lib.escapeShellArg distribution_info} > $out/usr/share/deepin/distribution.info
+    mv $out/usr/* $out/
+
+    install -D ${./nixos.svg} $out/share/pixmaps/nixos.svg
+    install -D ${./nixos-white.svg} $out/share/pixmaps/nixos-white.svg
+
+    echo -e ${lib.escapeShellArg distribution_info} > $out/share/deepin/distribution.info
+    ln -s $out/lib/deepin/desktop-version $out/etc/deepin-version
   '';
 
   meta = with lib; {
