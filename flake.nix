@@ -88,6 +88,7 @@
                 ### TODO
                 (mkIf cfg.enable {
                   #services.xserver.displayManager.sessionPackages = [ pkgs.deepin.core ];
+                  #services.xserver.displayManager.defaultSession = mkForce "deepin";
                   #services.xserver.displayManager.lightdm.theme = mkDefault "deepin";
                   hardware.bluetooth.enable = mkDefault true;
                   hardware.pulseaudio.enable = mkDefault true;
@@ -95,7 +96,7 @@
                   services.accounts-daemon.enable = true;
                   programs.dconf.enable = true;
                   services.gnome.gnome-keyring.enable = true;
-                  
+                  services.bamf.enable = true;
 
                   services.udev.packages = with packages; [
                     #dde-daemon
