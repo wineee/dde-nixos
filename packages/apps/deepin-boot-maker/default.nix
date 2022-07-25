@@ -27,6 +27,16 @@ stdenv.mkDerivation rec {
     sha256 = "sha256-Ks35LDZrldilCRu+U41n2b03vFpqgIaJSvKqphzp6gM=";
   };
 
+  postPatch = ''
+    substituteInPlace src/src.pro \
+      --replace "/usr/share/deepin-boot-maker/translations" "$out/share/deepin-boot-maker/translations"
+    substituteInPlace deepin-boot-maker.pro \
+      --replace "/usr/share/deepin-manual/manual-assets/application" "$out/share/deepin-manual/manual-assets/application"
+    
+    substituteInPlace src/service/data/com.deepin.bootmaker.service \
+      --replace "/usr/lib/deepin-daemon/deepin-boot-maker-service" "/run/current-system/sw/lib/deepin-daemon/deepin-boot-maker-service"
+  '';
+
   nativeBuildInputs = [
     qmake
     qttools
@@ -52,14 +62,8 @@ stdenv.mkDerivation rec {
     "--prefix QT_QPA_PLATFORM_PLUGIN_PATH : ${qt5platform-plugins}/plugins"
   ];
 
-  postPatch = ''
-    substituteInPlace src/src.pro \
-      --replace "/usr/share/deepin-boot-maker/translations" "$out/share/deepin-boot-maker/translations"
-    substituteInPlace deepin-boot-maker.pro \
-      --replace "/usr/share/deepin-manual/manual-assets/application" "$out/share/deepin-manual/manual-assets/application"
-    
-    substituteInPlace src/service/data/com.deepin.bootmaker.service \
-      --replace "/usr/lib/deepin-daemon/deepin-boot-maker-service" "/run/current-system/sw/lib/deepin-daemon/deepin-boot-maker-service"
+  postFixup = ''
+    wrapQtApp $out/lib/deepin-daemon/deepin-boot-maker-service
   '';
 
   meta = with lib; {
