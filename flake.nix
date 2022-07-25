@@ -88,17 +88,8 @@
                 ### TODO
                 (mkIf cfg.enable {
                   services.xserver.displayManager.sessionPackages = [ packages.startdde ];
-                  #services.xserver.displayManager.defaultSession = mkForce "deepin";
+                  services.xserver.displayManager.defaultSession = "deepin";
                   #services.xserver.displayManager.lightdm.theme = mkDefault "deepin";
-                  services.xserver.desktopManager.session = [{
-                    name = "xfce";
-                    desktopNames = [ "XFCE" ];
-                    bgSupport = true;
-                    start = ''
-                      ${pkgs.runtimeShell} ${pkgs.xfce.xfce4-session.xinitrc} &
-                      waitPID=$!
-                    '';
-                  }];
                   
                   hardware.bluetooth.enable = mkDefault true;
                   hardware.pulseaudio.enable = mkDefault true;
@@ -113,7 +104,7 @@
 
                   services.bamf.enable = true;
                   services.udev.packages = with packages; [
-                    #dde-daemon
+                    dde-daemon
                   ];
                   # pkg/etc/udev/rules.d and pkg/lib/udev/rules.d
             
