@@ -1,7 +1,6 @@
 { stdenv
 , lib
 , fetchFromGitHub
-, patchShebangs
 , getPatchFrom
 , dtk
 , dde-qt-dbus-factory
