@@ -21,6 +21,22 @@ stdenv.mkDerivation rec {
     sha256 = "sha256-oPbOnWwktR0FA9lJRXs7qxKRBABf5HymtMeI92ZHIdU";
   };
 
+  fixInstallPatch = ''
+    substituteInPlace CMakeLists.txt \
+      --replace "set(PREFIX /usr)" "set(PREFIX $out)"
+
+    substituteInPlace src/deepin-draw/CMakeLists.txt \
+      --replace "/usr/lib" "$out/lib" \
+      --replace "/usr/bin" "$out/bin"
+  '';
+
+  fixServicePatch = ''
+    substituteInPlace com.deepin.Draw.service \
+      --replace "/usr/bin/deepin-draw" "$out/bin/deepin-draw"
+  '';
+
+  postPatch = fixInstallPatch + fixServicePatch;
+
   nativeBuildInputs = [
     cmake
     qttools
@@ -37,21 +53,6 @@ stdenv.mkDerivation rec {
     "--prefix QT_QPA_PLATFORM_PLUGIN_PATH : ${qt5platform-plugins}/plugins"
   ];
 
-  fixInstallPatch = ''
-    substituteInPlace CMakeLists.txt \
-      --replace "set(PREFIX /usr)" "set(PREFIX $out)"
-
-    substituteInPlace src/deepin-draw/CMakeLists.txt \
-      --replace "/usr/lib" "$out/lib" \
-      --replace "/usr/bin" "$out/bin"
-  '';
-
-  fixServicePatch = ''
-    substituteInPlace com.deepin.Draw.service \
-      --replace "/usr/bin/deepin-draw" "deepin-draw"
-  '';
-
-  postPatch = fixInstallPatch + fixServicePatch;
   #separateDebugInfo = true;
 
   meta = with lib; {
