@@ -16,6 +16,7 @@
 , glib
 , deepin-wallpapers
 , gtest
+, dbus
 }:
 let
   patchList = {
@@ -24,14 +25,15 @@ let
 
     ### MISC
     "dde-launcher.desktop" = [
-      [ "/usr/bin/dde-launcher" "$out/bin/dde-launcher" ]
+      # "/usr/bin/dde-launcher"
     ];
     "dde-launcher-wapper" = [
-      [ "/usr/share/applications/dde-launcher.desktop" "/run/current-system/sw/share/applications/dde-launcher.desktop" ]
+      [ "dbus-send" "${dbus}/bin/dbus-send" ]
+      # "/usr/share/applications/dde-launcher.desktop"
     ];
 
     "src/dbusservices/com.deepin.dde.Launcher.service" = [
-      [ "/usr/bin/dde-launcher-wapper" "$out/bin/dde-launcher-wapper" ]
+      # "/usr/bin/dde-launcher-wapper"
     ];
 
     ### CODE
@@ -41,7 +43,6 @@ let
     "src/boxframe/boxframe.cpp" = [
       [ "/usr/share/backgrounds/default_background.jpg" "${deepin-wallpapers}/share/wallpapers/deepin/desktop.jpg" ]
     ];
-
   };
 in
 stdenv.mkDerivation rec {
@@ -54,6 +55,8 @@ stdenv.mkDerivation rec {
     rev = version;
     sha256 = "sha256-8GusAwDGTfqoqHr+oV6S3OzMXUgqkyzOGnkczx5B6Us=";
   };
+
+  postPatch = getPatchFrom patchList;
 
   nativeBuildInputs = [
     cmake
@@ -78,8 +81,6 @@ stdenv.mkDerivation rec {
     "--prefix QT_PLUGIN_PATH : ${qt5integration}/plugins"
     "--prefix QT_QPA_PLATFORM_PLUGIN_PATH : ${qt5platform-plugins}/plugins"
   ];
-
-  postPatch = getPatchFrom patchList;
 
   preFixup = ''
     glib-compile-schemas ${glib.makeSchemaPath "$out" "${pname}-${version}"}
