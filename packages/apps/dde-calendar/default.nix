@@ -84,6 +84,10 @@ stdenv.mkDerivation rec {
     "--prefix QT_QPA_PLATFORM_PLUGIN_PATH : ${qt5platform-plugins}/plugins"
   ];
 
+  postFixup = ''
+    wrapQtApp $out/lib/deepin-daemon/dde-calendar-service
+  '';
+
   meta = with lib; {
     description = "Calendar for Deepin Desktop Environment";
     homepage = "https://github.com/linuxdeepin/deepin-calendar";
