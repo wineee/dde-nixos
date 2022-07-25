@@ -17,6 +17,7 @@
 , glib
 , gtest
 , xkeyboard_config
+, dbus
 }:
 let
   patchList = {
@@ -26,7 +27,7 @@ let
 
     ### MISC
     "files/com.deepin.dde.shutdownFront.service" = [
-      [ "/usr/bin/dbus-send" "dbus-send" ]
+      [ "/usr/bin/dbus-send" "${dbus}/bin/dbus-send" ]
       [ "/usr/share" "/run/current-system/sw/share" ]
       #/usr/share/applications/dde-lock.desktop
     ];
@@ -43,7 +44,7 @@ let
       [ "/usr/bin/deepin-greeter" "deepin-greeter" ]
     ];
     "files/com.deepin.dde.lockFront.service" = [
-      [ "/usr/bin/dbus-send" "dbus-send" ]
+      [ "/usr/bin/dbus-send" "${dbus}/bin/dbus-send" ]
       [ "/usr/share" "/run/current-system/sw/share" ]
       #/usr/share/applications/dde-lock.desktop
     ];
@@ -140,6 +141,8 @@ stdenv.mkDerivation rec {
     sha256 = "sha256-mEYD9gC46pGufqjSCjyrLtZWn6u3ALFTjnBhL3FIs2o=";
   };
 
+  postPatch = getPatchFrom patchList;
+
   nativeBuildInputs = [
     cmake
     pkg-config
@@ -161,13 +164,10 @@ stdenv.mkDerivation rec {
     gtest
   ];
 
-  postPatch = getPatchFrom patchList;
-
   preFixup = ''
     glib-compile-schemas ${glib.makeSchemaPath "$out" "${pname}-${version}"}
     qtWrapperArgs+=("''${gappsWrapperArgs[@]}")
   '';
-
 
   meta = with lib; {
     description = "Deepin desktop-environment - session-shell module";
