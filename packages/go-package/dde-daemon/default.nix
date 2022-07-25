@@ -36,6 +36,8 @@
 , fprintd
 , xorg
 , xdotool
+, dbus
+, getconf
 }:
 let
   goCodePatchs = {
@@ -114,13 +116,13 @@ let
       # ?
     ];
     "system/systeminfo/manager.go" = [
-      [ "/usr/bin/getconf" "getconf" ]
+      [ "/usr/bin/getconf" "${getconf}/bin/getconf" ]
     ];
     "bin/search/main.go" = [
       # "/usr/lib/deepin-daemon/search"
     ];
     "system/power/manager_lmt.go" = [
-      [ "/usr/sbin/laptop_mode" "laptop_mode" ]
+      [ "/usr/sbin/laptop_mode" "laptop_mode" ] # TODO https://github.com/rickysarraf/laptop-mode-tools
       #? "/etc/laptop-mode/laptop-mode.conf"
     ];
     "bin/user-config/config_datas.go" = [
@@ -312,7 +314,7 @@ buildGoPackage rec {
     done
 
     substituteInPlace misc/udev-rules/80-deepin-fprintd.rules \
-      --replace "/usr/bin/dbus-send" "dbus-send"
+      --replace "/usr/bin/dbus-send" "${dbus}/bin/dbus-send"
 
     substituteInPlace misc/dde-daemon/keybinding/system_actions.json \
       --replace "/usr/lib/deepin-daemon/"        "$out/lib/deepin-daemon/" \
