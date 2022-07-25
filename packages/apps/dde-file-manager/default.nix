@@ -40,17 +40,17 @@
 , boost
 , taglib
 , glib
+, dde-daemon
 }:
 let
   patchList = {
-    ## BUILD
+    ### BUILD
     "src/dde-file-manager/translate_ts2desktop.sh" = [
       [ "/usr/bin/deepin-desktop-ts-convert" "${deepin-gettext-tools}/bin/deepin-desktop-ts-convert" ]
     ];
     "src/dde-file-manager-lib/dbusinterface/dbusinterface.pri" = [
       [ "/usr/share/dbus-1/interfaces/com.deepin.anything.xml" "${deepin-anything.server}/share/dbus-1/interfaces/com.deepin.anything.xml" ]
     ];
-
     "src/dde-desktop/translate_ts2desktop.sh" = [
       [ "/usr/bin/deepin-desktop-ts-convert" "${deepin-gettext-tools}/bin/deepin-desktop-ts-convert" ]
     ];
@@ -58,7 +58,7 @@ let
     ## TODO dde-dock-plugins
     "src/dde-dock-plugins/dde-dock-plugins.pro" = [ [ "SUBDIRS += disk-mount" "" ] ];
 
-    ## INSTALL
+    ### INSTALL
     "src/dde-file-manager/dde-file-manager.pro" = [
       [ "/etc/xdg/autostart" "$out/etc/xdg/autostart" ]
     ];
@@ -84,15 +84,24 @@ let
       [ "\\$\\$system(\\$\\$PKG_CONFIG --variable libdir deepin-anything-server-lib)/deepin-anything-server-lib/plugins/handlers" "$out/lib/deepin-anything-server-lib/plugins/handlers" ]
     ];
 
-    ### DESKTOP
+    ### MISC
     "src/dde-desktop/data/applications/dde-home.desktop" = [ ];
     "src/dde-file-manager/dde-file-manager.desktop" = [ ];
     "src/dde-file-manager/dde-open.desktop" = [ ];
 
+    "src/dde-file-manager-daemon/dbusservice/dde-filemanager-daemon.service" = [ ];
+    "src/dde-file-manager-daemon/dbusservice/com.deepin.filemanager.daemon.service" = [ ];
+    "src/dde-desktop/dbus/filemanager1/org.freedesktop.FileManager.service" = [ ];
+    "src/dde-select-dialog-x11/com.deepin.filemanager.filedialog_x11.service" = [ ];
+    "src/dde-select-dialog-wayland/com.deepin.filemanager.filedialog_wayland.service" = [ ];
+    "src/dde-desktop/dbus/filedialog/com.deepin.filemanager.filedialog.service" = [ ];
+    "src/dde-desktop/data/com.deepin.dde.desktop.service" = [ ];
+    "src/dbusservices/com.deepin.dde.desktop.service" = [ ];
+
     ### CODE
 
     "src/dde-zone/mainwindow.h" = [
-      [ "/usr/lib/deepin-daemon/desktop-toggle" "desktop-toggle" ] ## TODO
+      [ "/usr/lib/deepin-daemon/desktop-toggle" "${dde-daemon}/lib/deepin-daemon/desktop-toggle" ]
     ];
     # SW_64 ...
     "src/dde-file-manager-lib/sw_label/filemanagerlibrary.h" = [ ];
@@ -102,10 +111,12 @@ let
       #["/usr/share/dde-file-manager/database" ] ## TODO
     ];
     "src/dde-file-manager-lib/shutil/mimesappsmanager.cpp" = [
+      [ "/usr/share/applications" "/run/current-system/sw/share/applications" ]
       #"/usr/share/applications" ## TODO
     ];
 
     "src/dde-file-manager-lib/shutil/fileutils.cpp" = [
+      [ "/usr/share" "/run/current-system/sw/share" ]
       #["/usr/share/applications"] ## TODO
       #["/usr/share/pixmaps"]
       #["/usr/lib/deepin-daemon"]
@@ -213,8 +224,9 @@ stdenv.mkDerivation rec {
     wrapQtAppsHook
     wrapGAppsHook
   ];
-
   dontWrapGApps = true;
+
+  postPatch = getShebangsPatchFrom shebangsList + getPatchFrom patchList;
 
   buildInputs = [
     dtk
@@ -236,19 +248,15 @@ stdenv.mkDerivation rec {
     libsecret
     libmediainfo
     mediainfo
-
     lxqt.libqtxdg
     poppler
     polkit-qt
     polkit
     pcre
-
     lucenepp
     boost
     taglib
   ];
-
-  postPatch = getShebangsPatchFrom shebangsList + getPatchFrom patchList;
 
   enableParallelBuilding = true;
 
