@@ -1,6 +1,7 @@
 { stdenv
 , lib
 , fetchFromGitHub
+, patchShebangs
 , getPatchFrom
 , dtk
 , dde-qt-dbus-factory
@@ -28,34 +29,30 @@ let
     ### MISC
     "files/com.deepin.dde.shutdownFront.service" = [
       [ "/usr/bin/dbus-send" "${dbus}/bin/dbus-send" ]
-      [ "/usr/share" "/run/current-system/sw/share" ]
       #/usr/share/applications/dde-lock.desktop
     ];
-
+    "files/com.deepin.dde.lockFront.service" = [
+      [ "/usr/bin/dbus-send" "${dbus}/bin/dbus-send" ]
+      #/usr/share/applications/dde-lock.desktop
+    ];
     "files/lightdm-deepin-greeter.conf" = [
       [ "/usr/share" "/run/current-system/sw/share" ]
       # /usr/share/icons/bloom
     ];
-
     "files/wayland/lightdm-deepin-greeter-wayland.desktop" = [
-      [ "/usr/bin/deepin-greeter" "deepin-greeter" ]
+      # "/usr/bin/deepin-greeter"
     ];
     "files/lightdm-deepin-greeter.desktop" = [
-      [ "/usr/bin/deepin-greeter" "deepin-greeter" ]
-    ];
-    "files/com.deepin.dde.lockFront.service" = [
-      [ "/usr/bin/dbus-send" "${dbus}/bin/dbus-send" ]
-      [ "/usr/share" "/run/current-system/sw/share" ]
-      #/usr/share/applications/dde-lock.desktop
+      # "/usr/bin/deepin-greeter"
     ];
     "files/dde-lock.desktop" = [
-      [ "/usr/bin/dde-lock" "dde-lock" ]
+      # "/usr/bin/dde-lock"
     ];
 
     ### CODE
     "scripts/lightdm-deepin-greeter" = [
       # TODO ["/usr/lib/deepin-daemon/greeter-display-daemon"]
-      [ "/usr/bin/lightdm-deepin-greeter" "lightdm-deepin-greeter" ]
+      # "/usr/bin/lightdm-deepin-greeter"
     ];
 
     "src/widgets/shutdownwidget.cpp" = [
@@ -113,8 +110,8 @@ let
       #"/usr/share/dde-session-ui/dde-shutdown.conf
     ];
     "files/wayland/lightdm-deepin-greeter-wayland" = [
+      # "/usr/bin/lightdm-deepin-greeter"
       #? /usr/lib/deepin-daemon/greeter-display-daemon
-      [ "/usr/bin/lightdm-deepin-greeter" "lightdm-deepin-greeter" ]
       # TODO export QT_QPA_PLATFORM_PLUGIN_PATH...
     ];
 
@@ -141,7 +138,9 @@ stdenv.mkDerivation rec {
     sha256 = "sha256-mEYD9gC46pGufqjSCjyrLtZWn6u3ALFTjnBhL3FIs2o=";
   };
 
-  postPatch = getPatchFrom patchList;
+  postPatch = getPatchFrom patchList + ''
+    patchShebangs files/deepin-greeter
+  '';
 
   nativeBuildInputs = [
     cmake
