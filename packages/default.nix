@@ -58,9 +58,6 @@ let
     docparser = callPackage ./library/docparser { };
     dtk = [ dtkcommon dtkcore dtkgui dtkwidget ];
 
-    ## TMP
-    lucenecpp = callPackage ./library/lucenecpp { };
-
     #### MISC
     dde-polkit-agent = callPackage ./misc/dde-polkit-agent { };
     dpa-ext-gnomekeyring = callPackage ./misc/dpa-ext-gnomekeyring { };

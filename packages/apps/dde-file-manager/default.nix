@@ -36,7 +36,7 @@
 , pcre
 , wrapQtAppsHook
 , wrapGAppsHook
-, lucenecpp
+, lucenepp
 , boost
 , taglib
 , glib
@@ -243,7 +243,7 @@ stdenv.mkDerivation rec {
     polkit
     pcre
 
-    lucenecpp
+    lucenepp
     boost
     taglib
   ];
