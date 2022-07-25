@@ -22,6 +22,7 @@
 , utillinux
 , xcur2png
 , gdk-pixbuf-xlib
+, dbus
 }:
 let
   patchList = {
@@ -72,7 +73,7 @@ let
 
     ### MISC
     "misc/systemd/system/deepin-login-sound.service" = [
-      [ "/usr/bin/dbus-send" "dbus-send" ]
+      [ "/usr/bin/dbus-send" "${dbus}/bin/dbus-send" ]
     ];
     "misc/systemd/system/deepin-shutdown-sound.service" = [
       [ "/usr/bin/true" "true" ]
