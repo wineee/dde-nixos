@@ -23,6 +23,7 @@
 , libv4l
 , udev
 , kwayland
+, dbus
 }:
 # TODO
 # src/main.cpp : ffmpeg
@@ -36,7 +37,7 @@ let
       # /usr/share/deepin-screen-recorder/tablet_resources/fast-icon_recording_normal.svg
     ];
     "com.deepin.Screenshot.service" = [
-      [ "/usr/bin/dbus-send" "dbus-send" ]
+      [ "/usr/bin/dbus-send" "${dbus}/bin/dbus-send" ]
       # /usr/share/applications/deepin-screen-recorder.desktop
     ];
     "src/dbusservice/com.deepin.Screenshot.service" = [
@@ -44,18 +45,18 @@ let
       # /usr/bin/deepin-screenshot
     ];
     "src/pin_screenshots/com.deepin.PinScreenShots.service" = [
-      [ "/usr/bin/dbus-send" "dbus-send" ]
+      [ "/usr/bin/dbus-send" "${dbus}/bin/dbus-send" ]
       # /usr/bin/deepin-pin-screenshots
     ];
     "assets/com.deepin.Screenshot.service" = [
-      [ "/usr/bin/dbus-send" "dbus-send" ]
+      [ "/usr/bin/dbus-send" "${dbus}/bin/dbus-send" ]
       #/usr/bin/deepin-screen-recorder
     ];
     "assets/com.deepin.ScreenRecorder.service" = [
       # /usr/bin/deepin-screen-recorder
     ];
     "com.deepin.ScreenRecorder.service" = [
-      [ "/usr/bin/dbus-send" "dbus-send" ]
+      [ "/usr/bin/dbus-send" "${dbus}/bin/dbus-send" ]
     ];
 
     ### CODE
