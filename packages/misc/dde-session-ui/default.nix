@@ -26,25 +26,22 @@ let
   patchList = {
     ### MISC
     "dmemory-warning-dialog/com.deepin.dde.MemoryWarningDialog.service" = [
-      [ "/usr/bin/dmemory-warning-dialog" "dmemory-warning-dialog" ]
+      # "/usr/bin/dmemory-warning-dialog"
     ];
     "dde-warning-dialog/com.deepin.dde.WarningDialog.service" = [
-      #?
-      [ "/usr/lib/deepin-daemon/dde-warning-dialog" "dde-warning-dialog" ]
+      # "/usr/lib/deepin-daemon/dde-warning-dialog"
     ];
     "dde-welcome/com.deepin.dde.welcome.service" = [
-      #?
-      [ "/usr/lib/deepin-daemon/dde-welcome" "dde-welcome" ]
+      # "/usr/lib/deepin-daemon/dde-welcome"
     ];
     "dde-osd/files/com.deepin.dde.freedesktop.Notification.service" = [
-      #?
-      [ "/usr/lib/deepin-daemon/dde-osd" "dde-osd" ]
+      # "/usr/lib/deepin-daemon/dde-osd"
     ];
     "dde-osd/files/com.deepin.dde.Notification.service" = [
-      [ "/usr/lib/deepin-daemon/dde-osd" "dde-osd" ]
+      # "/usr/lib/deepin-daemon/dde-osd"
     ];
     "dde-osd/files/com.deepin.dde.osd.service" = [
-      [ "/usr/lib/deepin-daemon/dde-osd" "dde-osd" ]
+      # "/usr/lib/deepin-daemon/dde-osd"
     ];
     ### CODE
     "widgets/fullscreenbackground.cpp" = [
@@ -89,6 +86,8 @@ stdenv.mkDerivation rec {
     sha256 = "sha256-N4TOnkYpjRbozr6sZefhkYFOvbYDp124qvlGaUjWiuQ=";
   };
 
+  postPatch = getPatchFrom patchList;
+
   nativeBuildInputs = [
     cmake
     pkg-config
@@ -112,10 +111,6 @@ stdenv.mkDerivation rec {
   ];
 
   NIX_CFLAGS_COMPILE = "-I${dde-dock}/include/dde-dock";
-
-  postPatch = getPatchFrom patchList;
-
-  #dontWrapQtApps = true;
 
   preFixup = ''
     glib-compile-schemas ${glib.makeSchemaPath "$out" "${pname}-${version}"}
