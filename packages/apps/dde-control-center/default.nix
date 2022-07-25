@@ -33,6 +33,7 @@
 , gtest
 , runtimeShell
 , tzdata
+, dbus
 }:
 let
   patchList = {
@@ -46,7 +47,7 @@ let
       # /usr/bin/abrecovery
     ];
     "com.deepin.dde.ControlCenter.service" = [
-      [ "/usr/bin/dbus-send" "dbus-send" ]
+      [ "/usr/bin/dbus-send" "${dbus}/bin/dbus-send" ]
       # "/usr/share/applications/dde-control-center.desktop
     ];
     "dde-control-center-wapper" = [
