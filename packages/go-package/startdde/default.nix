@@ -153,6 +153,8 @@ buildGoPackage rec {
     glib-compile-schemas ${glib.makeSchemaPath "$out" "${pname}-${version}"}
   '';
 
+  passthru.providedSessions = [ "deepin" ];
+
   meta = with lib; {
     description = "starter of deepin desktop environment";
     longDescription = "Startdde is used for launching DDE components and invoking user's custom applications which compliant with xdg autostart specification";
