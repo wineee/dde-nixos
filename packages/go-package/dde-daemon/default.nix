@@ -177,6 +177,8 @@ let
       [ "/usr/bin/setxkbmap" "${xorg.setxkbmap}/bin/setxkbmap" ]
       [ "/usr/bin/xdotool" "${xdotool}/bin/xdotool" ]
       [ "/usr/bin/deepin-system-monitor" "deepin-system-monitor" ]
+      [ "dbus-send" "${dbus}/bin/dbus-send" ]
+      [ "gsettings" "${glib.bin}/bin/gsettings" ]
       ## TODO
     ];
     "accounts/users/display_manager.go" = [
