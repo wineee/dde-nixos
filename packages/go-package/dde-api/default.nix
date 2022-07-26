@@ -23,6 +23,7 @@
 , xcur2png
 , gdk-pixbuf-xlib
 , dbus
+, coreutils
 }:
 let
   patchList = {
@@ -76,7 +77,7 @@ let
       [ "/usr/bin/dbus-send" "${dbus}/bin/dbus-send" ]
     ];
     "misc/systemd/system/deepin-shutdown-sound.service" = [
-      [ "/usr/bin/true" "true" ]
+      [ "/usr/bin/true" "${coreutils}/bin/true" ]
       # /usr/lib/deepin-api/deepin-shutdown-sound
     ];
   };
