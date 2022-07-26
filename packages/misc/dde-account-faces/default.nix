@@ -15,7 +15,7 @@ stdenv.mkDerivation rec {
   };
 
   installPhase = ''
-    make install DESTDIR="$out" PREFIX="/"
+    make install DESTDIR="$out/var" PREFIX="/"
   '';
 
   meta = with lib; {
