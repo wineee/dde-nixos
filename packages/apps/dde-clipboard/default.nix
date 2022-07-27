@@ -18,7 +18,7 @@
 let
   patchList = {
     "CMakeLists.txt" = [
-      [ "/etc/xdg" "$out/xdg" ]
+      [ "/etc/xdg" "$out/etc/xdg" ]
       [ "/lib/systemd/user" "$out/lib/systemd/user" ]
     ];
     "misc/dde-clipboard.desktop" = [ ];
