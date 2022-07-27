@@ -1,6 +1,7 @@
 { stdenv
 , lib
 , fetchFromGitHub
+, linkFarm
 , getPatchFrom
 , dtk
 , dde-qt-dbus-factory
@@ -9,6 +10,7 @@
 , qttools
 , qtx11extras
 , wrapQtAppsHook
+, wrapGAppsHook
 , gsettings-qt
 , lightdm_qt
 , linux-pam
@@ -18,6 +20,7 @@
 , gtest
 , xkeyboard_config
 , dbus
+, dde-session-shell
 }:
 let
   patchList = {
@@ -148,7 +151,9 @@ stdenv.mkDerivation rec {
     pkg-config
     qttools
     wrapQtAppsHook
+    wrapGAppsHook
   ];
+  dontWrapGApps = true;
 
   buildInputs = [
     dtk
@@ -168,6 +173,17 @@ stdenv.mkDerivation rec {
     glib-compile-schemas ${glib.makeSchemaPath "$out" "${pname}-${version}"}
     qtWrapperArgs+=("''${gappsWrapperArgs[@]}")
   '';
+
+  postFixup = ''
+    for binary in $out/etc/deepin/greeters.d/*; do
+      wrapQtApp $binary
+    done
+  '';
+
+  passthru.xgreeters = linkFarm "deepin-greeter-xgreeters" [{
+    path = "${dde-session-shell}/share/xgreeters/lightdm-deepin-greeter.desktop";
+    name = "lightdm-deepin-greeter.desktop";
+  }];
 
   meta = with lib; {
     description = "Deepin desktop-environment - session-shell module";
