@@ -24,9 +24,7 @@ stdenv.mkDerivation rec {
     sha256 = "sha256-jVzwzTejaFgmTzkEEVoLXWdPX43EgwTC90dUurH57q8=";
   };
 
-  patches = [
-    ./fix_in_non_deepin.patch
-  ];
+  patches = [ ./fix_in_non_deepin.patch ];
 
   nativeBuildInputs = [
     cmake
