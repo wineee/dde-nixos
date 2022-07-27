@@ -89,6 +89,12 @@
                 (mkIf cfg.enable {
                   services.xserver.displayManager.sessionPackages = [ packages.startdde ];
                   services.xserver.displayManager.defaultSession = "deepin";
+                  # services.xserver.displayManager.lightdm.greeters.gtk.enable = false;
+                  # services.xserver.displayManager.lightdm.greeter = mkDefault {
+                  #   package = packages.dde-session-shell.xgreeters;
+                  #   name = "lightdm-deepin-greeter";
+                  # };
+
                   #services.xserver.displayManager.lightdm.theme = mkDefault "deepin";
                   
                   hardware.bluetooth.enable = mkDefault true;
@@ -129,6 +135,7 @@
                   fonts.fonts = with pkgs; [ noto-fonts ];
 
                   environment.sessionVariables.NIX_GSETTINGS_OVERRIDES_DIR = "${nixos-gsettings-desktop-schemas}/share/gsettings-schemas/nixos-gsettings-overrides/glib-2.0/schemas";
+                  environment.variables.DDE_POLKIT_AGENT_PLUGINS_DIRS = [ "${packages.dpa-ext-gnomekeyring}/lib/polkit-1-dde/plugins" ];
 
                   environment.pathsToLink = [
                     "/lib/deepin-daemon"
@@ -141,6 +148,7 @@
                   environment.etc."deepin-version".source = "${packages.deepin-desktop-base}/etc/deepin-version";
 
                   environment.systemPackages = with packages; [
+                    # dde-kwin
                     deepin-terminal
                     deepin-album
                     deepin-image-viewer
@@ -162,6 +170,7 @@
                     startdde
                     deepin-screen-recorder
                     dde-app-services
+                    dde-clipboard
                     
                     deepin-desktop-schemas
                     dde-api
@@ -177,7 +186,6 @@
                     deepin-wallpapers
                     deepin-reader
                     dmarked
-                    deepin-downloader
                     deepin-draw
                     deepin-boot-maker
                     deepin-gomoku
@@ -211,6 +219,7 @@
                     deepin-system-monitor
                     deepin-boot-maker
                     deepin-camera
+                    dde-clipboard
 
                     dde-dock
                     deepin-anything
@@ -222,6 +231,7 @@
                     dde-daemon
                     dde-file-manager
                     dde-calendar
+                    dde-clipboard
 
                     deepin-anything
                   ];
