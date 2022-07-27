@@ -1,6 +1,7 @@
 { stdenv
 , lib
 , fetchFromGitHub
+, getPatchFrom
 , dtk
 , qt5integration
 , qt5platform-plugins
@@ -14,17 +15,36 @@
 , glibmm
 , gtest
 }:
-
+let
+  patchList = {
+    "CMakeLists.txt" = [
+      [ "/etc/xdg" "$out/xdg" ]
+      [ "/lib/systemd/user" "$out/lib/systemd/user" ]
+    ];
+    "misc/dde-clipboard.desktop" = [ ];
+    "misc/dde-clipboard-daemon.service" = [ ];
+    "misc/com.deepin.dde.Clipboard.service" = [
+      [ "/usr/bin/qdbus" "${qttools}/bin/qdbus" ]
+    ];
+    "dde-clipboard-daemon/dbus_manager.cpp" = [ ];
+  };
+in
 stdenv.mkDerivation rec {
   pname = "dde-clipboard";
-  version = "unstable-2022-03-03";
+  version = "5.4.7+";
 
   src = fetchFromGitHub {
     owner = "linuxdeepin";
     repo = pname;
-    rev = "e9642d368183edc5ea0ad62d65fbaa13a042121b";
-    sha256 = "sha256-Y+rIc4Na7CwCPQN4xeQzUO3bUbK+tidhDL5mHD+3OVA=";
+    rev = "20e6ade9a253fe15d90400555a0e2e6f4c68a970";
+    sha256 = "sha256-Q8yuhseFX3hlmBLfARYkoDfv5E4VxMEkKWs+mh74ZU8=";
   };
+
+  patches = [ ./0001-feat-remove-wayland-support.patch ];
+
+  postPatch = getPatchFrom patchList + ''
+    patchShebangs translate_generation.sh generate_gtest_report.sh
+  '';
 
   nativeBuildInputs = [
     cmake
@@ -42,19 +62,12 @@ stdenv.mkDerivation rec {
     gtest
   ];
 
+  # NIX_CFLAGS_COMPILE = [ "-I${kwayland.dev}/include/KF5/KWayland" ];
+
   qtWrapperArgs = [
     "--prefix QT_PLUGIN_PATH : ${qt5integration}/plugins"
     "--prefix QT_QPA_PLATFORM_PLUGIN_PATH : ${qt5platform-plugins}/plugins"
   ];
-
-  patches = [ ./0001-remove-support-waylandcopy-client.patch ];
-
-  postPatch = ''
-    patchShebangs translate_generation.sh generate_gtest_report.sh
-
-    substituteInPlace CMakeLists.txt \
-      --replace "/etc/xdg/autostart)" "$out/xdg/autostart)"
-  '';
 
   meta = with lib; {
     description = "DDE optional clipboard manager componment";

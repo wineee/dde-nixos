@@ -38,28 +38,9 @@ let
         v = with builtins; fromJSON (readFile ../release/tags/${pname}.json);
       in
       v.version.tag;
-  };
-
-  pkgs_kwayland_5_57 = import (builtins.fetchGit {
-      # Descriptive name to make the store path easier to identify                
-      name = "my-old-kwayland-revision";                              
-      url = "https://github.com/NixOS/nixpkgs/";
-      ref = "refs/heads/nixos-19.09";   
-      rev = "81d4e65891f92e8e72c244da663c83c1e40dc919";                             
-  }) {};
-
-  pkgs_kwin_5_23_5 = import (builtins.fetchGit {
-      # Descriptive name to make the store path easier to identify                
-      name = "my-old-kwin-revision";                                                 
-      url = "https://github.com/NixOS/nixpkgs/";                       
-      ref = "refs/heads/nixpkgs-unstable";                     
-      rev = "20dd1e678299aae83735f1af5d1dcd80de22da5f";                                           
-  }) {};                                                                   
+  };                                                                
 
   packages = self: with self; functions // {
-    kwayland_5_57 = pkgs_kwayland_5_57.libsForQt511.kwayland;
-    kwin_23 = pkgs_kwin_5_23_5.libsForQt5.kwin;
-
     #### LIBRARIES
     dtkcommon = callPackage ./library/dtkcommon { };
     dtkcore = callPackage ./library/dtkcore { };
@@ -107,7 +88,7 @@ let
     #### Dtk Application
     dde-kwin = callPackage ./apps/dde-kwin { };
     dde-calendar = callPackage ./apps/dde-calendar { };
-    #FIXME dde-clipboard = callPackage ./apps/dde-clipboard { };
+    dde-clipboard = callPackage ./apps/dde-clipboard { };
     dde-dock = callPackage ./apps/dde-dock { };
     dde-device-formatter = callPackage ./apps/dde-device-formatter { };
     deepin-compressor = callPackage ./apps/deepin-compressor { };
