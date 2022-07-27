@@ -5,9 +5,10 @@
 , pkg-config
 , fetchFromGitHub
 , cmake
-, kwin
+, kwin_23
 , kwayland
 , qttools
+, deepin-gettext-tools
 , extra-cmake-modules
 , dtk
 , gsettings-qt
@@ -33,7 +34,7 @@ let
       [ "/etc/xdg" "$out/etc/xdg" ]
     ];
     "configures/kwin_no_scale.in" = [
-      [ "kwin 5.21.5" "kwin ${kwin.version}" ] # TODO
+      [ "kwin 5.21.5" "kwin ${kwin_23.version}" ] # TODO
     ];
   };
 in
@@ -65,13 +66,13 @@ stdenv.mkDerivation rec {
   nativeBuildInputs = [
     cmake
     qttools
-    #deepin-gettext-tools
+    deepin-gettext-tools
     extra-cmake-modules
     pkg-config
   ];
 
   buildInputs = [
-    kwin
+    kwin_23
     kwayland
     dtk
     gsettings-qt
@@ -87,9 +88,15 @@ stdenv.mkDerivation rec {
 
   cmakeFlags = [
     "-DPROJECT_VERSION=${version}"
-    "-DKWIN_VERSION=${kwin.version}"
-    "-DUSE_DEEPIN_WAYLAND=OFF"
+    "-DKWIN_VERSION=${kwin_23.version}"
     "-DUSE_WINDOW_TOOL=OFF"
+    "-DENABLE_BUILTIN_BLUR=OFF"
+    "-DENABLE_KDECORATION=OFF" #TODO
+    "-DENABLE_BUILTIN_MULTITASKING=OFF"
+    "-DENABLE_BUILTIN_BLACK_SCREEN=OFF"
+    "-DUSE_DEEPIN_WAYLAND=OFF"
+
+    "-DENABLE_BUILTIN_SCISSOR_WINDOW=OFF" # TODO
   ];
 
   meta = with lib; {
