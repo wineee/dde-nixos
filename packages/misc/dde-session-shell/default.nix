@@ -115,7 +115,9 @@ let
     ];
 
     # scripts/lightdm-deepin-greeter /etc/lightdm/deepin/xsettingsd.conf
-    # files/deepin-greeter /etc/deepin/greeters.d/
+    "files/deepin-greeter" = [
+      [ "/etc/deepin/greeters.d/" "$out/etc/deepin/greeters.d/" ]
+    ];
     # files/wayland/kwin_wayland_helper-wayland /etc/xdg/kglobalshortcutsrc
 
     "src/app/lightdm-deepin-greeter.cpp" = [
