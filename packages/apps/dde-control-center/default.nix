@@ -169,7 +169,7 @@ stdenv.mkDerivation rec {
   ];
 
   cmakeFlags = [
-    "-DVERSION=${version}"
+    "-DCVERSION=${version}"
     "-DDISABLE_AUTHENTICATION=YES"
     "-DDISABLE_ACTIVATOR=YES"
     "-DDISABLE_SYS_UPDATE=YES"
