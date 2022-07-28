@@ -101,12 +101,16 @@
                   hardware.pulseaudio.enable = mkDefault true;
 
                   security.polkit.enable = true;
+                  services.colord.enable = mkDefault true; # Need this?
+                  services.fwupd.enable = mkDefault true;  # Need this?
+
                   
                   services.accounts-daemon.enable = true;
                   services.gnome.gnome-keyring.enable = true;
                   services.gnome.at-spi2-core.enable = true; # Need this?
                   services.gvfs.enable = true;  # Need this?
                   services.gnome.glib-networking.enable = true;  # Need this?
+
 
                   services.bamf.enable = true;
                   services.udev.packages = with packages; [
@@ -134,6 +138,15 @@
 
                   fonts.fonts = with pkgs; [ noto-fonts ];
 
+                  xdg.mime.enable = true;
+                  xdg.icons.enable = true;
+                  xdg.portal.enable = true;
+                  xdg.portal.extraPortals = [ 
+                    (pkgs.xdg-desktop-portal-gtk.override {
+                      buildPortalsInGnome = false;
+                    })
+                  ];
+
                   environment.sessionVariables.NIX_GSETTINGS_OVERRIDES_DIR = "${nixos-gsettings-desktop-schemas}/share/gsettings-schemas/nixos-gsettings-overrides/glib-2.0/schemas";
                   environment.variables.DDE_POLKIT_AGENT_PLUGINS_DIRS = [ "${packages.dpa-ext-gnomekeyring}/lib/polkit-1-dde/plugins" ];
 
@@ -145,7 +158,7 @@
                     "/share"
                   ];
 
-                  environment.etc."deepin-version".source = "${packages.deepin-desktop-base}/etc/deepin-version";
+                  #environment.etc."deepin-version".source = "${packages.deepin-desktop-base}/etc/deepin-version";
 
                   environment.systemPackages = with packages; [
                     # dde-kwin
@@ -198,6 +211,7 @@
                     gtk3.out # for gtk-launch program
                     xdg-user-dirs # Update user dirs as described in http://freedesktop.org/wiki/Software/xdg-user-dirs/
                     util-linux # runuser
+                    polkit_gnome
                   ]);
 
                   services.dbus.packages = with packages; [
