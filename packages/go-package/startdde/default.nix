@@ -20,6 +20,9 @@
 , runtimeShell
 , dde-daemon
 , dde-polkit-agent
+, dde-session-ui
+, dde-session-shell
+, gnome
 }:
 let
   patchList = {
@@ -34,20 +37,20 @@ let
     "session.go" = [
       [ "/usr/share/applications/dde-lock.desktop" "/run/current-system/sw/share/applications/dde-lock.desktop" ]
       [ "/usr/bin/dde-shutdown" "dde-shutdown" ]
-      [ "/usr/lib/deepin-daemon/langselector" "langselector" ]
-      [ "/usr/bin/dde-lock" "dde-lock" ]
-      [ "/usr/lib/deepin-daemon/dde-osd" "dde-osd" ]
-      [ "/usr/bin/gnome-keyring-daemon" "gnome-keyring-daemon" ]
+      [ "/usr/lib/deepin-daemon/langselector" "${dde-daemon}/lib/deepin-daemon/langselector" ]
+      [ "/usr/bin/dde-lock" "${dde-session-shell}/bin/dde-lock" ]
+      [ "/usr/lib/deepin-daemon/dde-osd" "${dde-session-ui}/lib/deepin-daemon/dde-osd" ]
+      [ "/usr/bin/gnome-keyring-daemon" "${gnome.gnome-keyring}/bin/gnome-keyring-daemon" ]
       #? [ "/usr/share/deepin-default-settings/fontconfig.json"  ] 
     ];
     "main_test.go" = [
       [ "/usr/bin/kwin_no_scale" "kwin_no_scale" ]
     ];
     "misc/lightdm.conf" = [
-      [ "/usr/sbin/deepin-fix-xauthority-perm" "deepin-fix-xauthority-perm" ]
+      # "/usr/sbin/deepin-fix-xauthority-perm" 
     ];
     "misc/Xsession.d/00deepin-dde-env" = [
-      [ "/usr/bin/startdde" "$out/bin/startdde" ]
+      # "/usr/bin/startdde
     ];
     "misc/auto_launch/chinese.json" = [
       [ "/usr/bin/dde-file-manager" "dde-file-manager" ]
@@ -58,7 +61,7 @@ let
       [ "/usr/lib/polkit-1-dde/dde-polkit-agent" "${dde-polkit-agent}/lib/polkit-1-dde/dde-polkit-agent" ] 
     ];
     "utils.go" = [
-      [ "/usr/lib/deepin-daemon/dde-welcome" "dde-welcome" ]
+      [ "/usr/lib/deepin-daemon/dde-welcome" "${dde-session-ui}/lib/deepin-daemon/dde-welcome" ]
     ];
     "launch_group.go" = [
       # "/usr/share/startdde/auto_launch.json" 
