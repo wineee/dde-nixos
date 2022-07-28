@@ -2,7 +2,7 @@
 name: Bug Report
 description: Create a report to help us improve.
 labels: [bug]
-assignees: aio-libs/triagers
+assignees: wineee
 body:
 - type: markdown
   attributes:
@@ -53,44 +53,6 @@ body:
       If applicable, add logs/tracebacks to help explain your problem.
       Paste the output of the steps above, including the commands
       themselves and their output/traceback etc.
-    render: python-traceback
-  validations:
-    required: true
-
-- type: textarea
-  attributes:
-    label: Python Version
-    description: Attach your version of Python.
-    render: console
-    value: |
-      $ python --version
-  validations:
-    required: true
-- type: textarea
-  attributes:
-    label: aiohttp Version
-    description: Attach your version of aiohttp.
-    render: console
-    value: |
-      $ python -m pip show aiohttp
-  validations:
-    required: true
-- type: textarea
-  attributes:
-    label: multidict Version
-    description: Attach your version of multidict.
-    render: console
-    value: |
-      $ python -m pip show multidict
-  validations:
-    required: true
-- type: textarea
-  attributes:
-    label: yarl Version
-    description: Attach your version of yarl.
-    render: console
-    value: |
-      $ python -m pip show yarl
   validations:
     required: true
 
