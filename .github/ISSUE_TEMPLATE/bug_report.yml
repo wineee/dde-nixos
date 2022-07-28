@@ -28,27 +28,9 @@ body:
 
 - type: textarea
   attributes:
-    label: To Reproduce (optional)
-    description: >-
-      Describe the steps to reproduce this bug.
-    placeholder: |
-      1. build *X*
-  validations:
-    required: true
-
-- type: textarea
-  attributes:
-    label: Logs/tracebacks (optional)
-    description: |
-      If applicable, add logs/tracebacks to help explain your problem.
-      Paste the output of the steps above, including the commands
-      themselves and their output/traceback etc.
-  validations:
-    required: true
-
-- type: textarea
-  attributes:
     label: Metadata
+    description: >-
+      Get nix info to help with debugging.
     placeholder: >-
       Please run `nix-shell -p nix-info --run "nix-info -m"` and paste the result.
   validations:
@@ -56,7 +38,21 @@ body:
 
 - type: textarea
   attributes:
-    label: Additional context (optional)
+    label: To Reproduce
+    description: >-
+      Describe the steps to reproduce this bug.
+    placeholder: |
+      1. build *X*
+
+- type: textarea
+  attributes:
+    label: Logs
+    description: |
+      log here if short otherwise a link to a gist.
+
+- type: textarea
+  attributes:
+    label: Additional context
     description: |
       Add any other context about the problem here.
 
