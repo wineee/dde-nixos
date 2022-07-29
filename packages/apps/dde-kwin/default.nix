@@ -5,7 +5,7 @@
 , pkg-config
 , fetchFromGitHub
 , cmake
-, kwin_23
+, kwin
 , kwayland
 , qttools
 , deepin-gettext-tools
@@ -34,7 +34,7 @@ let
       [ "/etc/xdg" "$out/etc/xdg" ]
     ];
     "configures/kwin_no_scale.in" = [
-      [ "kwin 5.21.5" "kwin ${kwin_23.version}" ] # TODO
+      [ "kwin 5.21.5" "kwin ${kwin.version}" ] # TODO
     ];
   };
 in
@@ -72,7 +72,7 @@ stdenv.mkDerivation rec {
   ];
 
   buildInputs = [
-    kwin_23
+    kwin
     kwayland
     dtk
     gsettings-qt
@@ -88,7 +88,7 @@ stdenv.mkDerivation rec {
 
   cmakeFlags = [
     "-DPROJECT_VERSION=${version}"
-    "-DKWIN_VERSION=${kwin_23.version}"
+    "-DKWIN_VERSION=${kwin.version}"
     "-DUSE_WINDOW_TOOL=OFF"
     "-DENABLE_BUILTIN_BLUR=OFF"
     "-DENABLE_KDECORATION=OFF" #TODO
