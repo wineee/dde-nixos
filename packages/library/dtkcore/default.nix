@@ -42,7 +42,8 @@ stdenv.mkDerivation rec {
       --replace '$$INSTALL_PREFIX' "'/run/current-system/sw'"
 
     substituteInPlace src/dsysinfo.cpp \
-      --replace "/usr/share/deepin/distribution.info" "${deepin-desktop-base}/share/deepin/distribution.info"
+      --replace "/usr/share/deepin/distribution.info" "${deepin-desktop-base}/share/deepin/distribution.info" \
+      --replace 'lshw.start("lshw"' 'lshw.start("${lshw}/bin/lshw"'
   '';
 
   qmakeFlags = [
