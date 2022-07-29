@@ -35,7 +35,7 @@ let
       [ "/usr/bin/dde-hints-dialog" "dde-hints-dialog" ]
     ];
     "session.go" = [
-      [ "/usr/share/applications/dde-lock.desktop" "/run/current-system/sw/share/applications/dde-lock.desktop" ]
+      [ "/usr/share/applications/dde-lock.desktop" "${dde-session-shell}/share/applications/dde-lock.desktop" ]
       [ "/usr/bin/dde-shutdown" "dde-shutdown" ]
       [ "/usr/lib/deepin-daemon/langselector" "${dde-daemon}/lib/deepin-daemon/langselector" ]
       [ "/usr/bin/dde-lock" "${dde-session-shell}/bin/dde-lock" ]
