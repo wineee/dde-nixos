@@ -16,11 +16,6 @@ stdenv.mkDerivation rec {
     sha256 = "sha256-tUp7OhNBXwomR2tO4UOaR0vJQ3GTirMk/hRl1cMk61o=";
   };
 
-  nativeBuildInputs = [
-    qmake
-    wrapQtAppsHook
-  ];
-
   postPatch = ''
     substituteInPlace src/src.pro \
       --replace '$$[QT_INSTALL_LIBS]' "$out/lib" \
@@ -28,6 +23,10 @@ stdenv.mkDerivation rec {
       --replace '$$[QMAKE_MKSPECS]' "$out/mkspecs"
   '';
 
+  nativeBuildInputs = [
+    qmake
+    wrapQtAppsHook
+  ];
 
   meta = with lib; {
     description = "Qt provides several classes for DBus communication";
