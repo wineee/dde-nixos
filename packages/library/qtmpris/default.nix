@@ -18,14 +18,6 @@ stdenv.mkDerivation rec {
     sha256 = "sha256-kuM8hUdsa7N+eLDbwYw3ay+PWxg35zcTBOvGow1NlzI=";
   };
 
-  nativeBuildInputs = [
-    qmake
-    pkgconfig
-    wrapQtAppsHook
-  ];
-
-  buildInputs = [ qtdeclarative ];
-
   postPatch = ''
     substituteInPlace declarative/declarative.pro \
       --replace '$$[QT_INSTALL_QML]' "$out/$qtQmlPrefix/"
@@ -36,6 +28,13 @@ stdenv.mkDerivation rec {
       --replace '$$[QMAKE_MKSPECS]' "$out/mkspecs"
   '';
 
+  nativeBuildInputs = [
+    qmake
+    pkgconfig
+    wrapQtAppsHook
+  ];
+
+  buildInputs = [ qtdeclarative ];
 
   meta = with lib; {
     description = "Qt and QML MPRIS interface and adaptor";
