@@ -13,13 +13,13 @@
 
 stdenv.mkDerivation rec {
   pname = "dtkgui";
-  version = "5.5.24";
+  version = "5.5.25";
 
   src = fetchFromGitHub {
     owner = "linuxdeepin";
     repo = pname;
     rev = version;
-    sha256 = "sha256-9zIqRDtjWYpj6n2gV7wrv35XrZnYiy+/6ZwyENNPUmY=";
+    sha256 = "sha256-pRH9tGz7EYmD0BJfAVkhoSSH8K6h6vBBk1ooiXTtlLs=";
   };
 
   nativeBuildInputs = [
