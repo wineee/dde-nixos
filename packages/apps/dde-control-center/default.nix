@@ -98,21 +98,14 @@ let
 in
 stdenv.mkDerivation rec {
   pname = "dde-control-center";
-  version = "unstable-2022-07-06";
+  version = "unstable-2022-07-36";
 
   src = fetchFromGitHub {
     owner = "linuxdeepin";
     repo = pname;
-    rev = "5214b2756a13a8a27fe414280d1ab8e3d990454f";
-    sha256 = "sha256-aB2vH8Uz06zqBsW9KBlzr8Z7S5HxDS7bZ2qxg95lSuY=";
+    rev = "2dbbe3e203191cd9ff3d79e11654492496bcbfff";
+    sha256 = "sha256-2do/iW+Olxmpi91xwPq+jykgJx6L78D6dUUzO8ieEeU=";
   };
-
-  patches = [
-    (substituteAll {
-      src = ./0001-fix-path.patch;
-      qtbase_dev = "${lib.getDev qtbase}/include/QtXkbCommonSupport/5.15.3";
-    })
-  ];
 
   fixInstallPatch = ''
     substituteInPlace src/frame/CMakeLists.txt \
