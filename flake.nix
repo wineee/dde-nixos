@@ -205,9 +205,10 @@
                     deepin-turbo
                     deepin-icon-theme
                     deepin-sound-theme
+                    deepin-gtk-theme
                     deepin-wallpapers
+
                     deepin-reader
-                    dmarked
                     deepin-draw
                     deepin-boot-maker
                     deepin-gomoku
