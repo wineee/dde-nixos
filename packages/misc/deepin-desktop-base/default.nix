@@ -1,6 +1,5 @@
 { stdenv
 , lib
-, writeText
 , fetchFromGitHub
 }:
 stdenv.mkDerivation rec {
@@ -16,16 +15,6 @@ stdenv.mkDerivation rec {
 
   makeFlags = [ "DESTDIR=${placeholder "out"}" ];
 
-  distribution_info = ''
-    [Distribution]
-    Name=NixOS
-    WebsiteName=www.nixos.org
-    Website=https://www.nixos.org
-    Logo=${placeholder "out"}/share/pixmaps/nixos.svg
-    LogoLight=${placeholder "out"}/share/pixmaps/nixos.svg
-    LogoTransparent=${placeholder "out"}/share/pixmaps/nixos-white.svg
-  '';
-
   postInstall = ''
     rm $out/etc/lsb-release
     rm -r $out/etc/systemd
@@ -35,10 +24,9 @@ stdenv.mkDerivation rec {
     mv $out/usr/* $out/
     rm -r $out/usr
 
-    install -D ${./nixos.svg} $out/share/pixmaps/nixos.svg
-    install -D ${./nixos-white.svg} $out/share/pixmaps/nixos-white.svg
-
-    echo ${lib.escapeShellArg distribution_info} > $out/share/deepin/distribution.info
+    install -D ${./distribution_logo.svg} $out/share/pixmaps/distribution_logo.svg
+    install -D ${./distribution_logo_light.svg} $out/share/pixmaps/distribution_logo_light.svg
+    install -D ${./distribution_logo_transparent.svg} $out/share/pixmaps/distribution_logo_transparent.svg
     ln -s $out/lib/deepin/desktop-version $out/etc/deepin-version
   '';
 
