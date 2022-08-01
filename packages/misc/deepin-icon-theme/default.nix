@@ -24,7 +24,6 @@ stdenvNoCC.mkDerivation rec {
   nativeBuildInputs = [ gtk3 xcursorgen ];
 
   propagatedBuildInputs = [
-    hicolor-icon-theme
     papirus-icon-theme
   ];
 
