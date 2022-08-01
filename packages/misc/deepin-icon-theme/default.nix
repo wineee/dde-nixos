@@ -1,13 +1,14 @@
-{ stdenv
+{ stdenvNoCC
 , lib
 , fetchFromDeepin
 , readVersion
 , gtk3
 , xcursorgen
 , hicolor-icon-theme
+, papirus-icon-theme
 }:
 
-stdenv.mkDerivation rec {
+stdenvNoCC.mkDerivation rec {
   pname = "deepin-icon-theme";
   version = readVersion pname;
 
@@ -24,6 +25,7 @@ stdenv.mkDerivation rec {
 
   propagatedBuildInputs = [
     hicolor-icon-theme
+    papirus-icon-theme
   ];
 
   dontDropIconThemeCache = true;
