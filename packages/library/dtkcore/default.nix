@@ -8,7 +8,6 @@
 , wrapQtAppsHook
 , lshw
 , dtkcommon
-, deepin-desktop-base
 }:
 
 stdenv.mkDerivation rec {
@@ -33,7 +32,6 @@ stdenv.mkDerivation rec {
     gtest
     lshw
     dtkcommon
-    deepin-desktop-base
   ];
 
   # DEFINES += PREFIX=\\\"$$INSTALL_PREFIX\\\"  path of dsg
@@ -42,7 +40,7 @@ stdenv.mkDerivation rec {
       --replace '$$INSTALL_PREFIX' "'/run/current-system/sw'"
 
     substituteInPlace src/dsysinfo.cpp \
-      --replace "/usr/share/deepin/distribution.info" "${deepin-desktop-base}/share/deepin/distribution.info" \
+      --replace "/usr/share/deepin/distribution.info" "/etc/distribution.info" \
       --replace 'lshw.start("lshw"' 'lshw.start("${lshw}/bin/lshw"'
   '';
 
