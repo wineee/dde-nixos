@@ -126,7 +126,6 @@
                   services.udisks2.enable = true;
                   services.upower.enable = true;
                   services.tumbler.enable = true;
-                  services.redshift.enable = mkDefault true;
                   
                   services.power-profiles-daemon.enable = true;
                   networking.networkmanager.enable = mkDefault true;
