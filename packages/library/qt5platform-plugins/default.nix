@@ -14,26 +14,22 @@
 
 stdenv.mkDerivation rec {
   pname = "qt5platform-plugins";
-  version = "5.0.64";
+  version = "5.0.67";
 
   src = fetchFromGitHub {
     owner = "linuxdeepin";
     repo = pname;
     rev = version;
-    sha256 = "sha256-28sz1reexvqjBibQywpj+UaVSN9zXqyg9cXwPg/OF3s=";
+    sha256 = "sha256-+grsAtfS0jo4nt4y91kWpDXssefbPnPHh0Cnj9kZVmA=";
   };
 
-  nativeBuildInputs = [ qmake pkgconfig wrapQtAppsHook ];
-
-  buildInputs = [
-    mtdev
-    cairo
-    qtbase
-    qtx11extras
-    xorg.libSM
-  ];
-
-  qmakeFlags = lib.optional (!waylandSupport) [ "CONFIG+=DISABLE_WAYLAND" ];
+  ## https://github.com/linuxdeepin/qt5platform-plugins/pull/119 
+  fixQtPatch = ''
+    rm -r xcb/libqt5xcbqpa-dev/
+    mkdir -p xcb/libqt5xcbqpa-dev/${qtbase.version}
+    cp -r ${qtbase.src}/src/plugins/platforms/xcb/*.h xcb/libqt5xcbqpa-dev/${qtbase.version}/
+    echo ${qtbase.src}/src/plugins/platforms/xcb
+  '';
 
   fixXcbInstallPatch = ''
     substituteInPlace xcb/xcb.pro \
@@ -49,8 +45,20 @@ stdenv.mkDerivation rec {
       --replace "DESTDIR = \$\$_PRO_FILE_PWD_/../../bin/plugins/platforms" "DESTDIR = $out/plugins/platforms"
   '';
 
-  postPatch = fixXcbInstallPatch
+  postPatch = fixQtPatch + fixXcbInstallPatch
     + lib.optionalString waylandSupport fixWaylandInstallPatch;
+
+  nativeBuildInputs = [ qmake pkgconfig wrapQtAppsHook ];
+
+  buildInputs = [
+    mtdev
+    cairo
+    qtbase
+    qtx11extras
+    xorg.libSM
+  ];
+
+  qmakeFlags = lib.optional (!waylandSupport) [ "CONFIG+=DISABLE_WAYLAND" ];
 
   meta = with lib; {
     description = "Qt platform plugins for DDE";
