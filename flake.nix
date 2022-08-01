@@ -159,6 +159,15 @@
                   ];
 
                   #environment.etc."deepin-version".source = "${packages.deepin-desktop-base}/etc/deepin-version";
+                  environment.etc."distribution.info".text = ''
+                    [Distribution]
+                    Name=NixOS
+                    WebsiteName=www.nixos.org
+                    Website=https://www.nixos.org
+                    Logo=${packages.deepin-desktop-base}/share/pixmaps/distribution_logo.svg
+                    LogoLight=${packages.deepin-desktop-base}/share/pixmaps/distribution_logo_light.svg
+                    LogoTransparent=${packages.deepin-desktop-base}/share/pixmaps/distribution_logo_transparent.svg
+                  '';
 
                   environment.systemPackages = with packages; [
                     # dde-kwin
