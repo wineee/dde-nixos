@@ -126,6 +126,7 @@
                   services.udisks2.enable = true;
                   services.upower.enable = true;
                   services.tumbler.enable = true;
+                  services.redshift.enable = mkDefault true;
                   
                   services.power-profiles-daemon.enable = true;
                   networking.networkmanager.enable = mkDefault true;
@@ -158,7 +159,7 @@
                     "/share"
                   ];
 
-                  #environment.etc."deepin-version".source = "${packages.deepin-desktop-base}/etc/deepin-version";
+                  environment.etc."deepin-version".source = "${packages.deepin-desktop-base}/etc/deepin-version";
                   environment.etc."distribution.info".text = ''
                     [Distribution]
                     Name=NixOS
@@ -197,7 +198,7 @@
                     deepin-desktop-schemas
                     dde-api
                     dde-daemon
-                    dpa-ext-gnomekeyring # 这个怎么搞
+                    dpa-ext-gnomekeyring
 
                     dde-polkit-agent
                     dde-account-faces
