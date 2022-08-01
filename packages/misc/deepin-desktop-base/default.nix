@@ -1,8 +1,8 @@
-{ stdenv
+{ stdenvNoCC
 , lib
 , fetchFromGitHub
 }:
-stdenv.mkDerivation rec {
+stdenvNoCC.mkDerivation rec {
   pname = "deepin-desktop-base";
   version = "2022.03.07";
 
