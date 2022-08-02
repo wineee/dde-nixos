@@ -119,6 +119,7 @@ let
     deepin-gomoku = callPackage ./apps/deepin-gomoku { };
     deepin-lianliankan = callPackage ./apps/deepin-lianliankan { };
     dde-grand-search = callPackage ./apps/dde-grand-search { };
+    dde-network-core = callPackage ./apps/dde-network-core { };
   };
 in
 makeScope newScope packages
