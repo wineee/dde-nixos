@@ -42,6 +42,7 @@ let
     "plugins/tray/system-trays/systemtrayscontroller.cpp" = [ ];
     "plugins/shutdown/shutdownplugin.h" = [
       rpetc
+      [ "/usr/lib/dde-dock/plugins/system-trays" "/run/current-system/sw/lib/dde-dock/plugins/system-trays" ] # TODO
       #"/etc/lightdm/lightdm-deepin-greeter.conf",
       #"/etc/deepin/dde-session-ui.conf"
       [ "/usr/share/dde-session-ui/dde-session-ui.conf" "share/dde-session-ui/dde-session-ui.conf" ] # TODO
@@ -49,7 +50,9 @@ let
 
     "plugins/tray/indicatortray.cpp" = [ rpetc ];
     "plugins/tray/trayplugin.cpp" = [ rpetc ];
-    "frame/controller/dockpluginscontroller.cpp" = [ ];
+    "frame/controller/dockpluginscontroller.cpp" = [
+       [ "/usr/lib/dde-dock/plugins" "/run/current-system/sw/lib/dde-dock/plugins" ] # TODO
+    ];
     "frame/window/components/desktop_widget.cpp" = [
       [ "/usr/lib/deepin-daemon/desktop-toggle" "${dde-daemon}/lib/deepin-daemon/desktop-toggle" ]
     ];
@@ -67,14 +70,12 @@ in
 stdenv.mkDerivation rec {
   pname = "dde-dock";
   version = "5.5.51";
-  #version = "5.5.38";
 
   src = fetchFromGitHub {
     owner = "linuxdeepin";
     repo = pname;
     rev = version;
     sha256 = "sha256-eTfLdGeNa0S0TuXAI2Q8m/D73tWHKgjoBpt76+FEyaY=";
-    #sha256 = "sha256-RugU6jVIgTl+XKnqaENPKCBFndP9zDSe8vkdisG3tmk=";
   };
 
   postPatch = getPatchFrom patchList;
