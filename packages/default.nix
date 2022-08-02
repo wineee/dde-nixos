@@ -118,6 +118,7 @@ let
     deepin-reader = callPackage ./apps/deepin-reader { };
     deepin-gomoku = callPackage ./apps/deepin-gomoku { };
     deepin-lianliankan = callPackage ./apps/deepin-lianliankan { };
+    dde-grand-search = callPackage ./apps/dde-grand-search { };
   };
 in
 makeScope newScope packages
