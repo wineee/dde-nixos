@@ -9,7 +9,7 @@
   };
 
   outputs = { self, nixpkgs, flake-utils }:
-    flake-utils.lib.eachSystem [ "x86_64-linux" ]
+    flake-utils.lib.eachSystem [ "x86_64-linux" "aarch64-linux" ]
       (system:
         let
           pkgs = nixpkgs.legacyPackages.${system};
@@ -39,10 +39,6 @@
                 '';
              }
           ) deepinPkgs;
-
-#          overlays.default = final: prev: {
-#            repoOverrides = { dde = (import ./packages { pkgs = prev.pkgs; }); };
-#          };
 
           nixosModules = { config, lib, pkgs, ... }:
             with lib;
@@ -153,6 +149,7 @@
                   environment.pathsToLink = [
                     "/lib/deepin-daemon"
                     "/lib/deepin-api"
+                    "/lib/dde-dock/plugins"
                     "/share/dsg"
                     # TODO
                     "/share"
@@ -193,6 +190,7 @@
                     deepin-screen-recorder
                     dde-app-services
                     dde-clipboard
+                    dde-grand-search
                     
                     deepin-desktop-schemas
                     dde-api
@@ -215,6 +213,7 @@
                     deepin-lianliankan
                     deepin-font-manager
                   ] ++ (with pkgs; [
+                    kwin
                     socat
                     xdotool
                     glib # for gsettings program
@@ -244,6 +243,7 @@
                     deepin-boot-maker
                     deepin-camera
                     dde-clipboard
+                    dde-grand-search
 
                     dde-dock
                     deepin-anything
