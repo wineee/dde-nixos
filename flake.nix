@@ -18,7 +18,7 @@
           getDbgVersion = name: value:
               (pkgs.lib.attrsets.nameValuePair
                 (name + "-dbg")
-                (value.override {
+                (if value.stdenv == pkgs.stdenvNoCC then value else value.override {
                   stdenv = pkgs.stdenvAdapters.keepDebugInfo pkgs.stdenv;
                 }));
           deepinPkgsDbg = with pkgs.lib.attrsets; mapAttrs' getDbgVersion deepinPkgs;
