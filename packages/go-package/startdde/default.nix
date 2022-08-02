@@ -54,11 +54,11 @@ let
     ];
     "misc/auto_launch/chinese.json" = [
       [ "/usr/bin/dde-file-manager" "dde-file-manager" ]
-      [ "/usr/lib/polkit-1-dde/dde-polkit-agent" "${dde-polkit-agent}/lib/polkit-1-dde/dde-polkit-agent" ] 
+      [ "/usr/lib/polkit-1-dde/dde-polkit-agent" "${dde-polkit-agent}/lib/polkit-1-dde/dde-polkit-agent" ]
       [ "/usr/bin/dde-shutdown" "dde-shutdown" ]
     ];
     "misc/auto_launch/default.json" = [
-      [ "/usr/lib/polkit-1-dde/dde-polkit-agent" "${dde-polkit-agent}/lib/polkit-1-dde/dde-polkit-agent" ] 
+      [ "/usr/lib/polkit-1-dde/dde-polkit-agent" "${dde-polkit-agent}/lib/polkit-1-dde/dde-polkit-agent" ]
     ];
     "utils.go" = [
       [ "/usr/lib/deepin-daemon/dde-welcome" "${dde-session-ui}/lib/deepin-daemon/dde-welcome" ]
@@ -73,13 +73,13 @@ let
       [ "/usr/bin/kwin_no_scale" "kwin_no_scale" ]
     ];
     "watchdog/dde_polkit_agent.go" = [
-      [ "/usr/lib/polkit-1-dde/dde-polkit-agent" "${dde-polkit-agent}/lib/polkit-1-dde/dde-polkit-agent" ] 
+      [ "/usr/lib/polkit-1-dde/dde-polkit-agent" "${dde-polkit-agent}/lib/polkit-1-dde/dde-polkit-agent" ]
     ];
     "launch_group_test.go" = [
-      [ "/usr/lib/polkit-1-dde/dde-polkit-agent" "${dde-polkit-agent}/lib/polkit-1-dde/dde-polkit-agent" ] 
+      [ "/usr/lib/polkit-1-dde/dde-polkit-agent" "${dde-polkit-agent}/lib/polkit-1-dde/dde-polkit-agent" ]
     ];
     "testdata/auto_launch/auto_launch.json" = [
-      [ "/usr/lib/polkit-1-dde/dde-polkit-agent" "${dde-polkit-agent}/lib/polkit-1-dde/dde-polkit-agent" ] 
+      [ "/usr/lib/polkit-1-dde/dde-polkit-agent" "${dde-polkit-agent}/lib/polkit-1-dde/dde-polkit-agent" ]
     ];
     "testdata/desktop/dde-file-manager.desktop" = [
       [ "/usr/bin/dde-file-manager" "dde-file-manager" ]

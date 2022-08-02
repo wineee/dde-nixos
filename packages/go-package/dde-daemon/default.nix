@@ -166,7 +166,7 @@ let
       [ "/usr/bin/kwin_no_scale" "kwin_no_scale" ]
     ];
     "network/manager.go" = [
-      ["/usr/lib/NetworkManager/VPN" "/run/current-system/lib/NetworkManager/VPN" ]
+      [ "/usr/lib/NetworkManager/VPN" "/run/current-system/lib/NetworkManager/VPN" ]
       # ["/etc/NetworkManager/VPN"] 
     ];
     "dock/identify_window.go" = [
@@ -192,7 +192,7 @@ let
       #/usr/share/xsessions
     ];
     "network/nm_setting_vpn.go" = [
-      ["/usr/lib/NetworkManager/VPN" "/run/current-system/lib/NetworkManager/VPN" ]
+      [ "/usr/lib/NetworkManager/VPN" "/run/current-system/lib/NetworkManager/VPN" ]
       # "/etc/NetworkManager/VPN"
     ];
     "accounts/image_blur.go" = [

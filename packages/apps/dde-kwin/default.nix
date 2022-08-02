@@ -83,7 +83,7 @@ stdenv.mkDerivation rec {
   dontWrapQtApps = true;
 
   NIX_CFLAGS_COMPILE = [
-   "-I${kwayland.dev}/include/KF5"
+    "-I${kwayland.dev}/include/KF5"
   ];
 
   cmakeFlags = [

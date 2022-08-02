@@ -56,7 +56,7 @@ let
     ];
 
     ## TODO dde-dock-plugins
-    "src/dde-dock-plugins/dde-dock-plugins.pro" = [ [ "SUBDIRS += disk-mount" "" ] ];
+    #"src/dde-dock-plugins/dde-dock-plugins.pro" = [ [ "SUBDIRS += disk-mount" "" ] ];
 
     ### INSTALL
     "src/dde-file-manager/dde-file-manager.pro" = [
@@ -122,7 +122,6 @@ let
       #["/usr/lib/deepin-daemon"]
       [ "/usr/bin/mountavfs" "mountavfs" ]
       [ "/usr/bin/umountavfs" "umountavfs" ]
-      #["/etc/fstab"]
     ];
 
     "src/dde-file-manager-lib/vault/vaultglobaldefine.h" = [
@@ -180,12 +179,6 @@ let
       [ "/bin/bash" "${runtimeShell}" ]
     ];
 
-    "src/dde-file-manager-lib/shutil/danythingmonitorfilter.cpp" = [
-      [ "/etc/passwd" "passwd" ]
-    ];
-    "src/dde-file-manager-lib/interfaces/dfmsettings.cpp" = [
-      [ "/etc/xdg" "xdg" ] ## TODO
-    ];
     ## src/dde-file-manager-lib/models/dfmrootfileinfo.cpp "/etc/%1/ab-recovery.json"
 
     # src/dde-file-manager-daemon/usershare/usersharemanager.cpp

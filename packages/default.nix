@@ -38,7 +38,7 @@ let
         v = with builtins; fromJSON (readFile ../release/tags/${pname}.json);
       in
       v.version.tag;
-  };                                                                
+  };
 
   packages = self: with self; functions // {
     #### LIBRARIES
