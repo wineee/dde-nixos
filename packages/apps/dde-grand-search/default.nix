@@ -1,16 +1,47 @@
 { stdenv
 , lib
+, getPatchFrom
 , fetchFromGitHub
 , dtk
+, dde-qt-dbus-factory
+, dde-dock
 , qt5integration
 , qt5platform-plugins
 , cmake
 , qttools
 , pkgconfig
+, gsettings-qt
+, taglib
+, ffmpeg
+, poppler
+, ffmpegthumbnailer
 , wrapQtAppsHook
+, dbus
 }:
+let
+  patchList = {
+    "src/grand-search-daemon/CMakeLists.txt" = [
+        [ "/etc/xdg/autostart" "$out/etc/xdg/autostart" ]
+    ];
+    "src/grand-search-dock-plugin/CMakeLists.txt" = [ ];
+    "src/grand-search/CMakeLists.txt" = [ ];
+    "CMakeLists.txt" = [ ];
 
-stdenv.mkDerivation rec {
+    "src/grand-search-daemon/data/dde-grand-search-daemon.desktop" = [ ];
+    "src/grand-search-daemon/data/com.deepin.dde.daemon.GrandSearch.service" = [
+        [ "/usr/bin/dbus-send" "${dbus}/bin/dbus-send" ]
+    ];
+    "src/grand-search/contacts/services/com.deepin.dde.GrandSearch.service" = [ ];
+
+    "src/grand-search/utils/utils.cpp" = [
+        [ "/usr/share/applications/dde-control-center.desktop"  "/run/current-system/sw/share/applications/dde-control-center.desktop" ]
+    ];
+    "src/grand-search-daemon/searcher/app/desktopappsearcher.cpp" = [
+        [ "/usr/share" "/run/current-system/sw/share" ] # TODO
+    ];
+    "src/grand-search-daemon/dbusservice/grandsearchinterface.cpp" = [ ];
+  }; 
+in stdenv.mkDerivation rec {
   pname = "dde-grand-search";
   version = "5.3.2";
 
@@ -18,10 +49,10 @@ stdenv.mkDerivation rec {
     owner = "linuxdeepin";
     repo = pname;
     rev = version;
-    sha256 = "";
+    sha256 = "sha256-JzMjqxyMX0lJGFfwQq2yGsnhN9jU838s/In4jCLvrmI=";
   };
 
-  #postPatch = fixInstallPatch + fixServicePatch;
+  postPatch = getPatchFrom patchList;
 
   nativeBuildInputs = [
     cmake
@@ -30,9 +61,20 @@ stdenv.mkDerivation rec {
     wrapQtAppsHook
   ];
 
-  buildInputs = [ dtk ];
+  buildInputs = [ 
+    dtk
+    dde-dock
+    dde-qt-dbus-factory
+    gsettings-qt
+    taglib
+    ffmpeg.dev
+    poppler
+    ffmpegthumbnailer
+  ];
 
-  cmakeFlags = [ "-DVERSION=${version}" ];
+  cmakeFlags = [ 
+    "-DVERSION=${version}" 
+  ];
 
   qtWrapperArgs = [
     "--prefix QT_PLUGIN_PATH : ${qt5integration}/plugins"
