@@ -42,7 +42,7 @@ let
     "plugins/tray/system-trays/systemtrayscontroller.cpp" = [ ];
     "plugins/shutdown/shutdownplugin.h" = [
       rpetc
-      [ "/usr/lib/dde-dock/plugins/system-trays" "/run/current-system/sw/lib/dde-dock/plugins/system-trays" ] # TODO
+      [ "/usr/lib/dde-dock/plugins/system-trays" "/run/current-system/sw/lib/dde-dock/plugins/system-trays" ] # TODO https://github.com/NixOS/nixpkgs/pull/59244/files
       #"/etc/lightdm/lightdm-deepin-greeter.conf",
       #"/etc/deepin/dde-session-ui.conf"
       [ "/usr/share/dde-session-ui/dde-session-ui.conf" "share/dde-session-ui/dde-session-ui.conf" ] # TODO
