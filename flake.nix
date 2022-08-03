@@ -80,8 +80,6 @@
               };
 
               config = mkMerge [
-
-                ### TODO
                 (mkIf cfg.enable {
                   services.xserver.displayManager.sessionPackages = [ packages.startdde ];
                   services.xserver.displayManager.defaultSession = "deepin";
@@ -112,8 +110,7 @@
                   services.udev.packages = with packages; [
                     dde-daemon
                   ];
-                  # pkg/etc/udev/rules.d and pkg/lib/udev/rules.d
-            
+
                   services.xserver.updateDbusEnvironment = true;
                   services.xserver.libinput.enable = mkDefault true;      
                   # Enable GTK applications to load SVG icons
@@ -127,10 +124,10 @@
                   networking.networkmanager.enable = mkDefault true;
                   
                   programs.dconf.enable = true;
-                  #programs.dconf.packages = [];
-                  # /etc/dconf /etc/dconf/profiles/
+
                   programs.bash.vteIntegration = mkDefault true;
                   programs.zsh.vteIntegration = mkDefault true;
+                  #TODO: programs.gnupg.agent.pinentryFlavor = "qt";
 
                   fonts.fonts = with pkgs; [ noto-fonts ];
 
