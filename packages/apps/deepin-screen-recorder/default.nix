@@ -6,6 +6,7 @@
 , qt5integration
 , qt5platform-plugins
 , dde-qt-dbus-factory
+, dde-dock
 , image-editor
 , gsettings-qt
 , qmake
@@ -30,6 +31,8 @@
 let
   gstPluginPath = lib.makeSearchPathOutput "lib" "lib/gstreamer-1.0" (with gst_all_1; [ gstreamer gst-plugins-base gst-plugins-good gst-plugins-bad ]);
   patchList = {
+    "src/dde-dock-plugins/shotstart/shotstart.pro" = [ ];
+    "src/dde-dock-plugins/recordtime/recordtime.pro" = [ ];
 
     ###MISC
     "deepin-screen-recorder.desktop" = [ ];
@@ -97,8 +100,8 @@ stdenv.mkDerivation rec {
   buildInputs = [
     dtk
     dde-qt-dbus-factory
+    dde-dock
     image-editor
-    #polkit-qt
     gsettings-qt
     qtmultimedia
     qtx11extras
@@ -113,7 +116,12 @@ stdenv.mkDerivation rec {
     ffmpegthumbnailer
     portaudio
     udev
-  ];
+  ] ++ ( with gst_all_1; [
+    gstreamer
+    gst-plugins-base
+    gst-plugins-good
+    gst-plugins-bad
+  ]);
 
   qmakeFlags = [
     "PREFIX=${placeholder "out"}"
@@ -143,17 +151,12 @@ stdenv.mkDerivation rec {
       --replace "/usr/share/dbus-1/services" "$out/share/dbus-1/services"
   '';
 
-  rmddedockPatch = ''
-    substituteInPlace screen_shot_recorder.pro \
-      --replace "src/dde-dock-plugins" " "
-  '';
-
   fixPkgconfigPatch = ''
     substituteInPlace src/src.pro \
       --replace "PKGCONFIG +=xcb xcb-util dframeworkdbus gobject-2.0" "PKGCONFIG +=xcb xcb-util dframeworkdbus gobject-2.0 gstreamer-app-1.0"
   '';
 
-  postPatch = fixInstallPatch + rmddedockPatch + fixPkgconfigPatch + getPatchFrom patchList;
+  postPatch = fixInstallPatch + fixPkgconfigPatch + getPatchFrom patchList;
 
   meta = with lib; {
     description = "screen recorder application for dde";
