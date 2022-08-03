@@ -7,6 +7,7 @@
 , dtkcommon
 , qt5integration
 , qt5platform-plugins
+, dde-file-manager
 , cmake
 , qttools
 , pkgconfig
@@ -14,6 +15,7 @@
 , fontconfig
 , freetype
 , gtest
+, fileManagerPlugins ? true
 }:
 
 stdenv.mkDerivation rec {
@@ -26,6 +28,19 @@ stdenv.mkDerivation rec {
     rev = version;
     sha256 = "sha256-S8WhHNNggutwVNrFnxnrU50B9QNmzt7cMPgH5mi0I18=";
   };
+
+  rmPluginPatch = ''
+    substituteInPlace CMakeLists.txt \
+      --replace "ADD_SUBDIRECTORY(deepin-font-preview-plugin)" " " 
+  '';
+
+  fixInstallPatch = ''
+    substituteInPlace CMakeLists.txt \
+      --replace "/usr/share/deepin-manual/manual-assets/application/)" "$out/share/deepin-manual/manual-assets/application/)" \
+      --replace "SET(CMAKE_INSTALL_PREFIX /usr)" "SET(CMAKE_INSTALL_PREFIX $out)"
+  '';
+
+  postPatch = fixInstallPatch + lib.optionalString (!fileManagerPlugins) rmPluginPatch;
 
   nativeBuildInputs = [
     cmake
@@ -42,6 +57,7 @@ stdenv.mkDerivation rec {
     fontconfig
     freetype
     gtest
+    (lib.optional fileManagerPlugins dde-file-manager)
   ];
 
   cmakeFlags = [ "-DVERSION=${version}" ];
@@ -50,14 +66,6 @@ stdenv.mkDerivation rec {
     "--prefix QT_PLUGIN_PATH : ${qt5integration}/plugins"
     "--prefix QT_QPA_PLATFORM_PLUGIN_PATH : ${qt5platform-plugins}/plugins"
   ];
-
-  ### TODO: deepin-font-preview-plugin need dde-file-manger
-  postPatch = ''
-    substituteInPlace CMakeLists.txt \
-      --replace "ADD_SUBDIRECTORY(deepin-font-preview-plugin)" " " \
-      --replace "/usr/share/deepin-manual/manual-assets/application/)" "$out/share/deepin-manual/manual-assets/application/)" \
-      --replace "SET(CMAKE_INSTALL_PREFIX /usr)" "SET(CMAKE_INSTALL_PREFIX $out)"
-  '';
 
   meta = with lib; {
     description = "Deepin Font Manager is used to install and uninstall font file for users with bulk install function";
