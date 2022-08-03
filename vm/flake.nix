@@ -23,11 +23,8 @@
           gnome.dconf-editor
           dfeet
 
-          gcc
-          gnumake
-          cmake
-          libsForQt5.full
-          qtcreator
+          #gcc gnumake cmake
+          #libsForQt5.full qtcreator
           gsettings-qt
           fzf
           fd
@@ -52,11 +49,6 @@
           };
         };
         time.timeZone = "Asia/Shanghai";
-        i18n = {
-          defaultLocale = "en_US.UTF-8/UTF-8";
-          supportedLocales = [ "zh_CN.UTF-8/UTF-8" "en_US.UTF-8/UTF-8" ];
-          inputMethod.enabled = "fcitx";
-        };
         fonts = {
           fonts = with pkgs; [
             noto-fonts
@@ -72,7 +64,7 @@
         };
         virtualisation = {
           qemu.options = [ "-device intel-hda -device hda-duplex" ];
-          cores = 6;
+          cores = 8;
           memorySize = 8192;
           diskSize = 16384;
           resolution = { x = 1024; y = 768; };
