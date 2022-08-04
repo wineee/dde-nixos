@@ -22,7 +22,7 @@
           neofetch
           gnome.dconf-editor
           dfeet
-
+          binutils
           #gcc gnumake cmake
           #libsForQt5.full qtcreator
           gsettings-qt
