@@ -164,7 +164,7 @@
                   '';
 
                   environment.systemPackages = with packages; [
-                    # dde-kwin
+                    dde-kwin
                     deepin-terminal
                     deepin-album
                     deepin-image-viewer
@@ -224,6 +224,7 @@
                     dde-api
                     dde-daemon
                     deepin-pw-check
+                    dde-kwin
 
                     dde-launcher
                     dde-session-ui
