@@ -38,6 +38,7 @@
 , xdotool
 , dbus
 , getconf
+, dde-kwin
 }:
 let
   goCodePatchs = {
@@ -163,7 +164,7 @@ let
       # /usr/share /usr/local/share
     ];
     "keybinding/utils.go" = [
-      [ "/usr/bin/kwin_no_scale" "kwin_no_scale" ]
+      [ "/usr/bin/kwin_no_scale" "${dde-kwin}/bin/kwin_no_scale" ]
     ];
     "network/manager.go" = [
       [ "/usr/lib/NetworkManager/VPN" "/run/current-system/lib/NetworkManager/VPN" ]
