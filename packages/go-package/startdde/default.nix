@@ -23,11 +23,12 @@
 , dde-session-ui
 , dde-session-shell
 , gnome
+, dde-kwin
 }:
 let
   patchList = {
     "main.go" = [
-      [ "/usr/bin/kwin_no_scale" "kwin_no_scale" ] ### TODO dde-kwine 
+      [ "/usr/bin/kwin_no_scale" "${dde-kwin}/bin/kwin_no_scale" ]
       [ "/usr/lib/deepin-daemon/dde-session-daemon" "${dde-daemon}/lib/deepin-daemon/dde-session-daemon" ]
       [ "/usr/bin/dde-dock" "dde-dock" ]
       [ "/usr/bin/dde-desktop" "dde-desktop" ]
@@ -44,7 +45,7 @@ let
       #? [ "/usr/share/deepin-default-settings/fontconfig.json"  ] 
     ];
     "main_test.go" = [
-      [ "/usr/bin/kwin_no_scale" "kwin_no_scale" ]
+      [ "/usr/bin/kwin_no_scale" "${dde-kwin}/bin/kwin_no_scale" ]
     ];
     "misc/lightdm.conf" = [
       # "/usr/sbin/deepin-fix-xauthority-perm" 
@@ -70,7 +71,7 @@ let
       [ "/usr/lib/deepin-deepinid-daemon/deepin-deepinid-daemon" "deepin-deepinid-daemon" ]
     ];
     "watchdog/watchdog_test.go" = [
-      [ "/usr/bin/kwin_no_scale" "kwin_no_scale" ]
+      [ "/usr/bin/kwin_no_scale" "${dde-kwin}/bin/kwin_no_scale" ]
     ];
     "watchdog/dde_polkit_agent.go" = [
       [ "/usr/lib/polkit-1-dde/dde-polkit-agent" "${dde-polkit-agent}/lib/polkit-1-dde/dde-polkit-agent" ]
@@ -112,7 +113,8 @@ buildGoPackage rec {
 
   postPatch = getPatchFrom patchList + ''
     substituteInPlace "startmanager.go"\
-      --replace "/usr/share/startdde/app_startup.conf" "$out/share/startdde/app_startup.conf"
+      --replace "/usr/share/startdde/app_startup.conf" "$out/share/startdde/app_startup.conf" \
+      --replace "/bin/sh" "${runtimeShell}"
     substituteInPlace misc/xsessions/deepin.desktop.in --subst-var-by PREFIX $out
   '';
 
