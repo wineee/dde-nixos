@@ -43,6 +43,7 @@ let
       [ "/usr/lib/deepin-daemon/dde-osd" "${dde-session-ui}/lib/deepin-daemon/dde-osd" ]
       [ "/usr/bin/gnome-keyring-daemon" "${gnome.gnome-keyring}/bin/gnome-keyring-daemon" ]
       #? [ "/usr/share/deepin-default-settings/fontconfig.json"  ] 
+      [ "/bin/bash" "${runtimeShell}" ]
     ];
     "main_test.go" = [
       [ "/usr/bin/kwin_no_scale" "${dde-kwin}/bin/kwin_no_scale" ]
