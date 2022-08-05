@@ -98,7 +98,7 @@ let
 in
 stdenv.mkDerivation rec {
   pname = "dde-control-center";
-  version = "unstable-2022-07-36";
+  version = "unstable-2022-07-26";
 
   src = fetchFromGitHub {
     owner = "linuxdeepin";
