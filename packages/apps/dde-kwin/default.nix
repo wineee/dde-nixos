@@ -150,6 +150,7 @@ stdenv.mkDerivation rec {
     wrapProgram $out/bin/kwin_no_scale \
       --set QT_QPA_PLATFORM_PLUGIN_PATH "${placeholder "out"}/lib/plugins"
   '';
+  ## FIXME: why cann't use --prefix
 
   meta = with lib; {
     description = "KWin configuration for Deepin Desktop Environment";
