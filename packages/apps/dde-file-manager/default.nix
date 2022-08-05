@@ -120,7 +120,7 @@ let
       [ "/usr/share" "/run/current-system/sw/share" ]
       #["/usr/share/applications"] ## TODO
       #["/usr/share/pixmaps"]
-      #["/usr/lib/deepin-daemon"]
+      [ "/usr/lib/deepin-daemon" "/run/current-system/sw/lib/deepin-daemon" ]
       [ "/usr/bin/mountavfs" "mountavfs" ]
       [ "/usr/bin/umountavfs" "umountavfs" ]
     ];
