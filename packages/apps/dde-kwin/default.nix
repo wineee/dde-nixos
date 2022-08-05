@@ -66,6 +66,8 @@ let
     installPhase = ''
       mkdir -p $out/lib
       ln -sf $src/lib/libkwin.so.${version} $out/lib/libkwin.so
+      ln -sf $src/lib/libkwin.so.${version} $out/lib/libkwin.so.5
+      ln -sf $src/lib/libkwin.so.${version} $out/lib/libkwin.so.${version}
     '';
     dontFixup = true;
   };
