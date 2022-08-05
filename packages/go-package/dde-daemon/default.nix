@@ -2,6 +2,7 @@
 , lib
 , fetchFromGitHub
 , getPatchFrom
+, getShebangsPatchFrom
 , buildGoPackage
 , pkgconfig
 , go-dbus-factory
@@ -38,8 +39,11 @@
 , xdotool
 , dbus
 , getconf
+, utillinux
 }:
 let
+  fix_sh = [ "/bin/sh" "${runtimeShell}" ];
+  fix_bash = [ "/bin/bash" "${runtimeShell}" ];
   goCodePatchs = {
     "inputdevices/layout_list.go" = [
       ## setxkbmap
@@ -98,7 +102,7 @@ let
       #? "/usr/share/deepin-flatpak/app/"
     ];
     "audio/audio_config.go" = [
-      [ "/bin/sh" "${runtimeShell}" ]
+      fix_sh
       # "/usr/share/dde-daemon/audio/echoCancelEnable.sh"
     ];
     "bin/dde-authority/fprint_transaction.go" = [
@@ -126,6 +130,7 @@ let
       #? "/etc/laptop-mode/laptop-mode.conf"
     ];
     "bin/user-config/config_datas.go" = [
+      fix_sh
       #TODO
       [ "/usr/share" "/run/current-system/sw/share" ]
       # "/usr/share/doc/deepin-manuals"
@@ -143,6 +148,7 @@ let
     ];
     "system/display/displaycfg.go" = [
       [ "/usr/bin/lightdm-deepin-greeter" "lightdm-deepin-greeter" ]
+      [ "runuser" "${utillinux.bin}/bin/runuser" ]
     ];
     "bin/dde-system-daemon/main.go" = [
       #? os.Setenv("PATH", "/usr/local/sbin
@@ -219,6 +225,7 @@ let
       # /usr/lib/deepin-daemon/default-terminal
     ];
     "network/secret_agent.go" = [
+      fix_sh
       # /usr/lib/deepin-daemon/dnetwork-secret-dialog
     ];
     "accounts/handle_event.go" = [
@@ -237,14 +244,17 @@ let
       #? "/etc/pulse/default.pa"
     ];
     "grub2/edit_auth.go" = [
+      fix_sh
       #? "/etc/grub.d/42_uos_menu_crypto"
     ];
-    # "grub2/grub_params.go" = [
-    #   /etc/default/grub
-    # ];
-    # "grub_common/common.go" = [
-    #   /etc/default/grub
-    # ];
+    "grub2/grub_params.go" = [
+      fix_sh
+      #/etc/default/grub
+    ];
+    "grub_common/common.go" = [
+      fix_sh
+      #/etc/default/grub
+    ];
     "system/timedated/manager.go" = [
       #? /etc/systemd/timesyncd.conf.d/deepin.conf
     ];
@@ -254,30 +264,41 @@ let
     "langselector/locale_ifc.go" = [
       #? /etc/locale.gen
     ];
-    "keybinding/shortcuts/shortcut_manager.go" = [
-      #? /etc/deepin-version
-    ];
-    "accounts/deepinversion.go" = [
-      #? /etc/deepin-version
-    ];
     "accounts/users/manager.go" = [
       #? "/etc/adduser.conf"
-    ];
-    "accounts/users/common.go" = [
-      #"/etc/deepin-version"
-    ];
-    #TODO "accounts/users/display_manager.go"
-    "systeminfo/distro.go" = [
-      #/etc/lsb-release
-    ];
-    "systeminfo/version.go" = [
-      #? /etc/deepin-version
-      #/etc/lsb-release
     ];
     "session/power/power_save_plan.go" = [
       #? /etc/deepin/no_suspend
     ];
+    "gesture/manager.go" = [ fix_sh ];
+    "appearance/fsnotify_test.go" = [ fix_sh ];
+    "systeminfo/lsblk_disk.go" = [ fix_sh ];
+    "bluetooth/utils_test.go" =  [ fix_sh ];
+    "system/bluetooth/utils_test.go" = [ fix_sh fix_bash ];
+    "dock/process_info.go" = [ fix_sh ];
+    "keybinding/manager.go" = [ fix_sh ];
+    "accounts/utils_test.go" = [ fix_sh ];
+    "accounts/testdata/shells" = [ fix_sh ];
+    "inputdevices/utils.go" = [ fix_sh ];
+    #accounts/users/testdata #TODO
+
+    "image_effect/utils.go" = [
+      [ "runuser" "${utillinux.bin}/bin/runuser" ]
+    ];
   };
+  shebangsList = [
+    "misc/scripts/dde-system-daemon-power-refresh.sh"
+    "misc/etc/acpi/powerbtn.sh"
+    "misc/etc/acpi/actions/deepin_lid.sh"
+    "misc/dde-daemon/audio/echoCancelEnable.sh"
+    "misc/libexec/dde-daemon/keybinding/shortcut-dde-grand-search.sh"
+    "gen_test_report.sh"
+    "network/examples/python/gen_dbus_code.sh"
+    "network/examples/set_wired_static_ip.sh"
+
+    "misc/libexec/dde-daemon/keybinding/shortcut-dde-grand-search.sh"
+    "misc/dde-daemon/audio/echoCancelEnable.sh"
+  ];
 in
 buildGoPackage rec {
   pname = "dde-daemon";
@@ -300,12 +321,6 @@ buildGoPackage rec {
   rmUadpPatch = ''
     rm -rf system/uadp
     rm -rf session/uadpagent
-  '';
-
-  fixShebangsPatch = ''
-    patchShebangs misc/etc/acpi/actions/deepin_lid.sh \
-      misc/libexec/dde-daemon/keybinding/shortcut-dde-grand-search.sh \
-      misc/dde-daemon/audio/echoCancelEnable.sh
   '';
 
   fixPathPatch = ''
@@ -331,7 +346,7 @@ buildGoPackage rec {
       --replace "/etc/acpi/actions/deepin_lid.sh" "$out/etc/acpi/actions/deepin_lid.sh"
   '';
 
-  postPatch = rmUadpPatch + fixShebangsPatch + fixPathPatch + getPatchFrom goCodePatchs;
+  postPatch = rmUadpPatch + getShebangsPatchFrom shebangsList + fixPathPatch + getPatchFrom goCodePatchs;
 
   goDeps = ./deps.nix;
 
@@ -369,6 +384,7 @@ buildGoPackage rec {
     pulseaudio
     tzdata
     xkeyboard_config
+    utillinux
   ];
 
   buildPhase = ''
