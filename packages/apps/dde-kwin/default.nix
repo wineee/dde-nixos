@@ -16,8 +16,7 @@
 , gsettings-qt
 , xorg
 , libepoxy
-, qt5integration
-, qt5platform-plugins
+, makeWrapper
 }:
 let
   patchList = {
@@ -111,6 +110,7 @@ stdenv.mkDerivation rec {
     extra-cmake-modules
     pkg-config
     wrapQtAppsHook
+    makeWrapper
   ];
 
   buildInputs = [
@@ -143,13 +143,12 @@ stdenv.mkDerivation rec {
   ];
 
   qtWrapperArgs = [
-    "--prefix QT_PLUGIN_PATH : ${qt5integration}/plugins"
-    "--prefix QT_QPA_PLATFORM_PLUGIN_PATH : ${qt5platform-plugins}/plugins"
     "--prefix QT_QPA_PLATFORM_PLUGIN_PATH : ${placeholder "out"}/lib/plugins"
   ];
 
   postFixup = ''
-    wrapQtApp $out/bin/kwin_no_scale
+    wrapProgram $out/bin/kwin_no_scale \
+      --set QT_QPA_PLATFORM_PLUGIN_PATH "${placeholder "out"}/lib/plugins"
   '';
 
   meta = with lib; {
