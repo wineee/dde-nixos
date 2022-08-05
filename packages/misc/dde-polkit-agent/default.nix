@@ -1,18 +1,25 @@
 { stdenv
 , lib
 , fetchFromGitHub
-, dtkcommon
-, dtkcore
-, dtkgui
-, dtkwidget
+, getPatchFrom
+, dtk
+, qt5integration
+, qt5platform-plugins
 , dde-qt-dbus-factory
 , pkgconfig
 , cmake
 , qttools
 , wrapQtAppsHook
 , polkit-qt
+, dde-session-shell
 }:
-
+let
+  patchList = {
+    "AuthDialog.cpp" = [
+      [ "/usr/share/dde-session-shell/dde-session-shell.conf"  "${dde-session-shell}/share/dde-session-shell/dde-session-shell.conf" ]
+    ];
+  };
+in
 stdenv.mkDerivation rec {
   pname = "dde-polkit-agent";
   version = "5.5.19";
@@ -26,6 +33,8 @@ stdenv.mkDerivation rec {
 
   patches = [ ./fix_in_non_deepin.patch ];
 
+  postPatch = getPatchFrom patchList;
+
   nativeBuildInputs = [
     cmake
     pkgconfig
@@ -34,12 +43,14 @@ stdenv.mkDerivation rec {
   ];
 
   buildInputs = [
-    dtkcommon
-    dtkcore
-    dtkgui
-    dtkwidget
+    dtk
     dde-qt-dbus-factory
     polkit-qt
+  ];
+
+  qtWrapperArgs = [
+    "--prefix QT_PLUGIN_PATH : ${qt5integration}/plugins"
+    "--prefix QT_QPA_PLATFORM_PLUGIN_PATH : ${qt5platform-plugins}/plugins"
   ];
 
   postFixup = ''
