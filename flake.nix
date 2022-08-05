@@ -218,6 +218,7 @@
                     xdg-user-dirs # Update user dirs as described in http://freedesktop.org/wiki/Software/xdg-user-dirs/
                     util-linux # runuser
                     polkit_gnome
+                    busybox # lspci startdde
                   ]);
 
                   services.dbus.packages = with packages; [
