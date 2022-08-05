@@ -15,7 +15,7 @@
 stdenv.mkDerivation rec {
   pname = "dpa-ext-gnomekeyring";
   version = "5.0.11";
-
+  #TODO: /usr/share/dpa-ext-gnomekeyring/translations/dpa-ext-gnomekeyring_
   src = fetchFromGitHub {
     owner = "linuxdeepin";
     repo = pname;
