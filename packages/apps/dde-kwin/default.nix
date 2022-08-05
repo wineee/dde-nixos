@@ -16,6 +16,8 @@
 , gsettings-qt
 , xorg
 , libepoxy
+, qt5integration
+, qt5platform-plugins
 }:
 let
   patchList = {
@@ -134,11 +136,21 @@ stdenv.mkDerivation rec {
     "-DENABLE_BUILTIN_MULTITASKING=OFF"
     "-DENABLE_BUILTIN_BLACK_SCREEN=OFF"
     "-DUSE_DEEPIN_WAYLAND=OFF"
-    "-DPLUGIN_INSTALL_PATH=${placeholder "out"}/lib/platforms"
+    "-DPLUGIN_INSTALL_PATH=${placeholder "out"}/lib/plugins/platforms"
 
     "-DENABLE_BUILTIN_SCISSOR_WINDOW=OFF" # TODO
     "-DKWIN_LIBRARY_PATH=${libkwin}/lib"
   ];
+
+  qtWrapperArgs = [
+    "--prefix QT_PLUGIN_PATH : ${qt5integration}/plugins"
+    "--prefix QT_QPA_PLATFORM_PLUGIN_PATH : ${qt5platform-plugins}/plugins"
+    "--prefix QT_QPA_PLATFORM_PLUGIN_PATH : ${placeholder "out"}/lib/plugins"
+  ];
+
+  postFixup = ''
+    wrapQtApp $out/bin/kwin_no_scale
+  '';
 
   meta = with lib; {
     description = "KWin configuration for Deepin Desktop Environment";
