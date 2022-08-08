@@ -162,6 +162,10 @@
                     LogoLight=${packages.deepin-desktop-base}/share/pixmaps/distribution_logo_light.svg
                     LogoTransparent=${packages.deepin-desktop-base}/share/pixmaps/distribution_logo_transparent.svg
                   '';
+                  #environment.etc."polkit-1/localauthority/10-vendor.d/com.deepin.api.device.pkla" = "${packages.dde-api}/var/lib/polkit-1/localauthority/10-vendor.d/com.deepin.api.device.pkla";
+                  #environment.etc."polkit-1/localauthority/10-vendor.d/com.deepin.daemon.Accounts.pkla" = "${packages.dde-daemon}/var/lib/polkit-1/localauthority/10-vendor.d/com.deepin.daemon.Accounts.pkla";
+                  #environment.etc."polkit-1/localauthority/10-vendor.d/com.deepin.daemon.Fprintd.pkla" = "${packages.dde-daemon}/var/lib/polkit-1/localauthority/10-vendor.d/com.deepin.daemon.Fprintd.pkla";
+                  #environment.etc."polkit-1/localauthority/10-vendor.d/com.deepin.daemon.Grub2.pkla" = "${packages.dde-daemon}/var/lib/polkit-1/localauthority/10-vendor.d/com.deepin.daemon.Grub2.pkla";
 
                   environment.systemPackages = with packages; [
                     dde-kwin
@@ -219,6 +223,7 @@
                     util-linux # runuser
                     polkit_gnome
                     busybox # lspci startdde
+                    lshw
                   ]);
 
                   services.dbus.packages = with packages; [
