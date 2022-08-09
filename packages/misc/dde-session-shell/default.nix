@@ -129,6 +129,10 @@ let
     "src/lightdm-deepin-greeter/deepin-greeter" = [
       # /etc/deepin/greeters.d/
     ];
+
+    "src/libdde-auth/deepinauthframework.cpp" = [
+      [ "common-auth" "lightdm" ]
+    ];
   };
 in
 stdenv.mkDerivation rec {
