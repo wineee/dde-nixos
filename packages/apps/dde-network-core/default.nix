@@ -18,6 +18,7 @@
 , pcre
 , utillinux
 , libselinux
+, libsepol
 , wrapQtAppsHook
 , dbus
 , gtest
@@ -29,13 +30,13 @@ let
   }; 
 in stdenv.mkDerivation rec {
   pname = "dde-network-core";
-  version = "1.0.45";
+  version = "1.0.45+";
 
   src = fetchFromGitHub {
     owner = "linuxdeepin";
     repo = pname;
-    rev = version;
-    sha256 = "sha256-bhsAYkPvJccY17Bm5dmR0J8ye5a5W+sflOuhGaOAVdk=";
+    rev = "a24e2a10fb8ef276667cfc06e63e28d0250029ab";
+    sha256 = "sha256-T23IC6wps+TUgqAppfuiwk2N7zWtpNr7aybwEft3z8A=";
   };
 
   postPatch = getPatchFrom patchList;
@@ -54,16 +55,18 @@ in stdenv.mkDerivation rec {
     dde-session-shell
     dde-qt-dbus-factory
     gsettings-qt
-    networkmanager-qt
+    networkmanager-qt.dev
     glib.dev
     pcre
     utillinux
     libselinux
+    libsepol
     gtest
   ];
 
-#   NIX_CFLAGS_COMPILE = [ "-I${glib.dev}/include/glib-2.0" ];
+  #NIX_CFLAGS_COMPILE = [ "-I${glib.dev}/include/glib-2.0" ];
 
+  enableParallelBuilding = false;
   cmakeFlags = [ 
     "-DVERSION=${version}" 
   ];
