@@ -103,6 +103,8 @@ stdenv.mkDerivation rec {
     gtest
   ];
 
+  outputs = [ "out" "dev" ];
+
   cmakeFlags = [ "-DVERSION=${version}" ];
 
   qtWrapperArgs = [
