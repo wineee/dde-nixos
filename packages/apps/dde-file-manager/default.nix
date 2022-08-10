@@ -65,7 +65,7 @@ let
     ];
     "src/dde-select-dialog-x11/dde-select-dialog-x11.pro" = [ ];
     "src/dde-dock-plugins/disk-mount/disk-mount.pro" = [
-       ["/usr/include/dde-dock" "${dde-dock}/include/dde-dock"]
+       ["/usr/include/dde-dock" "${dde-dock.dev}/include/dde-dock"]
     ];
     "src/gschema/gschema.pro" = [ ];
     "src/common/common.pri" = [
@@ -229,7 +229,7 @@ stdenv.mkDerivation rec {
     disomaster
     gio-qt
     docparser
-    dde-dock
+    dde-dock.dev
     deepin-anything
     deepin-anything.server
     deepin-movie-reborn.dev
