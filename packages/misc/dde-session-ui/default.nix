@@ -110,7 +110,7 @@ stdenv.mkDerivation rec {
     gtest
   ];
 
-  NIX_CFLAGS_COMPILE = "-I${dde-dock}/include/dde-dock";
+  NIX_CFLAGS_COMPILE = "-I${dde-dock.dev}/include/dde-dock";
 
   preFixup = ''
     glib-compile-schemas ${glib.makeSchemaPath "$out" "${pname}-${version}"}
