@@ -31,7 +31,9 @@
           ripgrep
           ranger
           exa
-        ];
+        ] ++ (with dde-nixos.packages.${super.system}; [
+          deepin-draw
+        ]);
         services.xserver = {
           enable = true;
           displayManager = {
@@ -41,7 +43,7 @@
               user = "test";
             };
           };
-          desktopManager.plasma5.enable = true;
+          #desktopManager.plasma5.enable = true;
           #desktopManager.xfce.enable = true;
 
           desktopManager.deepin = {
