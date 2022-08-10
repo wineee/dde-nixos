@@ -18,13 +18,13 @@
 
 stdenv.mkDerivation rec {
   pname = "deepin-compressor";
-  version = "5.12.6";
+  version = "5.12.8+";
 
   src = fetchFromGitHub {
-    owner = "wineee";
+    owner = "linuxdeepin";
     repo = pname;
-    rev = "75f3d3fbdd3291613acd934472ccdccb1cb44daf";
-    sha256 = "sha256-8Bji+7ZHYVyQmMptm24tUuOSfWzssmHKiNka6ZBxRrQ=";
+    rev = "2087ff088877c34a60bcb15de2d4f159a2126723";
+    sha256 = "sha256-WxawHIdlt2MbiIuEmbe8qIXmJ6MR4+qYSNKTbq9Pe18=";
   };
 
   nativeBuildInputs = [
