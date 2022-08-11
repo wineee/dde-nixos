@@ -1,9 +1,13 @@
 {
-    "version": {
-        "author": "luokai",
-        "description": "Release 5.4.13",
-        "email": "luokai@uniontech.com",
-        "sha": "d0a66abaecc820d87d03e788b72802eaa59723e1",
+    "apiVersion": "1.0",
+    "repo": "dde-network-utils",
+    "data": {
+        "tagger": {
+            "name": "luokai",
+            "email": "luokai@uniontech.com"
+        },
+        "message": "Release 5.4.13",
+        "object": "d0a66abaecc820d87d03e788b72802eaa59723e1",
         "tag": "5.4.13"
     }
 }

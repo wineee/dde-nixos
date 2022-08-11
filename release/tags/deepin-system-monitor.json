@@ -1,0 +1,13 @@
+{
+    "apiVersion": "1.0",
+    "repo": "deepin-system-monitor",
+    "data": {
+        "tagger": {
+            "name": "李菲",
+            "email": "lifei@uniontech.com"
+        },
+        "message": "1050U3集成",
+        "object": "f0d7a72fce892f9db20673679d4d400aef8db392",
+        "tag": "5.9.25"
+    }
+}

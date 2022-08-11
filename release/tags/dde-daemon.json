@@ -1,9 +1,13 @@
 {
-    "version": {
-        "author": "lichangze",
-        "description": "release 1051",
-        "email": "lichangze@uniontech.com",
-        "sha": "7a222a4f32d2250f326711daaf89bc8c9bcc2bc4",
-        "tag": "5.14.44"
+    "apiVersion": "1.0",
+    "repo": "dde-daemon",
+    "data": {
+        "tagger": {
+            "name": "李昌泽",
+            "email": "lichangze@uniontech.com"
+        },
+        "message": "1050update3集成",
+        "object": "deb1845c3d9f8cf4ec06197ead79c959d551bd95",
+        "tag": "5.14.68"
     }
 }

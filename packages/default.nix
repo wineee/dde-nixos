@@ -34,7 +34,7 @@ let
 
     readVersion = pname:
       let
-        v = with builtins; fromJSON (readFile "${unsafeDiscardStringContext release}/${pname}.json");
+        v = with builtins; fromJSON (readFile ./../release/tags/${pname}.json);
       in
       v.data.tag;
   };

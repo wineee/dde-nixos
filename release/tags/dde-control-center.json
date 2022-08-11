@@ -1,9 +1,13 @@
 {
-    "version": {
-        "author": "wubowen",
-        "description": "1052\u63d0\u6d4b-20220510",
-        "email": "wubowen@uniontech.com",
-        "sha": "3d15a45e98d880e721e93bad18774e194fe3111f",
-        "tag": "5.5.77"
+    "apiVersion": "1.0",
+    "repo": "dde-control-center",
+    "data": {
+        "tagger": {
+            "name": "李昌泽",
+            "email": "lichangze@uniontech.com"
+        },
+        "message": "1050update3集成",
+        "object": "7d69b326e781fe1e2b1605eb4b3a1da9c1a5cb27",
+        "tag": "5.5.101"
     }
 }

@@ -1,9 +1,13 @@
 {
-    "version": {
-        "author": "wubowen",
-        "description": "1050 update1",
-        "email": "wubowen@uniontech.com",
-        "sha": "48b26758cf477c49f60e29f43a3ccde79adccf1d",
+    "apiVersion": "1.0",
+    "repo": "dde-api",
+    "data": {
+        "tagger": {
+            "name": "wubowen",
+            "email": "wubowen@uniontech.com"
+        },
+        "message": "1050 update1",
+        "object": "48b26758cf477c49f60e29f43a3ccde79adccf1d",
         "tag": "5.5.25"
     }
 }

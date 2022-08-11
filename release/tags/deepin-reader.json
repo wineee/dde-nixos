@@ -1,0 +1,13 @@
+{
+    "apiVersion": "1.0",
+    "repo": "deepin-reader",
+    "data": {
+        "tagger": {
+            "name": "李菲",
+            "email": "lifei@uniontech.com"
+        },
+        "message": "1050U3集成",
+        "object": "60d05210d4231fb8c95aa3988ddc6800c297310b",
+        "tag": "5.10.23"
+    }
+}

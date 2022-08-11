@@ -1,9 +1,13 @@
 {
-    "version": {
-        "author": "wubowen",
-        "description": "5.5.12.1",
-        "email": "wubowen@uniontech.com",
-        "sha": "291fc21ebbfea185d2403cec2b839d6d531aff48",
+    "apiVersion": "1.0",
+    "repo": "dde-qt-dbus-factory",
+    "data": {
+        "tagger": {
+            "name": "wubowen",
+            "email": "wubowen@uniontech.com"
+        },
+        "message": "5.5.12.1",
+        "object": "291fc21ebbfea185d2403cec2b839d6d531aff48",
         "tag": "5.5.12.1"
     }
 }

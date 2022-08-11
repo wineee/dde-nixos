@@ -1,13 +1,13 @@
 {
     "apiVersion": "1.0",
-    "repo": "startdde",
+    "repo": "lastore-daemon",
     "data": {
         "tagger": {
             "name": "李昌泽",
             "email": "lichangze@uniontech.com"
         },
-        "message": "1050update3 0810集成",
-        "object": "7bc2f8adf9393e1b795b22fc1be35236a8289ff5",
-        "tag": "5.9.46"
+        "message": "1050update3集成",
+        "object": "e4d1f2cd2c66fd91781e709900339bfee7f255e8",
+        "tag": "5.3.35"
     }
 }

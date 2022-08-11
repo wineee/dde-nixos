@@ -1,9 +1,13 @@
 {
-    "version": {
-        "author": "zhengyouge",
-        "description": "\u63d0\u4ea4\u5feb\u6377\u952e\u9884\u89c8eula1020\u7248\u672c",
-        "email": "zhengyouge@uniontech.com",
-        "sha": "0ea344c961a31aa7801ca545ebf8f9a6e0e6d621",
+    "apiVersion": "1.0",
+    "repo": "deepin-shortcut-viewer",
+    "data": {
+        "tagger": {
+            "name": "zhengyouge",
+            "email": "zhengyouge@uniontech.com"
+        },
+        "message": "提交快捷键预览eula1020版本",
+        "object": "0ea344c961a31aa7801ca545ebf8f9a6e0e6d621",
         "tag": "5.0.6"
     }
 }

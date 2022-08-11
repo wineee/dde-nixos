@@ -1,9 +1,13 @@
 {
-    "version": {
-        "author": "lvpeilong",
-        "description": "Release 5.1.8",
-        "email": "lvpeilong@uniontech.com",
-        "sha": "f1f94a9969906b67ea0999bfee7b7e46213262c1",
+    "apiVersion": "1.0",
+    "repo": "deepin-pw-check",
+    "data": {
+        "tagger": {
+            "name": "lvpeilong",
+            "email": "lvpeilong@uniontech.com"
+        },
+        "message": "Release 5.1.8",
+        "object": "f1f94a9969906b67ea0999bfee7b7e46213262c1",
         "tag": "5.1.8"
     }
 }

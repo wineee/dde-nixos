@@ -1,0 +1,13 @@
+{
+    "apiVersion": "1.0",
+    "repo": "deepin-manual",
+    "data": {
+        "tagger": {
+            "name": "吴勇（成都）",
+            "email": "wuyonga@uniontech.com"
+        },
+        "message": "1050u3第一次集成",
+        "object": "b894b528aa2fcc48bebb42bff4e6fa83a7d8092b",
+        "tag": "5.8.12"
+    }
+}

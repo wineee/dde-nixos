@@ -1,0 +1,13 @@
+{
+    "apiVersion": "1.0",
+    "repo": "deepin-compressor",
+    "data": {
+        "tagger": {
+            "name": "李菲",
+            "email": "lifei@uniontech.com"
+        },
+        "message": "1050U3集成",
+        "object": "2087ff088877c34a60bcb15de2d4f159a2126723",
+        "tag": "5.12.8"
+    }
+}

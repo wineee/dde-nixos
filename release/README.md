@@ -25,15 +25,18 @@
 
 ```json
 {
-    "version": {
-        "sha": "123bnda0a",
-        "tag": "1.0.0",
-        "title": "release 1.0.0",
-        "description": "for a new release",
-        "author": "",
-        "email": ""
-      }
-  }
+    "apiVersion": "1.0",
+    "repo": "dde-api",
+    "data": {
+        "tagger": {
+            "name": "justforlxz",
+            "email": "justforlxz@gmail.com"
+        },
+        "message": "1050 update1",
+        "object": "48b26758cf477c49f60e29f43a3ccde79adccf1d",
+        "tag": "5.5.25"
+    }
+}
 ```
 
 ### 字段说明

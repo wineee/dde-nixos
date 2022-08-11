@@ -1,9 +1,13 @@
 {
-    "version": {
-        "author": "lvwujun",
-        "description": "UOS branch, \u62fc\u97f3\u641c\u7d22\uff0c2022/3/17",
-        "email": "lvwujun@uniontech.com",
-        "sha": "0218923b88e8b9b727eebb27f132146fb260aa6e",
+    "apiVersion": "1.0",
+    "repo": "deepin-anything",
+    "data": {
+        "tagger": {
+            "name": "lvwujun",
+            "email": "lvwujun@uniontech.com"
+        },
+        "message": "UOS branch, 拼音搜索，2022/3/17",
+        "object": "0218923b88e8b9b727eebb27f132146fb260aa6e",
         "tag": "5.0.18"
     }
 }

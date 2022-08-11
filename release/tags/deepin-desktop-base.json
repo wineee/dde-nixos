@@ -1,9 +1,13 @@
 {
-    "version": {
-        "sha": "45fbe271f8c6d12db0a63a77e91582d9af0a6748",
-        "tag": "2021.2.20",
-        "description": "feat: update osbuild 11038.003",
-        "author": "李成刚",
-        "email": "<lichenggang@uniontech.com>"
+    "apiVersion": "1.0",
+    "repo": "deepin-desktop-base",
+    "data": {
+        "tagger": {
+            "name": " C",
+            "email": "zhangdingyuan@uniontech.com"
+        },
+        "message": "release 2022.07.26",
+        "object": "8676bb26e793bd7e100ad2b80fc091a76a98679a",
+        "tag": "2022.07.26"
     }
 }

@@ -1,9 +1,13 @@
 {
-    "version": {
-        "author": "chenke",
-        "description": "release tag",
-        "email": "chenke@uniontech.com",
-        "sha": "d5865437ff29f0d89b7ba8e8c96f9b98bbcfcf5e",
+    "apiVersion": "1.0",
+    "repo": "dtkwidget",
+    "data": {
+        "tagger": {
+            "name": "chenke",
+            "email": "chenke@uniontech.com"
+        },
+        "message": "release tag",
+        "object": "d5865437ff29f0d89b7ba8e8c96f9b98bbcfcf5e",
         "tag": "5.5.42"
     }
 }

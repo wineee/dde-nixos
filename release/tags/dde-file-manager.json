@@ -1,9 +1,13 @@
 {
-    "version": {
-        "author": "zhengyouge",
-        "description": "\u63d0\u4ea4\u684c\u9762\u56fe\u6807\u95f4\u8ddd\u4fee\u6539\u7d27\u6025\u4fee\u590d\u7248\u672c",
-        "email": "zhengyouge@uniontech.com",
-        "sha": "37e198eb92e61ba6d91fc94bfa021a0bd5e4a13c",
+    "apiVersion": "1.0",
+    "repo": "dde-file-manager",
+    "data": {
+        "tagger": {
+            "name": "zhengyouge",
+            "email": "zhengyouge@uniontech.com"
+        },
+        "message": "提交桌面图标间距修改紧急修复版本",
+        "object": "37e198eb92e61ba6d91fc94bfa021a0bd5e4a13c",
         "tag": "5.6.4"
     }
 }

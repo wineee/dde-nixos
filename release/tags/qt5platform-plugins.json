@@ -1,9 +1,13 @@
 {
-    "version": {
-        "sha": "3a0f0f991201349670bab70df71c67761e123057",
-        "tag": "5.0.59.1",
-        "description": "Revert fix: popup窗口失去焦点不能自消失",
-        "author": "chenke",
-        "email": "<chenke@uniontech.com>"
+    "apiVersion": "1.0",
+    "repo": "qt5platform-plugins",
+    "data": {
+        "tagger": {
+            "name": "chenke",
+            "email": "chenke@uniontech.com"
+        },
+        "message": "Revert fix: popup窗口失去焦点不能自消失",
+        "object": "3a0f0f991201349670bab70df71c67761e123057",
+        "tag": "5.0.59.1"
     }
 }
