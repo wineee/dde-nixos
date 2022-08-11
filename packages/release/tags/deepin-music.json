@@ -1,0 +1,13 @@
+{
+    "apiVersion": "1.0",
+    "repo": "deepin-music",
+    "data": {
+        "tagger": {
+            "name": "赵泽东",
+            "email": "zhaozedong@uniontech.com"
+        },
+        "message": "1050U3第一轮集成",
+        "object": "1c0da684df9f58a646686ead633693c0b27c59db",
+        "tag": "6.2.18"
+    }
+}

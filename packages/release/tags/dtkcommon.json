@@ -1,0 +1,13 @@
+{
+    "apiVersion": "1.0",
+    "repo": "dtkcommon",
+    "data": {
+        "tagger": {
+            "name": "Ye ShanShan",
+            "email": "yeshanshan@uniontech.com"
+        },
+        "message": "fix: modify dconfig's file install path",
+        "object": "38416d80b1559073478e543990f486b7028467b1",
+        "tag": "5.5.22"
+    }
+}

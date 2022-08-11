@@ -1,0 +1,13 @@
+{
+    "apiVersion": "1.0",
+    "repo": "deepin-screensaver",
+    "data": {
+        "tagger": {
+            "name": "zhengyouge",
+            "email": "zhengyouge@uniontech.com"
+        },
+        "message": "提交屏保应用1050集成",
+        "object": "e182e4751c15335c1921d1d0725cace15bc82816",
+        "tag": "5.0.10"
+    }
+}

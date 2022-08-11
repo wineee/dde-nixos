@@ -1,0 +1,13 @@
+{
+    "apiVersion": "1.0",
+    "repo": "deepin-turbo",
+    "data": {
+        "tagger": {
+            "name": "ck",
+            "email": "ck@uniontech.com"
+        },
+        "message": "chore: V20上去掉booster服务",
+        "object": "39942d9efa61dfeaf088224925fdb715404b8c44",
+        "tag": "0.0.6.3"
+    }
+}

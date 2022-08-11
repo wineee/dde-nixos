@@ -1,0 +1,13 @@
+{
+    "apiVersion": "1.0",
+    "repo": "deepin-ab-recovery",
+    "data": {
+        "tagger": {
+            "name": "李昌泽",
+            "email": "lichangze@uniontech.com"
+        },
+        "message": "1050update3提测",
+        "object": "8b74fdb9fcd05b45a38b4f6584df59600b660059",
+        "tag": "1.3.31"
+    }
+}

@@ -1,0 +1,13 @@
+{
+    "apiVersion": "1.0",
+    "repo": "deepin-voice-note",
+    "data": {
+        "tagger": {
+            "name": "赵泽东",
+            "email": "zhaozedong@uniontech.com"
+        },
+        "message": "1050U3第一轮集成",
+        "object": "a24412e85ecc37b7b1d00ff8a2689cc197c0901f",
+        "tag": "5.10.18"
+    }
+}

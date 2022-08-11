@@ -1,0 +1,13 @@
+{
+    "apiVersion": "1.0",
+    "repo": "gio-qt",
+    "data": {
+        "tagger": {
+            "name": "zhengyouge",
+            "email": "zhengyouge@uniontech.com"
+        },
+        "message": "提交gio-qt专业版1040集成版本",
+        "object": "ed75ef1134af14f37fbcd3b0557d15adb49e1797",
+        "tag": "0.0.11"
+    }
+}

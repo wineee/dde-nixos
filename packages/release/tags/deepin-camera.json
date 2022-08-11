@@ -1,0 +1,13 @@
+{
+    "apiVersion": "1.0",
+    "repo": "deepin-camera",
+    "data": {
+        "tagger": {
+            "name": "赵泽东",
+            "email": "zhaozedong@uniontech.com"
+        },
+        "message": "1050U3第一轮集成",
+        "object": "2d6975eb5bbcf5070b1a16a5477365773818ff16",
+        "tag": "1.4.2"
+    }
+}

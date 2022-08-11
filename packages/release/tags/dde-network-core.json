@@ -1,0 +1,13 @@
+{
+    "apiVersion": "1.0",
+    "repo": "dde-network-core",
+    "data": {
+        "tagger": {
+            "name": "李昌泽",
+            "email": "lichangze@uniontech.com"
+        },
+        "message": "1050update3 0810集成",
+        "object": "e740ee0b587ef2b42a27780dc312f9ca41f07773",
+        "tag": "1.0.57"
+    }
+}

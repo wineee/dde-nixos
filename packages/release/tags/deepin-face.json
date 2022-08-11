@@ -1,0 +1,13 @@
+{
+    "apiVersion": "1.0",
+    "repo": "deepin-face",
+    "data": {
+        "tagger": {
+            "name": "李昌泽",
+            "email": "lichangze@uniontech.com"
+        },
+        "message": "1050update3 0810集成",
+        "object": "f3610e0b07eca43139c25003814164186660c654",
+        "tag": "1.0.5"
+    }
+}

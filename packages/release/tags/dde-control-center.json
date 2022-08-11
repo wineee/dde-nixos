@@ -1,0 +1,13 @@
+{
+    "apiVersion": "1.0",
+    "repo": "dde-control-center",
+    "data": {
+        "tagger": {
+            "name": "李昌泽",
+            "email": "lichangze@uniontech.com"
+        },
+        "message": "1050update3集成",
+        "object": "7d69b326e781fe1e2b1605eb4b3a1da9c1a5cb27",
+        "tag": "5.5.101"
+    }
+}

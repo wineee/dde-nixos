@@ -1,0 +1,13 @@
+{
+    "apiVersion": "1.0",
+    "repo": "udisks2-qt5",
+    "data": {
+        "tagger": {
+            "name": "zhengyouge",
+            "email": "zhengyouge@uniontech.com"
+        },
+        "message": "提交udisk2-qt5在1040集成，解决1kb问题",
+        "object": "1c73567733e70351418df4fe4ef9b7272d9792ea",
+        "tag": "5.0.6"
+    }
+}

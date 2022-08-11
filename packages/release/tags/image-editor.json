@@ -1,0 +1,13 @@
+{
+    "apiVersion": "1.0",
+    "repo": "image-editor",
+    "data": {
+        "tagger": {
+            "name": "吴勇（成都）",
+            "email": "wuyonga@uniontech.com"
+        },
+        "message": "1050u3第一次集成",
+        "object": "51d5a9151b9d660b95e4eee7aca1e3dfe0941a61",
+        "tag": "1.0.19"
+    }
+}
