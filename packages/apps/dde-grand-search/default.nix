@@ -14,6 +14,10 @@
 , taglib
 , ffmpeg
 , poppler
+, pcre
+, utillinux
+, libselinux
+, libsepol
 , ffmpegthumbnailer
 , wrapQtAppsHook
 , dbus
@@ -69,6 +73,10 @@ in stdenv.mkDerivation rec {
     taglib
     ffmpeg.dev
     poppler
+    pcre
+    libselinux
+    libsepol.dev
+    utillinux.dev
     ffmpegthumbnailer
   ];
 
