@@ -4,7 +4,7 @@ let
 
   newScope = pkgs.libsForQt5.newScope;
 
-  functions = with pkgs.lib; {
+  functions = with pkgs.lib; rec {
     getShebangsPatchFrom = x: "patchShebangs " + concatStringsSep " " x + "\n";
 
     getPatchFrom =
@@ -22,22 +22,21 @@ let
         (s: s + "\n")
       ];
 
+    release = pkgs.callPackage ./release.nix { };
+
     fetchFromDeepin = { pname, sha256 }:
-      let
-        v = with builtins; fromJSON (readFile ../release/tags/${pname}.json);
-      in
       pkgs.fetchFromGitHub {
         inherit sha256;
         owner = "linuxdeepin";
         repo = pname;
-        rev = v.version.tag;
+        rev = readVersion pname;
       };
 
     readVersion = pname:
       let
-        v = with builtins; fromJSON (readFile ../release/tags/${pname}.json);
+        v = with builtins; fromJSON (readFile "${unsafeDiscardStringContext release}/${pname}.json");
       in
-      v.version.tag;
+      v.data.tag;
   };
 
   packages = self: with self; functions // {
