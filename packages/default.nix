@@ -22,6 +22,8 @@ let
         (s: s + "\n")
       ];
 
+    release = pkgs.callPackage ./release.nix { };
+
     fetchFromDeepin = { pname, sha256 }:
       pkgs.fetchFromGitHub {
         inherit sha256;
@@ -32,7 +34,7 @@ let
 
     readVersion = pname:
       let
-        v = with builtins; fromJSON (readFile ./../release/tag/${pname}.json);
+        v = with builtins; fromJSON (readFile "${unsafeDiscardStringContext release}/${pname}.json");
       in
       v.data.tag;
   };

@@ -1,0 +1,9 @@
+{
+    "version": {
+        "sha": "5b9329246e00df698d0dab4aea1e2ab4efe29eaa",
+        "tag": "5.5.30",
+        "description": "fix: DSetting unit error and crash randomly",
+        "author": "Ye ShanShan",
+        "email": "<yeshanshan@uniontech.com>"
+    }
+}

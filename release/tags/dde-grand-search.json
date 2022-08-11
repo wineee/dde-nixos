@@ -1,0 +1,9 @@
+{
+    "version": {
+        "sha": "be1334cb3df903d4997d68a620337797e193f6f6",
+        "tag": "5.3.1",
+        "description": "fix: fix the bug about match app name error",
+        "author": "Zhao Hanxi",
+        "email": "<zhaohanxi@uniontech.com>"
+    }
+}

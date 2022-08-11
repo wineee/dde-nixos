@@ -1,0 +1,9 @@
+{
+    "version": {
+        "sha": "38416d80b1559073478e543990f486b7028467b1",
+        "tag": "5.5.22",
+        "description": "fix: modify dconfig's file install path",
+        "author": "Ye ShanShan",
+        "email": "<yeshanshan@uniontech.com>"
+    }
+}

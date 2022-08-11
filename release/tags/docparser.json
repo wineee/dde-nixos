@@ -1,0 +1,9 @@
+{
+    "version": {
+        "sha": "4680b0abf705c499d5beda1f826fd1a2a3fa8be5",
+        "tag": "1.0.3",
+        "description": "fix: 全文搜索导致文管卡死/崩溃",
+        "author": "lvwujun",
+        "email": "<lvwujun@uniontech.com>"
+    }
+}

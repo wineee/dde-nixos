@@ -1,0 +1,9 @@
+{
+    "version": {
+        "sha": "6671621384378010eac21ff28cb9f2d8b9992ae7",
+        "tag": "5.5.19.1",
+        "description": "feat: 丢失焦点后隐藏器隐藏主界面",
+        "author": "Fan PengCheng",
+        "email": "<fanpengcheng@uniontech.com>"
+    }
+}

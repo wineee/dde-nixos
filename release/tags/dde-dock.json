@@ -1,0 +1,9 @@
+{
+    "version": {
+        "sha": "542e501d665734c238dbacbf038938b044e46f28",
+        "tag": "5.5.38.1",
+        "description": "fix: wine systray can't interact",
+        "author": "chenjun",
+        "email": "<chenjun@uniontech.com>"
+    }
+}

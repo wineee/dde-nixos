@@ -1,0 +1,9 @@
+{
+    "version": {
+        "sha": "45fbe271f8c6d12db0a63a77e91582d9af0a6748",
+        "tag": "2021.2.20",
+        "description": "feat: update osbuild 11038.003",
+        "author": "李成刚",
+        "email": "<lichenggang@uniontech.com>"
+    }
+}

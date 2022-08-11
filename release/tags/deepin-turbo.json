@@ -1,0 +1,9 @@
+{
+    "version": {
+        "sha": "39942d9efa61dfeaf088224925fdb715404b8c44",
+        "tag": "0.0.6.3",
+        "description": "chore: V20上去掉booster服务",
+        "author": "ck",
+        "email": "<ck@uniontech.com>"
+    }
+}
