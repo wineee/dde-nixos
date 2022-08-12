@@ -52,8 +52,8 @@ in stdenv.mkDerivation rec {
   src = fetchFromGitHub {
     owner = "linuxdeepin";
     repo = pname;
-    rev = version;
-    sha256 = "sha256-JzMjqxyMX0lJGFfwQq2yGsnhN9jU838s/In4jCLvrmI=";
+    rev = "9fcde3ea9b152233d19a750e14d1c2681676b6c0";
+    sha256 = "sha256-pXMTsOFar0nJDAlzjOkkO+D/XpEmhf8DYA37cR0XKbU=";
   };
 
   postPatch = getPatchFrom patchList;
@@ -83,6 +83,8 @@ in stdenv.mkDerivation rec {
   cmakeFlags = [ 
     "-DVERSION=${version}" 
   ];
+
+  NIX_CFLAGS_COMPILE = "-I${dde-dock.dev}/include/dde-dock";
 
   qtWrapperArgs = [
     "--prefix QT_PLUGIN_PATH : ${qt5integration}/plugins"
