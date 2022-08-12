@@ -15,7 +15,7 @@
 , fontconfig
 , freetype
 , gtest
-, fileManagerPlugins ? true
+, fileManagerPlugins ? false
 }:
 
 stdenv.mkDerivation rec {
