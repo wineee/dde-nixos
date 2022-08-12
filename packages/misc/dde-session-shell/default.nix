@@ -62,6 +62,7 @@ let
     ];
 
     "src/lightdm-deepin-greeter/greeterworker.cpp" = [
+      [ "/usr/include/shadow.h" "shadow.h" ]
       [ "/usr/sbin/lightdm" "lightdm" ]
       # /etc/deepin/no_suspend
     ];
@@ -137,13 +138,13 @@ let
 in
 stdenv.mkDerivation rec {
   pname = "dde-session-shell";
-  version = "unstable-2022-06-28";
+  version = "5.5.65+";
 
   src = fetchFromGitHub {
     owner = "linuxdeepin";
     repo = pname;
-    rev = "3bb0835a39606326fdefdf671e36f326a6ac06cf";
-    sha256 = "sha256-mEYD9gC46pGufqjSCjyrLtZWn6u3ALFTjnBhL3FIs2o=";
+    rev = "43a280f62f4991130e929ad275ac71d5d4f4671b";
+    sha256 = "sha256-d8a2dEj9Ec5Q5FCjbThUh8r2KWBUJz4+tDIAb8t/3zI=";
   };
 
   postPatch = getPatchFrom patchList + ''
@@ -170,6 +171,7 @@ stdenv.mkDerivation rec {
     xorg.libXcursor
     xorg.libXtst
     xorg.libXrandr
+    xorg.libXdmcp
     gtest
   ];
 
