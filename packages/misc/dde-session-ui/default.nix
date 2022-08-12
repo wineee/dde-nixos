@@ -77,13 +77,13 @@ let
 in
 stdenv.mkDerivation rec {
   pname = "dde-session-ui";
-  version = "5.5.24";
+  version = "5.5.23";
 
   src = fetchFromGitHub {
     owner = "linuxdeepin";
     repo = pname;
     rev = version;
-    sha256 = "sha256-N4TOnkYpjRbozr6sZefhkYFOvbYDp124qvlGaUjWiuQ=";
+    sha256 = "sha256-q8+aOUmU1PSs7nPYSlV28qq62FrOgPAAH72CKAbd60o=";
   };
 
   postPatch = getPatchFrom patchList;
@@ -109,6 +109,8 @@ stdenv.mkDerivation rec {
     libsepol
     gtest
   ];
+
+  NIX_CFLAGS_COMPILE = "-I${dde-dock.dev}/include/dde-dock";
 
   preFixup = ''
     glib-compile-schemas ${glib.makeSchemaPath "$out" "${pname}-${version}"}
