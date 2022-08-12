@@ -63,13 +63,13 @@ let
 in
 stdenv.mkDerivation rec {
   pname = "deepin-system-monitor";
-  version = "5.9.17";
+  version = "5.9.25";
 
   src = fetchFromGitHub {
     owner = "linuxdeepin";
     repo = pname;
     rev = version;
-    sha256 = "sha256-rcQspAjRYr/HINLOlz85zO5qIOwCchq5+23F60tr8hY=";
+    sha256 = "sha256-11XEHVEMQp+BJ1wxq9/VCRz8voGuhIBO4kl+1E1WSSs=";
   };
 
   nativeBuildInputs = [
@@ -84,7 +84,7 @@ stdenv.mkDerivation rec {
     dtk
     dde-qt-dbus-factory
     qtx11extras
-    kwayland
+    # kwayland
 
     gsettings-qt
     libpcap
@@ -97,7 +97,7 @@ stdenv.mkDerivation rec {
   cmakeFlags = [
     "-DVERSION=${version}"
     "-DCMAKE_INSTALL_PREFIX=${placeholder "out"}"
-    "-DWAYLAND_SESSION_SUPPORT=OFF"
+    "-DUSE_DEEPIN_WAYLAND=OFF"
   ];
 
   qtWrapperArgs = [
@@ -107,9 +107,9 @@ stdenv.mkDerivation rec {
 
   patches = [
     (fetchpatch {
-      url = "https://github.com/linuxdeepin/deepin-system-monitor/commit/36dc3291fd45810310c3fdaeb33e493ae6433778.patch";
-      sha256 = "sha256-9WwiEENrwxsacSFZ5WllQuhykHGAkmv7Agph6oyA/4k=";
       name = "Add_build_flag_to_disable_wayland_support_patch";
+      url = "https://github.com/linuxdeepin/deepin-system-monitor/pull/161/commits/7d0df4597f066fc785809a44c5fbc307a5c3fd66.patch";
+      sha256 = "sha256-GhVWUOy6nqoDXk+96AGaB0WUN3CAN47H0GWqQEtVchQ=";
     })
   ];
 
