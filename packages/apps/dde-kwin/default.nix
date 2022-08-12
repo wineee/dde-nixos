@@ -75,27 +75,23 @@ let
 in
 stdenv.mkDerivation rec {
   pname = "dde-kwin";
-  version = "5.4.26";
+  version = "5.5.11";
 
   src = fetchFromGitHub {
-    owner = "linuxdeepin";
+    owner = "justforlxz";
     repo = pname;
-    rev = version;
-    sha256 = "sha256-j/dgGt5zNaVHZF+DrEK8aRdYanPxcvePwqKmc7KM8gk=";
+    rev = "66934418c13b76c12b43940360145e93baee72a3";
+    sha256 = "sha256-s+H0Ps0C7Eb3go0C79hqNIQk9NO0J54wWlmFM171yRo=";
   };
 
   patches = [
     ./0001-feat-check-PLUGIN_INSTALL_PATH-value-before-set.patch
-    ./dde-kwin.5.4.26.patch
+    #./dde-kwin.5.4.26.patch
     ./deepin-kwin-tabbox-chameleon-rename.patch
   ];
 
   postPatch = ''
     patch -Rp1 -i ${./deepin-kwin-added-functions-from-their-forked-kwin.patch}
-
-    sed -i '/add_subdirectory(kdecoration)/d' plugins/CMakeLists.txt || die
-    sed -i 's|GLRenderTarget|GLFramebuffer|g' plugins/kwineffects/scissor-window/scissorwindow.cpp || die
-    sed -i '/(!w->isPaintingEnabled() || (mask & PAINT_WINDOW_LANCZOS)/,+2d' plugins/kwineffects/scissor-window/scissorwindow.cpp || die
   '' + getPatchFrom patchList + getShebangsPatchFrom [
     "configures/kwin_no_scale.in"
     "translate_desktop2ts.sh"
@@ -130,16 +126,17 @@ stdenv.mkDerivation rec {
   cmakeFlags = [
     "-DPROJECT_VERSION=${version}"
     "-DKWIN_VERSION=${kwin.version}"
+    "-DPLUGIN_INSTALL_PATH=${placeholder "out"}/lib/plugins/platforms"
+    "-DKWIN_LIBRARY_PATH=${libkwin}/lib"
+    "-DCMAKE_INSTALL_PREFIX=${placeholder "out"}"
+
     "-DUSE_WINDOW_TOOL=OFF"
-    "-DENABLE_BUILTIN_BLUR=OFF"
-    "-DENABLE_KDECORATION=OFF" #TODO
+    "-DENABLE_BUILTIN_BLUR=OFF" 
+    "-DENABLE_KDECORATION=ON"
     "-DENABLE_BUILTIN_MULTITASKING=OFF"
     "-DENABLE_BUILTIN_BLACK_SCREEN=OFF"
     "-DUSE_DEEPIN_WAYLAND=OFF"
-    "-DPLUGIN_INSTALL_PATH=${placeholder "out"}/lib/plugins/platforms"
-
-    "-DENABLE_BUILTIN_SCISSOR_WINDOW=OFF" # TODO
-    "-DKWIN_LIBRARY_PATH=${libkwin}/lib"
+    "-DENABLE_BUILTIN_SCISSOR_WINDOW=ON"
   ];
 
   qtWrapperArgs = [
