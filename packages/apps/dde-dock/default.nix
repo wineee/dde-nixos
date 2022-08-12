@@ -65,13 +65,13 @@ let
 in
 stdenv.mkDerivation rec {
   pname = "dde-dock";
-  version = "5.5.52";
+  version = "5.5.62";
 
   src = fetchFromGitHub {
     owner = "linuxdeepin";
     repo = pname;
     rev = version;
-    sha256 = "sha256-eTfLdGeNa0S0TuXAI2Q8m/D73tWHKgjoBpt76+FEyaY=";
+    sha256 = "sha256-flFb4Y7gkEQOh4YuRwk4AeonsfFkZLT+w3308WWTrqk=";
   };
 
   patches = [
@@ -115,7 +115,7 @@ stdenv.mkDerivation rec {
   outputs = [ "out" "dev" ];
 
   cmakeFlags = [ "-DVERSION=${version}" ];
-
+  
   qtWrapperArgs = [
     "--prefix QT_PLUGIN_PATH : ${qt5integration}/plugins"
     "--prefix QT_QPA_PLATFORM_PLUGIN_PATH : ${qt5platform-plugins}/plugins"
