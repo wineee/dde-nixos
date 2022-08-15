@@ -14,13 +14,13 @@
 
 stdenv.mkDerivation rec {
   pname = "qt5platform-plugins";
-  version = "5.0.67";
+  version = "5.0.68";
 
   src = fetchFromGitHub {
     owner = "linuxdeepin";
     repo = pname;
     rev = version;
-    sha256 = "sha256-+grsAtfS0jo4nt4y91kWpDXssefbPnPHh0Cnj9kZVmA=";
+    sha256 = "sha256-QuZxZbnsNUI/6hs4lG3IeOigLu+eq1tAc2nDmyPdX60=";
   };
 
   ## https://github.com/linuxdeepin/qt5platform-plugins/pull/119 
@@ -28,25 +28,9 @@ stdenv.mkDerivation rec {
     rm -r xcb/libqt5xcbqpa-dev/
     mkdir -p xcb/libqt5xcbqpa-dev/${qtbase.version}
     cp -r ${qtbase.src}/src/plugins/platforms/xcb/*.h xcb/libqt5xcbqpa-dev/${qtbase.version}/
-    echo ${qtbase.src}/src/plugins/platforms/xcb
   '';
 
-  fixXcbInstallPatch = ''
-    substituteInPlace xcb/xcb.pro \
-      --replace "DESTDIR = \$\$_PRO_FILE_PWD_/../bin/plugins/platforms
-    " "DESTDIR = $out/plugins/platforms"
-  '';
-
-  fixWaylandInstallPatch = ''
-    substituteInPlace wayland/wayland-shell/wayland-shell.pro \
-      --replace "DESTDIR = \$\$_PRO_FILE_PWD_/../../bin/plugins/wayland-shell-integration" "DESTDIR = $out/plugins/wayland-shell-integration"
-
-    substituteInPlace wayland/dwayland/dwayland.pro \
-      --replace "DESTDIR = \$\$_PRO_FILE_PWD_/../../bin/plugins/platforms" "DESTDIR = $out/plugins/platforms"
-  '';
-
-  postPatch = fixQtPatch + fixXcbInstallPatch
-    + lib.optionalString waylandSupport fixWaylandInstallPatch;
+  postPatch = fixQtPatch;
 
   nativeBuildInputs = [ qmake pkgconfig wrapQtAppsHook ];
 
@@ -58,7 +42,11 @@ stdenv.mkDerivation rec {
     xorg.libSM
   ];
 
-  qmakeFlags = lib.optional (!waylandSupport) [ "CONFIG+=DISABLE_WAYLAND" ];
+  qmakeFlags = [
+    "VERSION=${version}"
+    "INSTALL_PATH=${placeholder "out"}/${qtbase.qtPluginPrefix}/platforms"
+  ] 
+  ++ lib.optional (!waylandSupport) [ "CONFIG+=DISABLE_WAYLAND" ];
 
   meta = with lib; {
     description = "Qt platform plugins for DDE";
