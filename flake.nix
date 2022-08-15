@@ -140,8 +140,13 @@
                     })
                   ];
 
-                  environment.sessionVariables.NIX_GSETTINGS_OVERRIDES_DIR = "${nixos-gsettings-desktop-schemas}/share/gsettings-schemas/nixos-gsettings-overrides/glib-2.0/schemas";
-                  environment.variables.DDE_POLKIT_AGENT_PLUGINS_DIRS = [ "${packages.dpa-ext-gnomekeyring}/lib/polkit-1-dde/plugins" ];
+                  environment.sessionVariables = {
+                    NIX_GSETTINGS_OVERRIDES_DIR = "${nixos-gsettings-desktop-schemas}/share/gsettings-schemas/nixos-gsettings-overrides/glib-2.0/schemas";
+                    DDE_POLKIT_AGENT_PLUGINS_DIRS = [ "${packages.dpa-ext-gnomekeyring}/lib/polkit-1-dde/plugins" ];
+                    #QT_QPA_PLATFORM_PLUGIN_PATH = [ "{qt5platform-plugins}/${qtbase.qtPluginPrefix}"];
+                  };
+
+                  environment.variables.QT_QPA_PLATFORMTHEME = "dxcb"; # nixos/modules/config/qt5.nix
 
                   environment.pathsToLink = [
                     "/lib/deepin-daemon"
@@ -168,6 +173,7 @@
                   #environment.etc."polkit-1/localauthority/10-vendor.d/com.deepin.daemon.Grub2.pkla" = "${packages.dde-daemon}/var/lib/polkit-1/localauthority/10-vendor.d/com.deepin.daemon.Grub2.pkla";
 
                   environment.systemPackages = with packages; [
+                    qt5platform-plugins #TODO nixos/modules/config/qt5.nix
                     dde-kwin
                     deepin-terminal
                     deepin-album
