@@ -45,10 +45,10 @@ stdenv.mkDerivation rec {
     "DOCDIR=${placeholder "out"}/share/dman/deepin-picker"
   ];
 
-  qtWrapperArgs = [
-    "--prefix QT_PLUGIN_PATH : ${qt5integration}/plugins"
-    "--prefix QT_QPA_PLATFORM_PLUGIN_PATH : ${qt5platform-plugins}/plugins"
-  ];
+  # qtWrapperArgs = [
+  #   "--prefix QT_PLUGIN_PATH : ${qt5integration}/plugins"
+  #   "--prefix QT_QPA_PLATFORM_PLUGIN_PATH : ${qt5platform-plugins}/plugins"
+  # ];
 
   postPatch = ''
     substituteInPlace com.deepin.Picker.service \

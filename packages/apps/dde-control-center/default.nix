@@ -159,6 +159,9 @@ stdenv.mkDerivation rec {
     libsepol
     networkmanager-qt
     gtest
+    
+    qt5integration
+    qt5platform-plugins
   ];
 
   cmakeFlags = [
@@ -174,10 +177,10 @@ stdenv.mkDerivation rec {
     #"-DDCMAKE_INSTALL_COMPONENT=false"
   ];
 
-  qtWrapperArgs = [
-    "--prefix QT_PLUGIN_PATH : ${qt5integration}/plugins"
-    "--prefix QT_QPA_PLATFORM_PLUGIN_PATH : ${qt5platform-plugins}/plugins"
-  ];
+  # qtWrapperArgs = [
+  #   "--prefix QT_PLUGIN_PATH : ${qt5integration}/plugins"
+  #   "--prefix QT_QPA_PLATFORM_PLUGIN_PATH : ${qt5platform-plugins}/plugins"
+  # ];
 
   preFixup = ''
     glib-compile-schemas ${glib.makeSchemaPath "$out" "${pname}-${version}"}

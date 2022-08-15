@@ -78,6 +78,8 @@ in stdenv.mkDerivation rec {
     libsepol.dev
     utillinux.dev
     ffmpegthumbnailer
+    qt5integration
+    qt5platform-plugins
   ];
 
   cmakeFlags = [ 
@@ -86,10 +88,10 @@ in stdenv.mkDerivation rec {
 
   NIX_CFLAGS_COMPILE = "-I${dde-dock.dev}/include/dde-dock";
 
-  qtWrapperArgs = [
-    "--prefix QT_PLUGIN_PATH : ${qt5integration}/plugins"
-    "--prefix QT_QPA_PLATFORM_PLUGIN_PATH : ${qt5platform-plugins}/plugins"
-  ];
+  # qtWrapperArgs = [
+  #   "--prefix QT_PLUGIN_PATH : ${qt5integration}/plugins"
+  #   "--prefix QT_QPA_PLATFORM_PLUGIN_PATH : ${qt5platform-plugins}/plugins"
+  # ];
 
   meta = with lib; {
     description = "System-wide desktop search for DDE";

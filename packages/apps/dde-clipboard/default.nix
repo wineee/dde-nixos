@@ -60,14 +60,16 @@ stdenv.mkDerivation rec {
     kwayland
     glibmm
     gtest
+    qt5integration
+    qt5platform-plugins
   ];
 
   # NIX_CFLAGS_COMPILE = [ "-I${kwayland.dev}/include/KF5/KWayland" ];
 
-  qtWrapperArgs = [
-    "--prefix QT_PLUGIN_PATH : ${qt5integration}/plugins"
-    "--prefix QT_QPA_PLATFORM_PLUGIN_PATH : ${qt5platform-plugins}/plugins"
-  ];
+  # qtWrapperArgs = [
+  #   "--prefix QT_PLUGIN_PATH : ${qt5integration}/plugins"
+  #   "--prefix QT_QPA_PLATFORM_PLUGIN_PATH : ${qt5platform-plugins}/plugins"
+  # ];
 
   meta = with lib; {
     description = "DDE optional clipboard manager componment";

@@ -110,18 +110,20 @@ stdenv.mkDerivation rec {
     xorg.libXtst
     xorg.libXdmcp
     gtest
+    qt5integration
+    qt5platform-plugins
   ];
 
   outputs = [ "out" "dev" ];
 
   cmakeFlags = [ "-DVERSION=${version}" ];
   
-  qtWrapperArgs = [
-    "--prefix QT_PLUGIN_PATH : ${qt5integration}/plugins"
-    "--prefix QT_QPA_PLATFORM_PLUGIN_PATH : ${qt5platform-plugins}/plugins"
-    #"--prefix XDG_DATA_DIRS : ${glib.makeSchemaPath "${deepin-desktop-schemas}" "${deepin-desktop-schemas.name}"}"
-    #"--prefix DSG_DATA_DIRS : ${placeholder "out"}"
-  ];
+  # qtWrapperArgs = [
+  #   "--prefix QT_PLUGIN_PATH : ${qt5integration}/plugins"
+  #   "--prefix QT_QPA_PLATFORM_PLUGIN_PATH : ${qt5platform-plugins}/plugins"
+  #   #"--prefix XDG_DATA_DIRS : ${glib.makeSchemaPath "${deepin-desktop-schemas}" "${deepin-desktop-schemas.name}"}"
+  #   #"--prefix DSG_DATA_DIRS : ${placeholder "out"}"
+  # ];
 
   # postInstall = ''
   #   glib-compile-schemas "$out/share/glib-2.0/schemas"

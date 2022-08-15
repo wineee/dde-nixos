@@ -73,16 +73,18 @@ stdenv.mkDerivation rec {
     dtk
     dde-qt-dbus-factory
     gtest
+    qt5integration
+    qt5platform-plugins
   ];
 
   cmakeFlags = [ "-DVERSION=${version}" ];
 
   installFlags = [ "DESTDIR=$(out)" ];
 
-  qtWrapperArgs = [
-    "--prefix QT_PLUGIN_PATH : ${qt5integration}/plugins"
-    "--prefix QT_QPA_PLATFORM_PLUGIN_PATH : ${qt5platform-plugins}/plugins"
-  ];
+  # qtWrapperArgs = [
+  #   "--prefix QT_PLUGIN_PATH : ${qt5integration}/plugins"
+  #   "--prefix QT_QPA_PLATFORM_PLUGIN_PATH : ${qt5platform-plugins}/plugins"
+  # ];
 
   postFixup = ''
     wrapQtApp $out/lib/deepin-daemon/dde-calendar-service

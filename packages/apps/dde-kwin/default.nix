@@ -35,6 +35,7 @@ let
     ];
     "configures/CMakeLists.txt" = [
       [ "/etc/xdg" "$out/etc/xdg" ]
+      [ " /bin" " $out/bin" ]
     ];
     "configures/kwin_no_scale.in" = [
       [ "/etc/xdg/kglobalshortcutsrc" "$out/etc/xdg/kglobalshortcutsrc" ]
@@ -80,19 +81,17 @@ stdenv.mkDerivation rec {
   src = fetchFromGitHub {
     owner = "justforlxz";
     repo = pname;
-    rev = "66934418c13b76c12b43940360145e93baee72a3";
-    sha256 = "sha256-s+H0Ps0C7Eb3go0C79hqNIQk9NO0J54wWlmFM171yRo=";
+    rev = "2dce6692fc43eaacce56faf1aecb72b718291fc0";
+    sha256 = "sha256-m2cSsWhv8sI5fK13ghq1PSOWwtxijSrD7dxslKU2UwI=";
   };
 
   patches = [
-    ./0001-feat-check-PLUGIN_INSTALL_PATH-value-before-set.patch
+    #./0001-feat-check-PLUGIN_INSTALL_PATH-value-before-set.patch
     #./dde-kwin.5.4.26.patch
-    ./deepin-kwin-tabbox-chameleon-rename.patch
+    #./deepin-kwin-tabbox-chameleon-rename.patch
   ];
 
-  postPatch = ''
-    patch -Rp1 -i ${./deepin-kwin-added-functions-from-their-forked-kwin.patch}
-  '' + getPatchFrom patchList + getShebangsPatchFrom [
+  postPatch = getPatchFrom patchList + getShebangsPatchFrom [
     "configures/kwin_no_scale.in"
     "translate_desktop2ts.sh"
     "translate_ts2desktop.sh"
@@ -129,6 +128,7 @@ stdenv.mkDerivation rec {
     "-DPLUGIN_INSTALL_PATH=${placeholder "out"}/lib/plugins/platforms"
     "-DKWIN_LIBRARY_PATH=${libkwin}/lib"
     "-DCMAKE_INSTALL_PREFIX=${placeholder "out"}"
+    "-DQT_INSTALL_PLUGINS=${placeholder "out"}/lib/plugins"
 
     "-DUSE_WINDOW_TOOL=OFF"
     "-DENABLE_BUILTIN_BLUR=OFF" 
