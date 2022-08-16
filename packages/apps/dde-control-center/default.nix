@@ -159,9 +159,6 @@ stdenv.mkDerivation rec {
     libsepol
     networkmanager-qt
     gtest
-    
-    qt5integration
-    qt5platform-plugins
   ];
 
   cmakeFlags = [

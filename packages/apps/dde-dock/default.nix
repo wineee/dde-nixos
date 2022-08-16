@@ -111,8 +111,6 @@ stdenv.mkDerivation rec {
     xorg.libXtst
     xorg.libXdmcp
     gtest
-    qt5integration
-    qt5platform-plugins
   ];
 
   outputs = [ "out" "dev" ];

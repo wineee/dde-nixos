@@ -252,8 +252,6 @@ stdenv.mkDerivation rec {
     lucenepp
     boost
     taglib
-    qt5integration
-    qt5platform-plugins
   ];
 
   enableParallelBuilding = true;

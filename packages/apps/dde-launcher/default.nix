@@ -74,8 +74,6 @@ stdenv.mkDerivation rec {
     qtx11extras
     gsettings-qt
     gtest
-    qt5integration
-    qt5platform-plugins
   ];
 
   cmakeFlags = [ "-DVERSION=${version}" ];

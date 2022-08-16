@@ -79,8 +79,6 @@ in stdenv.mkDerivation rec {
     libsepol.dev
     utillinux.dev
     ffmpegthumbnailer
-    qt5integration
-    qt5platform-plugins
   ];
 
   cmakeFlags = [ 

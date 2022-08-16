@@ -74,8 +74,6 @@ stdenv.mkDerivation rec {
     dtk
     dde-qt-dbus-factory
     gtest
-    qt5integration
-    qt5platform-plugins
   ];
 
   cmakeFlags = [ "-DVERSION=${version}" ];

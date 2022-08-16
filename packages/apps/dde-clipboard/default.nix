@@ -61,8 +61,6 @@ stdenv.mkDerivation rec {
     kwayland
     glibmm
     gtest
-    qt5integration
-    qt5platform-plugins
   ];
 
   # NIX_CFLAGS_COMPILE = [ "-I${kwayland.dev}/include/KF5/KWayland" ];
