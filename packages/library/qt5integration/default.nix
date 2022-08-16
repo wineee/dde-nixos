@@ -1,8 +1,13 @@
 { stdenv
 , lib
 , fetchFromGitHub
-, dtk
+, dtkcommon
+, dtkcore
+, dtkgui
+, dtkwidget
 , qmake
+, qtbase
+, qtsvg
 , pkgconfig
 , wrapQtAppsHook
 , qtx11extras
@@ -15,19 +20,22 @@
 
 stdenv.mkDerivation rec {
   pname = "qt5integration";
-  version = "5.5.23";
+  version = "5.5.24";
 
   src = fetchFromGitHub {
     owner = "linuxdeepin";
     repo = pname;
     rev = version;
-    sha256 = "sha256-mpGbxha5n5wFPhAwXcX1eizn5BvdqnKKcgq1Jm/vUsc=";
+    sha256 = "sha256-j2FcmEAcMSFRfUk81wccVBfylsg144RQTEP46L7ZjtY=";
   };
 
   nativeBuildInputs = [ qmake pkgconfig wrapQtAppsHook ];
 
   buildInputs = [
-    dtk
+    dtkcommon
+    dtkcore
+    dtkgui
+    dtkwidget
     qtx11extras
     qt5platform-plugins
     mtdev
@@ -37,7 +45,8 @@ stdenv.mkDerivation rec {
   ];
 
   installPhase = ''
-    cp -r bin $out
+    mkdir -p $out/${qtbase.qtPluginPrefix}
+    cp -r bin/plugins/* $out/${qtbase.qtPluginPrefix}/
   '';
 
   meta = with lib; {
