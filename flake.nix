@@ -146,7 +146,10 @@
                     #QT_QPA_PLATFORM_PLUGIN_PATH = [ "{qt5platform-plugins}/${qtbase.qtPluginPrefix}"];
                   };
 
-                  environment.variables.QT_QPA_PLATFORMTHEME = "dxcb"; # nixos/modules/config/qt5.nix
+                  environment.variables = {
+                    QT_QPA_PLATFORMTHEME = "dxcb"; # nixos/modules/config/qt5.nix
+                    QT_STYLE_OVERRIDE = "chameleon";
+                  };
 
                   environment.pathsToLink = [
                     "/lib/deepin-daemon"
