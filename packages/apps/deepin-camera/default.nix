@@ -21,6 +21,7 @@
 , libv4l
 , gst_all_1
 , systemd
+, qtbase
 }:
 
 let
@@ -66,11 +67,10 @@ stdenv.mkDerivation rec {
     "-I${gst_all_1.gst-plugins-base.dev}/include/gstreamer-1.0"
   ];
 
-  # qtWrapperArgs = [
-  #   "--prefix QT_PLUGIN_PATH : ${qt5integration}/plugins"
-  #   "--prefix QT_QPA_PLATFORM_PLUGIN_PATH : ${qt5platform-plugins}/plugins"
-  #   "--prefix GST_PLUGIN_SYSTEM_PATH_1_0 : ${gstPluginPath}"
-  # ];
+  qtWrapperArgs = [
+    "--prefix QT_PLUGIN_PATH : ${qt5integration}/${qtbase.qtPluginPrefix}"
+    "--prefix GST_PLUGIN_SYSTEM_PATH_1_0 : ${gstPluginPath}"
+  ];
 
   patches = [
     ./0001-fix-libusb-import.patch

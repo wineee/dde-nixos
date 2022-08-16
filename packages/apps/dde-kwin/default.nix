@@ -91,7 +91,9 @@ stdenv.mkDerivation rec {
     #./deepin-kwin-tabbox-chameleon-rename.patch
   ];
 
-  postPatch = getPatchFrom patchList + getShebangsPatchFrom [
+  postPatch = ''
+    fixQtBuiltinPaths "plugins/kdecoration/CMakeLists.txt" "plugins/kwineffects/CMakeLists.txt"
+  '' + getPatchFrom patchList + getShebangsPatchFrom [
     "configures/kwin_no_scale.in"
     "translate_desktop2ts.sh"
     "translate_ts2desktop.sh"
@@ -128,7 +130,7 @@ stdenv.mkDerivation rec {
     "-DPLUGIN_INSTALL_PATH=${placeholder "out"}/lib/plugins/platforms"
     "-DKWIN_LIBRARY_PATH=${libkwin}/lib"
     "-DCMAKE_INSTALL_PREFIX=${placeholder "out"}"
-    "-DQT_INSTALL_PLUGINS=${placeholder "out"}/lib/plugins"
+    #"-DQT_INSTALL_PLUGINS=${placeholder "out"}/lib/plugins"
 
     "-DUSE_WINDOW_TOOL=OFF"
     "-DENABLE_BUILTIN_BLUR=OFF" 

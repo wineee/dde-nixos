@@ -13,6 +13,7 @@
 , freetype
 , gtest
 , fileManagerPlugins ? false
+, qtbase
 }:
 
 stdenv.mkDerivation rec {
@@ -56,10 +57,9 @@ stdenv.mkDerivation rec {
 
   cmakeFlags = [ "-DVERSION=${version}" ];
 
-  # qtWrapperArgs = [
-  #   "--prefix QT_PLUGIN_PATH : ${qt5integration}/plugins"
-  #   "--prefix QT_QPA_PLATFORM_PLUGIN_PATH : ${qt5platform-plugins}/plugins"
-  # ];
+  qtWrapperArgs = [
+    "--prefix QT_PLUGIN_PATH : ${qt5integration}/${qtbase.qtPluginPrefix}"
+  ];
 
   meta = with lib; {
     description = "Deepin Font Manager is used to install and uninstall font file for users with bulk install function";

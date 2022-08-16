@@ -6,6 +6,8 @@
 , cmake
 , wrapQtAppsHook
 , gtest
+, qt5integration
+, qtbase
 }:
 let
   patchList = {
@@ -49,6 +51,10 @@ stdenv.mkDerivation rec {
   ];
 
   postPatch = getPatchFrom patchList;
+
+  qtWrapperArgs = [
+    "--prefix QT_PLUGIN_PATH : ${qt5integration}/${qtbase.qtPluginPrefix}"
+  ];
 
   meta = with lib; {
     description = "Provids dbus service for reading and writing DSG configuration";

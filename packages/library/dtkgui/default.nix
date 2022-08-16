@@ -7,19 +7,20 @@
 , gtest
 , wrapQtAppsHook
 , librsvg
+, lxqt
 , dtkcore
 , dtkcommon
 }:
 
 stdenv.mkDerivation rec {
   pname = "dtkgui";
-  version = "5.5.25";
+  version = "5.5.25+";
 
   src = fetchFromGitHub {
     owner = "linuxdeepin";
     repo = pname;
-    rev = version;
-    sha256 = "sha256-pRH9tGz7EYmD0BJfAVkhoSSH8K6h6vBBk1ooiXTtlLs=";
+    rev = "bdfcc85de9202ff4699878b6d418f8655abc2f6c";
+    sha256 = "sha256-LBUkJlAb6Wwx/xxxFbrk70MxkMnU0J7np7K2Ayf8boA=";
   };
 
   nativeBuildInputs = [
@@ -33,6 +34,7 @@ stdenv.mkDerivation rec {
     dtkcore
     dtkcommon
     librsvg
+    lxqt.libqtxdg
     gtest
   ];
 

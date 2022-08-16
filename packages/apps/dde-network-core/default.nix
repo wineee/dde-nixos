@@ -22,6 +22,7 @@
 , wrapQtAppsHook
 , dbus
 , gtest
+, qtbase
 }:
 let
   # FIXME: cant build 
@@ -71,10 +72,9 @@ in stdenv.mkDerivation rec {
     "-DVERSION=${version}" 
   ];
 
-  # qtWrapperArgs = [
-  #   "--prefix QT_PLUGIN_PATH : ${qt5integration}/plugins"
-  #   "--prefix QT_QPA_PLATFORM_PLUGIN_PATH : ${qt5platform-plugins}/plugins"
-  # ];
+  qtWrapperArgs = [
+    "--prefix QT_PLUGIN_PATH : ${qt5integration}/${qtbase.qtPluginPrefix}"
+  ];
 
   meta = with lib; {
     description = "dde-network-core";

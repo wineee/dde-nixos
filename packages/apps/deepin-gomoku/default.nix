@@ -11,6 +11,7 @@
 , qtmultimedia
 , wrapQtAppsHook
 , gtest
+, qtbase
 }:
 
 stdenv.mkDerivation rec {
@@ -41,10 +42,9 @@ stdenv.mkDerivation rec {
     "-DVERSION=${version}"
   ];
 
-  # qtWrapperArgs = [
-  #   "--prefix QT_PLUGIN_PATH : ${qt5integration}/plugins"
-  #   "--prefix QT_QPA_PLATFORM_PLUGIN_PATH : ${qt5platform-plugins}/plugins"
-  # ];
+  qtWrapperArgs = [
+    "--prefix QT_PLUGIN_PATH : ${qt5integration}/${qtbase.qtPluginPrefix}"
+  ];
 
   postPatch = ''
     substituteInPlace CMakeLists.txt \

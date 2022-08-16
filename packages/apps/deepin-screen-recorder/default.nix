@@ -25,6 +25,7 @@
 , udev
 , kwayland
 , dbus
+, qtbase
 }:
 # TODO
 # src/main.cpp : ffmpeg
@@ -134,10 +135,10 @@ stdenv.mkDerivation rec {
   ];
 
   qtWrapperArgs = [
-    # "--prefix QT_PLUGIN_PATH : ${qt5integration}/plugins"
-    # "--prefix QT_QPA_PLATFORM_PLUGIN_PATH : ${qt5platform-plugins}/plugins"
+    "--prefix QT_PLUGIN_PATH : ${qt5integration}/${qtbase.qtPluginPrefix}"
     "--prefix GST_PLUGIN_SYSTEM_PATH_1_0 : ${gstPluginPath}"
   ];
+
 
   fixInstallPatch = ''
     substituteInPlace screen_shot_recorder.pro \

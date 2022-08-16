@@ -15,6 +15,7 @@
 , libvlc
 , gst_all_1
 , gtest
+, qtbase
 }:
 
 stdenv.mkDerivation rec {
@@ -49,10 +50,9 @@ stdenv.mkDerivation rec {
 
   NIX_CFLAGS_COMPILE = "-I${dde-qt-dbus-factory}/include/libdframeworkdbus-2.0";
 
-  # qtWrapperArgs = [
-  #   "--prefix QT_PLUGIN_PATH : ${qt5integration}/plugins"
-  #   "--prefix QT_QPA_PLATFORM_PLUGIN_PATH : ${qt5platform-plugins}/plugins"
-  # ];
+  qtWrapperArgs = [
+    "--prefix QT_PLUGIN_PATH : ${qt5integration}/${qtbase.qtPluginPrefix}"
+  ];
 
   postPatch = ''
     substituteInPlace CMakeLists.txt \

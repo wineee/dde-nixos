@@ -21,6 +21,8 @@
 , xkeyboard_config
 , dbus
 , dde-session-shell
+, qtbase
+, qt5integration
 }:
 let
   patchList = {
@@ -173,6 +175,10 @@ stdenv.mkDerivation rec {
     xorg.libXrandr
     xorg.libXdmcp
     gtest
+  ];
+
+  qtWrapperArgs = [
+    "--prefix QT_PLUGIN_PATH : ${qt5integration}/${qtbase.qtPluginPrefix}"
   ];
 
   preFixup = ''

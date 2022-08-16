@@ -21,6 +21,8 @@
 , wrapQtAppsHook
 , gtest
 , xkeyboard_config
+, qtbase
+, qt5integration
 }:
 let
   patchList = {
@@ -111,6 +113,10 @@ stdenv.mkDerivation rec {
   ];
 
   NIX_CFLAGS_COMPILE = "-I${dde-dock.dev}/include/dde-dock";
+
+  qtWrapperArgs = [
+    "--prefix QT_PLUGIN_PATH : ${qt5integration}/${qtbase.qtPluginPrefix}"
+  ];
 
   preFixup = ''
     glib-compile-schemas ${glib.makeSchemaPath "$out" "${pname}-${version}"}

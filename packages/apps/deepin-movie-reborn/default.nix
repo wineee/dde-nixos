@@ -34,6 +34,7 @@
 , cudaSupport ? false
 , cudaPackages
 , breakpointHook
+, qtbase
 }:
 let
   replaceLibPath = filePath: ''
@@ -99,11 +100,11 @@ stdenv.mkDerivation rec {
     ./fix-build.patch
   ];
 
-  qtWrapperArgs = [
-    # "--prefix QT_PLUGIN_PATH : ${qt5integration}/plugins"
-    # "--prefix QT_QPA_PLATFORM_PLUGIN_PATH : ${qt5platform-plugins}/plugins"
+  qtWrapperArgs = [ 
+    "--prefix QT_PLUGIN_PATH : ${qt5integration}/${qtbase.qtPluginPrefix}"
     "--prefix XDG_DATA_DIRS : ${placeholder "out"}/share/gsettings-schemas/${pname}-${version}"
   ];
+
 
   cmakeFlags = [
     "-DVERSION=${version}"

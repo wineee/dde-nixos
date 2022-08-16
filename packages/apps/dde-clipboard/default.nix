@@ -14,6 +14,7 @@
 , wrapQtAppsHook
 , glibmm
 , gtest
+, qtbase
 }:
 let
   patchList = {
@@ -66,10 +67,9 @@ stdenv.mkDerivation rec {
 
   # NIX_CFLAGS_COMPILE = [ "-I${kwayland.dev}/include/KF5/KWayland" ];
 
-  # qtWrapperArgs = [
-  #   "--prefix QT_PLUGIN_PATH : ${qt5integration}/plugins"
-  #   "--prefix QT_QPA_PLATFORM_PLUGIN_PATH : ${qt5platform-plugins}/plugins"
-  # ];
+  qtWrapperArgs = [
+    "--prefix QT_PLUGIN_PATH : ${qt5integration}/${qtbase.qtPluginPrefix}"
+  ];
 
   meta = with lib; {
     description = "DDE optional clipboard manager componment";
