@@ -1,6 +1,7 @@
 { stdenv
 , stdenvNoCC
 , lib
+, fetchpatch
 , getPatchFrom
 , getShebangsPatchFrom
 , pkg-config
@@ -8,6 +9,7 @@
 , cmake
 , kwin
 , kwayland
+, qtbase
 , qttools
 , wrapQtAppsHook
 , deepin-gettext-tools
@@ -89,6 +91,11 @@ stdenv.mkDerivation rec {
     #./0001-feat-check-PLUGIN_INSTALL_PATH-value-before-set.patch
     #./dde-kwin.5.4.26.patch
     #./deepin-kwin-tabbox-chameleon-rename.patch
+    (fetchpatch {
+      name = "chore: check value of QT_INSTALL_PLUGINS before set";
+      url = "https://github.com/justforlxz/dde-kwin/pull/1/commits/33b74703e9dbff5249bcc90ba1c0da486d7e734b.patch";
+      sha256 = "sha256-TflLTT+0LxLks+6uxtwG0+m2eVQ1PxmcAtetKx2fIMM=";
+    })
   ];
 
   postPatch = ''
@@ -127,10 +134,10 @@ stdenv.mkDerivation rec {
   cmakeFlags = [
     "-DPROJECT_VERSION=${version}"
     "-DKWIN_VERSION=${kwin.version}"
-    "-DPLUGIN_INSTALL_PATH=${placeholder "out"}/lib/plugins/platforms"
+    #"-DPLUGIN_INSTALL_PATH=${placeholder "out"}/lib/plugins/platforms"
     "-DKWIN_LIBRARY_PATH=${libkwin}/lib"
     "-DCMAKE_INSTALL_PREFIX=${placeholder "out"}"
-    #"-DQT_INSTALL_PLUGINS=${placeholder "out"}/lib/plugins"
+    "-DQT_INSTALL_PLUGINS=${placeholder "out"}/${qtbase.qtPluginPrefix}"
 
     "-DUSE_WINDOW_TOOL=OFF"
     "-DENABLE_BUILTIN_BLUR=OFF" 
@@ -141,13 +148,9 @@ stdenv.mkDerivation rec {
     "-DENABLE_BUILTIN_SCISSOR_WINDOW=ON"
   ];
 
-  qtWrapperArgs = [
-    "--prefix QT_QPA_PLATFORM_PLUGIN_PATH : ${placeholder "out"}/lib/plugins"
-  ];
-
   postFixup = ''
     wrapProgram $out/bin/kwin_no_scale \
-      --set QT_QPA_PLATFORM_PLUGIN_PATH "${placeholder "out"}/lib/plugins"
+      --set QT_QPA_PLATFORM_PLUGIN_PATH "${placeholder "out"}/${qtbase.qtPluginPrefix}"
   '';
   ## FIXME: why cann't use --prefix
 
