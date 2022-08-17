@@ -35,13 +35,13 @@ stdenv.mkDerivation rec {
   version = "5.4.7+";
 
   src = fetchFromGitHub {
-    owner = "linuxdeepin";
+    owner = "wineee";
     repo = pname;
-    rev = "20e6ade9a253fe15d90400555a0e2e6f4c68a970";
-    sha256 = "sha256-Q8yuhseFX3hlmBLfARYkoDfv5E4VxMEkKWs+mh74ZU8=";
+    rev = "8a985ca4edf9cad634121128c13abcddaf46d4a1";
+    sha256 = "sha256-iHqFTHIKXPebRxuGFC5lQhZoN2u3CLO7jkczGtKOuRU=";
   };
 
-  patches = [ ./0001-feat-remove-wayland-support.patch ];
+  #patches = [ ./0001-feat-remove-wayland-support.patch ];
 
   postPatch = getPatchFrom patchList + ''
     patchShebangs translate_generation.sh generate_gtest_report.sh
@@ -64,6 +64,9 @@ stdenv.mkDerivation rec {
   ];
 
   # NIX_CFLAGS_COMPILE = [ "-I${kwayland.dev}/include/KF5/KWayland" ];
+  cmakeFlags = [
+    "-DUSE_DEEPIN_WAYLAND=OFF"
+  ];
 
   qtWrapperArgs = [
     "--prefix QT_PLUGIN_PATH : ${qt5integration}/${qtbase.qtPluginPrefix}"
