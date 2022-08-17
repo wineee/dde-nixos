@@ -27,15 +27,17 @@ stdenv.mkDerivation rec {
   patches = [
     (fetchpatch {
       name = "feat_check_PREFIX_value_before_set";
-      url = "https://github.com/linuxdeepin/image-editor/commit/a7c6655c57184952c10387771737f92b950246a5.patch";
-      sha256 = "sha256-uGRKCkzZGFcwT0n9JFK3SuMWilaXDyqyAYh+VUdTo/w=";
+      url = "https://github.com/linuxdeepin/image-editor/commit/d01339a04850d6b88c5b9b314a6bae3b32ecf52a.patch";
+      sha256 = "sha256-Tozvy4YCvvPeYaSdnFcQKxsXGHjJ127k3XmzsMHMRtU=";
     })
   ];
 
   postPatch = ''
     substituteInPlace libimageviewer/CMakeLists.txt \
-      --replace "/usr" "$out"
+      --replace "/usr/lib/" "$out/lib/"
+    # cat libimageviewer/CMakeLists.txt
   '';
+  #TODO:
 
   nativeBuildInputs = [ cmake pkgconfig qttools wrapQtAppsHook ];
 
@@ -47,7 +49,7 @@ stdenv.mkDerivation rec {
     pcre
   ];
 
-  cmakeFlags = [ "-DCMAKE_INSTALL_LIBDIR=lib" ];
+  cmakeFlags = [ "-DCMAKE_INSTALL_PREFIX=${placeholder "out"}" "-DCMAKE_INSTALL_LIBDIR=lib" ];
 
   meta = with lib; {
     description = "image editor lib for dtk";
