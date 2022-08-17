@@ -1,6 +1,7 @@
 { stdenv
 , lib
 , fetchFromGitHub
+, fetchpatch
 , dtk
 , qt5integration
 , qt5platform-plugins
@@ -21,14 +22,22 @@
 
 stdenv.mkDerivation rec {
   pname = "deepin-terminal";
-  version = "5.4.30";
+  version = "5.4.33";
 
   src = fetchFromGitHub {
     owner = "linuxdeepin";
     repo = pname;
     rev = version;
-    sha256 = "sha256-9RXdQREFyI9RWfIej4K1oj5Lp3fOXo03jGenbLAI8N8=";
+    sha256 = "sha256-aGiKvGVtQM639JDKU4+bEOKqtld/X1Z2+Na0R+YtPzk=";
   };
+
+  patches = [
+    (fetchpatch {
+      name = "chore: use GNUInstallDirs in CmakeLists";
+      url = "https://github.com/linuxdeepin/deepin-terminal/commit/b18a2ca8411f09f5573aa2a8403a484b693ec975.patch";
+      sha256 = "sha256-Qy8Jg+7BfZr8tQEsCAzhMEwf6rU96gkgup5f9bMMELY=";
+    })
+  ];
 
   cmakeFlags = [ "-DVERSION=${version}" ];
 
@@ -53,14 +62,6 @@ stdenv.mkDerivation rec {
   qtWrapperArgs = [
     "--prefix QT_PLUGIN_PATH : ${qt5integration}/${qtbase.qtPluginPrefix}"
   ];
-
-  postPatch = ''
-    substituteInPlace CMakeLists.txt \
-      --replace "/usr/share/deepin-manual/manual-assets/application/)" "share/deepin-manual/manual-assets/application/)"
-
-    substituteInPlace 3rdparty/terminalwidget/CMakeLists.txt \
-      --replace "set(CMAKE_INSTALL_PREFIX \"/usr\")" "set(CMAKE_INSTALL_PREFIX $out)"
-  '';
 
   meta = with lib; {
     description = "An advanced terminal emulator with workspace,multiple windows,remote management,quake mode and other features";
