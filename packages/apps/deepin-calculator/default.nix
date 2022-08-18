@@ -1,10 +1,8 @@
 { stdenv
 , lib
 , fetchFromGitHub
-, dtkcore
-, dtkgui
-, dtkwidget
-, dtkcommon
+, fetchpatch
+, dtk
 , qt5integration
 , qt5platform-plugins
 , dde-qt-dbus-factory
@@ -28,6 +26,14 @@ stdenv.mkDerivation rec {
     sha256 = "sha256-uM8qtlNMBL/XS/PTgNMwDo+iREvOrp07DaRZvPvpb2s=";
   };
 
+  patches = [
+    (fetchpatch {
+      name = "chore: use GNUInstallDirs in CmakeLists";
+      url = "https://github.com/linuxdeepin/deepin-calculator/commit/aa565ccb961cbc29666559041b6db1ba581b089b.patch";
+      sha256 = "sha256-jUX+8TOcXkPi2lQmrapu0mpeX8sBIRLGHdKtuJjhybY=";
+    })
+  ];
+
   nativeBuildInputs = [
     cmake
     qttools
@@ -36,10 +42,7 @@ stdenv.mkDerivation rec {
   ];
 
   buildInputs = [
-    dtkcommon
-    dtkcore
-    dtkgui
-    dtkwidget
+    dtk
     dde-qt-dbus-factory
     gtest
   ];
@@ -49,12 +52,6 @@ stdenv.mkDerivation rec {
   ];
 
   cmakeFlags = [ "-DVERSION=${version}" ];
-
-  postPatch = ''
-    substituteInPlace CMakeLists.txt \
-      --replace "set(CMAKE_INSTALL_PREFIX /usr)" "set(CMAKE_INSTALL_PREFIX $out)" \
-      --replace "/usr/share/deepin-manual/manual-assets/application/)" "share/deepin-manual/manual-assets/application/)"
-  '';
 
   meta = with lib; {
     description = "An easy to use calculator for ordinary users";
