@@ -1,6 +1,7 @@
 { stdenv
 , lib
 , fetchFromGitHub
+, fetchpatch
 , dtk
 , qt5integration
 , qt5platform-plugins
@@ -11,6 +12,7 @@
 , pkgconfig
 , wrapQtAppsHook
 , gtest
+, qtbase
 }:
 
 stdenv.mkDerivation rec {
@@ -23,6 +25,14 @@ stdenv.mkDerivation rec {
     rev = version;
     sha256 = "sha256-mPjrno6quSClXJmL8Nvh0cA0uiX214l5igSDIelGPgw=";
   };
+
+  patches = [
+    (fetchpatch {
+      name = "chore: use GNUInstallDirs in CmakeLists";
+      url = "https://github.com/linuxdeepin/deepin-downloader/commit/b4e5425c97b48065baebe55a8f9af3a3f149ad59.patch";
+      sha256 = "sha256-xu+rnkfnsnvVolbzvnHJCZSwbV5CYxrWJ+UO9s+Bk6g=";
+    })
+  ];
 
   nativeBuildInputs = [
     cmake
@@ -40,27 +50,11 @@ stdenv.mkDerivation rec {
 
   cmakeFlags = [ "-DVERSION=${version}" ];
 
-  # qtWrapperArgs = [
-  #   "--prefix QT_PLUGIN_PATH : ${qt5integration}/plugins"
-  #   "--prefix QT_QPA_PLATFORM_PLUGIN_PATH : ${qt5platform-plugins}/plugins"
-  # ];
-
-  fixInstallPatch = ''
-    substituteInPlace CMakeLists.txt \
-      --replace "set(CMAKE_INSTALL_PREFIX /usr)" "set(CMAKE_INSTALL_PREFIX $out)" \
-      --replace "/usr/share/deepin-manual/manual-assets/application/" "$out/share/deepin-manual/manual-assets/application/" \
-      --replace "/etc/browser/native-messaging-hosts/" "$out/etc/browser/native-messaging-hosts/" \
-      --replace "/usr/libexec/openconnect/" "$out/libexec/openconnect/"
-
-  '';
+  qtWrapperArgs = [
+    "--prefix QT_PLUGIN_PATH : ${qt5integration}/${qtbase.qtPluginPrefix}"
+  ];
 
   # TODO UOS_DONWLOAD_DATABASE_PATH ..
-  fixPathCodePatch = ''
-    substituteInPlace src/aria2/aria2rpcinterface.cpp \
-      --replace "/usr/bin/touch" "touch"
-  '';
-
-  postPatch = fixInstallPatch;
 
   meta = with lib; {
     description = "Download Manager is Deepin Desktop Environment download manager";
