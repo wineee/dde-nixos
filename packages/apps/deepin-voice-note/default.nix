@@ -20,14 +20,22 @@
 
 stdenv.mkDerivation rec {
   pname = "deepin-voice-note";
-  version = "5.10.17";
+  version = "5.10.18";
 
   src = fetchFromGitHub {
-    owner = "wineee";
+    owner = "linuxdeepin";
     repo = pname;
     rev = version;
-    sha256 = "sha256-TYKX3FcvVBKq3ijVIpbPGbfC6PhfDgUXyAeEaWZahlA=";
+    sha256 = "sha256-h7eo2DNENJKbeYWCyYSfO9lwIcFx6A+7eY0kJHmKW0Q=";
   };
+
+  patches = [
+    (fetchpatch {
+      name = "chore: use GNUInstallDirs in CmakeLists";
+      url = "https://github.com/linuxdeepin/deepin-voice-note/commit/3013c6bfcaef9c2969399286613e6810f8557f0a.patch";
+      sha256 = "sha256-MYAxDAVvkt62841naRQRnPX7Q4jdqFNtOfbeEuHKwBQ=";
+    })
+  ];
 
   nativeBuildInputs = [
     cmake
@@ -53,12 +61,6 @@ stdenv.mkDerivation rec {
   qtWrapperArgs = [
     "--prefix QT_PLUGIN_PATH : ${qt5integration}/${qtbase.qtPluginPrefix}"
   ];
-
-  postPatch = ''
-    substituteInPlace CMakeLists.txt \
-      --replace "set(CMAKE_INSTALL_PREFIX /usr)" "set(CMAKE_INSTALL_PREFIX $out)" \
-      --replace "/usr/share/deepin-manual/manual-assets/application/)" "$out/share/deepin-manual/manual-assets/application/)"
-  '';
 
   meta = with lib; {
     description = "a simple memo software with texts and voice recordings";
