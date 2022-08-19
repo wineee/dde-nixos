@@ -1,6 +1,7 @@
 { stdenv
 , lib
 , fetchFromGitHub
+, fetchpatch
 , dtk
 , qt5integration
 , qt5platform-plugins
@@ -10,8 +11,6 @@
 , cmake
 , pkgconfig
 , qttools
-, qtsvg
-, qtx11extras
 , wrapQtAppsHook
 , libraw
 , libexif
@@ -20,14 +19,28 @@
 
 stdenv.mkDerivation rec {
   pname = "deepin-image-viewer";
-  version = "5.9.2";
+  version = "5.9.4";
 
   src = fetchFromGitHub {
     owner = "linuxdeepin";
     repo = pname;
     rev = version;
-    sha256 = "sha256-eQDC50+auNjIPVaW+NrNjGwJykp3jtqyxIT8iWQ1lRk=";
+    sha256 = "sha256-5A6K47NcMkvncZIF5CXeHYYZWEHQ4YDnPDQr2axCmaI=";
   };
+
+  patches = [
+    ./0001-fix-fhs-path-for-nix.patch
+    (fetchpatch {
+      name = "chore: use GNUInstallDirs in CmakeLists";
+      url = "https://github.com/linuxdeepin/deepin-image-viewer/commit/4a046e6207fea306e592fddc33c1285cf719a63d.patch";
+      sha256 = "sha256-aIgYmq6WDfCE+ZcD0GshxM+QmBWZGjh9MzZcTMrhBJ0=";
+    })
+  ];
+
+  postPatch = '' 
+    substituteInPlace src/com.deepin.ImageViewer.service \
+      --replace "/usr/bin/deepin-image-viewer" "$out/bin/deepin-image-viewer"
+  '';
 
   nativeBuildInputs = [
     cmake
@@ -41,48 +54,15 @@ stdenv.mkDerivation rec {
     gio-qt
     udisks2-qt5
     image-editor
-
-    qtsvg
-
     libraw
     libexif
   ];
 
-  cmakeFlags = [
-    "-DVERSION=${version}"
-    "-DCMAKE_INSTALL_PREFIX=${placeholder "out"}"
-  ];
+  cmakeFlags = [ "-DVERSION=${version}" ];
 
   qtWrapperArgs = [
     "--prefix QT_PLUGIN_PATH : ${qt5integration}/${qtbase.qtPluginPrefix}"
   ];
-
-  patches = [ ./0001-fix-fhs-path-for-nix.patch ];
-
-  fixInstallPatch = ''
-    substituteInPlace src/CMakeLists.txt \
-      --replace "set(PREFIX  /usr)" "set(PREFIX  $out)" \
-      --replace "/usr/share/applications" "$out/share/applications" \
-      --replace "/usr/share/deepin-image-viewer/icons" "$out/share/deepin-image-viewer/icons" \
-      --replace "/usr/share/deepin-manual/manual-assets/application/" "$out/share/deepin-manual/manual-assets/application/" \
-      --replace "/usr/share/icons/hicolor/scalable/apps" "$out/share/icons/hicolor/scalable/apps" \
-      --replace "/usr/share/dbus-1/services" "$out/share/dbus-1/services"
-  '';
-
-  fixCodePatch = '' 
-    substituteInPlace src/src/module/view/homepagewidget.cpp \
-      --replace "\"../libimageviewer/image-viewer_global.h\"" "\"libimageviewer/image-viewer_global.h\"" \
-      --replace "\"../libimageviewer/imageviewer.h\"" "\"libimageviewer/imageviewer.h\""
-    
-    substituteInPlace src/src/mainwindow/mainwindow.cpp \
-      --replace "\"../libimageviewer/imageviewer.h\"" "\"libimageviewer/imageviewer.h\"" \
-      --replace "\"../libimageviewer/imageengine.h\"" "\"libimageviewer/imageengine.h\""
-    
-    substituteInPlace src/com.deepin.ImageViewer.service \
-      --replace "/usr/bin/deepin-image-viewer" "$out/bin/deepin-image-viewer"
-  '';
-
-  postPatch = fixInstallPatch + fixCodePatch;
 
   meta = with lib; {
     description = "An image viewing tool with fashion interface and smooth performance";
