@@ -85,8 +85,6 @@ in stdenv.mkDerivation rec {
     "-DVERSION=${version}" 
   ];
 
-  NIX_CFLAGS_COMPILE = "-I${dde-dock.dev}/include/dde-dock";
-
   qtWrapperArgs = [
     "--prefix QT_PLUGIN_PATH : ${qt5integration}/${qtbase.qtPluginPrefix}"
   ];

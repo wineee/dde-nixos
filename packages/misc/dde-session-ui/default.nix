@@ -112,8 +112,6 @@ stdenv.mkDerivation rec {
     gtest
   ];
 
-  NIX_CFLAGS_COMPILE = "-I${dde-dock.dev}/include/dde-dock";
-
   qtWrapperArgs = [
     "--prefix QT_PLUGIN_PATH : ${qt5integration}/${qtbase.qtPluginPrefix}"
   ];
