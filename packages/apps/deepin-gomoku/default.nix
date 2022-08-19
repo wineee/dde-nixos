@@ -1,6 +1,7 @@
 { stdenv
 , lib
 , fetchFromGitHub
+, fetchpatch
 , dtk
 , qt5integration
 , qt5platform-plugins
@@ -25,6 +26,14 @@ stdenv.mkDerivation rec {
     sha256 = "sha256-/GxmEk3F97N2ngvvERxPjKEjXqFmMVb7kXP6KFY768Q=";
   };
 
+  patches = [
+    (fetchpatch {
+      name = "chore: use GNUInstallDirs in CmakeLists";
+      url = "https://github.com/linuxdeepin/deepin-gomoku/commit/86656382d9ab646a994a4336a6e4c0a8c8e27f68.patch";
+      sha256 = "sha256-pOOuBC9kxz09XsssnAsi+xh6Z8ldkvNzFks1IhfXsIw=";
+    })
+  ];
+
   nativeBuildInputs = [
     cmake
     qttools
@@ -45,14 +54,6 @@ stdenv.mkDerivation rec {
   qtWrapperArgs = [
     "--prefix QT_PLUGIN_PATH : ${qt5integration}/${qtbase.qtPluginPrefix}"
   ];
-
-  postPatch = ''
-    substituteInPlace CMakeLists.txt \
-      --replace "set(CMAKE_INSTALL_PREFIX /usr)" "set(CMAKE_INSTALL_PREFIX $out)"
-    substituteInPlace gomoku/CMakeLists.txt \
-      --replace "set(CMAKE_INSTALL_PREFIX /usr)" "set(CMAKE_INSTALL_PREFIX $out)" \
-      --replace "/usr/share/deepin-manual/manual-assets/application/" "$out/share/deepin-manual/manual-assets/application/"
-  '';
 
   meta = with lib; {
     description = "Gomoku is an easy and funny chess game that is suitable for all ages";
