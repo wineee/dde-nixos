@@ -1,5 +1,6 @@
 { stdenv
 , lib
+, fetchpatch
 , fetchFromGitHub
 , dtk
 , qt5integration
@@ -25,6 +26,14 @@ stdenv.mkDerivation rec {
     sha256 = "sha256-79HohkY4EyeGewEsdz/n4cuWODKem/tnMPt/W6Cy/Lo=";
   };
 
+  patches = [
+    (fetchpatch {
+      name = "chore: use GNUInstallDirs in CmakeLists";
+      url = "https://github.com/linuxdeepin/deepin-lianliankan/commit/5a1b28b402dd25233136aa9728d822edf2d7c6b3.patch";
+      sha256 = "sha256-JMeS1wClRTqMJDKFC2RxEfK0ceHQDvzz4mCs4PGvjWo=";
+    })
+  ];
+
   nativeBuildInputs = [
     cmake
     qttools
@@ -43,12 +52,6 @@ stdenv.mkDerivation rec {
   qtWrapperArgs = [
     "--prefix QT_PLUGIN_PATH : ${qt5integration}/${qtbase.qtPluginPrefix}"
   ];
-
-  postPatch = ''
-    substituteInPlace src/CMakeLists.txt \
-      --replace "set(CMAKE_INSTALL_PREFIX /usr)" "set(CMAKE_INSTALL_PREFIX $out)" \
-      --replace "/usr/share/deepin-manual/manual-assets/application/" "$out/share/deepin-manual/manual-assets/application/"
-  '';
 
   meta = with lib; {
     description = "Lianliankan is an easy-to-play puzzle game with cute interface and countdown timer";
