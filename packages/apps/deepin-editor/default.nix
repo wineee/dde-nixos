@@ -21,31 +21,22 @@
 
 stdenv.mkDerivation rec {
   pname = "deepin-editor";
-  version = "5.10.23";
+  version = "5.10.35";
 
   src = fetchFromGitHub {
     owner = "linuxdeepin";
     repo = pname;
     rev = version;
-    sha256 = "sha256-6K9yQhYQrbqdb5HQeszdvYPi00PMndEaaMOza5griFQ=";
+    sha256 = "sha256-X3tsmtqMUSpYQZqCmgtCLCSGwzSmCZagF7TUWQYJsqU=";
   };
-
 
   patches = [
     (fetchpatch {
-      name = "fix_broken_KF5_include_path";
-      url = "https://github.com/linuxdeepin/deepin-editor/commit/c4b2e93f7cf0146833d2b78b516dc25f3976763f.patch";
-      sha256 = "sha256-oATccrlQBcyL6nz3ioY/9XEuHXdMqZfegFXGSowQINs=";
+      name = "chore: use GNUInstallDirs in CmakeLists";
+      url = "https://github.com/linuxdeepin/deepin-editor/commit/7f4314f386a3c8f5cdea3618591b8eb027d034c3.patch";
+      sha256 = "sha256-/aSBa2nILc/YrFchUyhBHHs2c7Mv6N1juwD5Sdc39Uo=";
     })
   ];
-
-  postPatch = ''
-    substituteInPlace CMakeLists.txt \
-      --replace "add_subdirectory(tests)" ""
-    substituteInPlace src/CMakeLists.txt \
-      --replace "set(CMAKE_INSTALL_PREFIX /usr)" "set(CMAKE_INSTALL_PREFIX $out)" \
-      --replace "/usr/share/deepin-manual/manual-assets/application/)" "$out/share/deepin-manual/manual-assets/application/)"
-  '';
 
   nativeBuildInputs = [
     cmake
