@@ -30,7 +30,7 @@ stdenv.mkDerivation rec {
 
   meta = with lib; {
     description = "A libisoburn wrapper class for Qt";
-    homepage = "https://github.com/linuxdeepin/libisoburn";
+    homepage = "https://github.com/linuxdeepin/disomaster";
     license = licenses.lgpl3Plus;
     platforms = platforms.linux;
   };
