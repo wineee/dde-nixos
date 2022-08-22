@@ -33,6 +33,7 @@
           exa
         ] ++ (with dde-nixos.packages.${super.system}; [
           deepin-draw
+          deepin-voice-note
         ]);
         services.xserver = {
           enable = true;
@@ -44,7 +45,6 @@
             };
           };
           #desktopManager.plasma5.enable = true;
-          #desktopManager.xfce.enable = true;
 
           desktopManager.deepin = {
             enable = true;
