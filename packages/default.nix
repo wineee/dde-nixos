@@ -46,7 +46,6 @@ let
     dtkgui = callPackage ./library/dtkgui { };
     dtkwidget = callPackage ./library/dtkwidget { };
     disomaster = callPackage ./library/disomaster { };
-    qtmpris = callPackage ./library/qtmpris { };
     qtdbusextended = callPackage ./library/qtdbusextended { };
     image-editor = callPackage ./library/image-editor { };
     gio-qt = callPackage ./library/gio-qt { };
