@@ -38,6 +38,10 @@ stdenv.mkDerivation rec {
     })
   ];
 
+  postPatch = ''
+    substituteInPlace src/common/utils.h --replace "/usr/share" "$out/share"
+  '';
+
   nativeBuildInputs = [
     cmake
     pkgconfig
