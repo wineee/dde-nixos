@@ -1,6 +1,7 @@
 { stdenv
 , lib
 , fetchFromGitHub
+, fetchpatch
 , linkFarm
 , getPatchFrom
 , dtk
@@ -26,10 +27,6 @@
 }:
 let
   patchList = {
-    ### INSTALL
-    "CMakeLists.txt" = [ [ "/etc" "$out/etc" ] ];
-    "cmake/DdeSessionShellConfig.cmake" = [ ];
-
     ### MISC
     "files/com.deepin.dde.shutdownFront.service" = [
       [ "/usr/bin/dbus-send" "${dbus}/bin/dbus-send" ]
@@ -148,6 +145,14 @@ stdenv.mkDerivation rec {
     rev = "43a280f62f4991130e929ad275ac71d5d4f4671b";
     sha256 = "sha256-d8a2dEj9Ec5Q5FCjbThUh8r2KWBUJz4+tDIAb8t/3zI=";
   };
+
+  patches = [
+    (fetchpatch {
+      name = "chore: use GNUInstallDirs in CmakeLists";
+      url = "https://github.com/linuxdeepin/dde-session-shell/commit/45cc7762cc2952425dc0cecdd0b90ad525f22a74.patch";
+      sha256 = "sha256-60QdBcjXn4/GLZMnYsi0nUkWcohFKbPGdPTafNXbIUE=";
+    })
+  ];
 
   postPatch = getPatchFrom patchList + ''
     patchShebangs files/deepin-greeter
