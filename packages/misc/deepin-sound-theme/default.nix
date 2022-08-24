@@ -1,9 +1,9 @@
-{ stdenv
+{ stdenvNoCC
 , lib
 , fetchFromGitHub
 }:
 
-stdenv.mkDerivation rec {
+stdenvNoCC.mkDerivation rec {
   pname = "deepin-sound-theme";
   version = "15.10.6";
 
@@ -14,9 +14,7 @@ stdenv.mkDerivation rec {
     sha256 = "sha256-BvG/ygZfM6sDuDSzAqwCzDXGT/bbA6Srlpg3br117OU=";
   };
 
-  installPhase = ''
-    make install DESTDIR="$out" PREFIX="/"
-  '';
+  makeFlags = [ "PREFIX=${placeholder "out"}" ];
 
   meta = with lib; {
     description = "The freedesktop sound theme for Deepin";
