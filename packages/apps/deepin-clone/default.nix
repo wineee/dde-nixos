@@ -35,18 +35,14 @@ stdenv.mkDerivation rec {
     dde-file-manager
   ];
 
-  cmakeFlags = [ "-DVERSION=${version}" ];
+  cmakeFlags = [ 
+    "-DVERSION=${version}"
+    "-DDISABLE_DFM_PLUGIN=YES"
+  ];
 
   qtWrapperArgs = [
     "--prefix QT_PLUGIN_PATH : ${qt5integration}/${qtbase.qtPluginPrefix}"
   ];
-
-  fixInstallPatch = ''
-    #  substituteInPlace CMakeLists.txt \
-    #    --replace "set(PREFIX /usr)" "set(PREFIX $out)"
-  '';
-
-  postPatch = fixInstallPatch;
 
   meta = with lib; {
     description = "Disk and partition backup/restore tool";
