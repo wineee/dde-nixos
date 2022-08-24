@@ -17,9 +17,7 @@ stdenvNoCC.mkDerivation rec {
     sha256 = "sha256-UC3PbqolcCbVrIEDqMovfJ4oeofMUGJag1A6u7X3Ml8=";
   };
 
-  postPatch = ''
-    substituteInPlace Makefile --replace "PREFIX = /usr" "PREFIX = $out"
-  '';
+  makeFlags = [ "PREFIX=${placeholder "out"}" ];
 
   nativeBuildInputs = [ gtk3 xcursorgen ];
 
