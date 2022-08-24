@@ -1,6 +1,7 @@
 { stdenv
 , lib
 , fetchFromGitHub
+, fetchpatch
 , dtk
 , qt5integration
 , qt5platform-plugins
@@ -16,26 +17,26 @@
 
 stdenv.mkDerivation rec {
   pname = "dde-calendar";
-  version = "5.8.29";
+  version = "5.8.30";
 
   src = fetchFromGitHub {
     owner = "linuxdeepin";
     repo = pname;
     rev = version;
-    sha256 = "sha256-2J8AvXugOhcsipMvkqJ0SsgIQcXqLe2KgJIDNQC3dzI=";
+    sha256 = "sha256-8/UXq9W3Gb1Lg/nOji6zcHJts6lgY2uDxvrBxQs3Zio=";
   };
+
+  patches = [
+    (fetchpatch {
+      name = "chore: use GNUInstallDirs in CmakeLists";
+      url = "https://github.com/linuxdeepin/dde-calendar/commit/b9d9555d90a36318eeee62ece49250b4bf8acd10.patch";
+      sha256 = "sha256-pvgxZPczs/lkwNjysNuVu+1AY69VZlxOn7hR9A02/3M=";
+    })
+  ];
 
   fixInstallPatch = ''
     substituteInPlace CMakeLists.txt \
-      --replace "set(CMAKE_INSTALL_PREFIX /usr)" "set(CMAKE_INSTALL_PREFIX /)" \
       --replace "ADD_SUBDIRECTORY(tests)" ""
-
-    substituteInPlace calendar-client/CMakeLists.txt \
-      --replace "set(CMAKE_INSTALL_PREFIX /usr)" "set(CMAKE_INSTALL_PREFIX /)" \
-      --replace "/usr/share/deepin-manual/manual-assets/application/)" "share/deepin-manual/manual-assets/application/)"
-
-    substituteInPlace calendar-service/CMakeLists.txt \
-      --replace "set(CMAKE_INSTALL_PREFIX /usr)" "set(CMAKE_INSTALL_PREFIX /)"
   '';
 
   fixServicePath = ''
@@ -78,8 +79,6 @@ stdenv.mkDerivation rec {
 
   cmakeFlags = [ "-DVERSION=${version}" ];
 
-  installFlags = [ "DESTDIR=$(out)" ];
-
   qtWrapperArgs = [
     "--prefix QT_PLUGIN_PATH : ${qt5integration}/${qtbase.qtPluginPrefix}"
   ];
@@ -90,7 +89,7 @@ stdenv.mkDerivation rec {
 
   meta = with lib; {
     description = "Calendar for Deepin Desktop Environment";
-    homepage = "https://github.com/linuxdeepin/deepin-calendar";
+    homepage = "https://github.com/linuxdeepin/dde-calendar";
     license = licenses.gpl3Plus;
     platforms = platforms.linux;
   };
