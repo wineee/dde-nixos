@@ -131,8 +131,6 @@ buildGoPackage rec {
      done
   '';
 
-  GOFLAGS = [ "-buildmode=pie" "-trimpath" "-mod=readonly" "-modcacherw" ];
-
   buildPhase = ''
     runHook preBuild
     GOPATH="$GOPATH:${go-dbus-factory}/share/gocode"
