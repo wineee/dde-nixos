@@ -1,6 +1,7 @@
 { stdenv
 , lib
 , fetchFromGitHub
+, fetchpatch
 , getPatchFrom
 , dtk
 , cmake
@@ -25,6 +26,14 @@ stdenv.mkDerivation rec {
     rev = version;
     sha256 = "sha256-t6/Ws/Q8DO0zBzrUr/liD61VkxbOv4W4x6VgMWr+Ozk=";
   };
+
+  # patches = [
+  #   (fetchpatch {
+  #     name = "chore: use GNUInstallDirs in CmakeLists";
+  #     url = "https://github.com/linuxdeepin/deepin-turbo/commit/f39073668e54e06264ee9570d912ce6fc0082e31.patch";
+  #     sha256 = "sha256-vEQUborOhHXxWgmaXeOcCop9RkzKFbXXfNOKiSxMPSs=";
+  #   })
+  # ];
 
   nativeBuildInputs = [
     cmake
