@@ -255,7 +255,7 @@ stdenv.mkDerivation rec {
   ];
 
   enableParallelBuilding = true;
-  outputs = [ "out" "dev" ];
+  #outputs = [ "out" "dev" ];
 
   qmakeFlags = [
     "filemanager.pro"
