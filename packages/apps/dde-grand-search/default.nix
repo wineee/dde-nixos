@@ -1,6 +1,7 @@
 { stdenv
 , lib
 , getPatchFrom
+, fetchpatch
 , fetchFromGitHub
 , dtk
 , dde-qt-dbus-factory
@@ -25,13 +26,6 @@
 }:
 let
   patchList = {
-    "src/grand-search-daemon/CMakeLists.txt" = [
-        [ "/etc/xdg/autostart" "$out/etc/xdg/autostart" ]
-    ];
-    "src/grand-search-dock-plugin/CMakeLists.txt" = [ ];
-    "src/grand-search/CMakeLists.txt" = [ ];
-    "CMakeLists.txt" = [ ];
-
     "src/grand-search-daemon/data/dde-grand-search-daemon.desktop" = [ ];
     "src/grand-search-daemon/data/com.deepin.dde.daemon.GrandSearch.service" = [
         [ "/usr/bin/dbus-send" "${dbus}/bin/dbus-send" ]
@@ -48,7 +42,7 @@ let
   }; 
 in stdenv.mkDerivation rec {
   pname = "dde-grand-search";
-  version = "5.3.2";
+  version = "5.3.2+";
 
   src = fetchFromGitHub {
     owner = "linuxdeepin";
@@ -56,6 +50,14 @@ in stdenv.mkDerivation rec {
     rev = "9fcde3ea9b152233d19a750e14d1c2681676b6c0";
     sha256 = "sha256-pXMTsOFar0nJDAlzjOkkO+D/XpEmhf8DYA37cR0XKbU=";
   };
+
+  patches = [
+    (fetchpatch {
+      name = "chore: use GNUInstallDirs in CmakeLists";
+      url = "https://github.com/linuxdeepin/dde-grand-search/commit/4e1cc361554774b74d52d819cc42bbd89a21567c.patch";
+      sha256 = "sha256-ZBqbYAYf6XenR++FDbyUg0bKDThOD9aWzT9JxDZjv5g=";
+    })
+  ];
 
   postPatch = getPatchFrom patchList;
 
