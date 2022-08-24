@@ -64,13 +64,13 @@ let
 in
 stdenv.mkDerivation rec {
   pname = "deepin-system-monitor";
-  version = "5.9.25";
+  version = "5.9.25+";
 
   src = fetchFromGitHub {
     owner = "linuxdeepin";
     repo = pname;
-    rev = version;
-    sha256 = "sha256-11XEHVEMQp+BJ1wxq9/VCRz8voGuhIBO4kl+1E1WSSs=";
+    rev = "5296f81344b0cdf3eca52242c89970f91700b896";
+    sha256 = "sha256-lj01JMIr3ZjNS5zTsuqPIMQD8n5c/Hr2e0bbuJq2YB8=";
   };
 
   nativeBuildInputs = [
@@ -97,7 +97,6 @@ stdenv.mkDerivation rec {
 
   cmakeFlags = [
     "-DVERSION=${version}"
-    "-DCMAKE_INSTALL_PREFIX=${placeholder "out"}"
     "-DUSE_DEEPIN_WAYLAND=OFF"
   ];
 
@@ -107,9 +106,9 @@ stdenv.mkDerivation rec {
 
   patches = [
     (fetchpatch {
-      name = "Add_build_flag_to_disable_wayland_support_patch";
-      url = "https://github.com/linuxdeepin/deepin-system-monitor/pull/161/commits/7d0df4597f066fc785809a44c5fbc307a5c3fd66.patch";
-      sha256 = "sha256-GhVWUOy6nqoDXk+96AGaB0WUN3CAN47H0GWqQEtVchQ=";
+      name = "chore: use GNUInstallDirs in CmakeLists";
+      url = "https://github.com/linuxdeepin/deepin-system-monitor/commit/e687b1c35961e8cd664c6e4982bd2c49375090d7.patch";
+      sha256 = "sha256-iR0X56OTUY6O8a9as2vF9eBygrbvzYGFcpf407b7jp0=";
     })
   ];
 
@@ -117,14 +116,6 @@ stdenv.mkDerivation rec {
     substituteInPlace CMakeLists.txt \
       --replace "ADD_SUBDIRECTORY(deepin-system-monitor-plugin)" "" \
       --replace "ADD_SUBDIRECTORY(deepin-system-monitor-plugin-popup)" ""
-
-    substituteInPlace deepin-system-monitor-main/CMakeLists.txt \
-      --replace "/usr/share/deepin-manual/manual-assets/application/)" "$out/share/deepin-manual/manual-assets/application/)"
-      
-    substituteInPlace deepin-system-monitor-daemon/CMakeLists.txt \
-      --replace "/etc/xdg/autostart)" "$out/xdg/autostart)" \
-      --replace "/usr/share/dbus-1/services)" "$out/share/dbus-1/services)" \
-      --replace "\"/usr/share/deepin-system-monitor-daemon/translations\")" "$out/share/deepin-system-monitor-daemon/translations)"
   '';
 
   meta = with lib; {
