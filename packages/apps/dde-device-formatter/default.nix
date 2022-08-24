@@ -63,8 +63,8 @@ stdenv.mkDerivation rec {
   postPatch = getShebangsPatchFrom shebangsList + getPatchFrom patchList;
 
   meta = with lib; {
-    description = "Deepin desktop-environment - Launcher module";
-    homepage = "https://github.com/linuxdeepin/dde-launcher";
+    description = "A simple graphical interface for creating file system in a block device";
+    homepage = "https://github.com/linuxdeepin/dde-device-formatter";
     license = licenses.gpl3Plus;
     platforms = platforms.linux;
   };
