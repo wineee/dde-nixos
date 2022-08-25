@@ -1,6 +1,7 @@
 { stdenv
 , lib
 , fetchFromGitHub
+, fetchpatch
 , dtk
 , qt5integration
 , qt5platform-plugins
@@ -25,13 +26,13 @@
 
 stdenv.mkDerivation rec {
   pname = "deepin-music";
-  version = "6.2.16";
+  version = "6.2.18";
 
   src = fetchFromGitHub {
     owner = "linuxdeepin";
     repo = pname;
-    rev = "9c4c678f0241736b41acf501dbf0a3829e83a004";
-    sha256 = "sha256-DZ6feQnbd58H/5IBixrhWCpGmN9YJutP+T6Ne9Rc6qc=";
+    rev = version;
+    sha256 = "sha256-rPexPFZK0bnDNshzhKdGvuhNaVvZNPnB3WesKLfx7Gg=";
   };
 
   nativeBuildInputs = [
@@ -65,6 +66,14 @@ stdenv.mkDerivation rec {
     "-DVERSION=${version}"
   ];
 
+  patches = [
+    (fetchpatch {
+      name = "chore: use GNUInstallDirs in CmakeLists";
+      url = "https://github.com/linuxdeepin/deepin-music/commit/3762b6e1e7f8bb4be1ccf639ad270c8570e9933c.patch";
+      sha256 = "sha256-iVHQLPCig/VhIIJF6t4jebNWrEP6DDfLfqslkD7+KKQ=";
+    })
+  ];
+
   fixIncludePatch = ''
     substituteInPlace src/music-player/CMakeLists.txt \
       --replace "include_directories(/usr/include/vlc)" "include_directories(${libvlc}/include/vlc)" \
@@ -83,21 +92,12 @@ stdenv.mkDerivation rec {
       --replace 'libPath(libformate);'  '"${ffmpeg.out}/lib/libavformat.so";'
   '';
 
-  fixInstallPatch = ''
-    substituteInPlace src/libmusic-plugin/CMakeLists.txt \
-      --replace "/usr/lib/deepin-aiassistant/serivce-plugins)" "$out/lib/deepin-aiassistant/serivce-plugins)"
-
-    substituteInPlace src/music-player/CMakeLists.txt \
-      --replace "set(CMAKE_INSTALL_PREFIX /usr)" "set(CMAKE_INSTALL_PREFIX $out)" \
-      --replace "/usr/share/deepin-manual/manual-assets/application/)" "$out/share/deepin-manual/manual-assets/application/)"
-  '';
-
   fixDesktopPatch = ''
     substituteInPlace src/music-player/data/deepin-music.desktop \
       --replace "/usr/bin/deepin-music" "$out/bin/deepin-music"
   '';
 
-  postPatch = fixIncludePatch + fixLoadLibPatch + fixInstallPatch + fixDesktopPatch;
+  postPatch = fixIncludePatch + fixLoadLibPatch + fixDesktopPatch;
 
   meta = with lib; {
     description = "Awesome music player with brilliant and tweakful UI Deepin-UI based";
