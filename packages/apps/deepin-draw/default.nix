@@ -1,6 +1,7 @@
 { stdenv
 , lib
 , fetchFromGitHub
+, fetchpatch
 , dtk
 , qtsvg
 , qt5integration
@@ -14,30 +15,29 @@
 
 stdenv.mkDerivation rec {
   pname = "deepin-draw";
-  version = "5.11.2";
+  version = "5.11.4";
 
   src = fetchFromGitHub {
     owner = "linuxdeepin";
     repo = pname;
     rev = version;
-    sha256 = "sha256-oPbOnWwktR0FA9lJRXs7qxKRBABf5HymtMeI92ZHIdU";
+    sha256 = "sha256-49RQQ52HR5aqzeVEjGm9vQpTOxhY7I0X724x/Bboo90=";
   };
 
-  fixInstallPatch = ''
-    substituteInPlace CMakeLists.txt \
-      --replace "set(PREFIX /usr)" "set(PREFIX $out)"
-
-    substituteInPlace src/deepin-draw/CMakeLists.txt \
-      --replace "/usr/lib" "$out/lib" \
-      --replace "/usr/bin" "$out/bin"
-  '';
+  patches = [
+    (fetchpatch {
+      name = "chore: use GNUInstallDirs in CmakeLists";
+      url = "https://github.com/linuxdeepin/deepin-draw/commit/dac714fe603e1b77fc39952bfe6949852ee6c2d5.patch";
+      sha256 = "sha256-zajxmKkZJT1lcyvPv/PRPMxcstF69PB1tC50gYKDlWA=";
+    })
+  ];
 
   fixServicePatch = ''
     substituteInPlace com.deepin.Draw.service \
       --replace "/usr/bin/deepin-draw" "$out/bin/deepin-draw"
   '';
 
-  postPatch = fixInstallPatch + fixServicePatch;
+  postPatch = fixServicePatch;
 
   nativeBuildInputs = [
     cmake
@@ -57,8 +57,8 @@ stdenv.mkDerivation rec {
   #separateDebugInfo = true;
 
   meta = with lib; {
-    description = "An easy to use calculator for ordinary users";
-    homepage = "https://github.com/linuxdeepin/deepin-calculator";
+    description = "Lightweight drawing tool for users to freely draw and simply edit images";
+    homepage = "https://github.com/linuxdeepin/deepin-draw";
     license = licenses.gpl3Plus;
     platforms = platforms.linux;
   };
