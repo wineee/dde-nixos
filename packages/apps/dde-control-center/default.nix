@@ -1,6 +1,7 @@
 { stdenv
 , lib
 , fetchFromGitHub
+, fetchpatch
 , getPatchFrom
 , dtk
 , substituteAll
@@ -98,35 +99,29 @@ let
 in
 stdenv.mkDerivation rec {
   pname = "dde-control-center";
-  version = "unstable-2022-07-26";
+  version = "5.5.143";
 
   src = fetchFromGitHub {
     owner = "linuxdeepin";
     repo = pname;
-    rev = "2dbbe3e203191cd9ff3d79e11654492496bcbfff";
-    sha256 = "sha256-2do/iW+Olxmpi91xwPq+jykgJx6L78D6dUUzO8ieEeU=";
+    rev = version;
+    sha256 = "sha256-D5CsM/nIiLjH2EMgIfRodrcyb6xzJbWAHvtOnhUvLH8=";
   };
 
-  fixInstallPatch = ''
-    substituteInPlace src/frame/CMakeLists.txt \
-      --replace 'set(CMAKE_INSTALL_PREFIX /usr)' 'set(CMAKE_INSTALL_PREFIX $out)'
+  patches = [
+    (fetchpatch {
+      name = "chore: use GNUInstallDirs in CmakeLists";
+      url = "https://github.com/linuxdeepin/dde-control-center/commit/9e0dc3bf0abe1daa51d2bdf1866bd4b24f6b6728.patch";
+      sha256 = "sha256-+2XYLwDd8Cjx/6lutlzQUlenyzf19CevxtQOgDVsmDE=";
+    })
+    (fetchpatch {
+      name = "feat: use CMAKE_SYSTEM_PROCESSOR to check sw_64";
+      url = "https://github.com/linuxdeepin/dde-control-center/commit/5ff12b5e7f1f24272d889b7014a5b8431758c8ed.patch";
+      sha256 = "sha256-Jo2WTWfUF+tl8NzclERBT9NASX4emf8ToK7ESZctVnc=";
+    })
+  ];
 
-    substituteInPlace src/develop-tool/CMakeLists.txt \
-      --replace 'set(CMAKE_INSTALL_PREFIX /usr)' 'set(CMAKE_INSTALL_PREFIX $out)'
-
-    substituteInPlace abrecovery/CMakeLists.txt \
-      --replace 'set(CMAKE_INSTALL_PREFIX /usr)' 'set(CMAKE_INSTALL_PREFIX $out)' \
-      --replace '/usr/bin)' 'bin)' \
-      --replace '/etc/xdg/autostart)' 'etc/xdg/autostart)'
-
-    substituteInPlace src/reboot-reminder-dialog/CMakeLists.txt \
-      --replace 'set(CMAKE_INSTALL_PREFIX /usr)' 'set(CMAKE_INSTALL_PREFIX $out)'
-
-    substituteInPlace src/reset-password-dialog/CMakeLists.txt \
-      --replace 'set(CMAKE_INSTALL_PREFIX /usr)' 'set(CMAKE_INSTALL_PREFIX $out)'
-  '';
-
-  postPatch = fixInstallPatch + getPatchFrom patchList;
+  postPatch = getPatchFrom patchList;
 
   nativeBuildInputs = [
     cmake
@@ -169,8 +164,8 @@ stdenv.mkDerivation rec {
     "-DDISABLE_RECOVERY=YES"
     "-DDISABLE_DEVELOPER_MODE=YES"
     "-DDISABLE_CLOUD_SYNC=YES"
-    "-DCMAKE_INSTALL_LIBDIR=lib"
-    "-DINCLUDE_INSTALL_DIR=include"
+    #"-DCMAKE_INSTALL_LIBDIR=lib"
+    #"-DINCLUDE_INSTALL_DIR=include"
     #"-DDCMAKE_INSTALL_COMPONENT=false"
   ];
 

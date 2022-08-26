@@ -18,7 +18,7 @@
 
 buildGoPackage rec {
   pname = "deepin-pw-check";
-  version = "5.1.11";
+  version = "5.1.16";
 
   goPackagePath = "github.com/linuxdeepin/deepin-pw-check";
 
@@ -26,7 +26,7 @@ buildGoPackage rec {
     owner = "linuxdeepin";
     repo = pname;
     rev = version;
-    sha256 = "sha256-h+zW7uyTWep+nCbc4RvIgWddsqpO5ZbXvXDPiZ6z6gY=";
+    sha256 = "sha256-XIZsm0BYrkr4fRcfivvteFNNmhdoc6GawOGP5MeaeUQ=";
   };
 
   goDeps = ./deps.nix;
