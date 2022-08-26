@@ -22,13 +22,13 @@
 
 stdenv.mkDerivation rec {
   pname = "deepin-album";
-  version = "5.10.4";
+  version = "5.10.5";
 
   src = fetchFromGitHub {
     owner = "linuxdeepin";
     repo = pname;
     rev = version;
-    sha256 = "sha256-dexYchGo3znD/4q+Ja7e6mhckxwAgEP3ZDuemtPwiSo=";
+    sha256 = "sha256-4IJoz7JRaiVfarkUD/05nJAKNeDXxK9wXar5eR5qC0s=";
   };
 
   patches = [
