@@ -49,7 +49,9 @@ let
       --replace 'libPath("libgstpbutils-1.0.so")'     '"${gst_all_1.gst-plugins-base.out}/lib/libgstpbutils-1.0.so"'
 
   '' + lib.optionalString cudaSupport '' 
-  
+    substituteInPlace ${filePath} \
+      --replace 'libPath("libgpuinfo.so")'     '"${cudaPackages.cudatoolkit}/lib/libgpuinfo.so"'
+      
   '';
   ### TODO src/backends/mpv/mpv_proxy.cpp libgpuinfo.so
 
@@ -140,7 +142,6 @@ stdenv.mkDerivation rec {
 
   cmakeFlags = [
     "-DVERSION=${version}"
-    "-D_LIBMPR_=NO"
   ];
 
   preFixup = ''
