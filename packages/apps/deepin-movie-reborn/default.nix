@@ -106,14 +106,11 @@ stdenv.mkDerivation rec {
 
   buildInputs = [
     dtk
-    qtx11extras
-    qtmultimedia
     qtdbusextended
     qtmpris
     gsettings-qt
     elfutils.dev
     ffmpeg
-    ffmpegthumbnailer
     xorg.libXtst
     xorg.libXdmcp
     pcre.dev
@@ -129,6 +126,12 @@ stdenv.mkDerivation rec {
     libpulseaudio
     gst_all_1.gstreamer
   ] ++ lib.optional cudaSupport [ cudaPackages.cudatoolkit ];
+
+  propagatedBuildInputs = [
+    qtmultimedia
+    qtx11extras
+    ffmpegthumbnailer
+  ];
 
   qtWrapperArgs = [ 
     "--prefix QT_PLUGIN_PATH : ${qt5integration}/${qtbase.qtPluginPrefix}"
