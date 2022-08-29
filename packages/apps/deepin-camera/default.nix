@@ -74,10 +74,14 @@ stdenv.mkDerivation rec {
 
   patches = [
     ./0001-fix-libusb-import.patch
-    ./0002-CMakeLists-use-cmake-install-prefix.patch
+    (fetchpatch {
+      name = "chore: use GNUInstallDirs in CmakeLists";
+      url = "https://github.com/linuxdeepin/deepin-camera/commit/4679e5e00c7eb21eabf7c7bced0d0b0d196f0eba.patch";
+      sha256 = "sha256-5hn6oFgtLS19Fg/F2q7ExRFN6QVPV1/43XyB1yyjshg=";
+    })
     (fetchpatch {
       name = "fix_missing_include_in_windowstatethread_h";
-      url = "https://github.com/linuxdeepin/deepin-camera/commit/1a1e7d86e44933de46f9e62c1e42953c8c63f794.patch";
+      url = "https://github.com/linuxdeepin/deepin-camera/commit/9dfc1d18275510a0ed2c96cd4e07933989270ae7.patch";
       sha256 = "sha256-JGDaPAQciw/A1RG5Fc+ttDsa7XBlwAdQy85MRYWZA3o=";
     })
   ];
