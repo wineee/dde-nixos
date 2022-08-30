@@ -177,6 +177,8 @@
 
                   environment.systemPackages = with packages; [
                     qt5platform-plugins #TODO nixos/modules/config/qt5.nix
+                    dde-introduction
+                    dde-network-core
                     dde-kwin
                     deepin-terminal
                     deepin-album
