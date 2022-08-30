@@ -137,20 +137,25 @@ let
 in
 stdenv.mkDerivation rec {
   pname = "dde-session-shell";
-  version = "5.5.67";
+  version = "5.5.69+";
 
   src = fetchFromGitHub {
     owner = "linuxdeepin";
     repo = pname;
-    rev = version;
-    sha256 = "sha256-XOfDa9bfeuFf/iILSop9UoYkKmXlrbRuucKbzz4uZV0=";
+    rev = "1cd6f190eb9935d953e4bae0d83868c691e8dd9c";
+    sha256 = "sha256-s2T9H7ne0ivKku5o7lHEah+UfR8pmt3WASFYkYb73kA=";
   };
 
   patches = [
     (fetchpatch {
       name = "chore: use GNUInstallDirs in CmakeLists";
-      url = "https://github.com/linuxdeepin/dde-session-shell/commit/45cc7762cc2952425dc0cecdd0b90ad525f22a74.patch";
-      sha256 = "sha256-60QdBcjXn4/GLZMnYsi0nUkWcohFKbPGdPTafNXbIUE=";
+      url = "https://github.com/linuxdeepin/dde-session-shell/commit/1db2017f0f48ec6a6c26740826fb020711eb5a2d.patch";
+      sha256 = "sha256-iZQwnC2oDxhyw7iJaQHDDakG+OOr8mMZIrF9itG895w=";
+    })
+    (fetchpatch {
+      name = "feat: use configure_file set path in DdeSessionShellConfig.cmake";
+      url = "https://github.com/linuxdeepin/dde-session-shell/commit/8e906b22f7f879aa572f523437f17f768259dfce.patch";
+      sha256 = "sha256-vPNVa6Tz2SLkAb+YZ9YwPRBbEkHDEmwJ6DiEM5p4S9s=";
     })
   ];
 
