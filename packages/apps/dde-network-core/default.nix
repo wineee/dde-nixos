@@ -2,6 +2,7 @@
 , lib
 , getPatchFrom
 , fetchFromGitHub
+, fetchpatch
 , dtk
 , dde-qt-dbus-factory
 , dde-dock
@@ -9,6 +10,7 @@
 , dde-session-shell
 , qt5integration
 , qt5platform-plugins
+, gio-qt
 , cmake
 , qttools
 , pkgconfig
@@ -23,6 +25,7 @@
 , dbus
 , gtest
 , qtbase
+, breakpointHook
 }:
 let
   # FIXME: cant build 
@@ -36,9 +39,17 @@ in stdenv.mkDerivation rec {
   src = fetchFromGitHub {
     owner = "linuxdeepin";
     repo = pname;
-    rev = "a24e2a10fb8ef276667cfc06e63e28d0250029ab";
-    sha256 = "sha256-T23IC6wps+TUgqAppfuiwk2N7zWtpNr7aybwEft3z8A=";
+    rev = "2dd8c5c35644d48b2b007188b3746f64516720d3";
+    sha256 = "sha256-UmjDUax/PsCsqT5b2KImiYLyU/mLKTHhE2/8W49I9Tg=";
   };
+
+  patches = [
+    (fetchpatch {
+      name = "chore: use GNUInstallDirs in CmakeLists";
+      url = "https://github.com/linuxdeepin/dde-network-core/commit/ada23d3ff993316d832ffac755f62dd95829f9da.patch";
+      sha256 = "sha256-Xr1qlseCjsp81TxRKH0UjQiJg56RnY+0BDHL08rD91k=";
+    })
+  ];
 
   postPatch = getPatchFrom patchList;
 
@@ -47,6 +58,7 @@ in stdenv.mkDerivation rec {
     qttools
     pkgconfig
     wrapQtAppsHook
+    breakpointHook
   ];
 
   buildInputs = [ 
@@ -56,6 +68,7 @@ in stdenv.mkDerivation rec {
     dde-session-shell
     dde-qt-dbus-factory
     gsettings-qt
+    gio-qt
     networkmanager-qt.dev
     glib.dev
     pcre
@@ -67,9 +80,9 @@ in stdenv.mkDerivation rec {
 
   #NIX_CFLAGS_COMPILE = [ "-I${glib.dev}/include/glib-2.0" ];
 
-  enableParallelBuilding = false;
+  enableParallelBuilding = true;
   cmakeFlags = [ 
-    "-DVERSION=${version}" 
+    "-DVERSION=${version}"
   ];
 
   qtWrapperArgs = [
