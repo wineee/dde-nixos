@@ -9,7 +9,6 @@
 , cmake
 , qttools
 , qtx11extras
-, kwayland
 , kwindowsystem
 , pkgconfig
 , dde-qt-dbus-factory
@@ -26,8 +25,8 @@ stdenv.mkDerivation rec {
   src = fetchFromGitHub {
     owner = "wineee"; #"SeptemberHX";
     repo = pname;
-    rev = "b1bc618e7629702637e539c7b2c1c0f479095c48";
-    sha256 = "sha256-BAlspeiZFOn9N2gyHNnAezPqE2/ukDxQSU3pS2jSXBQ=";
+    rev = "23956b7960017e66fcd85630cc6f145589007eac";
+    sha256 = "sha256-tFtNc/dJv1hVc4FDwm1rBDHcIkCtES0/jZisrrwDSls=";
   };
 
   nativeBuildInputs = [
@@ -43,9 +42,8 @@ stdenv.mkDerivation rec {
     qtx11extras
     kwindowsystem
     dde-qt-dbus-factory
-    kwayland
     xorg.libXdmcp
-    xdotool #
+    xdotool
   ];
 
   qtWrapperArgs = [
@@ -54,7 +52,6 @@ stdenv.mkDerivation rec {
 
   cmakeFlags = [
     "-DVERSION=${version}"
-    #"-DUSE_TEST=OFF"
   ];
 
 #   fixPluginLoadPatch = ''
