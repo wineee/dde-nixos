@@ -119,6 +119,7 @@ let
     deepin-lianliankan = callPackage ./apps/deepin-lianliankan { };
     dde-grand-search = callPackage ./apps/dde-grand-search { };
     dde-network-core = callPackage ./apps/dde-network-core { };
+    dde-top-panel = callPackage ./apps/dde-top-panel { };
   };
 in
 makeScope newScope packages
