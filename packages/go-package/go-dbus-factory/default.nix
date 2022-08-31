@@ -7,20 +7,20 @@
 
 stdenv.mkDerivation rec {
   pname = "go-dbus-factory";
-  version = "1.10.20";
+  version = "5.10.22";
 
   src = fetchFromGitHub {
     owner = "linuxdeepin";
     repo = pname;
     rev = version;
-    sha256 = "sha256-gqf3L/ndYNFMHf+ejgSskTXyAmiEg1ysHi8alM8oU0E=";
+    sha256 = "sha256-9hkO4lYh1mI72yzCtdYvgCPjRsi7EJyWJfdVnglD27s=";
   };
 
   makeFlags = [ "PREFIX=${placeholder "out"}" ];
 
   meta = with lib; {
-    description = "a library containing many useful go routines for things such as glib, gettext, archive, graphic, etc";
-    homepage = "https://github.com/linuxdeepin/dde-api";
+    description = "Generate go binding of D-Bus interfaces";
+    homepage = "https://github.com/linuxdeepin/go-dbus-factory";
     license = licenses.gpl3Plus;
     platforms = platforms.linux;
   };
