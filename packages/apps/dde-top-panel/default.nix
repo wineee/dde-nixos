@@ -23,10 +23,10 @@ stdenv.mkDerivation rec {
   version = "unstable-2022-08-30";
 
   src = fetchFromGitHub {
-    owner = "wineee"; #"SeptemberHX";
+    owner = "SeptemberHX";
     repo = pname;
-    rev = "23956b7960017e66fcd85630cc6f145589007eac";
-    sha256 = "sha256-tFtNc/dJv1hVc4FDwm1rBDHcIkCtES0/jZisrrwDSls=";
+    rev = "5d51ae46bce1bd3d2cf175879eac06426ece94b9";
+    sha256 = "sha256-/Oi+t/rFW+1D+++0ChOMBW9zTOec8RLZMMIJnC15DU0=";
   };
 
   nativeBuildInputs = [
