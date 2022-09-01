@@ -26,13 +26,13 @@
 
 stdenv.mkDerivation rec {
   pname = "deepin-music";
-  version = "6.2.18";
+  version = "6.2.19";
 
   src = fetchFromGitHub {
     owner = "linuxdeepin";
     repo = pname;
     rev = version;
-    sha256 = "sha256-rPexPFZK0bnDNshzhKdGvuhNaVvZNPnB3WesKLfx7Gg=";
+    sha256 = "sha256-d2vlOfxWWgtYi7DI2hMrr6JjrJyKhA5pXDBK2PjLhRQ=";
   };
 
   nativeBuildInputs = [
@@ -80,24 +80,12 @@ stdenv.mkDerivation rec {
       --replace "include_directories(/usr/include/vlc/plugins)" "include_directories(${libvlc}/include/vlc/plugins)"
   '';
 
-  fixLoadLibPatch = ''
-    substituteInPlace src/music-player/core/vlc/vlcdynamicinstance.cpp \
-      --replace 'libPath(libvlccore);'  '"${libvlc}/lib/libvlccore.so";' \
-      --replace 'libPath(libvlc);'      '"${libvlc}/lib/libvlc.so";' \
-      --replace 'libPath(libcodec);'    '"${ffmpeg.out}/lib/libavcodec.so";' \
-      --replace 'libPath(libformate);'  '"${ffmpeg.out}/lib/libavformat.so";'
-
-    substituteInPlace src/libdmusic/ffmpegdynamicinstance.cpp \
-      --replace 'libPath(libcodec);'    '"${ffmpeg.out}/lib/libavcodec.so";' \
-      --replace 'libPath(libformate);'  '"${ffmpeg.out}/lib/libavformat.so";'
-  '';
-
   fixDesktopPatch = ''
     substituteInPlace src/music-player/data/deepin-music.desktop \
       --replace "/usr/bin/deepin-music" "$out/bin/deepin-music"
   '';
 
-  postPatch = fixIncludePatch + fixLoadLibPatch + fixDesktopPatch;
+  postPatch = fixIncludePatch + fixDesktopPatch;
 
   meta = with lib; {
     description = "Awesome music player with brilliant and tweakful UI Deepin-UI based";
