@@ -22,13 +22,13 @@
 
 stdenv.mkDerivation rec {
   pname = "deepin-terminal";
-  version = "5.4.33";
+  version = "5.4.34";
 
   src = fetchFromGitHub {
     owner = "linuxdeepin";
     repo = pname;
     rev = version;
-    sha256 = "sha256-aGiKvGVtQM639JDKU4+bEOKqtld/X1Z2+Na0R+YtPzk=";
+    sha256 = "sha256-CpI7dyQwrYOYzqVZ6aa+/OAUC3xRyY4ZwzH1mqURTfY=";
   };
 
   patches = [
