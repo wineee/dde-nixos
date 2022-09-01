@@ -63,37 +63,14 @@ let
 in
 stdenv.mkDerivation rec {
   pname = "dde-dock";
-  version = "5.5.64";
+  version = "5.5.67";
 
   src = fetchFromGitHub {
     owner = "linuxdeepin";
     repo = pname;
     rev = version;
-    sha256 = "sha256-80yMfCCHuaB8daKf1B7pbQxKBRAXD3zTdlsoCSlh3tg=";
+    sha256 = "sha256-LlviZxdG24jGkiyPOUVVLR86cU686pdn5pAsznpXRqA=";
   };
-
-  patches = [
-     (fetchpatch {
-      name = "chore: use GNUInstallDirs in CmakeLists";
-      url = "https://github.com/linuxdeepin/dde-dock/commit/1e50c56540b607b7bbe2d1587e7d2de6eae4fc58.patch";
-      sha256 = "sha256-xCKePyvToHJT/C9CgUICQSa1IbV9eGKShHEl78ACGyk=";
-    })
-    (fetchpatch {
-      name = "fix: use correct path in pkgconfig";
-      url = "https://github.com/linuxdeepin/dde-dock/commit/69a66fde944b939e2a9579451c1898def48df75c.patch";
-      sha256 = "sha256-d+V4U7aWKbw8kb6eBtxCrAnPltQwpETteI1hsc0SKAk=";
-    })
-    (fetchpatch {
-      name = "chore: check define of VERSION before set";
-      url = "https://github.com/linuxdeepin/dde-dock/commit/87ed99c1601d77f63b80a50a589d56cf9fcb72f6.patch";
-      sha256 = "sha256-w2cbohBLiuojPKexX8zwQcFWyBC/GVEnnLrA7kC6wb0=";
-    })
-    (fetchpatch {
-      name = "feat: use configure_file set path in DdeDockConfig";
-      url = "https://github.com/linuxdeepin/dde-dock/commit/89cd371e57ca5c4bf6d152b47b9159e507d82f8b.patch";
-      sha256 = "sha256-ML8Yyt5OkijjSJ5/o/1jS/1O8KjGuNJ+sM+d96xE5GQ=";
-    })
-  ];
 
   postPatch = getPatchFrom patchList;
 
