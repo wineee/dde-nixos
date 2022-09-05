@@ -44,7 +44,7 @@
               user = "test";
             };
           };
-          #desktopManager.plasma5.enable = true;
+          # desktopManager.plasma5.enable = true;
 
           desktopManager.deepin = {
             enable = true;
@@ -77,8 +77,7 @@
     packages.${system}.default = self.nixosConfigurations.vm.config.system.build.vm;
     apps.${system}.default = {
       type = "app";
-      program = "${self.packages.x86_64-linux.default}/bin/run-nixos-vm";
+      program = "${self.packages.${system}.default}/bin/run-nixos-vm";
     };
   };
 }
-
