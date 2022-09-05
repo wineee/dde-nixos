@@ -137,13 +137,13 @@ let
 in
 stdenv.mkDerivation rec {
   pname = "dde-session-shell";
-  version = "5.5.69+";
+  version = "5.5.71";
 
   src = fetchFromGitHub {
     owner = "linuxdeepin";
     repo = pname;
-    rev = "1cd6f190eb9935d953e4bae0d83868c691e8dd9c";
-    sha256 = "sha256-s2T9H7ne0ivKku5o7lHEah+UfR8pmt3WASFYkYb73kA=";
+    rev = version;
+    sha256 = "sha256-noWMbyzIX7rrcun7v8+Qd3OYLZsfd7LqVs+gvm801ro=";
   };
 
   patches = [
