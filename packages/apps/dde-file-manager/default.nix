@@ -1,8 +1,8 @@
 { stdenv
 , lib
 , fetchFromGitHub
-, getShebangsPatchFrom
 , getPatchFrom
+, fetchpatch
 , runtimeShell
 , dtk
 , qt5integration
@@ -47,18 +47,9 @@
 let
   patchList = {
     ### BUILD
-    "src/dde-file-manager/translate_ts2desktop.sh" = [
-      [ "/usr/bin/deepin-desktop-ts-convert" "${deepin-gettext-tools}/bin/deepin-desktop-ts-convert" ]
-    ];
     "src/dde-file-manager-lib/dbusinterface/dbusinterface.pri" = [
       [ "/usr/share/dbus-1/interfaces/com.deepin.anything.xml" "${deepin-anything.server}/share/dbus-1/interfaces/com.deepin.anything.xml" ]
     ];
-    "src/dde-desktop/translate_ts2desktop.sh" = [
-      [ "/usr/bin/deepin-desktop-ts-convert" "${deepin-gettext-tools}/bin/deepin-desktop-ts-convert" ]
-    ];
-
-    ## TODO dde-dock-plugins
-    #"src/dde-dock-plugins/dde-dock-plugins.pro" = [ [ "SUBDIRS += disk-mount" "" ] ];
 
     ### INSTALL
     "src/dde-file-manager/dde-file-manager.pro" = [
@@ -122,8 +113,6 @@ let
       #["/usr/share/applications"] ## TODO
       #["/usr/share/pixmaps"]
       [ "/usr/lib/deepin-daemon" "/run/current-system/sw/lib/deepin-daemon" ]
-      [ "/usr/bin/mountavfs" "mountavfs" ]
-      [ "/usr/bin/umountavfs" "umountavfs" ]
     ];
 
     "src/dde-file-manager-lib/vault/vaultglobaldefine.h" = [
@@ -164,9 +153,6 @@ let
     "src/dde-wallpaper-chooser/frame.cpp" = [
       [ "/usr/share/backgrounds/default_background.jpg" "${deepin-wallpapers}/share/wallpapers/deepin/desktop.jpg" ]
     ];
-    "src/dde-file-manager-daemon/usershare/usersharemanager.cpp" = [
-      [ "/usr/sbin/groupadd" "groupadd" ]
-    ];
     "src/dde-file-manager-daemon/vault/vaultbruteforceprevention.cpp" = [
       # {"/usr/bin/dde-file-manager", "/usr/bin/dde-desktop", "/usr/bin/dde-select-dialog-wayland", "/usr/bin/dde-select-dialog-x11"};
     ];
@@ -187,18 +173,6 @@ let
     # ln -sf /lib/systemd/system/smbd.service /etc/systemd/system/multi-user.target.wants/smbd.service
   };
 
-  shebangsList = [
-    "src/dde-file-manager-lib/generate_translations.sh"
-    "src/dde-file-manager-lib/update_translations.sh"
-    "src/dde-file-manager/translate_ts2desktop.sh"
-    "src/dde-file-manager/translate_desktop2ts.sh"
-    "src/dde-file-manager/generate_translations.sh"
-    "src/dde-file-manager-plugins/generate_translations.sh"
-    "src/dde-file-manager-plugins/update_translations.sh"
-    "src/dde-desktop/translate_generation.sh"
-    "src/dde-desktop/translate_ts2desktop.sh"
-  ];
-
 in
 stdenv.mkDerivation rec {
   pname = "dde-file-manager";
@@ -207,8 +181,8 @@ stdenv.mkDerivation rec {
   src = fetchFromGitHub {
     owner = "linuxdeepin";
     repo = pname;
-    rev = version;
-    sha256 = "sha256-/MK1oOvY7D4DOKMRO1h7cWjveKUtVBQOrW7r9l1wTcM=";
+    rev = "a00b3c9b8c983a93e11e57fccd246d3f61baadbb";
+    sha256 = "sha256-KRQ0Dp4E6txShji+OimuWcrX/IJFenBj/r7dhhOqXkw=";
   };
 
   nativeBuildInputs = [
@@ -220,8 +194,23 @@ stdenv.mkDerivation rec {
     wrapGAppsHook
   ];
   dontWrapGApps = true;
+  
+  patches = [
+    (fetchpatch {
+      name = "chore: avoid hardcode in Shebangs";
+      url = "https://github.com/linuxdeepin/dde-file-manager/commit/45f55e570a2ffb13881e5950a5e77694798cc4e4.patch";
+      sha256 = "sha256-bHVrKKjCCODyqCklZYxlH6e0etUFvxqicerq51nmjLU=";
+    })
+    (fetchpatch {
+      name = "chore: avoid hardcode";
+      url = "https://github.com/linuxdeepin/dde-file-manager/commit/f47acae84862fffeb5c6468c85a1672362261963.patch";
+      sha256 = "sha256-wjSeCtb8CdKAUiFUGzaXEPH5Y+oVmGjCjbaEUYMgktk=";
+    })
+  ];
 
-  postPatch = getShebangsPatchFrom shebangsList + getPatchFrom patchList;
+  postPatch = getPatchFrom patchList + ''
+    patchShebangs .
+  '';
 
   buildInputs = [
     dtk
