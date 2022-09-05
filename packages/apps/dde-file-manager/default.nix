@@ -78,10 +78,6 @@ let
     ];
 
     ### MISC
-    "src/dde-desktop/data/applications/dde-home.desktop" = [ ];
-    "src/dde-file-manager/dde-file-manager.desktop" = [ ];
-    "src/dde-file-manager/dde-open.desktop" = [ ];
-
     "src/dde-file-manager-daemon/dbusservice/dde-filemanager-daemon.service" = [ ];
     "src/dde-file-manager-daemon/dbusservice/com.deepin.filemanager.daemon.service" = [ ];
     "src/dde-desktop/dbus/filemanager1/org.freedesktop.FileManager.service" = [ ];
@@ -205,6 +201,11 @@ stdenv.mkDerivation rec {
       name = "chore: avoid hardcode";
       url = "https://github.com/linuxdeepin/dde-file-manager/commit/f47acae84862fffeb5c6468c85a1672362261963.patch";
       sha256 = "sha256-wjSeCtb8CdKAUiFUGzaXEPH5Y+oVmGjCjbaEUYMgktk=";
+    })
+    (fetchpatch {
+      name = "chore: avoid hardcode in desktop file";
+      url = "https://github.com/linuxdeepin/dde-file-manager/commit/5c720cabce0af873fea6744348148fb43bbfadb7.patch";
+      sha256 = "sha256-OjLFN5o7uKgnG0ZnFbbCgPSDpfDq3e3bfZPTbXV6rfQ=";
     })
   ];
 
