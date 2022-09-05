@@ -34,22 +34,14 @@ let
   }; 
 in stdenv.mkDerivation rec {
   pname = "dde-network-core";
-  version = "1.0.45+";
+  version = "1.0.45";
 
   src = fetchFromGitHub {
-    owner = "linuxdeepin";
+    owner = "wineee";
     repo = pname;
-    rev = "2dd8c5c35644d48b2b007188b3746f64516720d3";
-    sha256 = "sha256-UmjDUax/PsCsqT5b2KImiYLyU/mLKTHhE2/8W49I9Tg=";
+    rev = "882da45c0dfbd61909a7b655547e5ab369f8e873";
+    sha256 = "sha256-n/kZKAol+GHrcastECU2IyPlJp2oui38EVhxjrowEAw=";
   };
-
-  patches = [
-    (fetchpatch {
-      name = "chore: use GNUInstallDirs in CmakeLists";
-      url = "https://github.com/linuxdeepin/dde-network-core/commit/ada23d3ff993316d832ffac755f62dd95829f9da.patch";
-      sha256 = "sha256-Xr1qlseCjsp81TxRKH0UjQiJg56RnY+0BDHL08rD91k=";
-    })
-  ];
 
   postPatch = getPatchFrom patchList;
 
@@ -82,7 +74,7 @@ in stdenv.mkDerivation rec {
 
   enableParallelBuilding = true;
   cmakeFlags = [ 
-    "-DVERSION=${version}"
+    "-DPROJECT_VERSION=${version}"
   ];
 
   qtWrapperArgs = [
