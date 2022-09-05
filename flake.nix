@@ -9,7 +9,7 @@
   };
 
   outputs = { self, nixpkgs, flake-utils }:
-    flake-utils.lib.eachSystem [ "x86_64-linux" "aarch64-linux" ]
+    flake-utils.lib.eachSystem [ "x86_64-linux" "aarch64-linux" "i686-linux" ]
       (system:
         let
           pkgs = nixpkgs.legacyPackages.${system};
@@ -28,8 +28,7 @@
           devShells = builtins.mapAttrs (
             name: value: 
               pkgs.mkShell {
-                nativeBuildInputs = [ pkgs.qtcreator ]
-                        ++ deepinPkgs.${name}.nativeBuildInputs;
+                nativeBuildInputs = deepinPkgs.${name}.nativeBuildInputs;
                 buildInputs = deepinPkgs.${name}.buildInputs
                         ++ deepinPkgs.${name}.propagatedBuildInputs;
                 shellHook = ''
@@ -175,7 +174,12 @@
                   #environment.etc."polkit-1/localauthority/10-vendor.d/com.deepin.daemon.Fprintd.pkla" = "${packages.dde-daemon}/var/lib/polkit-1/localauthority/10-vendor.d/com.deepin.daemon.Fprintd.pkla";
                   #environment.etc."polkit-1/localauthority/10-vendor.d/com.deepin.daemon.Grub2.pkla" = "${packages.dde-daemon}/var/lib/polkit-1/localauthority/10-vendor.d/com.deepin.daemon.Grub2.pkla";
 
+                  services.xserver.desktopManager.deepin.extraGSettingsOverridePackages = with packages; [
+                    dde-top-panel
+                  ];
+
                   environment.systemPackages = with packages; [
+                    dde-top-panel
                     qt5platform-plugins #TODO nixos/modules/config/qt5.nix
                     dde-introduction
                     dde-network-core
