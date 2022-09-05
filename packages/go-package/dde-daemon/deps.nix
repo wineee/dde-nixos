@@ -224,4 +224,58 @@
       sha256 = "sha256-d/3rkxDeRTPveZblArKc61gB4LJVV08n7g0THieuhx8=";
     };
   }
+  {
+    goPackagePath = "google.golang.org/protobuf";
+    fetch = {
+      type = "git";
+      url = "https://github.com/protocolbuffers/protobuf-go";
+      rev = "v1.28.1";
+      sha256 = "sha256-7Cg7fByLR9jX3OSCqJfLw5PAHDQi/gopkjtkbobnyWM";
+    };
+  }
+  {
+    goPackagePath = "github.com/mdlayher/netlink";
+    fetch = {
+      type = "git";
+      url = "https://github.com/mdlayher/netlink";
+      rev = "v1.6.0";
+      sha256 = "sha256-3pVOXscdUVerFlRW9aGz7/5YL2OWFkvm8AJGSxygkEs=";
+    };
+  }
+  {
+    goPackagePath = "github.com/josharian/native";
+    fetch = {
+      type = "git";
+      url = "https://github.com/josharian/native";
+      rev = "a938fb150d47536d63d6bb2f0c4433091cb8c223";
+      sha256 = "sha256-KYeAFKKzRt+e7Zy0sp4VW65HQL90hF/wjXP3R5dXaww=";
+    };
+  }
+  {
+    goPackagePath = "github.com/mdlayher/socket";
+    fetch = {
+      type = "git";
+      url = "https://github.com/mdlayher/socket";
+      rev = "v0.2.3";
+      sha256 = "sha256-EDaSQ621SJ2OK2WycMtybuJ2KpaH86JHknqsiduuCtQ=";
+    };
+  }
+  {
+    goPackagePath = "golang.org/x/net";
+    fetch = {
+      type = "git";
+      url = "https://github.com/golang/net";
+      rev = "83b083e8dc8b4507e702ce59208711115b23ec25";
+      sha256 = "sha256-50A1EeE7HxKbnLBy1vdxtrbH+7d6/mnZA0cOwHJr5XA=";
+    };
+  }
+  {
+    goPackagePath = "golang.org/x/sync";
+    fetch = {
+      type = "git";
+      url = "https://github.com/golang/sync";
+      rev = "7fc1605a5dde7535a0fc1770ca44238629ff29ac";
+      sha256 = "sha256-5EOxO8FRdaLW9v/DhwBmWiT2G34A2ofxSCaC7ovvpb0=";
+    };
+  }
 ]

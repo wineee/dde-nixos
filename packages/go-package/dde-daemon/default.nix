@@ -40,6 +40,7 @@
 , dbus
 , getconf
 , utillinux
+, ddcutil
 }:
 let
   fix_sh = [ "/bin/sh" "${runtimeShell}" ];
@@ -302,7 +303,7 @@ let
 in
 buildGoPackage rec {
   pname = "dde-daemon";
-  version = "5.14.44";
+  version = "5.14.103";
 
   goPackagePath = "github.com/linuxdeepin/dde-daemon";
 
@@ -310,18 +311,18 @@ buildGoPackage rec {
     owner = "linuxdeepin";
     repo = pname;
     rev = version;
-    sha256 = "sha256-Enikmyt+CsBb00YwqxbA/id1n/PUYoZ7LykB74PToYc=";
+    sha256 = "sha256-GVfkkvgDT3yucnuAaMN0lN6noPs0HNp+JauHGDuzwgc=";
   };
 
   patches = [
-    ./remove-tc.patch
-    ./dde-daemon.patch
+    #./remove-tc.patch
+    #./dde-daemon.patch
   ];
 
-  rmUadpPatch = ''
-    rm -rf system/uadp
-    rm -rf session/uadpagent
-  '';
+  # rmUadpPatch = ''
+  #   rm -rf system/uadp
+  #   rm -rf session/uadpagent
+  # '';
 
   fixPathPatch = ''
     for file in misc/system-services/* misc/services/* misc/systemd/services/*
@@ -346,7 +347,7 @@ buildGoPackage rec {
       --replace "/etc/acpi/actions/deepin_lid.sh" "$out/etc/acpi/actions/deepin_lid.sh"
   '';
 
-  postPatch = rmUadpPatch + getShebangsPatchFrom shebangsList + fixPathPatch + getPatchFrom goCodePatchs;
+  postPatch = getShebangsPatchFrom shebangsList + fixPathPatch + getPatchFrom goCodePatchs;
 
   goDeps = ./deps.nix;
 
@@ -385,6 +386,7 @@ buildGoPackage rec {
     tzdata
     xkeyboard_config
     utillinux
+    ddcutil
   ];
 
   buildPhase = ''
