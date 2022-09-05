@@ -1,8 +1,8 @@
 { stdenv
 , lib
 , fetchFromGitHub
+, fetchpatch
 , getPatchFrom
-, getShebangsPatchFrom
 , dtk
 , deepin-gettext-tools
 , qt5integration
@@ -18,34 +18,40 @@
 }:
 let
   patchList = {
-    ## BUILD
-    "translate_ts2desktop.sh" = [
-      [ "/usr/bin/deepin-desktop-ts-convert" "${deepin-gettext-tools}/bin/deepin-desktop-ts-convert" ]
-    ];
     ## INSTALL
     "dde-device-formatter.pro" = [ ];
   };
-
-  shebangsList = [
-    "*.sh"
-  ];
 in
 stdenv.mkDerivation rec {
   pname = "dde-device-formatter";
-  version = "unstable-2022-06-27";
+  version = "unstable-2022-09-05";
 
   src = fetchFromGitHub {
     owner = "linuxdeepin";
     repo = pname;
-    rev = "b1232cca7a0f7ab24a352e78f96e5187d8ef1be5";
-    sha256 = "sha256-U67CsbgcTBBLas+KxQv+2bCc3m90GUNYm+a3YGLYbeg=";
+    rev = "9b8489cb2bb7c85bd62557d16a5eabc94100512e";
+    sha256 = "sha256-Mi48dSDCoKhr8CGt9z64/9d7+r9QSrPPICv+R5VDuaU=";
   };
+
+  patches = [
+    (fetchpatch {
+      name = "chore: don't use hardcode path";
+      url = "https://github.com/linuxdeepin/dde-device-formatter/commit/b836a498b8e783e0dff3820302957f15ee8416eb.patch";
+      sha256 = "sha256-i/VqJ6EmCyhE6weHKUB66bW6b51gLyssIAzb5li4aJM=";
+    })
+  ];
+  
+  postPatch = getPatchFrom patchList + ''
+    patchShebangs *.sh
+  '';
+
 
   nativeBuildInputs = [
     qmake
     qttools
     pkgconfig
     wrapQtAppsHook
+    deepin-gettext-tools
   ];
 
   buildInputs = [
@@ -59,8 +65,6 @@ stdenv.mkDerivation rec {
   qtWrapperArgs = [
     "--prefix QT_PLUGIN_PATH : ${qt5integration}/${qtbase.qtPluginPrefix}"
   ];
-
-  postPatch = getShebangsPatchFrom shebangsList + getPatchFrom patchList;
 
   meta = with lib; {
     description = "A simple graphical interface for creating file system in a block device";
