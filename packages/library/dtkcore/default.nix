@@ -1,8 +1,9 @@
 { stdenv
 , lib
 , fetchFromGitHub
+, fetchpatch
 , pkgconfig
-, qmake
+, cmake
 , gsettings-qt
 , gtest
 , wrapQtAppsHook
@@ -12,17 +13,25 @@
 
 stdenv.mkDerivation rec {
   pname = "dtkcore";
-  version = "5.5.33+";
+  version = "5.6.0.2+";
 
   src = fetchFromGitHub {
     owner = "linuxdeepin";
     repo = pname;
-    rev = "b2de0dd2e29057bca006a9c1f832ee230fb8bec8";
-    sha256 = "sha256-V02KNmBZ7dIDyZci/NpsDQpQwTF4XoRyFvPtG+zYXsM=";
+    rev = "e221e232fc36be183c0f234f0b2113bf65baa080";
+    sha256 = "sha256-brSluN0VKaI0U/D3B9dKNegiQQ8urfAvgp+RzV93rLM=";
   };
 
+  patches = [
+    (fetchpatch {
+      name = "chore: use DSG_PREFIX_PATH set PREFIX";
+      url = "https://github.com/linuxdeepin/dtkcore/commit/31f09e67b9d3c502b17247eadfdbd38bd32f97dd.patch";
+      sha256 = "sha256-1MVBq0yoBgFrBy2Iuh4YA0S/1QfgQysFiaNia+bNTik=";
+    })
+  ];
+
   nativeBuildInputs = [
-    qmake
+    cmake
     pkgconfig
     wrapQtAppsHook
   ];
@@ -34,19 +43,14 @@ stdenv.mkDerivation rec {
     dtkcommon
   ];
 
-  # DEFINES += PREFIX=\\\"$$INSTALL_PREFIX\\\"  path of dsg
   postPatch = ''
-    substituteInPlace src/filesystem/filesystem.pri \
-      --replace '$$INSTALL_PREFIX' "'/run/current-system/sw'"
-
     substituteInPlace src/dsysinfo.cpp \
       --replace "/usr/share/deepin/distribution.info" "/etc/distribution.info" \
-      --replace 'lshw.start("lshw"' 'lshw.start("${lshw}/bin/lshw"'
   '';
 
-  qmakeFlags = [
-    "LIB_INSTALL_DIR=${placeholder "out"}/lib"
-    "MKSPECS_INSTALL_DIR=${placeholder "out"}/mkspecs"
+  cmakeFlags = [
+    "-DBUILD_DOCS=OFF"
+    "-DDSG_PREFIX_PATH='/run/current-system/sw'"
   ];
 
   meta = with lib; {
