@@ -22,6 +22,8 @@ stdenv.mkDerivation rec {
 
   buildInputs = [ udisks ];
 
+  qmakeFlags = [ "VERSION=${version}" ];
+
   meta = with lib; {
     description = "UDisks2 D-Bus interfaces binding for Qt5";
     homepage = "https://github.com/linuxdeepin/udisks2-qt5";
