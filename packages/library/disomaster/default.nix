@@ -10,13 +10,13 @@
 
 stdenv.mkDerivation rec {
   pname = "disomaster";
-  version = "5.0.7";
+  version = "5.0.8";
 
   src = fetchFromGitHub {
     owner = "linuxdeepin";
     repo = pname;
     rev = version;
-    sha256 = "sha256-restwLBWza6VI87YlYHH69igrEWbe47DIsnGLcdlHJY=";
+    sha256 = "sha256-wN8mhddqqzYXkT6rRWsHVCWzaG2uRcF2iiFHlZx2LfY=";
   };
 
   nativeBuildInputs = [
