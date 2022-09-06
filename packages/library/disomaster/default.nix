@@ -28,6 +28,8 @@ stdenv.mkDerivation rec {
 
   buildInputs = [ libisoburn ];
 
+  qmakeFlags = [ "VERSION=${version}" ];
+
   meta = with lib; {
     description = "A libisoburn wrapper class for Qt";
     homepage = "https://github.com/linuxdeepin/disomaster";
