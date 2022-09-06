@@ -2,9 +2,8 @@
 , lib
 , fetchFromGitHub
 , pkgconfig
-, qmake
+, cmake
 , qttools
-, gtest
 , wrapQtAppsHook
 , librsvg
 , lxqt
@@ -14,17 +13,17 @@
 
 stdenv.mkDerivation rec {
   pname = "dtkgui";
-  version = "5.5.25+";
+  version = "5.6.1.1+";
 
   src = fetchFromGitHub {
     owner = "linuxdeepin";
     repo = pname;
-    rev = "bdfcc85de9202ff4699878b6d418f8655abc2f6c";
-    sha256 = "sha256-LBUkJlAb6Wwx/xxxFbrk70MxkMnU0J7np7K2Ayf8boA=";
+    rev = "09de488645171b9a55f27cf7a423c2012ed83e76";
+    sha256 = "sha256-Q9qzxDulQ5W05TGxfwNzSTXqNRLMjcy0mojpBrCeYpo=";
   };
 
   nativeBuildInputs = [
-    qmake
+    cmake
     qttools
     pkgconfig
     wrapQtAppsHook
@@ -35,14 +34,9 @@ stdenv.mkDerivation rec {
     dtkcommon
     librsvg
     lxqt.libqtxdg
-    gtest
   ];
 
-  qmakeFlags = [
-    "DTK_VERSION=${version}"
-    "LIB_INSTALL_DIR=${placeholder "out"}/lib"
-    "MKSPECS_INSTALL_DIR=${placeholder "out"}/mkspecs"
-  ];
+  cmakeFlags = [ "-DBUILD_DOCS=OFF" ];
 
   meta = with lib; {
     description = "Deepin Toolkit, gui module for DDE look and feel";
