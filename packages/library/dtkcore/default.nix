@@ -5,7 +5,6 @@
 , pkgconfig
 , cmake
 , gsettings-qt
-, gtest
 , wrapQtAppsHook
 , lshw
 , dtkcommon
@@ -38,7 +37,6 @@ stdenv.mkDerivation rec {
 
   buildInputs = [
     gsettings-qt
-    gtest
     lshw
     dtkcommon
   ];
