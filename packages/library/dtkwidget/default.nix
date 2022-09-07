@@ -1,6 +1,7 @@
 { stdenv
 , lib
 , fetchFromGitHub
+, fetchpatch
 , dtkcore
 , dtkgui
 , dtkcommon
@@ -29,6 +30,20 @@ stdenv.mkDerivation rec {
     sha256 = "sha256-TRG1W+8iSui8wO297AizIgVRJAiF7xVAHPO1dS8EyL4=";
   };
 
+  patches = [
+    (fetchpatch {
+      name = "chore(mkspecs): define mkspecs self";
+      url = "https://github.com/linuxdeepin/dtkwidget/commit/f489687e3b4f0e1005dd10986e95acdfd0fd6a6c.patch";
+      sha256 = "sha256-ZJ0LQeM8tx/ulafvu/kvPztqG08M2PzXhunuAqQYA+M=";
+    })
+  ];
+
+  postPatch = ''
+    substituteInPlace src/widgets/dapplication.cpp \
+      --replace "auto dataDirs = DStandardPaths::standardLocations(QStandardPaths::GenericDataLocation);" \
+                "auto dataDirs = DStandardPaths::standardLocations(QStandardPaths::GenericDataLocation) << \"$out/share\";"
+  '';
+
   nativeBuildInputs = [
     cmake
     qttools
@@ -50,14 +65,10 @@ stdenv.mkDerivation rec {
     xorg.libXdmcp
   ];
 
-  fixTranslationPatch = ''
-    substituteInPlace src/widgets/dapplication.cpp \
-      --replace "auto dataDirs = DStandardPaths::standardLocations(QStandardPaths::GenericDataLocation);" "auto dataDirs = DStandardPaths::standardLocations(QStandardPaths::GenericDataLocation) << \"$out/share\";"
-  '';
-
-  postPatch = fixTranslationPatch;
-
-  cmakeFlags = [ "-DBUILD_DOCS=OFF" ];
+  cmakeFlags = [ 
+    "-DBUILD_DOCS=OFF"
+    "-DMKSPECS_INSTALL_DIR=${placeholder "out"}/mkspecs/modules"
+  ];
 
   meta = with lib; {
     description = "Deepin graphical user interface library";
