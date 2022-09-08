@@ -78,19 +78,16 @@ let
 in
 stdenv.mkDerivation rec {
   pname = "dde-kwin";
-  version = "5.5.11";
+  version = "5.5.11-deepin";
 
   src = fetchFromGitHub {
-    owner = "justforlxz";
+    owner = "linuxdeepin";
     repo = pname;
-    rev = "2dce6692fc43eaacce56faf1aecb72b718291fc0";
+    rev = version;
     sha256 = "sha256-m2cSsWhv8sI5fK13ghq1PSOWwtxijSrD7dxslKU2UwI=";
   };
 
   patches = [
-    #./0001-feat-check-PLUGIN_INSTALL_PATH-value-before-set.patch
-    #./dde-kwin.5.4.26.patch
-    #./deepin-kwin-tabbox-chameleon-rename.patch
     (fetchpatch {
       name = "chore: check value of QT_INSTALL_PLUGINS before set";
       url = "https://github.com/justforlxz/dde-kwin/pull/1/commits/33b74703e9dbff5249bcc90ba1c0da486d7e734b.patch";
@@ -98,14 +95,9 @@ stdenv.mkDerivation rec {
     })
   ];
 
-  postPatch = ''
-    fixQtBuiltinPaths "plugins/kdecoration/CMakeLists.txt" "plugins/kwineffects/CMakeLists.txt"
-  '' + getPatchFrom patchList + getShebangsPatchFrom [
-    "configures/kwin_no_scale.in"
-    "translate_desktop2ts.sh"
-    "translate_ts2desktop.sh"
-    "plugins/platforms/plugin/translate_generation.sh"
-  ];
+  postPatch = getPatchFrom patchList + ''
+    patchShebangs .
+  '';
 
   nativeBuildInputs = [
     cmake
