@@ -17,22 +17,14 @@
 
 stdenv.mkDerivation rec {
   pname = "deepin-calculator";
-  version = "5.7.21";
+  version = "5.7.21+";
 
   src = fetchFromGitHub {
     owner = "linuxdeepin";
     repo = pname;
-    rev = version;
-    sha256 = "sha256-uM8qtlNMBL/XS/PTgNMwDo+iREvOrp07DaRZvPvpb2s=";
+    rev = "493d1cba8ee9cc7f3af8af05d4f58bdd656dfdb4";
+    sha256 = "sha256-4p7pdhIbAdFZ59UL/ZrMXIW58hKZlQk7/W6ecFlng98=";
   };
-
-  patches = [
-    (fetchpatch {
-      name = "chore: use GNUInstallDirs in CmakeLists";
-      url = "https://github.com/linuxdeepin/deepin-calculator/commit/aa565ccb961cbc29666559041b6db1ba581b089b.patch";
-      sha256 = "sha256-jUX+8TOcXkPi2lQmrapu0mpeX8sBIRLGHdKtuJjhybY=";
-    })
-  ];
 
   nativeBuildInputs = [
     cmake
