@@ -84,7 +84,7 @@ let
 in
 buildGoPackage rec {
   pname = "dde-api";
-  version = "5.5.25";
+  version = "5.5.31";
 
   goPackagePath = "github.com/linuxdeepin/dde-api";
 
@@ -92,7 +92,7 @@ buildGoPackage rec {
     owner = "linuxdeepin";
     repo = pname;
     rev = version;
-    sha256 = "sha256-0W3KmXuqbNy2XrEr5LlJCI6YlFyDpWG6KsyJTFO2PQE";
+    sha256 = "sha256-FiM1iBPgcEbgLQwZz6cwOrdGCzRz0Yeq2ZbbnpuTjU0";
   };
 
   goDeps = ./deps.nix;
@@ -100,10 +100,6 @@ buildGoPackage rec {
   nativeBuildInputs = [
     pkgconfig
     deepin-gettext-tools
-    #bc          # run (to adjust grub theme?)
-    #blur-effect # run (is it really needed?)
-    #utillinux   # run
-    #xcur2png    # run
   ];
 
   buildInputs = [
