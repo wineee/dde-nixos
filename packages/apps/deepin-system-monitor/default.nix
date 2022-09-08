@@ -64,13 +64,13 @@ let
 in
 stdenv.mkDerivation rec {
   pname = "deepin-system-monitor";
-  version = "5.9.25+";
+  version = "5.9.27";
 
   src = fetchFromGitHub {
     owner = "linuxdeepin";
     repo = pname;
-    rev = "5296f81344b0cdf3eca52242c89970f91700b896";
-    sha256 = "sha256-lj01JMIr3ZjNS5zTsuqPIMQD8n5c/Hr2e0bbuJq2YB8=";
+    rev = version;
+    sha256 = "sha256-9rNDp96DrUWA7p1S4Cs6fWAoW5t0LweT7xEQQpkbWFI=";
   };
 
   nativeBuildInputs = [
