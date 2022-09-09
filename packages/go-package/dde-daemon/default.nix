@@ -44,21 +44,10 @@
 let
   goCodePatchs = {
     "inputdevices/layout_list.go" = [
-      ## setxkbmap
-      ## xkeyboard-config
       [ "/usr/share/X11/xkb/rules/base.xml" "${xkeyboard_config}/share/X11/xkb/rules/base.xml" ]
     ];
-    "inputdevices/keyboard.go" = [
-      [ "/usr/bin/setxkbmap" "${xorg.setxkbmap}/bin/setxkbmap" ]
-      #? "/etc/default/keyboard"
-    ];
     "grub2/modify_manger.go" = [
-      [ "/usr/lib/deepin-api/adjust-grub-theme" "/run/current-system/sw/lib/deepin-api/adjust-grub-theme" ]
-      ## FIXE setENV ??
-      ## os.Setenv("PATH", "/usr/local/sbin:
-    ];
-    "gesture/built-in.go" = [
-      # "/usr/lib/deepin-daemon/desktop-toggle"
+      [ "_ = os.Setenv(\"PATH\", \"/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin\")" " " ]
     ];
     "gesture/config.go" = [
       # "/usr/share/dde-daemon/gesture.json"
@@ -68,26 +57,15 @@ let
       # /usr/share/themes"
       # /usr/share/icons
     ];
-    "appearance/background/list.go" = [
-      [ "/usr/share/wallpapers/deepin" "/run/current-system/sw/share/wallpapers/deepin" ]
-    ];
     "apps/utils.go" = [
       [ "/usr/share" "/run/current-system/sw/share" ]
       # return []string{"/usr/share", "/usr/local/share"}
     ];
-    "appearance/background/custom_wallpapers.go" = [
-      [ "/usr/share/wallpapers/deepin/desktop.bmp" "/run/current-system/sw/share/wallpapers/deepin/desktop.bmp" ]
-    ];
-    "timedate/zoneinfo/zone.go" = [
-      [ "usr/share/zoneinfo" "${tzdata}/share/zoneinfo" ]
-    ];
+   
     "appearance/ifc.go" = [ ];
-    "appearance/manager.go" = [
-      [ "usr/share/zoneinfo" "${tzdata}/share/zoneinfo" ]
-    ];
     "launcher/manager.go" = [
       [ "/usr/share" "/run/current-system/sw/share" ]
-      ## ddeDataDir = /usr/share/dde/data/
+      # ddeDataDir = /usr/share/dde/data/
     ];
     "launcher/manager_init.go" = [
       [ "/usr/share" "/run/current-system/sw/share" ]
@@ -95,9 +73,6 @@ let
     ];
     "launcher/manager_ifc.go" = [
       [ "/usr/bin/dde-launcher" "dde-launcher" ]
-    ];
-    "launcher/manager_uninstall.go" = [
-      #? "/usr/share/deepin-flatpak/app/"
     ];
     "audio/audio_config.go" = [
       # "/usr/share/dde-daemon/audio/echoCancelEnable.sh"
@@ -111,33 +86,17 @@ let
       [ "/usr/bin/systemd-detect-virt" "systemd-detect-virt" ]
     ];
     "system/gesture/config.go" = [
-      ## TODO
-
-      #/etc/
-      # ?
-    ];
-    "system/systeminfo/manager.go" = [
-      [ "/usr/bin/getconf" "${getconf}/bin/getconf" ]
-    ];
-    "bin/search/main.go" = [
-      # "/usr/lib/deepin-daemon/search"
+      [ "/usr/share" "/run/current-system/sw/share" ]
     ];
     "system/power/manager_lmt.go" = [
       [ "/usr/sbin/laptop_mode" "laptop_mode" ] # TODO https://github.com/rickysarraf/laptop-mode-tools
-      #? "/etc/laptop-mode/laptop-mode.conf"
     ];
     "bin/user-config/config_datas.go" = [
       #TODO
       [ "/usr/share" "/run/current-system/sw/share" ]
       # "/usr/share/doc/deepin-manuals"
-      # "/usr/share/deepin-default-settings"
       # "/usr/share/deepin-sample-music"
       #? /etc/default/locale
-      #? /etc/skel.locale
-    ];
-    "bin/dde-system-daemon/wallpaper.go" = [
-      [ "/usr/share" "/run/current-system/sw/share" ]
-      #"/usr/share/wallpapers/custom-wallpapers/
     ];
     "bin/dde-system-daemon/virtual.go" = [
       # "/usr/share/dde-daemon/supportVirsConf.ini"
@@ -146,38 +105,17 @@ let
       [ "/usr/bin/lightdm-deepin-greeter" "lightdm-deepin-greeter" ]
       [ "runuser" "${utillinux.bin}/bin/runuser" ]
     ];
-    "bin/dde-system-daemon/main.go" = [
-      #? os.Setenv("PATH", "/usr/local/sbin
-      # "/usr/lib/deepin-daemon/dde-system-daemon"
-    ];
     "service_trigger/manager.go" = [
-      # "/usr/lib/deepin-daemon/"
       [ "/etc/deepin-daemon/" "$out/etc/deepin-daemon/" ]
-    ];
-    "bluetooth/utils_notify.go" = [
-      [ "/usr/lib/deepin-daemon/dde-bluetooth-dialog" "dde-bluetooth-dialog" ]
-    ];
-    "keybinding/special_keycode.go" = [
-      [ "/usr/bin/setxkbmap" "${xorg.setxkbmap}/bin/setxkbmap" ]
-      [ "/usr/bin/xdotool" "xdotool" ]
-    ];
-    "mime/app_info.go" = [
-      # /usr/share /usr/local/share
     ];
     "keybinding/utils.go" = [
       [ "/usr/bin/kwin_no_scale" "kwin_no_scale" ]
-    ];
-    "network/manager.go" = [
-      [ "/usr/lib/NetworkManager/VPN" "/run/current-system/lib/NetworkManager/VPN" ]
-      # ["/etc/NetworkManager/VPN"] 
     ];
     "dock/identify_window.go" = [
       [ "/usr/share" "/run/current-system/sw/share" ]
       # "/usr/share/applications/"
     ];
     "keybinding/shortcuts/system_shortcut.go" = [
-      [ "/usr/bin/setxkbmap" "${xorg.setxkbmap}/bin/setxkbmap" ]
-      [ "/usr/bin/xdotool" "${xdotool}/bin/xdotool" ]
       [ "/usr/bin/deepin-system-monitor" "deepin-system-monitor" ]
       [ "dbus-send" "${dbus}/bin/dbus-send" ]
       [ "gsettings" "${glib.bin}/bin/gsettings" ]
@@ -187,19 +125,11 @@ let
       #? /usr/share/config/kdm/kdmrc"
     ];
     "accounts/user.go" = [
-      # /usr/lib/deepin-daemon
       [ "/usr/bin/dde-control-center" "dde-control-center" ]
       [ "/usr/share" "/run/current-system/sw/share" ]
-      #/usr/share/wallpapers/deepin/
       #/usr/share/xsessions
     ];
-    "network/nm_setting_vpn.go" = [
-      [ "/usr/lib/NetworkManager/VPN" "/run/current-system/lib/NetworkManager/VPN" ]
-      # "/etc/NetworkManager/VPN"
-    ];
-    "accounts/image_blur.go" = [
-      [ "/usr/lib/deepin-api/image-blur-helper" "${dde-api}/lib/deepin-api/image-blur-helper" ]
-    ];
+
     "dock/desktop_file_path.go" = [
       [ "/usr/share" "/run/current-system/sw/share" ]
       # "/usr/share/applications/"
@@ -217,30 +147,13 @@ let
     "accounts/users/list.go" = [
       #? /usr/etc/login.defs
     ];
-    "keybinding/shortcuts/media_shortcut.go" = [
-      # /usr/lib/deepin-daemon/default-terminal
-    ];
-    "network/secret_agent.go" = [
-      # /usr/lib/deepin-daemon/dnetwork-secret-dialog
-    ];
     "accounts/handle_event.go" = [
       #? /usr/share/config/kdm/kdmrc
     ];
     "accounts/manager.go" = [
       # /usr/share/dde-daemon/accounts/dbus-udcp.json
     ];
-    "systeminfo/utils.go" = [
-      [ "/usr/bin/getconf" "getconf" ]
-    ];
-    "session/power/constant.go" = [
-      [ "/usr/lib/deepin-daemon/dde-lowpower" "dde-lowpower" ]
-    ];
-    "audio/util.go" = [
-      #? "/etc/pulse/default.pa"
-    ];
-    "grub2/edit_auth.go" = [
-      #? "/etc/grub.d/42_uos_menu_crypto"
-    ];
+
     "grub2/grub_params.go" = [
       #/etc/default/grub
     ];
@@ -250,19 +163,12 @@ let
     "system/timedated/manager.go" = [
       #? /etc/systemd/timesyncd.conf.d/deepin.conf
     ];
-    "bin/dde-system-daemon/network.go" = [
-      #?/etc/NetworkManager/system-connections
-    ];
     "langselector/locale_ifc.go" = [
       #? /etc/locale.gen
     ];
     "accounts/users/manager.go" = [
       #? "/etc/adduser.conf"
     ];
-    "session/power/power_save_plan.go" = [
-      #? /etc/deepin/no_suspend
-    ];
-    #accounts/users/testdata #TODO
     "image_effect/utils.go" = [
       [ "runuser" "${utillinux.bin}/bin/runuser" ]
     ];
@@ -275,14 +181,21 @@ let
     ];
     "misc/dde-daemon/keybinding/system_actions.json" = [
       [ "/usr/bin/deepin-system-monitor" "deepin-system-monitor" ]
-      [ "/usr/bin/setxkbmap"             "${xorg.setxkbmap}/bin/setxkbmap" ]
-      [ "/usr/bin/xdotool"               "${xdotool}/bin/xdotool" ]
     ];
   };
+  replaceAll = x: y: ''
+    echo Replacing "${x}" to "${y}":
+    for file in $(grep -rl "${x}")
+    do
+      echo -- $file
+      substituteInPlace $file \
+        --replace "${x}" "${y}"
+    done
+  '';
 in
 buildGoPackage rec {
   pname = "dde-daemon";
-  version = "5.14.103";
+  version = "5.14.104";
 
   goPackagePath = "github.com/linuxdeepin/dde-daemon";
 
@@ -290,32 +203,23 @@ buildGoPackage rec {
     owner = "linuxdeepin";
     repo = pname;
     rev = version;
-    sha256 = "sha256-GVfkkvgDT3yucnuAaMN0lN6noPs0HNp+JauHGDuzwgc=";
+    sha256 = "sha256-BkqKVgJey4uwtBe0dJbg5VhtXJSVhmuYDIiv0pX21Ko=";
   };
 
-  fixPathPatch = ''
-    for file in misc/system-services/* misc/services/* misc/systemd/services/*
-    do
-      substituteInPlace $file \
-        --replace "/usr/lib/deepin-daemon" "$out/lib/deepin-daemon"
-    done
-
-    for file in $(grep -rl "/bin/sh")
-    do
-      substituteInPlace $file \
-        --replace "/bin/sh" "${runtimeShell}"
-    done
-
-    for file in $(grep -rl "/bin/bash")
-    do
-      substituteInPlace $file \
-        --replace "/bin/bash" "${runtimeShell}"
-    done
-
-    patchShebangs .
-  '';
-
-  postPatch = fixPathPatch + getPatchFrom goCodePatchs;
+  postPatch =  getPatchFrom goCodePatchs
+               + replaceAll "/usr/lib/deepin-api" "/run/current-system/sw/lib/deepin-api"
+               + replaceAll "/usr/lib/deepin-daemon" "/run/current-system/sw/lib/deepin-daemon"
+               + replaceAll "/usr/share/wallpapers" "/run/current-system/sw/share/wallpapers"
+               + replaceAll "/bin/bash" "${runtimeShell}"
+               + replaceAll "/bin/sh" "${runtimeShell}"
+               + replaceAll "/usr/bin/setxkbmap" "${xorg.setxkbmap}/bin/setxkbmap"
+               + replaceAll "/usr/bin/xdotool" "${xdotool}/bin/xdotool"
+               + replaceAll "/usr/bin/getconf" "${getconf}/bin/getconf"
+               + replaceAll "/usr/share/zoneinfo" "${tzdata}/share/zoneinfo"
+               + ''
+                  patchShebangs .
+                  substituteInPlace Makefile --replace "/run/current-system/sw/lib/deepin-daemon" "/lib/deepin-daemon"
+               '';
 
   goDeps = ./deps.nix;
 
