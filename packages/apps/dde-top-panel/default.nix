@@ -54,13 +54,6 @@ stdenv.mkDerivation rec {
     "-DVERSION=${version}"
   ];
 
-#   fixPluginLoadPatch = ''
-#     substituteInPlace src/source/common/pluginmanager.cpp \
-#       --replace "/usr/lib/" "$out/lib/"
-#   '';
-
-#  postPatch = fixPluginLoadPatch;
-
   meta = with lib; {
     description = "Top panel for deepin desktop environment v20";
     homepage = "https://github.com/SeptemberHX/dde-top-panel";
