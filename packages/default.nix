@@ -5,8 +5,6 @@ let
   newScope = pkgs.libsForQt5.newScope;
 
   functions = with pkgs.lib; rec {
-    getShebangsPatchFrom = x: "patchShebangs " + concatStringsSep " " x + "\n";
-
     getPatchFrom =
       let
         rpstr = a: b: " --replace \"${a}\" \"${b}\"";

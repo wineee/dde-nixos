@@ -3,7 +3,6 @@
 , lib
 , fetchpatch
 , getPatchFrom
-, getShebangsPatchFrom
 , pkg-config
 , fetchFromGitHub
 , cmake
