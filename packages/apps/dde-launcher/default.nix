@@ -15,7 +15,6 @@
 , wrapGAppsHook
 , gsettings-qt
 , glib
-, deepin-wallpapers
 , gtest
 , dbus
 , qtbase
@@ -23,36 +22,33 @@
 let
   patchList = {
     ### MISC
-    "dde-launcher.desktop" = [
-      # "/usr/bin/dde-launcher"
-    ];
+    "dde-launcher.desktop" = [ ];
     "dde-launcher-wapper" = [
       [ "dbus-send" "${dbus}/bin/dbus-send" ]
       # "/usr/share/applications/dde-launcher.desktop"
     ];
-
     "src/dbusservices/com.deepin.dde.Launcher.service" = [
       # "/usr/bin/dde-launcher-wapper"
     ];
 
     ### CODE
     "src/boxframe/backgroundmanager.cpp" = [
-      [ "/usr/share/backgrounds/default_background.jpg" "${deepin-wallpapers}/share/wallpapers/deepin/desktop.jpg" ]
+      [ "/usr/share/backgrounds" "/run/current-system/sw/share/backgrounds" ]
     ];
     "src/boxframe/boxframe.cpp" = [
-      [ "/usr/share/backgrounds/default_background.jpg" "${deepin-wallpapers}/share/wallpapers/deepin/desktop.jpg" ]
+      [ "/usr/share/backgrounds" "/run/current-system/sw/share/backgrounds" ]
     ];
   };
 in
 stdenv.mkDerivation rec {
   pname = "dde-launcher";
-  version = "5.5.30";
+  version = "5.5.32";
 
   src = fetchFromGitHub {
     owner = "linuxdeepin";
     repo = pname;
     rev = version;
-    sha256 = "sha256-C6VPlfn89y5YLnkumG4iBOg9mf+GQ368B0BLp4MPPRo=";
+    sha256 = "sha256-h9s1LhbUY7C6mdp9ZmesjdcGpMF9P/oAXnlHvB27YrE=";
   };
 
   patches = [
