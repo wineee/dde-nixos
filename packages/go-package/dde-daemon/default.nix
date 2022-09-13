@@ -218,7 +218,6 @@ buildGoPackage rec {
                + replaceAll "/usr/share/zoneinfo" "${tzdata}/share/zoneinfo"
                + ''
                   patchShebangs .
-                  substituteInPlace Makefile --replace "/run/current-system/sw/lib/deepin-daemon" "/lib/deepin-daemon"
                '';
 
   goDeps = ./deps.nix;
@@ -281,6 +280,8 @@ buildGoPackage rec {
         "''${gappsWrapperArgs[@]}" \
         "''${qtWrapperArgs[@]}"
     done
+    mv $out/run/current-system/sw/lib/deepin-daemon/service-trigger $out/lib/deepin-daemon/
+    rm -r $out/run
   '';
 
   meta = with lib; {
