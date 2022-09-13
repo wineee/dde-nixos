@@ -23,16 +23,14 @@ let
 in
 stdenv.mkDerivation rec {
   pname = "dde-polkit-agent";
-  version = "5.5.19";
+  version = "5.5.21";
 
   src = fetchFromGitHub {
     owner = "linuxdeepin";
     repo = pname;
     rev = version;
-    sha256 = "sha256-jVzwzTejaFgmTzkEEVoLXWdPX43EgwTC90dUurH57q8=";
+    sha256 = "sha256-jWH1E3lBEIlLtwO8oTIaK7CzUhGfxJIo2KOQ1om2qco=";
   };
-
-  patches = [ ./fix_in_non_deepin.patch ];
 
   postPatch = getPatchFrom patchList;
 
