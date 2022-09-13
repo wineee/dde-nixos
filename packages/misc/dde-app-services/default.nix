@@ -2,7 +2,7 @@
 , lib
 , fetchFromGitHub
 , fetchpatch
-, getPatchFrom
+, getUsrPatchFrom
 , dtk
 , cmake
 , wrapQtAppsHook
@@ -54,7 +54,7 @@ stdenv.mkDerivation rec {
     gtest
   ];
 
-  postPatch = getPatchFrom patchList;
+  postPatch = getUsrPatchFrom patchList;
 
   qtWrapperArgs = [
     "--prefix QT_PLUGIN_PATH : ${qt5integration}/${qtbase.qtPluginPrefix}"

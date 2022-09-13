@@ -1,7 +1,7 @@
 { stdenv
 , lib
 , fetchFromGitHub
-, getPatchFrom
+, getUsrPatchFrom
 , fetchpatch
 , runtimeShell
 , dtk
@@ -209,7 +209,7 @@ stdenv.mkDerivation rec {
     })
   ];
 
-  postPatch = getPatchFrom patchList + ''
+  postPatch = getUsrPatchFrom patchList + ''
     patchShebangs .
   '';
 

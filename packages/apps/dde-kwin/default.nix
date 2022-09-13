@@ -2,7 +2,7 @@
 , stdenvNoCC
 , lib
 , fetchpatch
-, getPatchFrom
+, getUsrPatchFrom
 , pkg-config
 , fetchFromGitHub
 , cmake
@@ -94,7 +94,7 @@ stdenv.mkDerivation rec {
     })
   ];
 
-  postPatch = getPatchFrom patchList + ''
+  postPatch = getUsrPatchFrom patchList + ''
     patchShebangs .
   '';
 

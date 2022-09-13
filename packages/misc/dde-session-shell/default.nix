@@ -3,7 +3,7 @@
 , fetchFromGitHub
 , fetchpatch
 , linkFarm
-, getPatchFrom
+, getUsrPatchFrom
 , dtk
 , dde-qt-dbus-factory
 , cmake
@@ -159,7 +159,7 @@ stdenv.mkDerivation rec {
     })
   ];
 
-  postPatch = getPatchFrom patchList + ''
+  postPatch = getUsrPatchFrom patchList + ''
     patchShebangs files/deepin-greeter
   '';
 

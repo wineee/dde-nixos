@@ -1,7 +1,7 @@
 { stdenv
 , lib
 , fetchFromGitHub
-, getPatchFrom
+, getUsrPatchFrom
 , dtk
 , qt5integration
 , qt5platform-plugins
@@ -78,7 +78,7 @@ stdenv.mkDerivation rec {
       --replace '/usr/include/chardet' "${libchardet}/include/chardet"
   '';
 
-  postPatch = fixIncludePatch + getPatchFrom patchList;
+  postPatch = fixIncludePatch + getUsrPatchFrom patchList;
 
   meta = with lib; {
     description = "a simple memo software with texts and voice recordings";

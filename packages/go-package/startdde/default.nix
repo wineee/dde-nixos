@@ -1,7 +1,7 @@
 { stdenv
 , lib
 , fetchFromGitHub
-, getPatchFrom
+, getUsrPatchFrom
 , buildGoPackage
 , pkgconfig
 , go-dbus-factory
@@ -95,7 +95,7 @@ buildGoPackage rec {
     + replaceAll "/usr/lib/polkit-1-dde/dde-polkit-agent" "${dde-polkit-agent}/lib/polkit-1-dde/dde-polkit-agent"
     + replaceAll "/usr/bin/startdde" "$out/bin/startdde"
     + replaceAll "\"lspci\"" "\"${pciutils}/bin/lspci\"" 
-    + getPatchFrom patchList + ''
+    + getUsrPatchFrom patchList + ''
       substituteInPlace "startmanager.go"\
         --replace "/usr/share/startdde/app_startup.conf" "$out/share/startdde/app_startup.conf"
       substituteInPlace misc/xsessions/deepin.desktop.in --subst-var-by PREFIX $out

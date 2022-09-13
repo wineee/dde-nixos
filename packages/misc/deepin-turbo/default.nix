@@ -2,7 +2,7 @@
 , lib
 , fetchFromGitHub
 , fetchpatch
-, getPatchFrom
+, getUsrPatchFrom
 , dtk
 , cmake
 , pkgconfig
@@ -43,7 +43,7 @@ stdenv.mkDerivation rec {
 
   buildInputs = [ dtk ];
 
-  postPatch = getPatchFrom patchList;
+  postPatch = getUsrPatchFrom patchList;
 
   meta = with lib; {
     description = "A daemon that helps to launch applications faster";

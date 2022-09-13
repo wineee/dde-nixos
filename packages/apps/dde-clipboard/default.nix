@@ -1,7 +1,7 @@
 { stdenv
 , lib
 , fetchFromGitHub
-, getPatchFrom
+, getUsrPatchFrom
 , dtk
 , qt5integration
 , qt5platform-plugins
@@ -43,7 +43,7 @@ stdenv.mkDerivation rec {
 
   #patches = [ ./0001-feat-remove-wayland-support.patch ];
 
-  postPatch = getPatchFrom patchList + ''
+  postPatch = getUsrPatchFrom patchList + ''
     patchShebangs translate_generation.sh generate_gtest_report.sh
   '';
 

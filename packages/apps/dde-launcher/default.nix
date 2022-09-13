@@ -1,7 +1,7 @@
 { stdenv
 , lib
 , fetchFromGitHub
-, getPatchFrom
+, getUsrPatchFrom
 , fetchpatch
 , dtk
 , dde-qt-dbus-factory
@@ -59,7 +59,7 @@ stdenv.mkDerivation rec {
     })
   ];
 
-  postPatch = getPatchFrom patchList;
+  postPatch = getUsrPatchFrom patchList;
 
   nativeBuildInputs = [
     cmake

@@ -1,7 +1,6 @@
 { stdenv
 , lib
 , fetchFromGitHub
-, getPatchFrom
 , buildGoPackage
 , go
 , go-lib

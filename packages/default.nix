@@ -5,13 +5,12 @@ let
   newScope = pkgs.libsForQt5.newScope;
 
   functions = with pkgs.lib; rec {
-    getPatchFrom =
+    getPatchFrom = commonRp:
       let
         rpstr = a: b: " --replace \"${a}\" \"${b}\"";
         rpstrL = l: if length l == 2 then rpstr (head l) (last l) else (throw "input must be a 2-tuple");
         rpfile = filePath: replaceLists:
           "substituteInPlace ${filePath}" + concatMapStrings rpstrL replaceLists;
-        commonRp = [ [ "/usr" "$out" ] ];
       in
       x: pipe x [
         (x: mapAttrs (name: value: value ++ commonRp) x)
@@ -19,6 +18,8 @@ let
         (concatStringsSep "\n")
         (s: s + "\n")
       ];
+    
+    getUsrPatchFrom = getPatchFrom [ [ "/usr" "$out" ] ];
 
     release = pkgs.callPackage ./release.nix { };
 

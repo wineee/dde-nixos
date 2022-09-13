@@ -1,7 +1,7 @@
 { stdenv
 , lib
 , fetchFromGitHub
-, getPatchFrom
+, getUsrPatchFrom
 , dtk
 , qt5integration
 , qt5platform-plugins
@@ -157,7 +157,7 @@ stdenv.mkDerivation rec {
       --replace "PKGCONFIG +=xcb xcb-util dframeworkdbus gobject-2.0" "PKGCONFIG +=xcb xcb-util dframeworkdbus gobject-2.0 gstreamer-app-1.0"
   '';
 
-  postPatch = fixInstallPatch + fixPkgconfigPatch + getPatchFrom patchList;
+  postPatch = fixInstallPatch + fixPkgconfigPatch + getUsrPatchFrom patchList;
 
   meta = with lib; {
     description = "screen recorder application for dde";

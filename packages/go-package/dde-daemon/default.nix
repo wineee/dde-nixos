@@ -1,7 +1,7 @@
 { stdenv
 , lib
 , fetchFromGitHub
-, getPatchFrom
+, getUsrPatchFrom
 , buildGoPackage
 , pkgconfig
 , go-dbus-factory
@@ -206,7 +206,7 @@ buildGoPackage rec {
     sha256 = "sha256-BkqKVgJey4uwtBe0dJbg5VhtXJSVhmuYDIiv0pX21Ko=";
   };
 
-  postPatch =  getPatchFrom goCodePatchs
+  postPatch =  getUsrPatchFrom goCodePatchs
                + replaceAll "/usr/lib/deepin-api" "/run/current-system/sw/lib/deepin-api"
                + replaceAll "/usr/lib/deepin-daemon" "/run/current-system/sw/lib/deepin-daemon"
                + replaceAll "/usr/share/wallpapers" "/run/current-system/sw/share/wallpapers"

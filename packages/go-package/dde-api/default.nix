@@ -2,7 +2,7 @@
 , lib
 , fetchFromGitHub
 , buildGoPackage
-, getPatchFrom
+, getUsrPatchFrom
 , pkgconfig
 , alsaLib
 , bc
@@ -119,7 +119,7 @@ buildGoPackage rec {
 
   dontWrapQtApps = true;
 
-  postPatch = getPatchFrom patchList + ''
+  postPatch = getUsrPatchFrom patchList + ''
     for file in misc/system-services/* misc/services/*
      do
        substituteInPlace $file \

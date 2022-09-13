@@ -1,7 +1,7 @@
 { stdenv
 , lib
 , fetchFromGitHub
-, getPatchFrom
+, getUsrPatchFrom
 , dtk
 , pkg-config
 , cmake
@@ -88,7 +88,7 @@ stdenv.mkDerivation rec {
     sha256 = "sha256-q8+aOUmU1PSs7nPYSlV28qq62FrOgPAAH72CKAbd60o=";
   };
 
-  postPatch = getPatchFrom patchList;
+  postPatch = getUsrPatchFrom patchList;
 
   nativeBuildInputs = [
     cmake

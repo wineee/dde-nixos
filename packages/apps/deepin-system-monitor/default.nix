@@ -2,7 +2,7 @@
 , lib
 , fetchFromGitHub
 , fetchpatch
-, getPatchFrom
+, getUsrPatchFrom
 , dtk
 , qt5integration
 , qt5platform-plugins
@@ -73,6 +73,20 @@ stdenv.mkDerivation rec {
     sha256 = "sha256-9rNDp96DrUWA7p1S4Cs6fWAoW5t0LweT7xEQQpkbWFI=";
   };
 
+  patches = [
+    (fetchpatch {
+      name = "chore: use GNUInstallDirs in CmakeLists";
+      url = "https://github.com/linuxdeepin/deepin-system-monitor/commit/e687b1c35961e8cd664c6e4982bd2c49375090d7.patch";
+      sha256 = "sha256-iR0X56OTUY6O8a9as2vF9eBygrbvzYGFcpf407b7jp0=";
+    })
+  ];
+
+  postPatch = getUsrPatchFrom patchList + ''
+    substituteInPlace CMakeLists.txt \
+      --replace "ADD_SUBDIRECTORY(deepin-system-monitor-plugin)" "" \
+      --replace "ADD_SUBDIRECTORY(deepin-system-monitor-plugin-popup)" ""
+  '';
+
   nativeBuildInputs = [
     cmake
     pkgconfig
@@ -103,20 +117,6 @@ stdenv.mkDerivation rec {
   qtWrapperArgs = [
     "--prefix QT_PLUGIN_PATH : ${qt5integration}/${qtbase.qtPluginPrefix}"
   ];
-
-  patches = [
-    (fetchpatch {
-      name = "chore: use GNUInstallDirs in CmakeLists";
-      url = "https://github.com/linuxdeepin/deepin-system-monitor/commit/e687b1c35961e8cd664c6e4982bd2c49375090d7.patch";
-      sha256 = "sha256-iR0X56OTUY6O8a9as2vF9eBygrbvzYGFcpf407b7jp0=";
-    })
-  ];
-
-  postPatch = getPatchFrom patchList + ''
-    substituteInPlace CMakeLists.txt \
-      --replace "ADD_SUBDIRECTORY(deepin-system-monitor-plugin)" "" \
-      --replace "ADD_SUBDIRECTORY(deepin-system-monitor-plugin-popup)" ""
-  '';
 
   meta = with lib; {
     description = "a more user-friendly system monitor";

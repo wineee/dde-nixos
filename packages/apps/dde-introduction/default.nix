@@ -1,6 +1,6 @@
 { stdenv
 , lib
-, getPatchFrom
+, getUsrPatchFrom
 , fetchpatch
 , fetchFromGitHub
 , dtk
@@ -40,7 +40,7 @@ in stdenv.mkDerivation rec {
     })
   ];
 
-  postPatch = getPatchFrom patchList;
+  postPatch = getUsrPatchFrom patchList;
 
   nativeBuildInputs = [
     cmake

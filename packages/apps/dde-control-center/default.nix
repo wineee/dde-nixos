@@ -2,7 +2,7 @@
 , lib
 , fetchFromGitHub
 , fetchpatch
-, getPatchFrom
+, getUsrPatchFrom
 , dtk
 , substituteAll
 , qt5integration
@@ -121,7 +121,7 @@ stdenv.mkDerivation rec {
     })
   ];
 
-  postPatch = getPatchFrom patchList;
+  postPatch = getUsrPatchFrom patchList;
 
   nativeBuildInputs = [
     cmake

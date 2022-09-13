@@ -2,7 +2,7 @@
 , lib
 , fetchFromGitHub
 , fetchpatch
-, getPatchFrom
+, getUsrPatchFrom
 , dtk
 , deepin-gettext-tools
 , qt5integration
@@ -41,10 +41,9 @@ stdenv.mkDerivation rec {
     })
   ];
   
-  postPatch = getPatchFrom patchList + ''
+  postPatch = getUsrPatchFrom patchList + ''
     patchShebangs *.sh
   '';
-
 
   nativeBuildInputs = [
     qmake

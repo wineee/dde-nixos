@@ -1,7 +1,7 @@
 { stdenv
 , lib
 , fetchFromGitHub
-, getPatchFrom
+, getUsrPatchFrom
 , dtk
 , qt5integration
 , qt5platform-plugins
@@ -32,7 +32,7 @@ stdenv.mkDerivation rec {
     sha256 = "sha256-jWH1E3lBEIlLtwO8oTIaK7CzUhGfxJIo2KOQ1om2qco=";
   };
 
-  postPatch = getPatchFrom patchList;
+  postPatch = getUsrPatchFrom patchList;
 
   nativeBuildInputs = [
     cmake
