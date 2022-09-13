@@ -60,7 +60,7 @@ stdenv.mkDerivation rec {
   ];
 
   cmakeFlags = [ 
-    "-DPROJECT_VERSION=${version}"
+    "-DVERSION=${version}"
   ];
 
   qtWrapperArgs = [
