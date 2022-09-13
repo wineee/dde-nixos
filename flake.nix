@@ -131,6 +131,7 @@
                   fonts.fonts = with pkgs; [ noto-fonts ];
 
                   xdg.mime.enable = true;
+                  xdg.menus.enable = true;
                   xdg.icons.enable = true;
                   xdg.portal.enable = true;
                   xdg.portal.extraPortals = [ 
@@ -155,6 +156,8 @@
                     "/lib/deepin-api"
                     "/lib/dde-dock/plugins"
                     "/share/dsg"
+                    "/share/backgrounds"
+                    "/share/wallpapers"
                     # TODO
                     "/share"
                   ];
