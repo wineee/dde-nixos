@@ -1,8 +1,6 @@
 { stdenv
 , lib
-, getPatchFrom
 , fetchFromGitHub
-, fetchpatch
 , dtk
 , dde-qt-dbus-factory
 , dde-dock
@@ -25,32 +23,23 @@
 , dbus
 , gtest
 , qtbase
-, breakpointHook
 }:
-let
-  # FIXME: cant build 
-  patchList = {
-
-  }; 
-in stdenv.mkDerivation rec {
+stdenv.mkDerivation rec {
   pname = "dde-network-core";
-  version = "1.0.45";
+  version = "1.0.64";
 
   src = fetchFromGitHub {
-    owner = "wineee";
+    owner = "linuxdeepin";
     repo = pname;
-    rev = "882da45c0dfbd61909a7b655547e5ab369f8e873";
-    sha256 = "sha256-n/kZKAol+GHrcastECU2IyPlJp2oui38EVhxjrowEAw=";
+    rev = version;
+    sha256 = "sha256-jCJ7G1rKAxPAgX+nfuIkBS2BZzuFe2CxUQukJl6rocE=";
   };
-
-  postPatch = getPatchFrom patchList;
 
   nativeBuildInputs = [
     cmake
     qttools
     pkgconfig
     wrapQtAppsHook
-    breakpointHook
   ];
 
   buildInputs = [ 
@@ -70,9 +59,6 @@ in stdenv.mkDerivation rec {
     gtest
   ];
 
-  #NIX_CFLAGS_COMPILE = [ "-I${glib.dev}/include/glib-2.0" ];
-
-  enableParallelBuilding = true;
   cmakeFlags = [ 
     "-DPROJECT_VERSION=${version}"
   ];
