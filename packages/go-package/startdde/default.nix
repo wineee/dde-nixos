@@ -29,8 +29,6 @@
 let
   patchList = {
     "main.go" = [
-      [ "/usr/bin/kwin_no_scale" "${dde-kwin}/bin/kwin_no_scale" ]
-      [ "/usr/lib/deepin-daemon/dde-session-daemon" "${dde-daemon}/lib/deepin-daemon/dde-session-daemon" ]
       [ "/usr/bin/dde-dock" "dde-dock" ]
       [ "/usr/bin/dde-desktop" "dde-desktop" ]
       [ "/usr/libexec/deepin/login-reminder-helper" "login-reminder-helper" ]
@@ -39,38 +37,23 @@ let
     "session.go" = [
       [ "/usr/share/applications/dde-lock.desktop" "${dde-session-shell}/share/applications/dde-lock.desktop" ]
       [ "/usr/bin/dde-shutdown" "dde-shutdown" ]
-      [ "/usr/lib/deepin-daemon/langselector" "${dde-daemon}/lib/deepin-daemon/langselector" ]
       [ "/usr/bin/dde-lock" "${dde-session-shell}/bin/dde-lock" ]
-      [ "/usr/lib/deepin-daemon/dde-osd" "${dde-session-ui}/lib/deepin-daemon/dde-osd" ]
       [ "/usr/bin/gnome-keyring-daemon" "${gnome.gnome-keyring}/bin/gnome-keyring-daemon" ]
       #? [ "/usr/share/deepin-default-settings/fontconfig.json"  ] 
-    ];
-    "main_test.go" = [
-      [ "/usr/bin/kwin_no_scale" "${dde-kwin}/bin/kwin_no_scale" ]
     ];
     "misc/lightdm.conf" = [
       # "/usr/sbin/deepin-fix-xauthority-perm" 
     ];
     "misc/Xsession.d/00deepin-dde-env" = [
       # "/usr/bin/startdde
+      [ "/usr/share" "/run/current-system/sw/share" ]
     ];
     "misc/auto_launch/chinese.json" = [
       [ "/usr/bin/dde-file-manager" "dde-file-manager" ]
       [ "/usr/bin/dde-shutdown" "dde-shutdown" ]
     ];
-    "misc/auto_launch/default.json" = [
-    ];
-    "utils.go" = [
-      [ "/usr/lib/deepin-daemon/dde-welcome" "${dde-session-ui}/lib/deepin-daemon/dde-welcome" ]
-    ];
     "launch_group.go" = [
       # "/usr/share/startdde/auto_launch.json" 
-    ];
-    # "watchdog/deepinid_daemon.go" = [
-    #   [ "/usr/lib/deepin-deepinid-daemon/deepin-deepinid-daemon" "deepin-deepinid-daemon" ]
-    # ];
-    "watchdog/watchdog_test.go" = [
-      [ "/usr/bin/kwin_no_scale" "${dde-kwin}/bin/kwin_no_scale" ]
     ];
     "testdata/desktop/dde-file-manager.desktop" = [
       [ "/usr/bin/dde-file-manager" "dde-file-manager" ]
@@ -78,13 +61,9 @@ let
     "memchecker/config.go" = [
       # /usr/share/startdde/memchecker.json 
     ];
-    "display/manager.go" = [
-      [ "/usr/lib/deepin-daemon/dde-touchscreen-dialog" "dde-touchscreen-dialog" ]
-    ];
     "display/wayland.go" = [
       [ "/usr/bin/dde_wloutput" "dde_wloutput" ]
     ];
-    #?  "memanalyzer/config_test.go" 
   };
   replaceAll = x: y: ''
     echo Replacing "${x}" to "${y}":
@@ -109,14 +88,14 @@ buildGoPackage rec {
     sha256 = "sha256-MHOaqvwYCliC7W54c7JBAdNFz+CwnTBPpYFoUgvXZ7w=";
   };
 
-  postPatch = getPatchFrom patchList
-    + replaceAll "/bin/bash" "${runtimeShell}"
+  postPatch = replaceAll "/bin/bash" "${runtimeShell}"
     + replaceAll "/bin/sh" "${runtimeShell}"
     + replaceAll "/usr/bin/kwin_no_scale" "${dde-kwin}/bin/kwin_no_scale"
     + replaceAll "/usr/lib/deepin-daemon" "/run/current-system/sw/lib/deepin-daemon"
     + replaceAll "/usr/lib/polkit-1-dde/dde-polkit-agent" "${dde-polkit-agent}/lib/polkit-1-dde/dde-polkit-agent"
     + replaceAll "/usr/bin/startdde" "$out/bin/startdde"
-    + replaceAll "\"lspci\"" "\"${pciutils}/bin/lspci\"" + ''
+    + replaceAll "\"lspci\"" "\"${pciutils}/bin/lspci\"" 
+    + getPatchFrom patchList + ''
       substituteInPlace "startmanager.go"\
         --replace "/usr/share/startdde/app_startup.conf" "$out/share/startdde/app_startup.conf"
       substituteInPlace misc/xsessions/deepin.desktop.in --subst-var-by PREFIX $out
