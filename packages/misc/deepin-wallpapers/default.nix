@@ -30,6 +30,10 @@ stdenv.mkDerivation rec {
 
     mkdir -p $out/share/wallpapers/image-blur
     cp image-blur/* $out/share/wallpapers/image-blur
+
+    mkdir -p $out/share/backgrounds
+
+    ln -s $out/share/wallpapers/deepin/desktop.jpg  $out/share/backgrounds/default_background.jpg
   '';
 
   meta = with lib; {
