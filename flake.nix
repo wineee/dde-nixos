@@ -159,7 +159,7 @@
                     "/share/backgrounds"
                     "/share/wallpapers"
                     # TODO
-                    "/share"
+                    #"/share"
                   ];
 
                   environment.etc."deepin-version".source = "${packages.deepin-desktop-base}/etc/deepin-version";
@@ -172,6 +172,11 @@
                     LogoLight=${packages.deepin-desktop-base}/share/pixmaps/distribution_logo_light.svg
                     LogoTransparent=${packages.deepin-desktop-base}/share/pixmaps/distribution_logo_transparent.svg
                   '';
+                  environment.etc = {
+                    "X11/Xsession.d".source = "${packages.startdde}/X11/Xsession.d";
+                    #"lightdm/lightdm.conf".source = "${packages.startdde}/etc/lightdm/lightdm.conf";
+                  };
+
                   #environment.etc."polkit-1/localauthority/10-vendor.d/com.deepin.api.device.pkla" = "${packages.dde-api}/var/lib/polkit-1/localauthority/10-vendor.d/com.deepin.api.device.pkla";
                   #environment.etc."polkit-1/localauthority/10-vendor.d/com.deepin.daemon.Accounts.pkla" = "${packages.dde-daemon}/var/lib/polkit-1/localauthority/10-vendor.d/com.deepin.daemon.Accounts.pkla";
                   #environment.etc."polkit-1/localauthority/10-vendor.d/com.deepin.daemon.Fprintd.pkla" = "${packages.dde-daemon}/var/lib/polkit-1/localauthority/10-vendor.d/com.deepin.daemon.Fprintd.pkla";
