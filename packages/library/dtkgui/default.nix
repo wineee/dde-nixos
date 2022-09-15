@@ -14,20 +14,20 @@
 
 stdenv.mkDerivation rec {
   pname = "dtkgui";
-  version = "5.6.1.1+";
+  version = "5.6.1.1";
 
   src = fetchFromGitHub {
     owner = "linuxdeepin";
     repo = pname;
-    rev = "09de488645171b9a55f27cf7a423c2012ed83e76";
-    sha256 = "sha256-Q9qzxDulQ5W05TGxfwNzSTXqNRLMjcy0mojpBrCeYpo=";
+    rev = "798f77411a1d9bf7aeb941e45ff9ac1155d659e0";
+    sha256 = "sha256-ANF6VXNAKoT0b0v6mAtuG5pjJQx+X0TFywBiTrCz/9w=";
   };
 
   patches = [
     (fetchpatch {
-      name = "chore(mkspecs): define mkspecs self";
-      url = "https://github.com/linuxdeepin/dtkgui/commit/092aa58ec96657d94ac5bf4724e3fcdd00e5f83d.patch";
-      sha256 = "sha256-GoqRB1Iywq2ZdQWF011ArpUfXKGUUtJjrVTJ6sfPsJ0=";
+      name = "feat: Improve version information";
+      url = "https://github.com/linuxdeepin/dtkgui/commit/b5b812816fa436abf3bc65f479454d93f8e54c8b.patch";
+      sha256 = "sha256-5+53w61eWBmbY5QhaIkwYjW3Y3UNO8O3O5deJfkZACs=";
     })
   ];
 
