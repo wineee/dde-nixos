@@ -26,8 +26,8 @@ stdenv.mkDerivation rec {
   patches = [
     (fetchpatch {
       name = "feat: Improve version information";
-      url = "https://github.com/linuxdeepin/dtkgui/commit/b5b812816fa436abf3bc65f479454d93f8e54c8b.patch";
-      sha256 = "sha256-5+53w61eWBmbY5QhaIkwYjW3Y3UNO8O3O5deJfkZACs=";
+      url = "https://github.com/linuxdeepin/dtkgui/commit/b6e6f17ddb58abfd3b9e33898afe1f69b2791a44.patch";
+      sha256 = "sha256-UUkSvz2jYinqVulhpvYmZBWqppsXOFJeSHcyQZeSMaE=";
     })
   ];
 
