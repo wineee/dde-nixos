@@ -21,23 +21,23 @@
 
 stdenv.mkDerivation rec {
   pname = "dtkwidget";
-  version = "5.6.1+";
+  version = "5.6.1";
 
   src = fetchFromGitHub {
     owner = "linuxdeepin";
     repo = pname;
-    rev = "3102d4e6a60704901396d391b121ca07e65a6da9";
-    sha256 = "sha256-TRG1W+8iSui8wO297AizIgVRJAiF7xVAHPO1dS8EyL4=";
+    rev = "1b3c54402e7db0644488ada48ce8a61049347d0f";
+    sha256 = "sha256-72RSPqgGvPjmc9AIye36MppfAgyq5WhcuzvS5ssOv5o=";
   };
-
+ 
   patches = [
     (fetchpatch {
-      name = "chore(mkspecs): define mkspecs self";
-      url = "https://github.com/linuxdeepin/dtkwidget/commit/f489687e3b4f0e1005dd10986e95acdfd0fd6a6c.patch";
-      sha256 = "sha256-ZJ0LQeM8tx/ulafvu/kvPztqG08M2PzXhunuAqQYA+M=";
+      name = "feat: Improve version information";
+      url = "https://github.com/linuxdeepin/dtkwidget/commit/1e9f22fe357cf67b903cfe0ce189393253e637bc.patch";
+      sha256 = "sha256-CEf8ibd/U0c8dPcFJSqx1edmsbc+iOduEgS2Cfzh1E0=";
     })
   ];
-
+ 
   postPatch = ''
     substituteInPlace src/widgets/dapplication.cpp \
       --replace "auto dataDirs = DStandardPaths::standardLocations(QStandardPaths::GenericDataLocation);" \
