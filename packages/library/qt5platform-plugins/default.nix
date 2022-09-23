@@ -14,13 +14,13 @@
 
 stdenv.mkDerivation rec {
   pname = "qt5platform-plugins";
-  version = "5.0.68";
+  version = "5.0.69";
 
   src = fetchFromGitHub {
     owner = "linuxdeepin";
     repo = pname;
     rev = version;
-    sha256 = "sha256-QuZxZbnsNUI/6hs4lG3IeOigLu+eq1tAc2nDmyPdX60=";
+    sha256 = "sha256-5vwjK+Oc+GR6Ed40SMCdQsCut/wpIhOaTW7hsL1Y/no=";
   };
 
   ## https://github.com/linuxdeepin/qt5platform-plugins/pull/119 
