@@ -17,9 +17,17 @@ stdenv.mkDerivation rec {
   src = fetchFromGitHub {
     owner = "linuxdeepin";
     repo = pname;
-    rev = "363b612ef790b707fd6e7b6bd9a7a41bd0c2a057";
-    sha256 = "sha256-ygDn763aUMRFO/rzkwMb1K7hUUXrV5Y8N9SPrHoGjIU=";
+    rev = "42bd299eb2137399ba3ed5248de95ca9870b5077";
+    sha256 = "sha256-gqiQCAmT0a45WP2dwhoAEfmD72iMSip1UPIZVhGUIi4=";
   };
+
+  patches = [
+    (fetchpatch {
+      name = "feat: Improve version information";
+      url = "https://github.com/linuxdeepin/dtkcore/commit/c05c6a0a0f6a1e84307791a0605480cb65d02993.patch";
+      sha256 = "sha256-YYtyXxVWSipL2KMjCwH0PZbte1Cj7wGMi+s2iu8VcS4=";
+    })
+  ];
 
   postPatch = ''
     substituteInPlace src/dsysinfo.cpp \
