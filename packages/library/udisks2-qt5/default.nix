@@ -2,7 +2,7 @@
 , lib
 , fetchFromGitHub
 , qmake
-, pkgconfig
+, pkg-config
 , wrapQtAppsHook
 , udisks
 }:
@@ -18,7 +18,7 @@ stdenv.mkDerivation rec {
     sha256 = "sha256-WS4fmqEYXi5dkn8RvyJBzy3+r+UgFcGDFFpQlbblLu4=";
   };
 
-  nativeBuildInputs = [ qmake pkgconfig wrapQtAppsHook ];
+  nativeBuildInputs = [ qmake pkg-config wrapQtAppsHook ];
 
   buildInputs = [ udisks ];
 

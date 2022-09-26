@@ -3,7 +3,7 @@
 , fetchFromDeepin
 , readVersion
 , cmake
-, pkgconfig
+, pkg-config
 , wrapQtAppsHook
 , glibmm
 , doxygen
@@ -19,7 +19,7 @@ stdenv.mkDerivation rec {
     sha256 = "sha256-dlY1CTlXywgGZUonBBe3cDwx8h2xXrPY6Ft/D59nlug=";
   };
 
-  nativeBuildInputs = [ cmake pkgconfig wrapQtAppsHook ];
+  nativeBuildInputs = [ cmake pkg-config wrapQtAppsHook ];
 
   cmakeFlags = [ 
     "-DCMAKE_INSTALL_LIBDIR=lib"

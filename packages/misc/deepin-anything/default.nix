@@ -3,9 +3,9 @@
 , fetchFromGitHub
 , dtkcore
 , qmake
-, pkgconfig
+, pkg-config
 , udisks2-qt5
-, utillinux
+, util-linux
 , pcre
 }:
 stdenv.mkDerivation rec {
@@ -23,13 +23,13 @@ stdenv.mkDerivation rec {
 
   nativeBuildInputs = [
     qmake
-    pkgconfig
+    pkg-config
   ];
 
   buildInputs = [
     dtkcore
     udisks2-qt5
-    utillinux
+    util-linux
     pcre
   ];
 
@@ -89,7 +89,7 @@ stdenv.mkDerivation rec {
   '';
 
   postInstall = ''
-    echo -e ${lib.strings.escapeShellArg deepin_anything_backend_pc} > ${placeholder "server"}/lib/pkgconfig/deepin-anything-server-lib.pc
+    echo -e ${lib.strings.escapeShellArg deepin_anything_backend_pc} > ${placeholder "server"}/lib/pkg-config/deepin-anything-server-lib.pc
   '';
 
   dontFixup = true;

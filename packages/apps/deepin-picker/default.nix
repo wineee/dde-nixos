@@ -7,7 +7,7 @@
 , dde-qt-dbus-factory
 , qmake
 , qttools
-, pkgconfig
+, pkg-config
 , qtsvg
 , xorg
 , wrapQtAppsHook
@@ -28,7 +28,7 @@ stdenv.mkDerivation rec {
   nativeBuildInputs = [
     qmake
     qttools
-    pkgconfig
+    pkg-config
     wrapQtAppsHook
   ];
 

@@ -5,7 +5,7 @@
 , dtk
 , cmake
 , qttools
-, pkgconfig
+, pkg-config
 , wrapQtAppsHook
 , opencv
 , freeimage
@@ -38,7 +38,7 @@ stdenv.mkDerivation rec {
   #   })
   # ];
 
-  nativeBuildInputs = [ cmake pkgconfig qttools wrapQtAppsHook ];
+  nativeBuildInputs = [ cmake pkg-config qttools wrapQtAppsHook ];
 
   buildInputs = [
     dtk

@@ -2,7 +2,7 @@
 , lib
 , fetchFromGitHub
 , fetchpatch
-, pkgconfig
+, pkg-config
 , cmake
 , qttools
 , wrapQtAppsHook
@@ -19,22 +19,22 @@ stdenv.mkDerivation rec {
   src = fetchFromGitHub {
     owner = "linuxdeepin";
     repo = pname;
-    rev = "798f77411a1d9bf7aeb941e45ff9ac1155d659e0";
-    sha256 = "sha256-ANF6VXNAKoT0b0v6mAtuG5pjJQx+X0TFywBiTrCz/9w=";
+    rev = "999b6f5fc5588b819a0fde8bc44dcd0f84177f71";
+    sha256 = "sha256-5P8xuDj3+bDE8vqwLRbouj3n+DWPaLVRiJaTYD64Iu0=";
   };
 
   patches = [
     (fetchpatch {
       name = "feat: Improve version information";
-      url = "https://github.com/linuxdeepin/dtkgui/commit/b6e6f17ddb58abfd3b9e33898afe1f69b2791a44.patch";
-      sha256 = "sha256-UUkSvz2jYinqVulhpvYmZBWqppsXOFJeSHcyQZeSMaE=";
+      url = "https://github.com/linuxdeepin/dtkgui/commit/03a732b73a07422a26e718c16135cc56ea8603f0.patch";
+      sha256 = "sha256-nL7Ayrb2g16UkJF/x/L1NVI4E9bAn3lBibFNbiK+OP4=";
     })
   ];
 
   nativeBuildInputs = [
     cmake
     qttools
-    pkgconfig
+    pkg-config
     wrapQtAppsHook
   ];
 

@@ -3,7 +3,7 @@
 , fetchFromGitHub
 , getUsrPatchFrom
 , buildGoPackage
-, pkgconfig
+, pkg-config
 , go-dbus-factory
 , go-gir-generator
 , go-lib
@@ -105,7 +105,7 @@ buildGoPackage rec {
 
   nativeBuildInputs = [
     gettext
-    pkgconfig
+    pkg-config
     jq
     wrapGAppsHook
     glib

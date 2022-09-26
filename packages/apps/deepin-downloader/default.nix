@@ -9,7 +9,7 @@
 , qttools
 , qtwebengine
 , qtwebsockets
-, pkgconfig
+, pkg-config
 , wrapQtAppsHook
 , gtest
 , qtbase
@@ -37,7 +37,7 @@ stdenv.mkDerivation rec {
   nativeBuildInputs = [
     cmake
     qttools
-    pkgconfig
+    pkg-config
     wrapQtAppsHook
   ];
 

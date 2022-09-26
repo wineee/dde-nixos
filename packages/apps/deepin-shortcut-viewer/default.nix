@@ -6,7 +6,7 @@
 , qt5platform-plugins
 , qmake
 , qttools
-, pkgconfig
+, pkg-config
 , wrapQtAppsHook
 , qtbase
 }:
@@ -25,7 +25,7 @@ stdenv.mkDerivation rec {
   nativeBuildInputs = [
     qmake
     qttools
-    pkgconfig
+    pkg-config
     wrapQtAppsHook
   ];
 

@@ -9,7 +9,7 @@
 , udisks2-qt5
 , image-editor
 , cmake
-, pkgconfig
+, pkg-config
 , qttools
 , wrapQtAppsHook
 , libraw
@@ -44,7 +44,7 @@ stdenv.mkDerivation rec {
 
   nativeBuildInputs = [
     cmake
-    pkgconfig
+    pkg-config
     qttools
     wrapQtAppsHook
   ];

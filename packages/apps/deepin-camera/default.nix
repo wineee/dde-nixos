@@ -10,7 +10,7 @@
 , image-editor
 , dde-api
 , cmake
-, pkgconfig
+, pkg-config
 , qttools
 , qtmultimedia
 , wrapQtAppsHook
@@ -40,7 +40,7 @@ stdenv.mkDerivation rec {
 
   nativeBuildInputs = [
     cmake
-    pkgconfig
+    pkg-config
     qttools
     deepin-gettext-tools
     wrapQtAppsHook

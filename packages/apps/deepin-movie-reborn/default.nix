@@ -9,7 +9,7 @@
 , qtmpris
 , qtdbusextended
 , cmake
-, pkgconfig
+, pkg-config
 , qttools
 , qtx11extras
 , qtmultimedia
@@ -99,7 +99,7 @@ stdenv.mkDerivation rec {
 
   nativeBuildInputs = [
     cmake
-    pkgconfig
+    pkg-config
     qttools
     wrapQtAppsHook
   ];

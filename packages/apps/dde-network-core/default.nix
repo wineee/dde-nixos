@@ -11,12 +11,12 @@
 , gio-qt
 , cmake
 , qttools
-, pkgconfig
+, pkg-config
 , gsettings-qt
 , networkmanager-qt
 , glib
 , pcre
-, utillinux
+, util-linux
 , libselinux
 , libsepol
 , wrapQtAppsHook
@@ -38,7 +38,7 @@ stdenv.mkDerivation rec {
   nativeBuildInputs = [
     cmake
     qttools
-    pkgconfig
+    pkg-config
     wrapQtAppsHook
   ];
 
@@ -53,7 +53,7 @@ stdenv.mkDerivation rec {
     networkmanager-qt.dev
     glib.dev
     pcre
-    utillinux
+    util-linux
     libselinux
     libsepol
     gtest

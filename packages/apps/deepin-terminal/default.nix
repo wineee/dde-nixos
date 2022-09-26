@@ -9,7 +9,7 @@
 , cmake
 , qttools
 , qtx11extras
-, pkgconfig
+, pkg-config
 , wrapQtAppsHook
 , at-spi2-core
 , libsecret
@@ -44,7 +44,7 @@ stdenv.mkDerivation rec {
   nativeBuildInputs = [
     cmake
     qttools
-    pkgconfig
+    pkg-config
     wrapQtAppsHook
   ];
 

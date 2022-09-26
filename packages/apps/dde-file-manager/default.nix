@@ -23,7 +23,7 @@
 , qtx11extras
 , qtmultimedia
 , kcodecs
-, pkgconfig
+, pkg-config
 , jemalloc
 , ffmpegthumbnailer
 , libsecret
@@ -184,7 +184,7 @@ stdenv.mkDerivation rec {
   nativeBuildInputs = [
     qmake
     qttools
-    pkgconfig
+    pkg-config
     deepin-gettext-tools
     wrapQtAppsHook
     wrapGAppsHook

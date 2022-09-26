@@ -1,5 +1,6 @@
 { stdenv
 , lib
+, fetchpatch
 , fetchFromGitHub
 , getUsrPatchFrom
 , dtk
@@ -9,9 +10,9 @@
 , dde-dock
 , image-editor
 , gsettings-qt
-, qmake
+, cmake
 , qttools
-, pkgconfig
+, pkg-config
 , qtmultimedia
 , qtx11extras
 , wrapQtAppsHook
@@ -25,6 +26,7 @@
 , udev
 , kwayland
 , dbus
+, procps
 , qtbase
 }:
 # TODO
@@ -32,8 +34,6 @@
 let
   gstPluginPath = lib.makeSearchPathOutput "lib" "lib/gstreamer-1.0" (with gst_all_1; [ gstreamer gst-plugins-base gst-plugins-good gst-plugins-bad ]);
   patchList = {
-    "src/dde-dock-plugins/shotstart/shotstart.pro" = [ ];
-    "src/dde-dock-plugins/recordtime/recordtime.pro" = [ ];
 
     ###MISC
     "deepin-screen-recorder.desktop" = [ ];
@@ -82,18 +82,26 @@ let
 in
 stdenv.mkDerivation rec {
   pname = "deepin-screen-recorder";
-  version = "5.11.2";
+  version = "5.11.8+";
 
   src = fetchFromGitHub {
-    owner = "linuxdeepin";
+    owner = "Decodetalkers";
     repo = pname;
-    rev = version;
-    sha256 = "sha256-K5/xnfmtDWO01fl6RVGFoH6O/Jd1movUZGbhrbmpzEw=";
+    rev = "84213c514aa8914411d64547b15f0e2cae8f743f";
+    sha256 = "sha256-bWnAp/8yAfWjdoVXiifKwoqXMJ0azMLs67p+MxLvmU0=";
   };
 
+  # patches = [
+  #   (fetchpatch {
+  #     name = "fix: don't hardcode /usr/bin path";
+  #     url = "https://github.com/linuxdeepin/deepin-screen-recorder/commit/292c2b7975496e936b5289b52920a36effc05477.patch";
+  #     sha256 = "sha256-oMVfM4s1gvHJgG8o+gGrEAbqRNMZQjjqs53kcIS1oYU=";
+  #   })
+  # ];
+
   nativeBuildInputs = [
-    qmake
-    pkgconfig
+    cmake
+    pkg-config
     qttools
     wrapQtAppsHook
   ];
@@ -117,6 +125,7 @@ stdenv.mkDerivation rec {
     ffmpegthumbnailer
     portaudio
     udev
+    procps
   ] ++ ( with gst_all_1; [
     gstreamer
     gst-plugins-base
@@ -124,40 +133,10 @@ stdenv.mkDerivation rec {
     gst-plugins-bad
   ]);
 
-  qmakeFlags = [
-    "PREFIX=${placeholder "out"}"
-    "BINDIR=${placeholder "out"}/bin"
-    "ICONDIR=${placeholder "out"}/share/icons/hicolor/scalable/apps"
-    "APPDIR=${placeholder "out"}/share/applications"
-    "DSRDIR=${placeholder "out"}/share/deepin-screen-recorder"
-    "DOCDIR=${placeholder "out"}/share/dman/deepin-screen-recorder"
-    "ETCDIR=${placeholder "out"}/etc"
-  ];
-
   qtWrapperArgs = [
     "--prefix QT_PLUGIN_PATH : ${qt5integration}/${qtbase.qtPluginPrefix}"
     "--prefix GST_PLUGIN_SYSTEM_PATH_1_0 : ${gstPluginPath}"
   ];
-
-
-  fixInstallPatch = ''
-    substituteInPlace screen_shot_recorder.pro \
-      --replace "/usr/share/deepin-screen-recorder/translations" "$out/share/deepin-screen-recorder/translations"
-
-    substituteInPlace src/src.pro \
-      --replace "/usr/share/deepin-manual/manual-assets/application/" "$out/share/deepin-manual/manual-assets/application/"
-
-    substituteInPlace src/pin_screenshots/pin_screenshots.pro \
-      --replace "/usr/bin" "$out/bin" \
-      --replace "/usr/share/dbus-1/services" "$out/share/dbus-1/services"
-  '';
-
-  fixPkgconfigPatch = ''
-    substituteInPlace src/src.pro \
-      --replace "PKGCONFIG +=xcb xcb-util dframeworkdbus gobject-2.0" "PKGCONFIG +=xcb xcb-util dframeworkdbus gobject-2.0 gstreamer-app-1.0"
-  '';
-
-  postPatch = fixInstallPatch + fixPkgconfigPatch + getUsrPatchFrom patchList;
 
   meta = with lib; {
     description = "screen recorder application for dde";

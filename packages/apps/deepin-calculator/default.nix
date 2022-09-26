@@ -8,7 +8,7 @@
 , dde-qt-dbus-factory
 , cmake
 , qttools
-, pkgconfig
+, pkg-config
 , qtx11extras
 , wrapQtAppsHook
 , gtest
@@ -29,7 +29,7 @@ stdenv.mkDerivation rec {
   nativeBuildInputs = [
     cmake
     qttools
-    pkgconfig
+    pkg-config
     wrapQtAppsHook
   ];
 

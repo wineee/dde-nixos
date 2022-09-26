@@ -8,7 +8,7 @@
 , dde-file-manager
 , cmake
 , qttools
-, pkgconfig
+, pkg-config
 , wrapQtAppsHook
 , fontconfig
 , freetype
@@ -45,7 +45,7 @@ stdenv.mkDerivation rec {
 
   nativeBuildInputs = [
     cmake
-    pkgconfig
+    pkg-config
     qttools
     wrapQtAppsHook
   ];

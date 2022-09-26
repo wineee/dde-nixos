@@ -5,7 +5,7 @@
 , dde-polkit-agent
 , qt5integration
 , cmake
-, pkgconfig
+, pkg-config
 , qttools
 , wrapQtAppsHook
 , libsecret
@@ -25,7 +25,7 @@ stdenv.mkDerivation rec {
 
   nativeBuildInputs = [
     cmake
-    pkgconfig
+    pkg-config
     qttools
     wrapQtAppsHook
   ];

@@ -3,7 +3,7 @@
 , fetchFromGitHub
 , buildGoPackage
 , getUsrPatchFrom
-, pkgconfig
+, pkg-config
 , alsaLib
 , bc
 , blur-effect
@@ -19,7 +19,7 @@
 , librsvg
 , poppler
 , pulseaudio
-, utillinux
+, util-linux
 , xcur2png
 , gdk-pixbuf-xlib
 , dbus
@@ -98,7 +98,7 @@ buildGoPackage rec {
   goDeps = ./deps.nix;
 
   nativeBuildInputs = [
-    pkgconfig
+    pkg-config
     deepin-gettext-tools
   ];
 

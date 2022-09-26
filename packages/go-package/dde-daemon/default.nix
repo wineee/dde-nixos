@@ -3,7 +3,7 @@
 , fetchFromGitHub
 , getUsrPatchFrom
 , buildGoPackage
-, pkgconfig
+, pkg-config
 , go-dbus-factory
 , go-gir-generator
 , go-lib
@@ -38,7 +38,7 @@
 , xdotool
 , dbus
 , getconf
-, utillinux
+, util-linux
 , ddcutil
 }:
 let
@@ -103,7 +103,7 @@ let
     ];
     "system/display/displaycfg.go" = [
       [ "/usr/bin/lightdm-deepin-greeter" "lightdm-deepin-greeter" ]
-      [ "runuser" "${utillinux.bin}/bin/runuser" ]
+      [ "runuser" "${util-linux.bin}/bin/runuser" ]
     ];
     "service_trigger/manager.go" = [
       [ "/etc/deepin-daemon/" "$out/etc/deepin-daemon/" ]
@@ -170,7 +170,7 @@ let
       #? "/etc/adduser.conf"
     ];
     "image_effect/utils.go" = [
-      [ "runuser" "${utillinux.bin}/bin/runuser" ]
+      [ "runuser" "${util-linux.bin}/bin/runuser" ]
     ];
     "misc/etc/acpi/events/deepin_lid" = [ 
       [ "/etc/acpi/actions/deepin_lid.sh" "$out/etc/acpi/actions/deepin_lid.sh" ]
@@ -223,7 +223,7 @@ buildGoPackage rec {
   goDeps = ./deps.nix;
 
   nativeBuildInputs = [
-    pkgconfig
+    pkg-config
     deepin-gettext-tools
     gettext
     networkmanager
@@ -255,7 +255,7 @@ buildGoPackage rec {
     pulseaudio
     tzdata
     xkeyboard_config
-    utillinux
+    util-linux
     ddcutil
   ];
 

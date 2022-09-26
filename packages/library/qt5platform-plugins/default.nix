@@ -2,7 +2,7 @@
 , lib
 , fetchFromGitHub
 , qmake
-, pkgconfig
+, pkg-config
 , qtbase
 , qtx11extras
 , wrapQtAppsHook
@@ -32,7 +32,7 @@ stdenv.mkDerivation rec {
 
   postPatch = fixQtPatch;
 
-  nativeBuildInputs = [ qmake pkgconfig wrapQtAppsHook ];
+  nativeBuildInputs = [ qmake pkg-config wrapQtAppsHook ];
 
   buildInputs = [
     mtdev

@@ -5,7 +5,7 @@
 , getUsrPatchFrom
 , dtk
 , cmake
-, pkgconfig
+, pkg-config
 , wrapQtAppsHook
 }:
 let
@@ -37,7 +37,7 @@ stdenv.mkDerivation rec {
 
   nativeBuildInputs = [
     cmake
-    pkgconfig
+    pkg-config
     wrapQtAppsHook
   ];
 

@@ -3,7 +3,7 @@
 , fetchFromGitHub
 , dtk
 , qmake
-, pkgconfig
+, pkg-config
 , qtbase
 , qttools
 , qtx11extras
@@ -40,7 +40,7 @@ stdenv.mkDerivation rec {
   nativeBuildInputs = [
     qmake
     qttools
-    pkgconfig
+    pkg-config
     wrapQtAppsHook
   ];
 

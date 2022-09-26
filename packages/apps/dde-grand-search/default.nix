@@ -10,13 +10,13 @@
 , qt5platform-plugins
 , cmake
 , qttools
-, pkgconfig
+, pkg-config
 , gsettings-qt
 , taglib
 , ffmpeg
 , poppler
 , pcre
-, utillinux
+, util-linux
 , libselinux
 , libsepol
 , ffmpegthumbnailer
@@ -64,7 +64,7 @@ in stdenv.mkDerivation rec {
   nativeBuildInputs = [
     cmake
     qttools
-    pkgconfig
+    pkg-config
     wrapQtAppsHook
   ];
 
@@ -79,7 +79,7 @@ in stdenv.mkDerivation rec {
     pcre
     libselinux
     libsepol.dev
-    utillinux.dev
+    util-linux.dev
     ffmpegthumbnailer
   ];
 

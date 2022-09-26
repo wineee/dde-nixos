@@ -8,7 +8,7 @@
 , qmake
 , qtbase
 , qtsvg
-, pkgconfig
+, pkg-config
 , wrapQtAppsHook
 , qtx11extras
 , qt5platform-plugins
@@ -29,7 +29,7 @@ stdenv.mkDerivation rec {
     sha256 = "sha256-j2FcmEAcMSFRfUk81wccVBfylsg144RQTEP46L7ZjtY=";
   };
 
-  nativeBuildInputs = [ qmake pkgconfig wrapQtAppsHook ];
+  nativeBuildInputs = [ qmake pkg-config wrapQtAppsHook ];
 
   buildInputs = [
     dtkcommon

@@ -3,7 +3,7 @@
 , fetchFromGitHub
 , go-lib
 , go
-, pkgconfig
+, pkg-config
 , libgudev
 , gobject-introspection
 }:
@@ -20,7 +20,7 @@ stdenv.mkDerivation rec {
   };
 
   nativeBuildInputs = [
-    pkgconfig
+    pkg-config
     go
   ];
 

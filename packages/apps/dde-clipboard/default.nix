@@ -10,7 +10,7 @@
 , cmake
 , qttools
 , kwayland
-, pkgconfig
+, pkg-config
 , wrapQtAppsHook
 , glibmm
 , gtest
@@ -49,7 +49,7 @@ stdenv.mkDerivation rec {
 
   nativeBuildInputs = [
     cmake
-    pkgconfig
+    pkg-config
     qttools
     wrapQtAppsHook
   ];

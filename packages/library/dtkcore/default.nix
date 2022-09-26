@@ -2,7 +2,7 @@
 , lib
 , fetchFromGitHub
 , fetchpatch
-, pkgconfig
+, pkg-config
 , cmake
 , gsettings-qt
 , wrapQtAppsHook
@@ -28,7 +28,7 @@ stdenv.mkDerivation rec {
 
   nativeBuildInputs = [
     cmake
-    pkgconfig
+    pkg-config
     wrapQtAppsHook
   ];
 

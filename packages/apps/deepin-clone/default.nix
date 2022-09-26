@@ -7,7 +7,7 @@
 , dde-file-manager
 , cmake
 , qttools
-, pkgconfig
+, pkg-config
 , wrapQtAppsHook
 , qtbase
 }:
@@ -26,7 +26,7 @@ stdenv.mkDerivation rec {
   nativeBuildInputs = [
     cmake
     qttools
-    pkgconfig
+    pkg-config
     wrapQtAppsHook
   ];
 

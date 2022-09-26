@@ -14,7 +14,7 @@
 , cmake
 , qttools
 , qtbase
-, pkgconfig
+, pkg-config
 , qtx11extras
 , qtmultimedia
 , wrapQtAppsHook
@@ -126,7 +126,7 @@ stdenv.mkDerivation rec {
   nativeBuildInputs = [
     cmake
     qttools
-    pkgconfig
+    pkg-config
     wrapQtAppsHook
     wrapGAppsHook
   ];

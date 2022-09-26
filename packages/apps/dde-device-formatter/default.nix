@@ -10,7 +10,7 @@
 , qmake
 , qttools
 , qtx11extras
-, pkgconfig
+, pkg-config
 , wrapQtAppsHook
 , udisks2-qt5
 , gtest
@@ -48,7 +48,7 @@ stdenv.mkDerivation rec {
   nativeBuildInputs = [
     qmake
     qttools
-    pkgconfig
+    pkg-config
     wrapQtAppsHook
     deepin-gettext-tools
   ];

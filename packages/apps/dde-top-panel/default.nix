@@ -10,7 +10,7 @@
 , qttools
 , qtx11extras
 , kwindowsystem
-, pkgconfig
+, pkg-config
 , dde-qt-dbus-factory
 , wrapQtAppsHook
 , xorg
@@ -32,7 +32,7 @@ stdenv.mkDerivation rec {
   nativeBuildInputs = [
     cmake
     qttools
-    pkgconfig
+    pkg-config
     wrapQtAppsHook
   ];
 

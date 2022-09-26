@@ -2,7 +2,7 @@
 , lib
 , fetchFromGitHub
 , buildGoPackage
-, pkgconfig
+, pkg-config
 , deepin-gettext-tools
 , go
 , go-dbus-factory
@@ -32,7 +32,7 @@ buildGoPackage rec {
   goDeps = ./deps.nix;
 
   nativeBuildInputs = [
-    pkgconfig
+    pkg-config
     gettext
     deepin-gettext-tools
   ];
@@ -52,7 +52,7 @@ buildGoPackage rec {
 
   postPatch = ''
     sed -i 's|iniparser/||' */*.c
-    substituteInPlace misc/pkgconfig/libdeepin_pw_check.pc \
+    substituteInPlace misc/pkg-config/libdeepin_pw_check.pc \
       --replace "/usr" "$out" \
       --replace "Version: 0.0.0.1" "Version: ${version}"
     
@@ -70,7 +70,7 @@ buildGoPackage rec {
   '';
 
   installPhase = ''
-    make install DESTDIR="$out" PREFIX="/" PKG_FILE_DIR="/lib/pkgconfig" -C go/src/${goPackagePath}
+    make install DESTDIR="$out" PREFIX="/" PKG_FILE_DIR="/lib/pkg-config" -C go/src/${goPackagePath}
     ln -s $out/lib/libdeepin_pw_check.so $out/lib/libdeepin_pw_check.so.1
   '';
 

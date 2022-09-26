@@ -5,7 +5,7 @@
 , dtkcore
 , dtkgui
 , dtkcommon
-, pkgconfig
+, pkg-config
 , cmake
 , qttools
 , qtmultimedia
@@ -47,7 +47,7 @@ stdenv.mkDerivation rec {
   nativeBuildInputs = [
     cmake
     qttools
-    pkgconfig
+    pkg-config
     wrapQtAppsHook
   ];
 

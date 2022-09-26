@@ -8,7 +8,7 @@
 , cmake
 , qttools
 , polkit-qt
-, pkgconfig
+, pkg-config
 , qtx11extras
 , wrapQtAppsHook
 , pciutils
@@ -32,7 +32,7 @@ stdenv.mkDerivation rec {
 
   nativeBuildInputs = [
     cmake
-    pkgconfig
+    pkg-config
     qttools
     wrapQtAppsHook
   ];

@@ -13,7 +13,7 @@
 , lightdm_qt
 , qttools
 , qtx11extras
-, utillinux
+, util-linux
 , xorg
 , pcre
 , libselinux
@@ -106,7 +106,7 @@ stdenv.mkDerivation rec {
     qtx11extras
     pcre
     xorg.libXdmcp
-    utillinux
+    util-linux
     libselinux
     libsepol
     gtest
