@@ -48,11 +48,12 @@ buildGoPackage rec {
     linux-pam
   ];
 
-  hardeningDisable = [ "all" ]; ## FIXME
+  # hardeningDisable = [ "all" ];
 
   postPatch = ''
     sed -i 's|iniparser/||' */*.c
-    substituteInPlace misc/pkg-config/libdeepin_pw_check.pc \
+    sed -i 's|sprintf(outbuf, err_to_string|sprintf(outbuf, "%s", err_to_string|' pam/pam.c
+    substituteInPlace misc/pkgconfig/libdeepin_pw_check.pc \
       --replace "/usr" "$out" \
       --replace "Version: 0.0.0.1" "Version: ${version}"
     
