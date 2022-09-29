@@ -4,7 +4,7 @@
 , buildGoPackage
 , getUsrPatchFrom
 , pkg-config
-, alsaLib
+, alsa-lib
 , bc
 , blur-effect
 , deepin-gettext-tools
@@ -107,7 +107,7 @@ buildGoPackage rec {
     go-gir-generator
     go-lib
 
-    alsaLib
+    alsa-lib
     gtk3
     libcanberra
     libgudev

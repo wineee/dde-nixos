@@ -26,15 +26,15 @@ stdenv.mkDerivation rec {
   src = fetchFromGitHub {
     owner = "linuxdeepin";
     repo = pname;
-    rev = "1b3c54402e7db0644488ada48ce8a61049347d0f";
-    sha256 = "sha256-72RSPqgGvPjmc9AIye36MppfAgyq5WhcuzvS5ssOv5o=";
+    rev = "1b42cb9c7dbd7c10c7f490373181aa80bebf6e72";
+    sha256 = "sha256-iD9WIMeUCE8RL1QyIETj8owbSLVloz25X8W9mmYbK1I=";
   };
  
   patches = [
     (fetchpatch {
       name = "feat: Improve version information";
-      url = "https://github.com/linuxdeepin/dtkwidget/commit/1e9f22fe357cf67b903cfe0ce189393253e637bc.patch";
-      sha256 = "sha256-CEf8ibd/U0c8dPcFJSqx1edmsbc+iOduEgS2Cfzh1E0=";
+      url = "https://github.com/linuxdeepin/dtkwidget/commit/94444d442b2cdc62518c1d9938826035c741d18f.patch";
+      sha256 = "sha256-a0YCQdkB62oN6G99mRS3xMpQ6QCSFNXwnGrNjOVze3M=";
     })
   ];
  

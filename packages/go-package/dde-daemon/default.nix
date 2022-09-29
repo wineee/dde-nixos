@@ -12,7 +12,7 @@
 , dde-api
 , deepin-desktop-schemas
 , deepin-wallpapers
-, alsaLib
+, alsa-lib
 , glib
 , gtk3
 , libgudev
@@ -240,7 +240,7 @@ buildGoPackage rec {
     go-lib
     linux-pam
 
-    alsaLib
+    alsa-lib
     dde-api
     deepin-desktop-schemas
     deepin-wallpapers

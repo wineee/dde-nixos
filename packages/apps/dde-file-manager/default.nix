@@ -221,8 +221,8 @@ stdenv.mkDerivation rec {
     gio-qt
     docparser
     dde-dock.dev
-    deepin-anything
-    deepin-anything.server
+    #deepin-anything
+    #deepin-anything.server
     deepin-movie-reborn.dev
     deepin-desktop-schemas
     qtx11extras
@@ -253,6 +253,7 @@ stdenv.mkDerivation rec {
     "PREFIX=${placeholder "out"}"
     "LIB_INSTALL_DIR=${placeholder "out"}/lib"
     "INCLUDE_INSTALL_DIR=${placeholder "out"}/include"
+    "CONFIG+=DISABLE_ANYTHING"
   ];
 
   qtWrapperArgs = [
