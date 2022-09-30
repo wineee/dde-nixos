@@ -14,22 +14,14 @@
 
 stdenv.mkDerivation rec {
   pname = "dtkgui";
-  version = "5.6.1.1";
+  version = "5.6.1+";
 
   src = fetchFromGitHub {
     owner = "linuxdeepin";
     repo = pname;
-    rev = "999b6f5fc5588b819a0fde8bc44dcd0f84177f71";
-    sha256 = "sha256-5P8xuDj3+bDE8vqwLRbouj3n+DWPaLVRiJaTYD64Iu0=";
+    rev = "5204f570ef298afd3555edd2e3b718e6423681ac";
+    sha256 = "sha256-ioekMkhWZlI7aHc1eSQeL7/wmt7FCs1CFMdpUpN+ywA=";
   };
-
-  patches = [
-    (fetchpatch {
-      name = "feat: Improve version information";
-      url = "https://github.com/linuxdeepin/dtkgui/commit/2b2748c32fa2cf4aaa78889e1d89d6170e2461f7.patch";
-      sha256 = "sha256-FWtWkKImKYEA3HH0WEsWsucOA8LaQ8UDsO8sz60b3Ec=";
-    })
-  ];
 
   nativeBuildInputs = [
     cmake

@@ -12,22 +12,14 @@
 
 stdenv.mkDerivation rec {
   pname = "dtkcore";
-  version = "5.6.0.2";
+  version = "5.6.2";
 
   src = fetchFromGitHub {
     owner = "linuxdeepin";
     repo = pname;
-    rev = "42bd299eb2137399ba3ed5248de95ca9870b5077";
-    sha256 = "sha256-gqiQCAmT0a45WP2dwhoAEfmD72iMSip1UPIZVhGUIi4=";
+    rev = version;
+    sha256 = "sha256-2XEtMeoBNLJoHPXfhyQRZoWRNjflDsXmWkOI5T3oS+0=";
   };
-
-  patches = [
-    (fetchpatch {
-      name = "feat: Improve version information";
-      url = "https://github.com/linuxdeepin/dtkcore/commit/c05c6a0a0f6a1e84307791a0605480cb65d02993.patch";
-      sha256 = "sha256-YYtyXxVWSipL2KMjCwH0PZbte1Cj7wGMi+s2iu8VcS4=";
-    })
-  ];
 
   postPatch = ''
     substituteInPlace src/dsysinfo.cpp \

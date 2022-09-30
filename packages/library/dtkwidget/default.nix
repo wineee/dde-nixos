@@ -21,22 +21,14 @@
 
 stdenv.mkDerivation rec {
   pname = "dtkwidget";
-  version = "5.6.1";
+  version = "5.6.2";
 
   src = fetchFromGitHub {
     owner = "linuxdeepin";
     repo = pname;
-    rev = "1b42cb9c7dbd7c10c7f490373181aa80bebf6e72";
-    sha256 = "sha256-iD9WIMeUCE8RL1QyIETj8owbSLVloz25X8W9mmYbK1I=";
+    rev = "bed17f106684a3ab8b0fff337fb850b8b31cf4f8";
+    sha256 = "sha256-Jrf63j2lk7XR6mdF2fY3AxN1sgdBBHGdoJ9aU7eRk60=";
   };
- 
-  patches = [
-    (fetchpatch {
-      name = "feat: Improve version information";
-      url = "https://github.com/linuxdeepin/dtkwidget/commit/94444d442b2cdc62518c1d9938826035c741d18f.patch";
-      sha256 = "sha256-a0YCQdkB62oN6G99mRS3xMpQ6QCSFNXwnGrNjOVze3M=";
-    })
-  ];
  
   postPatch = ''
     substituteInPlace src/widgets/dapplication.cpp \
