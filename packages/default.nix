@@ -21,6 +21,16 @@ let
     
     getUsrPatchFrom = getPatchFrom [ [ "/usr" "$out" ] ];
 
+    replaceAll = x: y: ''
+      echo Replacing "${x}" to "${y}":
+      for file in $(grep -rl "${x}")
+      do
+        echo -- $file
+        substituteInPlace $file \
+          --replace "${x}" "${y}"
+      done
+    '';
+
     release = pkgs.callPackage ./release.nix { };
 
     fetchFromDeepin = { pname, sha256 }:

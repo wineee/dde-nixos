@@ -2,6 +2,7 @@
 , lib
 , fetchFromGitHub
 , getUsrPatchFrom
+, replaceAll
 , buildGoPackage
 , pkg-config
 , go-dbus-factory
@@ -65,15 +66,6 @@ let
       [ "/usr/bin/dde_wloutput" "dde_wloutput" ]
     ];
   };
-  replaceAll = x: y: ''
-    echo Replacing "${x}" to "${y}":
-    for file in $(grep -rl "${x}")
-    do
-      echo -- $file
-      substituteInPlace $file \
-        --replace "${x}" "${y}"
-    done
-  '';
 in
 buildGoPackage rec {
   pname = "startdde";
