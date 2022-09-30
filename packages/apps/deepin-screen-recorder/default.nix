@@ -3,6 +3,7 @@
 , fetchpatch
 , fetchFromGitHub
 , getUsrPatchFrom
+, replaceAll
 , dtk
 , qt5integration
 , qt5platform-plugins
@@ -11,6 +12,7 @@
 , image-editor
 , gsettings-qt
 , cmake
+, qmake
 , qttools
 , pkg-config
 , qtmultimedia
@@ -28,12 +30,18 @@
 , dbus
 , procps
 , qtbase
+, patchelf
 }:
 # TODO
 # src/main.cpp : ffmpeg
 let
   gstPluginPath = lib.makeSearchPathOutput "lib" "lib/gstreamer-1.0" (with gst_all_1; [ gstreamer gst-plugins-base gst-plugins-good gst-plugins-bad ]);
   patchList = {
+    "screen_shot_recorder.pro " = [ ];
+    "src/src.pro" = [ ];
+    "src/pin_screenshots/pin_screenshots.pro" = [ ];
+    "src/dde-dock-plugins/shotstart/shotstart.pro" = [ ];
+    "src/dde-dock-plugins/recordtime/recordtime.pro" = [ ];
 
     ###MISC
     "deepin-screen-recorder.desktop" = [ ];
@@ -41,7 +49,6 @@ let
       # /usr/share/deepin-screen-recorder/tablet_resources/fast-icon_recording_normal.svg
     ];
     "com.deepin.Screenshot.service" = [
-      [ "/usr/bin/dbus-send" "${dbus}/bin/dbus-send" ]
       # /usr/share/applications/deepin-screen-recorder.desktop
     ];
     "src/dbusservice/com.deepin.Screenshot.service" = [
@@ -49,58 +56,54 @@ let
       # /usr/bin/deepin-screenshot
     ];
     "src/pin_screenshots/com.deepin.PinScreenShots.service" = [
-      [ "/usr/bin/dbus-send" "${dbus}/bin/dbus-send" ]
       # /usr/bin/deepin-pin-screenshots
     ];
     "assets/com.deepin.Screenshot.service" = [
-      [ "/usr/bin/dbus-send" "${dbus}/bin/dbus-send" ]
       #/usr/bin/deepin-screen-recorder
     ];
     "assets/com.deepin.ScreenRecorder.service" = [
       # /usr/bin/deepin-screen-recorder
-    ];
-    "com.deepin.ScreenRecorder.service" = [
-      [ "/usr/bin/dbus-send" "${dbus}/bin/dbus-send" ]
     ];
 
     ### CODE
     "src/recordertablet.cpp" = [
       #/usr/share/deepin-screen-recorder/tablet_resources
     ];
-    "src/pin_screenshots/mainwindow.cpp" = [
-      #? QFile("/usr/bin/dde-file-manager").exists()
-    ];
-
-    "src/main.cpp" = [
-      #? /usr/bin/ffmpeg why not "which ffmpeg"
-    ];
-
-    "src/main_window.cpp" = [
-      #? QFile("/usr/bin/deepin-album").exists() ..
-    ];
   };
 in
 stdenv.mkDerivation rec {
   pname = "deepin-screen-recorder";
-  version = "5.11.8+";
+  version = "5.11.10";
 
   src = fetchFromGitHub {
-    owner = "Decodetalkers";
+    owner = "linuxdeepin";
     repo = pname;
-    rev = "84213c514aa8914411d64547b15f0e2cae8f743f";
-    sha256 = "sha256-bWnAp/8yAfWjdoVXiifKwoqXMJ0azMLs67p+MxLvmU0=";
+    rev = version;
+    sha256 = "sha256-N/jscymVdvfO5/jpDfHH5APlufeHaeIvD0Ky33DL0oc=";
   };
 
-  # patches = [
-  #   (fetchpatch {
-  #     name = "fix: don't hardcode /usr/bin path";
-  #     url = "https://github.com/linuxdeepin/deepin-screen-recorder/commit/292c2b7975496e936b5289b52920a36effc05477.patch";
-  #     sha256 = "sha256-oMVfM4s1gvHJgG8o+gGrEAbqRNMZQjjqs53kcIS1oYU=";
-  #   })
-  # ];
+  patches = [
+    (fetchpatch {
+      name = "fix: don't hardcode /usr/bin path";
+      url = "https://github.com/linuxdeepin/deepin-screen-recorder/pull/227/commits/292c2b7975496e936b5289b52920a36effc05477.patch";
+      sha256 = "sha256-oMVfM4s1gvHJgG8o+gGrEAbqRNMZQjjqs53kcIS1oYU=";
+    })
+  ];
+
+  postPatch = getUsrPatchFrom patchList + replaceAll "/usr/bin/dbus-send" "${dbus}/bin/dbus-send";
+
+  qmakeFlags = [
+    "PREFIX=${placeholder "out"}"
+    "BINDIR=${placeholder "out"}/bin"
+    "ICONDIR=${placeholder "out"}/share/icons/hicolor/scalable/apps"
+    "APPDIR=${placeholder "out"}/share/applications"
+    "DSRDIR=${placeholder "out"}/share/deepin-screen-recorder"
+    "DOCDIR=${placeholder "out"}/share/dman/deepin-screen-recorder"
+    "ETCDIR=${placeholder "out"}/etc"
+  ];
 
   nativeBuildInputs = [
-    cmake
+    qmake #cmake
     pkg-config
     qttools
     wrapQtAppsHook
@@ -137,6 +140,10 @@ stdenv.mkDerivation rec {
     "--prefix QT_PLUGIN_PATH : ${qt5integration}/${qtbase.qtPluginPrefix}"
     "--prefix GST_PLUGIN_SYSTEM_PATH_1_0 : ${gstPluginPath}"
   ];
+
+  preFixup = ''
+      patchelf --add-needed ${udev}/lib/libudev.so $out/bin/deepin-screen-recorder
+  '';
 
   meta = with lib; {
     description = "screen recorder application for dde";
