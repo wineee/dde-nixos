@@ -31,6 +31,7 @@
           ripgrep
           ranger
           exa
+          ffmpeg
         ] ++ (with dde-nixos.packages.${super.system}; [
           deepin-draw
           deepin-voice-note
