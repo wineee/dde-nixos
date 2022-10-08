@@ -172,6 +172,7 @@
                   environment.etc = {
                     "X11/Xsession.d".source = "${packages.startdde}/X11/Xsession.d";
                     #"lightdm/lightdm.conf".source = "${packages.startdde}/etc/lightdm/lightdm.conf";
+                    "deepin/dde-session-ui.conf".source = "${packages.dde-session-ui}/share/deepin/dde-session-ui.conf";
                   };
 
                   #environment.etc."polkit-1/localauthority/10-vendor.d/com.deepin.api.device.pkla" = "${packages.dde-api}/var/lib/polkit-1/localauthority/10-vendor.d/com.deepin.api.device.pkla";
@@ -271,7 +272,7 @@
                     dde-grand-search
 
                     dde-dock
-                    deepin-anything
+                    #deepin-anything
                   ];
 
                   systemd.packages = with packages; [
@@ -282,7 +283,7 @@
                     dde-calendar
                     dde-clipboard
 
-                    deepin-anything
+                    #deepin-anything
                   ];
 
                   users.groups.deepin-sound-player = { };
