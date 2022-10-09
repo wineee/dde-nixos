@@ -17,13 +17,13 @@
 
 stdenv.mkDerivation rec {
   pname = "deepin-downloader";
-  version = "5.3.69.1";
+  version = "5.3.70";
 
   src = fetchFromGitHub {
     owner = "linuxdeepin";
     repo = pname;
     rev = version;
-    sha256 = "sha256-mPjrno6quSClXJmL8Nvh0cA0uiX214l5igSDIelGPgw=";
+    sha256 = "sha256-divROohz9v3sAI9sVF+ck2UeaQoGgjFbXNJ8yCkwdfE=";
   };
 
   patches = [
