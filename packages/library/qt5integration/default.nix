@@ -25,8 +25,8 @@ stdenv.mkDerivation rec {
   src = fetchFromGitHub {
     owner = "linuxdeepin";
     repo = pname;
-    rev = version;
-    sha256 = "sha256-j2FcmEAcMSFRfUk81wccVBfylsg144RQTEP46L7ZjtY=";
+    rev = "2a1a8a8c5eec3a53dc1a54104ea4ac1c178e7f19";
+    sha256 = "sha256-s47syrxTz3YxlRp7TPqh7l0DdGRPE/Hn4CkA/MqRqvc=";
   };
 
   nativeBuildInputs = [ qmake pkg-config wrapQtAppsHook ];
@@ -52,7 +52,7 @@ stdenv.mkDerivation rec {
   meta = with lib; {
     description = "Qt platform theme integration plugins for DDE";
     homepage = "https://github.com/linuxdeepin/qt5integration";
-    license = licenses.gpl3Plus;
+    license = licenses.lgpl3Plus;
     platforms = platforms.linux;
   };
 }
