@@ -1,7 +1,6 @@
 { stdenv
 , lib
 , getUsrPatchFrom
-, fetchpatch
 , fetchFromGitHub
 , dtk
 , dde-qt-dbus-factory
@@ -23,22 +22,14 @@ let
   }; 
 in stdenv.mkDerivation rec {
   pname = "dde-introduction";
-  version = "unstable-2022-08-18";
+  version = "unstable-2022-09-23";
 
   src = fetchFromGitHub {
     owner = "linuxdeepin";
     repo = pname;
-    rev = "43cd3f4fe76dad84edac291ebd601df848b73cc1";
-    sha256 = "sha256-h77EzDg7TJqh9/RW7AJSjPHuc6rG5EI88LM72rSLKPk=";
+    rev = "f7427cabf249ac370f9755f2bf313fb609b9facc";
+    sha256 = "sha256-P0Cz54e2Lngze5gkFGTQKgmcuJMyExSrfJDHb8GkeRo=";
   };
-
-  patches = [
-    (fetchpatch {
-      name = "chore: use GNUInstallDirs in CmakeLists";
-      url = "https://github.com/linuxdeepin/dde-introduction/commit/be4274ee9a26772b996416d368d5ef553fed8a04.diff";
-      sha256 = "sha256-j8r3ng9JmITCdV/utMW2GIQQAHMxKE6Knas7ixWbVGU=";
-    })
-  ];
 
   postPatch = getUsrPatchFrom patchList;
 
