@@ -1,8 +1,8 @@
 { stdenv
 , lib
 , fetchFromGitHub
-, fetchpatch
 , getUsrPatchFrom
+, replaceAll
 , dtk
 , substituteAll
 , qt5integration
@@ -53,7 +53,7 @@ let
     ];
     "dde-control-center-wapper" = [
       # /usr/share/applications/dde-control-center.desktop
-      #? qdbus
+      [ "qdbus" "${qttools.bin}/bin/qdbus" ]
     ];
 
     "src/reboot-reminder-dialog/main.cpp" = [
@@ -68,60 +68,31 @@ let
     "src/frame/window/mainwindow.cpp" = [
       # /usr/lib/dde-control-center/modules
       #? /usr/share/icons/bloom/apps/64/preferences-system.svg
+      [ "/usr/share/icons" "/run/current-system/sw/share/icons" ]
     ];
-    "src/frame/window/protocolfile.cpp" = [
-      #? /usr/share/protocol
-      #? /usr/share/deepin-deepinid-client/
-    ];
-    "include/widgets/utils.h" = [
-      # "/usr/share/dde-control-center/dde-control-center.conf" 
-    ];
-    "src/reset-password-dialog/main.cpp" = [
-      # /usr/share/dde-control-center/translations/reset-password-dialog_
-    ];
-    "src/frame/modules/update/updatework.cpp" = [
-      #? /usr/share/deepin/
-    ];
+    "include/widgets/utils.h" = [ ];
+    "src/reset-password-dialog/main.cpp" = [ ];
     "src/frame/modules/datetime/timezone_dialog/timezone.cpp" = [
       [ "usr/share/zoneinfo" "${tzdata}/share/zoneinfo" ]
-      # /usr/share/zoneinfo/zone1970.tab
     ];
     "src/frame/modules/keyboard/customedit.cpp" = [
-      #? /usr/bin
+      [ "/usr/bin" "/run/current-system/sw/bin" ]
     ];
-    "abrecovery/main.cpp" = [
-      # /usr/share/dde-control-center/translations/recovery_
-    ];
-    "src/frame/modules/accounts/accountsworker.cpp" = [
-      [ "/bin/bash" "${runtimeShell}" ]
-    ];
+    "abrecovery/main.cpp" = [ ];
   };
 in
 stdenv.mkDerivation rec {
   pname = "dde-control-center";
-  version = "5.5.143";
+  version = "5.5.154";
 
   src = fetchFromGitHub {
     owner = "linuxdeepin";
     repo = pname;
     rev = version;
-    sha256 = "sha256-D5CsM/nIiLjH2EMgIfRodrcyb6xzJbWAHvtOnhUvLH8=";
+    sha256 = "sha256-PWZ5qsPWxqnNUJSoUfHwMyRfJFm8/1fXvvBHOwTY3Wg=";
   };
 
-  patches = [
-    (fetchpatch {
-      name = "chore: use GNUInstallDirs in CmakeLists";
-      url = "https://github.com/linuxdeepin/dde-control-center/commit/9e0dc3bf0abe1daa51d2bdf1866bd4b24f6b6728.patch";
-      sha256 = "sha256-+2XYLwDd8Cjx/6lutlzQUlenyzf19CevxtQOgDVsmDE=";
-    })
-    (fetchpatch {
-      name = "feat: use CMAKE_SYSTEM_PROCESSOR to check sw_64";
-      url = "https://github.com/linuxdeepin/dde-control-center/commit/5ff12b5e7f1f24272d889b7014a5b8431758c8ed.patch";
-      sha256 = "sha256-Jo2WTWfUF+tl8NzclERBT9NASX4emf8ToK7ESZctVnc=";
-    })
-  ];
-
-  postPatch = getUsrPatchFrom patchList;
+  postPatch = replaceAll "/bin/bash" "${runtimeShell}" + getUsrPatchFrom patchList;
 
   nativeBuildInputs = [
     cmake
@@ -164,9 +135,6 @@ stdenv.mkDerivation rec {
     "-DDISABLE_RECOVERY=YES"
     "-DDISABLE_DEVELOPER_MODE=YES"
     "-DDISABLE_CLOUD_SYNC=YES"
-    #"-DCMAKE_INSTALL_LIBDIR=lib"
-    #"-DINCLUDE_INSTALL_DIR=include"
-    #"-DDCMAKE_INSTALL_COMPONENT=false"
   ];
 
   qtWrapperArgs = [
