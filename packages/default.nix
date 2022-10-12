@@ -63,7 +63,6 @@ let
     qt5integration = callPackage ./library/qt5integration { };
     docparser = callPackage ./library/docparser { };
     dtk = [ dtkcommon dtkcore dtkgui dtkwidget /*qt5integration*/ qt5platform-plugins ];
-    ffmpegthumbnailer = callPackage ./library/ffmpegthumbnailer { };
 
     #### MISC
     dde-polkit-agent = callPackage ./misc/dde-polkit-agent { };
