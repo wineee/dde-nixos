@@ -2,7 +2,6 @@
 , lib
 , fetchFromGitHub
 , getUsrPatchFrom
-, fetchpatch
 , dtk
 , dde-qt-dbus-factory
 , qt5integration
@@ -21,7 +20,6 @@
 }:
 let
   patchList = {
-    ### MISC
     "dde-launcher.desktop" = [ ];
     "dde-launcher-wapper" = [
       [ "dbus-send" "${dbus}/bin/dbus-send" ]
@@ -30,8 +28,6 @@ let
     "src/dbusservices/com.deepin.dde.Launcher.service" = [
       # "/usr/bin/dde-launcher-wapper"
     ];
-
-    ### CODE
     "src/boxframe/backgroundmanager.cpp" = [
       [ "/usr/share/backgrounds" "/run/current-system/sw/share/backgrounds" ]
     ];
@@ -42,22 +38,14 @@ let
 in
 stdenv.mkDerivation rec {
   pname = "dde-launcher";
-  version = "5.5.32";
+  version = "5.5.34";
 
   src = fetchFromGitHub {
     owner = "linuxdeepin";
     repo = pname;
     rev = version;
-    sha256 = "sha256-h9s1LhbUY7C6mdp9ZmesjdcGpMF9P/oAXnlHvB27YrE=";
+    sha256 = "sha256-rKLINEctDbL2c0zBfjMLuKI9fw3YP/MdCbDaBPjWqWM=";
   };
-
-  patches = [
-    (fetchpatch {
-      name = "chore: use GNUInstallDirs in CmakeLists";
-      url = "https://github.com/linuxdeepin/dde-launcher/commit/121d6048092c7afc96d788e360445644e4fb95dd.diff";
-      sha256 = "sha256-14hhnBWWURYuy0rbO/y2mRp6ktm6cxcZOPrVI/ruAKc=";
-    })
-  ];
 
   postPatch = getUsrPatchFrom patchList;
 
