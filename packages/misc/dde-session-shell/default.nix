@@ -125,7 +125,7 @@ stdenv.mkDerivation rec {
   postPatch = replaceAll "/usr/bin/dbus-send" "${dbus}/bin/dbus-send"
       + replaceAll "/usr/lib/deepin-daemon" "/run/current-system/sw/lib/deepin-daemon"
       + replaceAll "/usr/share/backgrounds" "/run/current-system/sw/share/backgrounds"
-      + replaceAll "/usr/lib/dde-session-shell/modules" "$out/lib/dde-session-shell/modules" 
+      + replaceAll "/usr/lib/dde-session-shell/modules" "/run/current-system/sw/lib/dde-session-shell/modules" 
       + getUsrPatchFrom patchList + ''
         patchShebangs files/deepin-greeter
       '';

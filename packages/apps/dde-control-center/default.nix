@@ -62,11 +62,7 @@ let
     "src/frame/main.cpp" = [
       # /usr/share/dde-control-center/translations/keyboard_language_
     ];
-    "src/frame/window/insertplugin.cpp" = [
-      # /usr/lib/dde-control-center/modules
-    ];
     "src/frame/window/mainwindow.cpp" = [
-      # /usr/lib/dde-control-center/modules
       #? /usr/share/icons/bloom/apps/64/preferences-system.svg
       [ "/usr/share/icons" "/run/current-system/sw/share/icons" ]
     ];
@@ -93,7 +89,7 @@ stdenv.mkDerivation rec {
   };
 
   postPatch = replaceAll "/bin/bash" "${runtimeShell}"
-    + replaceAll "/usr/lib/dde-control-center/modules" "$out/lib/dde-control-center/modules"
+    + replaceAll "/usr/lib/dde-control-center/modules" "/run/current-system/sw/lib/dde-control-center/modules"
     + getUsrPatchFrom patchList;
 
   nativeBuildInputs = [
