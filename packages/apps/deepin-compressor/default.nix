@@ -1,7 +1,6 @@
 { stdenv
 , lib
 , fetchFromGitHub
-, fetchpatch
 , dtk
 , qt5integration
 , qt5platform-plugins
@@ -20,22 +19,14 @@
 
 stdenv.mkDerivation rec {
   pname = "deepin-compressor";
-  version = "5.12.8+";
+  version = "5.12.9";
 
   src = fetchFromGitHub {
     owner = "linuxdeepin";
     repo = pname;
-    rev = "2087ff088877c34a60bcb15de2d4f159a2126723";
-    sha256 = "sha256-WxawHIdlt2MbiIuEmbe8qIXmJ6MR4+qYSNKTbq9Pe18=";
+    rev = version;
+    sha256 = "sha256-HJDtUvXUT94G4WqrK92UMmijnuC4ApkKHU3yE3rOKHQ=";
   };
-
-  patches = [
-    (fetchpatch {
-      name = "chore: use GNUInstallDirs in CmakeLists";
-      url = "https://github.com/linuxdeepin/deepin-compressor/commit/cc1dfcbff84f712b97b54948fb75fcd64edde28d.patch";
-      sha256 = "sha256-6vxkqm+shbMbl1UZF5ShrteYr6cEp6MyvqEuPfvmrFg=";
-    })
-  ];
 
   nativeBuildInputs = [
     cmake
