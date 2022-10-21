@@ -152,6 +152,7 @@
                     "/lib/deepin-daemon"
                     "/lib/deepin-api"
                     "/lib/dde-dock/plugins"
+                    "/lib/dde-control-center/modules"
                     "/share/dsg"
                     "/share/backgrounds"
                     "/share/wallpapers"

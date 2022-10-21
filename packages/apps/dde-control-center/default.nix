@@ -83,16 +83,18 @@ let
 in
 stdenv.mkDerivation rec {
   pname = "dde-control-center";
-  version = "5.5.154";
+  version = "5.5.157";
 
   src = fetchFromGitHub {
     owner = "linuxdeepin";
     repo = pname;
     rev = version;
-    sha256 = "sha256-PWZ5qsPWxqnNUJSoUfHwMyRfJFm8/1fXvvBHOwTY3Wg=";
+    sha256 = "sha256-DVZI4xa1ibfcvNuKzfGufVE22v5oUeRKQGLH/kMJCgo=";
   };
 
-  postPatch = replaceAll "/bin/bash" "${runtimeShell}" + getUsrPatchFrom patchList;
+  postPatch = replaceAll "/bin/bash" "${runtimeShell}"
+    + replaceAll "/usr/lib/dde-control-center/modules" "$out/lib/dde-control-center/modules"
+    + getUsrPatchFrom patchList;
 
   nativeBuildInputs = [
     cmake
