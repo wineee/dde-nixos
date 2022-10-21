@@ -1,7 +1,7 @@
 { stdenv
 , lib
 , fetchFromGitHub
-, fetchpatch
+, replaceAll
 , linkFarm
 , getUsrPatchFrom
 , dtk
@@ -29,11 +29,9 @@ let
   patchList = {
     ### MISC
     "files/com.deepin.dde.shutdownFront.service" = [
-      [ "/usr/bin/dbus-send" "${dbus}/bin/dbus-send" ]
       #/usr/share/applications/dde-lock.desktop
     ];
     "files/com.deepin.dde.lockFront.service" = [
-      [ "/usr/bin/dbus-send" "${dbus}/bin/dbus-send" ]
       #/usr/share/applications/dde-lock.desktop
     ];
     "files/lightdm-deepin-greeter.conf" = [
@@ -52,30 +50,15 @@ let
 
     ### CODE
     "scripts/lightdm-deepin-greeter" = [
-      # TODO ["/usr/lib/deepin-daemon/greeter-display-daemon"]
       # "/usr/bin/lightdm-deepin-greeter"
     ];
-
     "src/widgets/shutdownwidget.cpp" = [
       [ "/usr/bin/deepin-system-monitor" "deepin-system-monitor" ]
     ];
-
     "src/lightdm-deepin-greeter/greeterworker.cpp" = [
       [ "/usr/include/shadow.h" "shadow.h" ]
       [ "/usr/sbin/lightdm" "lightdm" ]
       # /etc/deepin/no_suspend
-    ];
-    "src/session-widgets/userinfo.cpp" = [
-      # TODO
-      # ["/usr/share/backgrounds/default_background.jpg"]
-    ];
-    "src/widgets/fullscreenbackground.cpp" = [
-      # TODO
-      #"/usr/share/backgrounds/default_background.jpg"
-    ];
-    "src/session-widgets/lockcontent.cpp" = [
-      # TODO
-      # "/usr/share/backgrounds/deepin/desktop.jpg"
     ];
     "src/session-widgets/auth_module.h" = [
       # TODO
@@ -95,25 +78,18 @@ let
       # TODO
       # /usr/share/dde-session-shell/translations
     ];
-    "src/global_util/modules_loader.cpp" = [
-      # TODO
-      # /usr/lib/dde-session-shell/modules
-    ];
     "src/global_util/xkbparser.h" = [
       [ "/usr/share/X11/xkb/rules/base.xml" "${xkeyboard_config}/share/X11/xkb/rules/base.xml" ]
     ];
     "src/global_util/constants.h" = [
       [ "/usr/share/icons" "/run/current-system/sw/share/icons" ]
       #"/usr/share/icons/default/index.theme"
-
       #"/usr/share/dde-session-shell/dde-session-shell.conf",
-
       #"/usr/share/dde-session-ui/dde-session-ui.conf"
       #"/usr/share/dde-session-ui/dde-shutdown.conf
     ];
     "files/wayland/lightdm-deepin-greeter-wayland" = [
       # "/usr/bin/lightdm-deepin-greeter"
-      #? /usr/lib/deepin-daemon/greeter-display-daemon
       # TODO export QT_QPA_PLATFORM_PLUGIN_PATH...
     ];
 
@@ -137,31 +113,22 @@ let
 in
 stdenv.mkDerivation rec {
   pname = "dde-session-shell";
-  version = "5.5.71";
+  version = "5.5.81";
 
   src = fetchFromGitHub {
     owner = "linuxdeepin";
     repo = pname;
     rev = version;
-    sha256 = "sha256-noWMbyzIX7rrcun7v8+Qd3OYLZsfd7LqVs+gvm801ro=";
+    sha256 = "sha256-sLrTgE3OuwhbY8LEnbVX2Rel3qmVSrpSm5eCeXfiMT8=";
   };
 
-  patches = [
-    (fetchpatch {
-      name = "chore: use GNUInstallDirs in CmakeLists";
-      url = "https://github.com/linuxdeepin/dde-session-shell/commit/1db2017f0f48ec6a6c26740826fb020711eb5a2d.patch";
-      sha256 = "sha256-iZQwnC2oDxhyw7iJaQHDDakG+OOr8mMZIrF9itG895w=";
-    })
-    (fetchpatch {
-      name = "feat: use configure_file set path in DdeSessionShellConfig.cmake";
-      url = "https://github.com/linuxdeepin/dde-session-shell/commit/8e906b22f7f879aa572f523437f17f768259dfce.patch";
-      sha256 = "sha256-vPNVa6Tz2SLkAb+YZ9YwPRBbEkHDEmwJ6DiEM5p4S9s=";
-    })
-  ];
-
-  postPatch = getUsrPatchFrom patchList + ''
-    patchShebangs files/deepin-greeter
-  '';
+  postPatch = replaceAll "/usr/bin/dbus-send" "${dbus}/bin/dbus-send"
+      + replaceAll "/usr/lib/deepin-daemon" "/run/current-system/sw/lib/deepin-daemon"
+      + replaceAll "/usr/share/backgrounds" "/run/current-system/sw/share/backgrounds"
+      + replaceAll "/usr/lib/dde-session-shell/modules" "$out/lib/dde-session-shell/modules" 
+      + getUsrPatchFrom patchList + ''
+        patchShebangs files/deepin-greeter
+      '';
 
   nativeBuildInputs = [
     cmake
