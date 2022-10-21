@@ -26,13 +26,13 @@
 }:
 stdenv.mkDerivation rec {
   pname = "dde-network-core";
-  version = "1.0.64";
+  version = "1.0.69";
 
   src = fetchFromGitHub {
     owner = "linuxdeepin";
     repo = pname;
     rev = version;
-    sha256 = "sha256-jCJ7G1rKAxPAgX+nfuIkBS2BZzuFe2CxUQukJl6rocE=";
+    sha256 = "sha256-IncVvM2tx6+LAg/eLekfnphOvywmaCkC5nkxDXQhmV8=";
   };
 
   nativeBuildInputs = [
@@ -68,7 +68,7 @@ stdenv.mkDerivation rec {
   ];
 
   meta = with lib; {
-    description = "dde-network-core";
+    description = "DDE network library framework";
     homepage = "https://github.com/linuxdeepin/dde-network-core";
     license = licenses.gpl3Plus;
     platforms = platforms.linux;
