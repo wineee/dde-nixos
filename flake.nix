@@ -153,11 +153,10 @@
                     "/lib/deepin-api"
                     "/lib/dde-dock/plugins"
                     "/lib/dde-control-center/modules"
+                    "/lib/dde-session-shell/modules"
                     "/share/dsg"
                     "/share/backgrounds"
                     "/share/wallpapers"
-                    # TODO
-                    #"/share"
                   ];
 
                   environment.etc."deepin-version".source = "${packages.deepin-desktop-base}/etc/deepin-version";
