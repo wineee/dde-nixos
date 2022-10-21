@@ -103,10 +103,7 @@
 
 
                   services.bamf.enable = true;
-                  services.udev.packages = with packages; [
-                    dde-daemon
-                  ];
-
+                  
                   services.xserver.updateDbusEnvironment = true;
                   services.xserver.libinput.enable = mkDefault true;      
                   # Enable GTK applications to load SVG icons
@@ -216,7 +213,6 @@
                     
                     deepin-desktop-schemas
                     dde-api
-                    dde-daemon
                     dpa-ext-gnomekeyring
 
                     dde-polkit-agent
@@ -250,7 +246,6 @@
 
                   services.dbus.packages = with packages; [
                     dde-api
-                    dde-daemon
                     deepin-pw-check
                     dde-kwin
 
@@ -272,31 +267,22 @@
                     dde-grand-search
 
                     dde-dock
-                    #deepin-anything
+                    deepin-anything.server
                   ];
 
                   systemd.packages = with packages; [
                     dde-launcher
                     dde-api
-                    dde-daemon
                     dde-file-manager
                     dde-calendar
                     dde-clipboard
-
-                    #deepin-anything
+                    deepin-anything.server
                   ];
 
                   users.groups.deepin-sound-player = { };
                   users.users.deepin-sound-player = {
                     description = "Deepin sound player";
                     group = "deepin-sound-player";
-                    isSystemUser = true;
-                  };
-
-                  users.groups.deepin-daemon = { };
-                  users.users.deepin-daemon = {
-                    description = "Deepin daemon user";
-                    group = "deepin-daemon";
                     isSystemUser = true;
                   };
 
@@ -307,12 +293,13 @@
                     isSystemUser = true;
                   };
 
-                  #services.dde.dde-daemon.enable = true;
+                  services.dde.dde-daemon.enable = true;
                 })
 
                 (mkIf config.services.dde.dde-daemon.enable {
                   environment.systemPackages = [ packages.dde-daemon ];
                   services.dbus.packages = [ packages.dde-daemon ];
+                  services.udev.packages = [ packages.dde-daemon ];
                   systemd.packages = [ packages.dde-daemon ];
                   users.groups.dde-daemon = { };
                   users.users.dde-daemon = {
@@ -320,7 +307,9 @@
                     group = "dde-daemon";
                     isSystemUser = true;
                   };
-               })               
+               })
+
+
               ];
             };
         });
