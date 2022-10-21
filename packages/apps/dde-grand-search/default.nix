@@ -35,10 +35,7 @@ let
     "src/grand-search/utils/utils.cpp" = [
         [ "/usr/share/applications/dde-control-center.desktop"  "/run/current-system/sw/share/applications/dde-control-center.desktop" ]
     ];
-    "src/grand-search-daemon/searcher/app/desktopappsearcher.cpp" = [
-        [ "/usr/share" "/run/current-system/sw/share" ] # TODO
-    ];
-    "src/grand-search-daemon/dbusservice/grandsearchinterface.cpp" = [ ];
+    "src/libgrand-search-daemon/dbusservice/grandsearchinterface.cpp" = [ ];
   }; 
 in stdenv.mkDerivation rec {
   pname = "dde-grand-search";
@@ -47,17 +44,9 @@ in stdenv.mkDerivation rec {
   src = fetchFromGitHub {
     owner = "linuxdeepin";
     repo = pname;
-    rev = "9fcde3ea9b152233d19a750e14d1c2681676b6c0";
-    sha256 = "sha256-pXMTsOFar0nJDAlzjOkkO+D/XpEmhf8DYA37cR0XKbU=";
+    rev = "e2e6142dcac9242e933b3bf40b0844bd5889d6fa";
+    sha256 = "sha256-lXPWU1PoO3310BiFlExj5oSF+NpVlerVuLJ9+I7gz1s=";
   };
-
-  patches = [
-    (fetchpatch {
-      name = "chore: use GNUInstallDirs in CmakeLists";
-      url = "https://github.com/linuxdeepin/dde-grand-search/commit/4e1cc361554774b74d52d819cc42bbd89a21567c.patch";
-      sha256 = "sha256-ZBqbYAYf6XenR++FDbyUg0bKDThOD9aWzT9JxDZjv5g=";
-    })
-  ];
 
   postPatch = getUsrPatchFrom patchList;
 
