@@ -311,6 +311,8 @@
                   users.groups.deepin-sound-player = { };
                   users.users.deepin-sound-player = {
                     description = "Deepin sound player";
+                    home = "/var/lib/deepin-sound-player";
+                    createHome = true;
                     group = "deepin-sound-player";
                     isSystemUser = true;
                   };
