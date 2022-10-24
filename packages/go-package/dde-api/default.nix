@@ -1,8 +1,11 @@
 { stdenv
 , lib
 , fetchFromGitHub
+, replaceAll
 , buildGoPackage
 , getUsrPatchFrom
+, wrapQtAppsHook
+, wrapGAppsHook
 , pkg-config
 , alsa-lib
 , bc
@@ -31,32 +34,18 @@ let
     "lunar-calendar/huangli.go" = [
       # /usr/share/dde-api/data/huangli*
     ];
-    "lunar-calendar/main.go" = [
-      #? /usr/lib/deepin-api/lunar-calendar
-    ];
     "locale-helper/main.go" = [
       [ "/usr/local/sbin:" "PATH:/usr/local/sbin" ]
-      #?
     ];
 
-    "theme_thumb/gtk/gtk.go" = [
-      # /usr/lib/deepin-api/gtk-thumbnailer
-    ];
     "device/main.go" = [
       [ "/usr/local/sbin:" "PATH:/usr/local/sbin" ]
     ];
-    "thumbnails/gtk/gtk.go" = [
-      # /usr/lib/deepin-api/gtk-thumbnailer
-    ];
     "i18n_dependent/i18n_dependent.go" = [
       [ "/usr/share" "/run/current-system/sw/share" ]
-      #? /usr/share/i18n/i18n_dependent.json
     ];
     "adjust-grub-theme/main.go" = [
       # "/usr/share/dde-api/data/grub-themes/"
-    ];
-    "language_support/lang_support.go" = [
-      #? dpkg
     ];
     "sound-theme-player/main.go" = [
       [ "/usr/sbin/alsactl" "alsactl" ]
@@ -69,16 +58,6 @@ let
     ];
     "lang_info/lang_info.go" = [
       [ "/usr/share" "/run/current-system/sw/share" ]
-      #? /usr/share/i18n/language_info.json
-    ];
-
-    ### MISC
-    "misc/systemd/system/deepin-login-sound.service" = [
-      [ "/usr/bin/dbus-send" "${dbus}/bin/dbus-send" ]
-    ];
-    "misc/systemd/system/deepin-shutdown-sound.service" = [
-      [ "/usr/bin/true" "${coreutils}/bin/true" ]
-      # /usr/lib/deepin-api/deepin-shutdown-sound
     ];
   };
 in
@@ -95,12 +74,21 @@ buildGoPackage rec {
     sha256 = "sha256-FiM1iBPgcEbgLQwZz6cwOrdGCzRz0Yeq2ZbbnpuTjU0";
   };
 
+  postPatch = replaceAll "/usr/lib/deepin-api" "/run/current-system/sw/lib/deepin-api"
+      + replaceAll "/usr/bin/dbus-send" "${dbus}/bin/dbus-send"
+      + replaceAll "/usr/bin/true" "${coreutils}/bin/true"
+      + replaceAll "/usr/share/i18n" "/run/current-system/sw/share/i18n"
+      + getUsrPatchFrom patchList;
+
   goDeps = ./deps.nix;
 
   nativeBuildInputs = [
     pkg-config
     deepin-gettext-tools
+    wrapQtAppsHook
+    wrapGAppsHook
   ];
+  dontWrapGApps = true;
 
   buildInputs = [
     go-dbus-factory
@@ -117,16 +105,6 @@ buildGoPackage rec {
     gdk-pixbuf-xlib
   ];
 
-  dontWrapQtApps = true;
-
-  postPatch = getUsrPatchFrom patchList + ''
-    for file in misc/system-services/* misc/services/*
-     do
-       substituteInPlace $file \
-         --replace "/usr/lib/deepin-api" "$out/lib/deepin-api"
-     done
-  '';
-
   buildPhase = ''
     runHook preBuild
     GOPATH="$GOPATH:${go-dbus-factory}/share/gocode"
@@ -140,8 +118,18 @@ buildGoPackage rec {
     make install DESTDIR="$out" PREFIX="/" -C go/src/${goPackagePath}
   '';
 
+  preFixup = ''
+    qtWrapperArgs+=("''${gappsWrapperArgs[@]}")
+  '';
+
+  postFixup = ''
+    for binary in $out/lib/deepin-api/*; do
+      wrapProgram $binary "''${qtWrapperArgs[@]}"
+    done
+  '';
+
   meta = with lib; {
-    description = "DDE API provides some dbus interfaces that is used for screen zone detecting, thumbnail generating, sound playing, etc";
+    description = "Provides some dbus interfaces that is used for screen zone detecting, thumbnail generating, sound playing, etc";
     homepage = "https://github.com/linuxdeepin/dde-api";
     license = licenses.gpl3Plus;
     platforms = platforms.linux;
