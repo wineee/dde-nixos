@@ -68,8 +68,9 @@
                 };
 
                 services.dde = {
-                  dde-daemon.enable = mkEnableOption "A daemon for handling Deepin Desktop Environment session settings";
-                  deepin-anything.enable = mkEnableOption "Providing a lightning-fast filename search function for Linux users, and provides offline search functions";
+                  dde-daemon.enable = mkEnableOption "Daemon for handling Deepin Desktop Environment session settings";
+                  deepin-anything.enable = mkEnableOption "Lightning-fast filename search function for Linux users, and provides offline search functions";
+                  dde-api.enable = mkEnableOption "Dbus interfaces that is used for screen zone detecting, thumbnail generating, sound playing, etc";
                 };
                 
               };
@@ -171,11 +172,6 @@
                     "deepin/dde-session-ui.conf".source = "${packages.dde-session-ui}/share/deepin/dde-session-ui.conf";
                   };
 
-                  #environment.etc."polkit-1/localauthority/10-vendor.d/com.deepin.api.device.pkla" = "${packages.dde-api}/var/lib/polkit-1/localauthority/10-vendor.d/com.deepin.api.device.pkla";
-                  #environment.etc."polkit-1/localauthority/10-vendor.d/com.deepin.daemon.Accounts.pkla" = "${packages.dde-daemon}/var/lib/polkit-1/localauthority/10-vendor.d/com.deepin.daemon.Accounts.pkla";
-                  #environment.etc."polkit-1/localauthority/10-vendor.d/com.deepin.daemon.Fprintd.pkla" = "${packages.dde-daemon}/var/lib/polkit-1/localauthority/10-vendor.d/com.deepin.daemon.Fprintd.pkla";
-                  #environment.etc."polkit-1/localauthority/10-vendor.d/com.deepin.daemon.Grub2.pkla" = "${packages.dde-daemon}/var/lib/polkit-1/localauthority/10-vendor.d/com.deepin.daemon.Grub2.pkla";
-
                   services.xserver.desktopManager.deepin.extraGSettingsOverridePackages = with packages; [
                     dde-top-panel
                   ];
@@ -211,7 +207,6 @@
                     dde-grand-search
                     
                     deepin-desktop-schemas
-                    dde-api
                     dpa-ext-gnomekeyring
 
                     dde-polkit-agent
@@ -244,7 +239,6 @@
                   ]);
 
                   services.dbus.packages = with packages; [
-                    dde-api
                     deepin-pw-check
                     dde-kwin
 
@@ -270,22 +264,13 @@
 
                   systemd.packages = with packages; [
                     dde-launcher
-                    dde-api
                     dde-file-manager
                     dde-calendar
                     dde-clipboard
                   ];
 
-                  users.groups.deepin-sound-player = { };
-                  users.users.deepin-sound-player = {
-                    description = "Deepin sound player";
-                    group = "deepin-sound-player";
-                    isSystemUser = true;
-                  };
-
-
-
                   services.dde.dde-daemon.enable = mkForce true;
+                  services.dde.dde-api.enable = mkForce true;
                   services.dde.deepin-anything.enable = true;
                 })
 
@@ -300,6 +285,9 @@
                     group = "dde-daemon";
                     isSystemUser = true;
                   };
+                  environment.etc."polkit-1/localauthority/10-vendor.d/com.deepin.daemon.Accounts.pkla".source = "${packages.dde-daemon}/var/lib/polkit-1/localauthority/10-vendor.d/com.deepin.daemon.Accounts.pkla";
+                  environment.etc."polkit-1/localauthority/10-vendor.d/com.deepin.daemon.Fprintd.pkla".source = "${packages.dde-daemon}/var/lib/polkit-1/localauthority/10-vendor.d/com.deepin.daemon.Fprintd.pkla";
+                  environment.etc."polkit-1/localauthority/10-vendor.d/com.deepin.daemon.Grub2.pkla".source = "${packages.dde-daemon}/var/lib/polkit-1/localauthority/10-vendor.d/com.deepin.daemon.Grub2.pkla";
                })
 
                (mkIf config.services.dde.deepin-anything.enable {
@@ -315,6 +303,20 @@
                   boot.extraModulePackages = [ packages.deepin-anything.dkms ];
                   boot.kernelModules = [ "vfs_monitor" ];
                })
+
+               (mkIf config.services.dde.dde-api.enable {
+                  environment.systemPackages = [ packages.dde-api ];
+                  services.dbus.packages = [ packages.dde-api ];
+                  systemd.packages = [ packages.dde-api ];
+                  users.groups.deepin-sound-player = { };
+                  users.users.deepin-sound-player = {
+                    description = "Deepin sound player";
+                    group = "deepin-sound-player";
+                    isSystemUser = true;
+                  };
+                  environment.etc."polkit-1/localauthority/10-vendor.d/com.deepin.api.device.pkla".source = "${packages.dde-api}/var/lib/polkit-1/localauthority/10-vendor.d/com.deepin.api.device.pkla";
+               })
+
               ];
             };
         });

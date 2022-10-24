@@ -45,7 +45,7 @@
               user = "test";
             };
           };
-          #desktopManager.plasma5.enable = true;
+          desktopManager.plasma5.enable = true;
 
           desktopManager.deepin = {
             enable = true;
