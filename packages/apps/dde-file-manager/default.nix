@@ -13,7 +13,7 @@
 , docparser
 , disomaster
 , dde-dock
-, deepin-anything
+#, deepin-anything
 , deepin-gettext-tools
 , deepin-movie-reborn
 , deepin-desktop-schemas
@@ -48,7 +48,7 @@ let
   patchList = {
     ### BUILD
     "src/dde-file-manager-lib/dbusinterface/dbusinterface.pri" = [
-      [ "/usr/share/dbus-1/interfaces/com.deepin.anything.xml" "${deepin-anything.server}/share/dbus-1/interfaces/com.deepin.anything.xml" ]
+ #     [ "/usr/share/dbus-1/interfaces/com.deepin.anything.xml" "${deepin-anything.server}/share/dbus-1/interfaces/com.deepin.anything.xml" ]
     ];
 
     ### INSTALL
@@ -73,9 +73,9 @@ let
     ];
     "src/dde-desktop/dbus/filedialog/filedialog.pri" = [ ];
     "src/dde-desktop/dbus/filemanager1/filemanager1.pri" = [ ];
-    "src/deepin-anything-server-plugins/dde-anythingmonitor/dde-anythingmonitor.pro" = [
-      [ "\\$\\$system(\\$\\$PKG_CONFIG --variable libdir deepin-anything-server-lib)/deepin-anything-server-lib/plugins/handlers" "$out/lib/deepin-anything-server-lib/plugins/handlers" ]
-    ];
+#    "src/deepin-anything-server-plugins/dde-anythingmonitor/dde-anythingmonitor.pro" = [
+#      [ "\\$\\$system(\\$\\$PKG_CONFIG --variable libdir deepin-anything-server-lib)/deepin-anything-server-lib/plugins/handlers" "$out/lib/deepin-anything-server-lib/plugins/handlers" ]
+#    ];
 
     ### MISC
     "src/dde-file-manager-daemon/dbusservice/dde-filemanager-daemon.service" = [ ];
@@ -221,8 +221,8 @@ stdenv.mkDerivation rec {
     gio-qt
     docparser
     dde-dock.dev
-    #deepin-anything
-    #deepin-anything.server
+ #   deepin-anything
+ #   deepin-anything.server
     deepin-movie-reborn.dev
     deepin-desktop-schemas
     qtx11extras
@@ -245,7 +245,6 @@ stdenv.mkDerivation rec {
   ];
 
   enableParallelBuilding = true;
-  #outputs = [ "out" "dev" ];
 
   qmakeFlags = [
     "filemanager.pro"
