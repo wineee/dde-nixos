@@ -6,17 +6,18 @@
 , pkg-config
 , udisks2-qt5
 , util-linux
+, libnl
 , pcre
 }:
 stdenv.mkDerivation rec {
   pname = "deepin-anything";
-  version = "unstable-2022-04-26";
+  version = "unstable-2022-10-21";
 
   src = fetchFromGitHub {
     owner = "linuxdeepin";
     repo = pname;
-    rev = "28d03f19fc97c101a49601afce2a24bcccc9b695";
-    sha256 = "sha256-VGn17H8rfY+fGxW9f+nVvETIOVz4iVATlKei7o3VJ9Y=";
+    rev = "2d227f08400f65810312aa2bf607246bce18208d";
+    sha256 = "sha256-ro+UyS3crPbtXg8JTHO/XnKZke/RBjZQH4NeRLfUFsg=";
   };
 
   outputs = [ "out" "server" "dkms" ];
@@ -30,19 +31,18 @@ stdenv.mkDerivation rec {
     dtkcore
     udisks2-qt5
     util-linux
+    libnl.dev
     pcre
   ];
 
   dontWrapQtApps = true;
   dontUseQmakeConfigure = true;
 
-  # TODO: sysusers
-  fixServerPatch = ''
+  postPatch = ''
     substituteInPlace server/backend/backend.pro \
-      --replace '/usr/share/dbus-1/interfaces' '/share/dbus-1/interfaces'
+      --replace '/usr/share/dbus-1/interfaces' '/share/dbus-1/interfaces' \
+      --replace '/usr/include/libnl3' '${libnl.dev}/include/libnl3'
   '';
-
-  postPatch = fixServerPatch;
 
   buildPhase = ''
     sed 's|@@VERSION@@|${version}|g' debian/deepin-anything-dkms.dkms.in | tee debian/deepin-anything-dkms.dkms
@@ -63,13 +63,13 @@ stdenv.mkDerivation rec {
     cp -r kernelmod/* ${placeholder "dkms"}/src/deepin-anything-${version}
     mkdir -p ${placeholder "dkms"}/lib/modules-load.d
     echo "" | tee ${placeholder "dkms"}/lib/modules-load.d/anything.conf
+    
     install -D debian/deepin-anything-dkms.dkms ${placeholder "dkms"}/src/deepin-anything-${version}/dkms.conf
-
     install -D debian/deepin-anything-libs.lintian-overrides $out/share/lintian/overrides/deepin-anything-libs
 
     mkdir -p $out/include/deepin-anything
     cp -r library/inc/* $out/include/deepin-anything
-    cp -r kernelmod/vfs_change_uapi.h $out/include/deepin-anything
+    cp -r kernelmod/vfs_genl.h  $out/include/deepin-anything
     cp -r kernelmod/vfs_change_consts.h $out/include/deepin-anything
 
     make -C server install INSTALL_ROOT=${placeholder "server"}

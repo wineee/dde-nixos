@@ -69,9 +69,8 @@
 
                 services.dde = {
                   dde-daemon.enable = mkEnableOption "A daemon for handling Deepin Desktop Environment session settings";
+                  deepin-anything.enable = mkEnableOption "Providing a lightning-fast filename search function for Linux users, and provides offline search functions";
                 };
-
-                ## TODO: deepin-anything
                 
               };
 
@@ -267,7 +266,6 @@
                     dde-grand-search
 
                     dde-dock
-                    deepin-anything.server
                   ];
 
                   systemd.packages = with packages; [
@@ -276,7 +274,6 @@
                     dde-file-manager
                     dde-calendar
                     dde-clipboard
-                    deepin-anything.server
                   ];
 
                   users.groups.deepin-sound-player = { };
@@ -286,14 +283,10 @@
                     isSystemUser = true;
                   };
 
-                  users.groups.deepin_anything_server = { };
-                  users.users.deepin_anything_server = {
-                    description = "Deepin Anything Server";
-                    group = "deepin_anything_server";
-                    isSystemUser = true;
-                  };
 
-                  services.dde.dde-daemon.enable = true;
+
+                  services.dde.dde-daemon.enable = mkForce true;
+                  services.dde.deepin-anything.enable = true;
                 })
 
                 (mkIf config.services.dde.dde-daemon.enable {
@@ -309,7 +302,19 @@
                   };
                })
 
-
+               (mkIf config.services.dde.deepin-anything.enable {
+                  environment.systemPackages = [ packages.deepin-anything ];
+                  services.dbus.packages = [ packages.deepin-anything.server ];
+                  systemd.packages = [ packages.deepin-anything.server ];
+                  users.groups.deepin-anything-server = { };
+                  users.users.deepin-anything-server = {
+                    description = "Deepin Anything Server";
+                    group = "deepin-anything-server";
+                    isSystemUser = true;
+                  };
+                  boot.extraModulePackages = [ packages.deepin-anything.dkms ];
+                  boot.kernelModules = [ "vfs_monitor" ];
+               })
               ];
             };
         });
