@@ -71,6 +71,7 @@
                   dde-daemon.enable = mkEnableOption "Daemon for handling Deepin Desktop Environment session settings";
                   deepin-anything.enable = mkEnableOption "Lightning-fast filename search function for Linux users, and provides offline search functions";
                   dde-api.enable = mkEnableOption "Dbus interfaces that is used for screen zone detecting, thumbnail generating, sound playing, etc";
+                  app-services.enable = mkEnableOption "Service collection of DDE applications, including dconfig-center";
                 };
                 
               };
@@ -79,11 +80,11 @@
                 (mkIf cfg.enable {
                   services.xserver.displayManager.sessionPackages = [ packages.startdde ];
                   services.xserver.displayManager.defaultSession = "deepin";
-                  # services.xserver.displayManager.lightdm.greeters.gtk.enable = false;
-                  # services.xserver.displayManager.lightdm.greeter = mkDefault {
-                  #   package = packages.dde-session-shell.xgreeters;
-                  #   name = "lightdm-deepin-greeter";
-                  # };
+                  #services.xserver.displayManager.lightdm.greeters.gtk.enable = false;
+                  #services.xserver.displayManager.lightdm.greeter = mkDefault {
+                  #  package = packages.dde-session-shell.xgreeters;
+                  #  name = "lightdm-deepin-greeter";
+                  #};
 
                   #services.xserver.displayManager.lightdm.theme = mkDefault "deepin";
                   
@@ -146,12 +147,9 @@
                   };
 
                   environment.pathsToLink = [
-                    "/lib/deepin-daemon"
-                    "/lib/deepin-api"
                     "/lib/dde-dock/plugins"
                     "/lib/dde-control-center/modules"
                     "/lib/dde-session-shell/modules"
-                    "/share/dsg"
                     "/share/backgrounds"
                     "/share/wallpapers"
                   ];
@@ -216,7 +214,6 @@
                     deepin-shortcut-viewer
                     startdde
                     deepin-screen-recorder
-                    dde-app-services
                     dde-clipboard
                     dde-grand-search
                     
@@ -259,7 +256,6 @@
                     dde-launcher
                     dde-session-ui
                     dde-session-shell
-                    dde-app-services
                     dde-file-manager
                     dde-control-center
                     dde-calendar
@@ -285,6 +281,7 @@
 
                   services.dde.dde-daemon.enable = mkForce true;
                   services.dde.dde-api.enable = mkForce true;
+                  services.dde.app-services.enable = mkForce true;
                   services.dde.deepin-anything.enable = true;
                 })
 
@@ -293,6 +290,7 @@
                   services.dbus.packages = [ packages.dde-daemon ];
                   services.udev.packages = [ packages.dde-daemon ];
                   systemd.packages = [ packages.dde-daemon ];
+                  environment.pathsToLink = [ "/lib/deepin-daemon" ];
                   environment.etc."polkit-1/localauthority/10-vendor.d/com.deepin.daemon.Accounts.pkla".source = "${packages.dde-daemon}/var/lib/polkit-1/localauthority/10-vendor.d/com.deepin.daemon.Accounts.pkla";
                   environment.etc."polkit-1/localauthority/10-vendor.d/com.deepin.daemon.Fprintd.pkla".source = "${packages.dde-daemon}/var/lib/polkit-1/localauthority/10-vendor.d/com.deepin.daemon.Fprintd.pkla";
                   environment.etc."polkit-1/localauthority/10-vendor.d/com.deepin.daemon.Grub2.pkla".source = "${packages.dde-daemon}/var/lib/polkit-1/localauthority/10-vendor.d/com.deepin.daemon.Grub2.pkla";
@@ -316,6 +314,7 @@
                   environment.systemPackages = [ packages.dde-api ];
                   services.dbus.packages = [ packages.dde-api ];
                   systemd.packages = [ packages.dde-api ];
+                  environment.pathsToLink = [ "/lib/deepin-api" ];
                   users.groups.deepin-sound-player = { };
                   users.users.deepin-sound-player = {
                     description = "Deepin sound player";
@@ -325,6 +324,12 @@
                     isSystemUser = true;
                   };
                   environment.etc."polkit-1/localauthority/10-vendor.d/com.deepin.api.device.pkla".source = "${packages.dde-api}/var/lib/polkit-1/localauthority/10-vendor.d/com.deepin.api.device.pkla";
+               })
+
+               (mkIf config.services.dde.app-services.enable {
+                  environment.systemPackages = [ packages.dde-app-services ];
+                  services.dbus.packages = [ packages.dde-app-services ];
+                  environment.pathsToLink = [ "/share/dsg" ];
                })
 
               ];
