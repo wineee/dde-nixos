@@ -170,6 +170,20 @@
                     "X11/Xsession.d".source = "${packages.startdde}/X11/Xsession.d";
                     #"lightdm/lightdm.conf".source = "${packages.startdde}/etc/lightdm/lightdm.conf";
                     "deepin/dde-session-ui.conf".source = "${packages.dde-session-ui}/share/deepin/dde-session-ui.conf";
+                    "deepin/dde.conf".text = ''
+                      [Password]
+                      STRONG_PASSWORD = true
+                      PASSWORD_MIN_LENGTH = 1
+                      PASSWORD_MAX_LENGTH = 510
+                      VALIDATE_POLICY = 1234567890;abcdefghijklmnopqrstuvwxyz;ABCDEFGHIJKLMNOPQRSTUVWXYZ;~`!@#$%^&*()-_+=|\{}[]:"'<>,.?/
+                      VALIDATE_REQUIRED = 1
+                      PALINDROME_NUM = 0
+                      WORD_CHECK = 0
+                      MONOTONE_CHARACTER_NUM = 0
+                      CONSECUTIVE_SAME_CHARACTER_NUM = 0
+                      DICT_PATH = 
+                      FIRST_LETTER_UPPERCASE = false
+                    '';
                   };
 
                   services.xserver.desktopManager.deepin.extraGSettingsOverridePackages = with packages; [
@@ -279,12 +293,6 @@
                   services.dbus.packages = [ packages.dde-daemon ];
                   services.udev.packages = [ packages.dde-daemon ];
                   systemd.packages = [ packages.dde-daemon ];
-                  users.groups.dde-daemon = { };
-                  users.users.dde-daemon = {
-                    description = "Deepin daemon user";
-                    group = "dde-daemon";
-                    isSystemUser = true;
-                  };
                   environment.etc."polkit-1/localauthority/10-vendor.d/com.deepin.daemon.Accounts.pkla".source = "${packages.dde-daemon}/var/lib/polkit-1/localauthority/10-vendor.d/com.deepin.daemon.Accounts.pkla";
                   environment.etc."polkit-1/localauthority/10-vendor.d/com.deepin.daemon.Fprintd.pkla".source = "${packages.dde-daemon}/var/lib/polkit-1/localauthority/10-vendor.d/com.deepin.daemon.Fprintd.pkla";
                   environment.etc."polkit-1/localauthority/10-vendor.d/com.deepin.daemon.Grub2.pkla".source = "${packages.dde-daemon}/var/lib/polkit-1/localauthority/10-vendor.d/com.deepin.daemon.Grub2.pkla";
