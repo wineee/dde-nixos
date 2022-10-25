@@ -3,6 +3,7 @@
 , fetchFromGitHub
 , fetchpatch
 , getUsrPatchFrom
+, replaceAll
 , dtk
 , cmake
 , wrapQtAppsHook
@@ -13,10 +14,6 @@
 let
   patchList = {
     "dconfig-center/dde-dconfig-daemon/services/org.desktopspec.ConfigManager.service" = [ ];
-    "dconfig-center/dde-dconfig-daemon/dconfig_global.h" = [
-      # "/etc/dsg" 
-      [ "/usr/share/dsg" "/run/current-system/sw/share/dsg" ]
-    ];
   };
 in
 stdenv.mkDerivation rec {
@@ -30,6 +27,9 @@ stdenv.mkDerivation rec {
     sha256 = "sha256-cB9mA99eKx8NrBBIUfDr/jyLUfWmwaW7m3ssm22iCLs=";
   };
 
+  postPatch = replaceAll "/usr/share" "/run/current-system/sw/share"
+      + getUsrPatchFrom patchList;
+
   nativeBuildInputs = [
     cmake
     wrapQtAppsHook
@@ -40,10 +40,11 @@ stdenv.mkDerivation rec {
     gtest
   ];
 
-  postPatch = getUsrPatchFrom patchList;
+  cmakeFlags = [ "-DDVERSION=${version}" ];
 
   qtWrapperArgs = [
     "--prefix QT_PLUGIN_PATH : ${qt5integration}/${qtbase.qtPluginPrefix}"
+    "--prefix XDG_DATA_DIRS : \"/run/current-system/sw/share\""
   ];
 
   meta = with lib; {
