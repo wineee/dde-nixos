@@ -28,7 +28,6 @@
 , udev
 , kwayland
 , dbus
-, procps
 , qtbase
 , patchelf
 }:
@@ -128,7 +127,6 @@ stdenv.mkDerivation rec {
     ffmpegthumbnailer
     portaudio
     udev
-    procps
   ] ++ ( with gst_all_1; [
     gstreamer
     gst-plugins-base
