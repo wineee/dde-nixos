@@ -29,6 +29,7 @@
 , util-linux
 , libselinux
 , libsepol
+, libxcrypt
 , networkmanager-qt
 , glib
 , gtest
@@ -121,6 +122,7 @@ stdenv.mkDerivation rec {
     util-linux
     libselinux
     libsepol
+    libxcrypt
     networkmanager-qt
     gtest
   ];

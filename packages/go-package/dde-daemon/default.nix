@@ -41,6 +41,7 @@
 , getconf
 , util-linux
 , ddcutil
+, libxcrypt
 }:
 let
   goCodePatchs = {
@@ -224,6 +225,7 @@ buildGoPackage rec {
     makeWrapper
     wrapGAppsHook
     wrapQtAppsHook
+    libxcrypt
   ];
 
   buildInputs = [
@@ -231,7 +233,7 @@ buildGoPackage rec {
     go-gir-generator
     go-lib
     linux-pam
-
+    libxcrypt
     alsa-lib
     dde-api
     deepin-desktop-schemas
