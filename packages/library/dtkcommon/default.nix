@@ -16,8 +16,8 @@ stdenv.mkDerivation rec {
   src = fetchFromGitHub {
     owner = "linuxdeepin";
     repo = pname;
-    rev = "a070bf688aeccd4cb701b078897fcd3efe88a657";
-    sha256 = "sha256-B0szFtXsEhcvPuwVy8SIDVKvJCPk2V4/N0lsNR0rjD4=";
+    rev = "73b615b5287e780261ccf8bb0bdd421bd9bb6f6b";
+    sha256 = "sha256-RrM6KmM68or6MAmJgPVzN68Mflo5E4JXlhVgTYkiiTY=";
   };
 
   nativeBuildInputs = [
@@ -30,8 +30,6 @@ stdenv.mkDerivation rec {
   buildInputs = [ qtbase ];
 
   qmakeFlags = [ "PREFIX=${placeholder "out"}" ];
-
-  patches = [ ./0001-dtk_lib-disable-examples-subdirs.patch ];
 
   preFixup = ''
     glib-compile-schemas ${glib.makeSchemaPath "$out" "${pname}-${version}"}
