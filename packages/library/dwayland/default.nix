@@ -1,84 +1,44 @@
 { stdenv
-, stdenvNoCC
 , lib
-, fetchpatch
-, getUsrPatchFrom
-, pkg-config
 , fetchFromGitHub
 , cmake
-, kwin
-, kwayland
 , qtbase
-, qttools
-, wrapQtAppsHook
-, deepin-gettext-tools
+, qtwayland
+, wayland
+, wayland-protocols
 , extra-cmake-modules
-, dtk
-, gsettings-qt
-, xorg
-, libepoxy
-, makeWrapper
+, deepin-wayland-protocols
 }:
-let
-  patchList = {
-  };
-
-in
 stdenv.mkDerivation rec {
   pname = "dwayland";
   version = "5.24.3-deepin.1.3";
 
   src = fetchFromGitHub {
-    owner = "linuxdeepin";
+    owner = "justforlxz";
     repo = pname;
     rev = version;
-    sha256 = "";
+    sha256 = "sha256-87Ih2IiOFGF4pXdZH+4VLa1c59PuuFuX3IEGuCmtKzA=";
   };
-
-  patches = [
-  ];
-
-  postPatch = getUsrPatchFrom patchList + ''
-    patchShebangs .
-  '';
 
   nativeBuildInputs = [
     cmake
-    qttools
-    deepin-gettext-tools
     extra-cmake-modules
-    pkg-config
-    wrapQtAppsHook
-    makeWrapper
   ];
 
   buildInputs = [
-    kwin
-    libkwin
-    kwayland
-    dtk
-    gsettings-qt
-    xorg.libXdmcp
-    libepoxy.dev
+    qtbase
+    qtwayland
+    wayland
+    wayland-protocols
+    deepin-wayland-protocols
   ];
-
-  NIX_CFLAGS_COMPILE = [
-    "-I${kwayland.dev}/include/KF5"
-  ];
-
-  cmakeFlags = [
-  ];
-
-  postFixup = ''
-    wrapProgram $out/bin/kwin_no_scale \
-      --set QT_QPA_PLATFORM_PLUGIN_PATH "${placeholder "out"}/${qtbase.qtPluginPrefix}"
-  '';
-  ## FIXME: why cann't use --prefix
+  
+  dontWrapQtApps = true;
 
   meta = with lib; {
-    description = "KWin configuration for Deepin Desktop Environment";
-    homepage = "https://github.com/linuxdeepin/dde-kwin";
-    license = licenses.gpl3Plus;
+    description = "Qt-style API to interact with the wayland-client and wayland-server";
+    homepage = "https://github.com/linuxdeepin/dwayland";
+    license = licenses.lgpl21Plus;
     platforms = platforms.linux;
   };
 }
