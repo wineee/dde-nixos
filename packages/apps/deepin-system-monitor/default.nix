@@ -3,57 +3,34 @@
 , fetchFromGitHub
 , fetchpatch
 , getUsrPatchFrom
+, replaceAll
 , dtk
 , qt5integration
-, qt5platform-plugins
 , deepin-gettext-tools
 , dde-qt-dbus-factory
-, udisks2-qt5
-, image-editor
+, dde-dock
 , cmake
 , pkg-config
 , qttools
-, qtsvg
 , qtx11extras
 , wrapQtAppsHook
 , kwayland
 , gsettings-qt
 , libpcap
 , libnl
-, procps
-, gtest
 , qtbase
 }:
 let
   patchList = {
     "deepin-system-monitor-daemon/com.deepin.SystemMonitor.Daemon.service" = [ ];
     "deepin-system-monitor-plugin-popup/com.deepin.SystemMonitorPluginPopup.service" = [ ];
-    "deepin-system-monitor-main/translations/policy/com.deepin.pkexec.deepin-system-monitor.policy" = [
-      [ "/usr/bin/renice" "renice" ]
-      [ "/usr/bin/kill" "kill" ]
-      [ "/usr/bin/systemctl" "systemctl" ]
-    ];
     "deepin-system-monitor-daemon/deepin-system-monitor-daemon.desktop" = [ ];
     "deepin-system-monitor-plugin-popup/deepin-system-monitor-plugin-popup.desktop" = [ ];
-
     "deepin-system-monitor-plugin/deepin-system-monitor-plugin.pc.in" = [ ];
-
     "deepin-system-monitor-daemon/systemmonitorservice.cpp" = [ ];
     "deepin-system-monitor-daemon/main.cpp" = [ ];
-    "deepin-system-monitor-main/process/priority_controller.cpp" = [
-      [ "/usr/bin/pkexec" "pkexec" ]
-      [ "/usr/bin/renice" "renice" ]
-    ];
     "deepin-system-monitor-main/process/desktop_entry_cache.cpp" = [
       [ "/usr/share" "/run/current-system/sw/share" ]
-    ];
-    "deepin-system-monitor-main/process/process_controller.cpp" = [
-      [ "/usr/bin/pkexec" "pkexec" ]
-      [ "/usr/bin/kill" "kill" ]
-    ];
-    "deepin-system-monitor-main/service/service_manager.cpp" = [
-      [ "/usr/bin/systemctl" "systemctl" ]
-      [ "/usr/bin/pkexec" "pkexec" ]
     ];
     "deepin-system-monitor-main/common/common.cpp" = [
       [ "/usr/bin" "/run/current-system/sw/bin" ]
@@ -69,8 +46,8 @@ stdenv.mkDerivation rec {
   src = fetchFromGitHub {
     owner = "linuxdeepin";
     repo = pname;
-    rev = version;
-    sha256 = "sha256-9rNDp96DrUWA7p1S4Cs6fWAoW5t0LweT7xEQQpkbWFI=";
+    rev = "9d2e11693df27ad52bcfc078cb9e7b872d4ee35f";
+    sha256 = "sha256-AgW5qoxMIQzRpSQnrwaDLX1LJpFUBf5PDfhKnGg/eR8=";
   };
 
   patches = [
@@ -79,12 +56,24 @@ stdenv.mkDerivation rec {
       url = "https://github.com/linuxdeepin/deepin-system-monitor/commit/e687b1c35961e8cd664c6e4982bd2c49375090d7.patch";
       sha256 = "sha256-iR0X56OTUY6O8a9as2vF9eBygrbvzYGFcpf407b7jp0=";
     })
+    (fetchpatch {
+      name = "fix option to disable kwayland";
+      url = "https://github.com/linuxdeepin/deepin-system-monitor/commit/5e60d4cdf6451c13ea531e0fe99de1f435ddc404.patch";
+      sha256 = "sha256-yi2hrJY2TKfq8YL+TAgEx+43wg1BNhn1horyJ5LzHZ8=";
+    })
   ];
 
-  postPatch = getUsrPatchFrom patchList + ''
-    substituteInPlace CMakeLists.txt \
-      --replace "ADD_SUBDIRECTORY(deepin-system-monitor-plugin)" "" \
-      --replace "ADD_SUBDIRECTORY(deepin-system-monitor-plugin-popup)" ""
+  postPatch = replaceAll "/usr/bin/renice" "renice"
+    + replaceAll "/usr/bin/kill" "kill"
+    + replaceAll "/usr/bin/systemctl" "systemctl"
+    + replaceAll "/usr/bin/pkexec" "pkexec"
+    + replaceAll "/usr/bin/deepin-system-monitor" "deepin-system-monitor"
+    + replaceAll "/usr/include/dde-dock/pluginsiteminterface.h" "dde-dock/pluginsiteminterface.h"
+    + getUsrPatchFrom patchList + ''
+    substituteInPlace deepin-system-monitor-main/CMakeLists.txt \
+      --replace "find_library(LIB_PROCPS NAMES procps REQUIRED)" "" 
+    substituteInPlace deepin-system-monitor-plugin-popup/CMakeLists.txt \
+      --replace "find_library(LIB_PROPS NAMES procps REQUIRED)" ""
   '';
 
   nativeBuildInputs = [
@@ -99,14 +88,12 @@ stdenv.mkDerivation rec {
     dtk
     dde-qt-dbus-factory
     qtx11extras
+    dde-dock.dev
     # kwayland
 
     gsettings-qt
     libpcap
     libnl
-    procps
-
-    gtest
   ];
 
   cmakeFlags = [
