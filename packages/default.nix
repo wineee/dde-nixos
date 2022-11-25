@@ -62,8 +62,9 @@ let
     qt5platform-plugins = callPackage ./library/qt5platform-plugins { };
     qt5integration = callPackage ./library/qt5integration { };
     docparser = callPackage ./library/docparser { };
+    dwayland = callPackage ./library/dwayland { };
+    deepin-wayland-protocols = callPackage ./library/deepin-wayland-protocols { };
     dtk = [ dtkcommon dtkcore dtkgui dtkwidget /*qt5integration*/ qt5platform-plugins ];
-    procps4 = callPackage ./library/procps { };
 
     #### MISC
     dde-polkit-agent = callPackage ./misc/dde-polkit-agent { };
@@ -94,6 +95,7 @@ let
 
     #### Dtk Application
     dde-kwin = callPackage ./apps/dde-kwin { };
+    deepin-kwin = callPackage ./apps/deepin-kwin { };
     dde-calendar = callPackage ./apps/dde-calendar { };
     dde-clipboard = callPackage ./apps/dde-clipboard { };
     dde-dock = callPackage ./apps/dde-dock { };
