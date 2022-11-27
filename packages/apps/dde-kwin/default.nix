@@ -1,15 +1,13 @@
 { stdenv
-, stdenvNoCC
 , lib
-, fetchpatch
-, getUsrPatchFrom
+, replaceAll
 , pkg-config
 , fetchFromGitHub
 , cmake
-, kwin
 , kwayland
 , qtbase
 , qttools
+, qtx11extras
 , wrapQtAppsHook
 , deepin-gettext-tools
 , extra-cmake-modules
@@ -18,83 +16,28 @@
 , xorg
 , libepoxy
 , makeWrapper
+, deepin-kwin
+, kdecoration
+, kconfig
+, kwindowsystem
+, kglobalaccel
 }:
-let
-  patchList = {
-    ### BUILD
-    "translate_desktop2ts.sh" = [
-      [ "/usr/bin/deepin-desktop-ts-convert" "deepin-desktop-ts-convert" ]
-    ];
-    "translate_ts2desktop.sh" = [
-      [ "/usr/bin/deepin-desktop-ts-convert" "deepin-desktop-ts-convert" ]
-    ];
-    ### INSTALL
-    "CMakeLists.txt" = [
-      # TODO
-      [ "/usr/include/KWaylandServer" "${kwayland.dev}/include/KWaylandServer" ]
-      [ "/usr/local/include/KWaylandServer" "" ]
-    ];
-    "configures/CMakeLists.txt" = [
-      [ "/etc/xdg" "$out/etc/xdg" ]
-      [ " /bin" " $out/bin" ]
-    ];
-    "configures/kwin_no_scale.in" = [
-      [ "/etc/xdg/kglobalshortcutsrc" "$out/etc/xdg/kglobalshortcutsrc" ]
-      [ "kwin 5.21.5" "kwin ${kwin.version}" ] # TODO
-    ];
-    "plugins/platforms/lib/dde-kwin.pc.in" = [
-      [ "/usr/X11R6/lib64" "$out/lib" ] # FIXME:
-    ];
-
-    ### 
-    "plugins/kwineffects/multitasking/background.cpp" = [
-      # TODO: file:///usr/share/wallpapers/deepin/desktop.jpg
-    ];
-    "deepin-wm-dbus/deepinwmfaker.cpp" = [
-      # TODO: file:///usr/share/wallpapers/deepin/desktop.jpg
-      # /usr/lib/deepin-daemon/dde-warning-dialog
-    ];
-    "plugins/platforms/plugin/main_wayland.cpp" = [ ];
-    "plugins/platforms/plugin/main.cpp" = [ ];
-
-  };
-
-  libkwin = stdenvNoCC.mkDerivation rec {
-    pname = "libkwin";
-    version = kwin.version;
-    src = kwin.out;
-    propagatedBuildInputs = [ kwin ];
-    dotBuild = true;
-    dontWrapQtApps = true;
-    installPhase = ''
-      mkdir -p $out/lib
-      ln -sf $src/lib/libkwin.so.${version} $out/lib/libkwin.so
-      ln -sf $src/lib/libkwin.so.${version} $out/lib/libkwin.so.5
-      ln -sf $src/lib/libkwin.so.${version} $out/lib/libkwin.so.${version}
-    '';
-    dontFixup = true;
-  };
-in
 stdenv.mkDerivation rec {
   pname = "dde-kwin";
-  version = "5.5.11-deepin";
+  version = "5.5.22";
 
   src = fetchFromGitHub {
-    owner = "linuxdeepin";
+    owner = "wineee";
     repo = pname;
-    rev = version;
-    sha256 = "sha256-m2cSsWhv8sI5fK13ghq1PSOWwtxijSrD7dxslKU2UwI=";
+    rev = "54b63c1285bc54108796df2ce708cb1b6295b7f0";
+    sha256 = "sha256-l7YeCBilSFLH7fPU7ClkaWDf55lXTNunsUCZHo+x5p8=";
   };
 
-  patches = [
-    (fetchpatch {
-      name = "chore: check value of QT_INSTALL_PLUGINS before set";
-      url = "https://github.com/justforlxz/dde-kwin/pull/1/commits/33b74703e9dbff5249bcc90ba1c0da486d7e734b.patch";
-      sha256 = "sha256-TflLTT+0LxLks+6uxtwG0+m2eVQ1PxmcAtetKx2fIMM=";
-    })
-  ];
-
-  postPatch = getUsrPatchFrom patchList + ''
+  postPatch = replaceAll "/usr/include/KWaylandServer" "${kwayland.dev}/include/KWaylandServer"
+    + replaceAll "/usr/lib/deepin-daemon" "/run/current-system/sw/lib/deepin-daemon"
+    + replaceAll "/usr/share/backgrounds" "/run/current-system/sw/share/backgrounds"
+    + replaceAll "/usr/share/wallpapers" "/run/current-system/sw/share/wallpapers"
+  + ''
     patchShebangs .
   '';
 
@@ -109,11 +52,17 @@ stdenv.mkDerivation rec {
   ];
 
   buildInputs = [
-    kwin
-    libkwin
+    deepin-kwin
     kwayland
+    kdecoration
+    kconfig
+    kwindowsystem
+    kglobalaccel
+
     dtk
+    qtx11extras
     gsettings-qt
+    
     xorg.libXdmcp
     libepoxy.dev
   ];
@@ -124,19 +73,18 @@ stdenv.mkDerivation rec {
 
   cmakeFlags = [
     "-DPROJECT_VERSION=${version}"
-    "-DKWIN_VERSION=${kwin.version}"
+    #"-DKWIN_VERSION=${kwin.version}"
     #"-DPLUGIN_INSTALL_PATH=${placeholder "out"}/lib/plugins/platforms"
-    "-DKWIN_LIBRARY_PATH=${libkwin}/lib"
-    "-DCMAKE_INSTALL_PREFIX=${placeholder "out"}"
+    #"-DKWIN_LIBRARY_PATH=${libkwin}/lib"
     "-DQT_INSTALL_PLUGINS=${placeholder "out"}/${qtbase.qtPluginPrefix}"
 
-    "-DUSE_WINDOW_TOOL=OFF"
-    "-DENABLE_BUILTIN_BLUR=OFF" 
-    "-DENABLE_KDECORATION=ON"
-    "-DENABLE_BUILTIN_MULTITASKING=OFF"
-    "-DENABLE_BUILTIN_BLACK_SCREEN=OFF"
-    "-DUSE_DEEPIN_WAYLAND=OFF"
-    "-DENABLE_BUILTIN_SCISSOR_WINDOW=ON"
+    #"-DUSE_WINDOW_TOOL=OFF"
+    #"-DENABLE_BUILTIN_BLUR=OFF" 
+    #"-DENABLE_KDECORATION=ON"
+    #"-DENABLE_BUILTIN_MULTITASKING=OFF"
+    #"-DENABLE_BUILTIN_BLACK_SCREEN=OFF"
+    #"-DUSE_DEEPIN_WAYLAND=OFF"
+    #"-DENABLE_BUILTIN_SCISSOR_WINDOW=ON"
   ];
 
   postFixup = ''
