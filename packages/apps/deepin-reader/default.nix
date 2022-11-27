@@ -34,13 +34,13 @@ let
 in
 stdenv.mkDerivation rec {
   pname = "deepin-reader";
-  version = "5.10.16";
+  version = "5.10.28";
 
   src = fetchFromGitHub {
     owner = "linuxdeepin";
     repo = pname;
     rev = version;
-    sha256 = "sha256-2dDv8IvnysteRqOJRvHVRa8kRjI7EyGybASmEVTgurw=";
+    sha256 = "sha256-0jHhsxEjBbu3ktvjX1eKnkZDwzRk9MrUSJSdYeOvWtI=";
   };
 
   nativeBuildInputs = [
@@ -72,7 +72,7 @@ stdenv.mkDerivation rec {
   ## TODO: use pkg-config
   fixIncludePatch = ''
     substituteInPlace 3rdparty/deepin-pdfium/src/3rdparty/pdfium/pdfium.pri \
-      --replace '/usr/include/openjpeg-2.4' "${openjpeg.dev}/include/openjpeg-2.4"
+      --replace '/usr/include/openjpeg-2.4' "${openjpeg.dev}/include/openjpeg-2.5"
 
     substituteInPlace 3rdparty/deepin-pdfium/src/src.pro \
       --replace '/usr/include/chardet' "${libchardet}/include/chardet"
