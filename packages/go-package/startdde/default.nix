@@ -24,7 +24,6 @@
 , dde-session-ui
 , dde-session-shell
 , gnome
-, dde-kwin
 , pciutils
 }:
 let
@@ -82,7 +81,7 @@ buildGoPackage rec {
 
   postPatch = replaceAll "/bin/bash" "${runtimeShell}"
     + replaceAll "/bin/sh" "${runtimeShell}"
-    + replaceAll "/usr/bin/kwin_no_scale" "${dde-kwin}/bin/kwin_no_scale"
+    + replaceAll "/usr/bin/kwin_no_scale" "kwin_no_scale"
     + replaceAll "/usr/lib/deepin-daemon" "/run/current-system/sw/lib/deepin-daemon"
     + replaceAll "/usr/lib/polkit-1-dde/dde-polkit-agent" "${dde-polkit-agent}/lib/polkit-1-dde/dde-polkit-agent"
     + replaceAll "/usr/bin/startdde" "$out/bin/startdde"
