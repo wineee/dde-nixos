@@ -14,14 +14,16 @@ stdenv.mkDerivation rec {
     sha256 = "sha256-NWjR8qxWi2IrcP0cSF+lLxBJ/GrVpk1BfTjVH0ytinY=";
   };
 
+  # It should be installed to /var，but this can't be done directly on nixos, so move to $out/share
+  # we need patch dde-control-center / dde-daemon also
   installPhase = ''
-    make install DESTDIR="$out/var" PREFIX="/"
+    make install DESTDIR="$out/share" PREFIX="/"
   '';
 
   meta = with lib; {
-    description = "dde-account-faces provides account-faces of dde";
+    description = "Account faces of deepin desktop environment";
     homepage = "https://github.com/linuxdeepin/dde-account-faces";
-    license = licenses.cc0;
+    license = with licenses; [ gpl3Plus cc0 ];
     platforms = platforms.linux;
   };
 }
