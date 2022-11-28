@@ -12,7 +12,6 @@
 , gettext
 , dde-api
 , deepin-desktop-schemas
-, deepin-wallpapers
 , alsa-lib
 , glib
 , gtk3
@@ -45,9 +44,6 @@
 }:
 let
   goCodePatchs = {
-    "inputdevices/layout_list.go" = [
-      [ "/usr/share/X11/xkb/rules/base.xml" "${xkeyboard_config}/share/X11/xkb/rules/base.xml" ]
-    ];
     "grub2/modify_manger.go" = [
       [ "_ = os.Setenv(\"PATH\", \"/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin\")" " " ]
     ];
@@ -56,8 +52,7 @@ let
     ];
     "appearance/fsnotify.go" = [
       [ "/usr/share" "/run/current-system/sw/share" ]
-      # /usr/share/themes"
-      # /usr/share/icons
+      # /usr/share/themes /usr/share/icons
     ];
     "apps/utils.go" = [
       [ "/usr/share" "/run/current-system/sw/share" ]
@@ -73,9 +68,6 @@ let
       [ "/usr/share" "/run/current-system/sw/share" ]
       # "/usr/share/applications"
     ];
-    "launcher/manager_ifc.go" = [
-      [ "/usr/bin/dde-launcher" "dde-launcher" ]
-    ];
     "audio/audio_config.go" = [
       # "/usr/share/dde-daemon/audio/echoCancelEnable.sh"
     ];
@@ -84,9 +76,6 @@ let
       # services.fprintd.enable
       [ "/usr/lib/fprintd/fprintd" "${fprintd}/libexec/fprintd" ]
     ];
-    "system/power_manager/utils.go" = [
-      [ "/usr/bin/systemd-detect-virt" "systemd-detect-virt" ]
-    ];
     "system/gesture/config.go" = [
       [ "/usr/share" "/run/current-system/sw/share" ]
     ];
@@ -94,11 +83,9 @@ let
       [ "/usr/sbin/laptop_mode" "laptop_mode" ] # TODO https://github.com/rickysarraf/laptop-mode-tools
     ];
     "bin/user-config/config_datas.go" = [
-      #TODO
       [ "/usr/share" "/run/current-system/sw/share" ]
       # "/usr/share/doc/deepin-manuals"
       # "/usr/share/deepin-sample-music"
-      #? /etc/default/locale
     ];
     "bin/dde-system-daemon/virtual.go" = [
       # "/usr/share/dde-daemon/supportVirsConf.ini"
@@ -106,12 +93,6 @@ let
     "system/display/displaycfg.go" = [
       [ "/usr/bin/lightdm-deepin-greeter" "lightdm-deepin-greeter" ]
       [ "runuser" "${util-linux.bin}/bin/runuser" ]
-    ];
-    "service_trigger/manager.go" = [
-      [ "/etc/deepin-daemon/" "$out/etc/deepin-daemon/" ]
-    ];
-    "keybinding/utils.go" = [
-      [ "/usr/bin/kwin_no_scale" "kwin_no_scale" ]
     ];
     "dock/identify_window.go" = [
       [ "/usr/share" "/run/current-system/sw/share" ]
@@ -155,18 +136,8 @@ let
     "accounts/manager.go" = [
       # /usr/share/dde-daemon/accounts/dbus-udcp.json
     ];
-
-    "grub2/grub_params.go" = [
-      #/etc/default/grub
-    ];
-    "grub_common/common.go" = [
-      #/etc/default/grub
-    ];
     "system/timedated/manager.go" = [
       #? /etc/systemd/timesyncd.conf.d/deepin.conf
-    ];
-    "langselector/locale_ifc.go" = [
-      #? /etc/locale.gen
     ];
     "accounts/users/manager.go" = [
       #? "/etc/adduser.conf"
@@ -174,21 +145,12 @@ let
     "image_effect/utils.go" = [
       [ "runuser" "${util-linux.bin}/bin/runuser" ]
     ];
-    "misc/etc/acpi/events/deepin_lid" = [ 
-      [ "/etc/acpi/actions/deepin_lid.sh" "$out/etc/acpi/actions/deepin_lid.sh" ]
-    ];
     "misc/applications/deepin-toggle-desktop.desktop" = [ ];
-    "misc/udev-rules/80-deepin-fprintd.rules" = [
-      [ "/usr/bin/dbus-send" "${dbus}/bin/dbus-send" ]
-    ];
-    "misc/dde-daemon/keybinding/system_actions.json" = [
-      [ "/usr/bin/deepin-system-monitor" "deepin-system-monitor" ]
-    ];
   };
 in
 buildGoPackage rec {
   pname = "dde-daemon";
-  version = "5.14.104";
+  version = "5.14.122";
 
   goPackagePath = "github.com/linuxdeepin/dde-daemon";
 
@@ -196,22 +158,28 @@ buildGoPackage rec {
     owner = "linuxdeepin";
     repo = pname;
     rev = version;
-    sha256 = "sha256-BkqKVgJey4uwtBe0dJbg5VhtXJSVhmuYDIiv0pX21Ko=";
+    sha256 = "sha256-KoYMv4z4IGBH0O422PuFHrIgDBEkU08Vepax+00nrGE=";
   };
 
-  postPatch =  getUsrPatchFrom goCodePatchs
-               + replaceAll "/usr/lib/deepin-api" "/run/current-system/sw/lib/deepin-api"
-               + replaceAll "/usr/lib/deepin-daemon" "/run/current-system/sw/lib/deepin-daemon"
-               + replaceAll "/usr/share/wallpapers" "/run/current-system/sw/share/wallpapers"
-               + replaceAll "/bin/bash" "${runtimeShell}"
-               + replaceAll "/bin/sh" "${runtimeShell}"
-               + replaceAll "/usr/bin/setxkbmap" "${xorg.setxkbmap}/bin/setxkbmap"
-               + replaceAll "/usr/bin/xdotool" "${xdotool}/bin/xdotool"
-               + replaceAll "/usr/bin/getconf" "${getconf}/bin/getconf"
-               + replaceAll "/usr/share/zoneinfo" "${tzdata}/share/zoneinfo"
-               + ''
-                  patchShebangs .
-               '';
+  postPatch = replaceAll "/usr/lib/deepin-api" "/run/current-system/sw/lib/deepin-api"
+        + replaceAll "/usr/lib/deepin-daemon" "/run/current-system/sw/lib/deepin-daemon"
+        + replaceAll "/usr/share/wallpapers" "/run/current-system/sw/share/wallpapers"
+        + replaceAll "/usr/share/backgrounds" "/run/current-system/sw/share/backgrounds"
+        + replaceAll "/bin/bash" "${runtimeShell}"
+        + replaceAll "/bin/sh" "${runtimeShell}"
+        + replaceAll "/usr/bin/setxkbmap" "${xorg.setxkbmap}/bin/setxkbmap"
+        + replaceAll "/usr/bin/xdotool" "${xdotool}/bin/xdotool"
+        + replaceAll "/usr/bin/getconf" "${getconf}/bin/getconf"
+        + replaceAll "/usr/bin/dbus-send" "${dbus}/bin/dbus-send"
+        + replaceAll "/usr/bin/kwin_no_scale" "kwin_no_scale"
+        + replaceAll "/usr/bin/deepin-system-monitor" "deepin-system-monitor"
+        + replaceAll "/usr/bin/dde-launcher" "dde-launcher"
+        + replaceAll "/usr/bin/systemd-detect-virt" "systemd-detect-virt"
+        + replaceAll "/usr/share/zoneinfo" "${tzdata}/share/zoneinfo"
+        + replaceAll "/usr/share/X11/xkb/rules/base.xml" "${xkeyboard_config}/share/X11/xkb/rules/base.xml" 
+        + getUsrPatchFrom goCodePatchs +  ''
+            patchShebangs .
+        '';
 
   goDeps = ./deps.nix;
 
@@ -220,12 +188,11 @@ buildGoPackage rec {
     deepin-gettext-tools
     gettext
     networkmanager
-    networkmanager.dev
+    #networkmanager.dev
     python3
     makeWrapper
     wrapGAppsHook
     wrapQtAppsHook
-    libxcrypt
   ];
 
   buildInputs = [
@@ -237,7 +204,6 @@ buildGoPackage rec {
     alsa-lib
     dde-api
     deepin-desktop-schemas
-    deepin-wallpapers
     glib
     libgudev
     gtk3
