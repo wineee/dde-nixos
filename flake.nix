@@ -194,6 +194,7 @@
                     dde-introduction
                     dde-network-core
                     dde-kwin
+                    deepin-kwin
                     deepin-terminal
                     deepin-album
                     deepin-image-viewer
@@ -215,7 +216,7 @@
                     startdde
                     deepin-screen-recorder
                     dde-clipboard
-                    dde-grand-search
+                  #  dde-grand-search
                     
                     deepin-desktop-schemas
                     dpa-ext-gnomekeyring
@@ -236,7 +237,6 @@
                     deepin-lianliankan
                     deepin-font-manager
                   ] ++ (with pkgs; [
-                    kwin
                     socat
                     xdotool
                     glib # for gsettings program / gdbus
@@ -252,6 +252,7 @@
                   services.dbus.packages = with packages; [
                     deepin-pw-check
                     dde-kwin
+                    deepin-kwin
 
                     dde-launcher
                     dde-session-ui
@@ -267,12 +268,13 @@
                     deepin-boot-maker
                     deepin-camera
                     dde-clipboard
-                    dde-grand-search
+                   # dde-grand-search
 
                     dde-dock
                   ];
 
                   systemd.packages = with packages; [
+                    deepin-kwin
                     dde-launcher
                     dde-file-manager
                     dde-calendar
