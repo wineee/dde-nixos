@@ -142,14 +142,14 @@ stdenv.mkDerivation rec {
   ];
   dontWrapGApps = true;
 
-  postPatch = getUsrPatchFrom patchList 
-    + replaceAll "/bin/bash" "${runtimeShell}"
+  postPatch = replaceAll "/bin/bash" "${runtimeShell}"
     + replaceAll "/usr/bin/deepin-desktop-ts-convert" "deepin-desktop-ts-convert"
     + replaceAll "/usr/lib/deepin-daemon" "/run/current-system/sw/lib/deepin-daemon"
     + replaceAll "/usr/share/backgrounds" "/run/current-system/sw/share/backgrounds"
     + replaceAll "/usr/lib/dde-file-manager" "$out/lib/dde-file-manager"
     + replaceAll "/usr/lib/gvfs/gvfsd" "gvfsd" # TODO
     + replaceAll "/usr/share/dde-file-manager/database" "/var/db/dde-file-manager/database"
+    + getUsrPatchFrom patchList
     + ''
     patchShebangs .
   '';
@@ -194,7 +194,6 @@ stdenv.mkDerivation rec {
     "PREFIX=${placeholder "out"}"
     "LIB_INSTALL_DIR=${placeholder "out"}/lib"
     "INCLUDE_INSTALL_DIR=${placeholder "out"}/include"
-    # "CONFIG+=ENABLE_ANYTHING"
   ];
 
   qtWrapperArgs = [
