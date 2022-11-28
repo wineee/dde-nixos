@@ -3,6 +3,7 @@
 , fetchFromGitHub
 , getUsrPatchFrom
 , replaceAll
+, substituteAll
 , buildGoPackage
 , pkg-config
 , go-dbus-factory
@@ -41,11 +42,12 @@
 , util-linux
 , ddcutil
 , libxcrypt
+, dde-account-faces
 }:
 let
   goCodePatchs = {
     "grub2/modify_manger.go" = [
-      [ "_ = os.Setenv(\"PATH\", \"/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin\")" " " ]
+      [ "/usr/local/sbin:" "PATH:/usr/local/sbin" ]
     ];
     "gesture/config.go" = [
       # "/usr/share/dde-daemon/gesture.json"
@@ -76,6 +78,9 @@ let
       # services.fprintd.enable
       [ "/usr/lib/fprintd/fprintd" "${fprintd}/libexec/fprintd" ]
     ];
+    "bin/dde-system-daemon/main.go" = [
+       [ "/usr/local/sbin:" "PATH:/usr/local/sbin" ]
+    ];
     "system/gesture/config.go" = [
       [ "/usr/share" "/run/current-system/sw/share" ]
     ];
@@ -99,7 +104,6 @@ let
       # "/usr/share/applications/"
     ];
     "keybinding/shortcuts/system_shortcut.go" = [
-      [ "/usr/bin/deepin-system-monitor" "deepin-system-monitor" ]
       [ "dbus-send" "${dbus}/bin/dbus-send" ]
       [ "gsettings" "${glib.bin}/bin/gsettings" ]
       ## TODO
@@ -111,8 +115,8 @@ let
       [ "/usr/bin/dde-control-center" "dde-control-center" ]
       [ "/usr/share" "/run/current-system/sw/share" ]
       #/usr/share/xsessions
+      [ "/var/lib/AccountsService/icons" "${dde-account-faces}/share/lib/AccountsService/icons" ]
     ];
-
     "dock/desktop_file_path.go" = [
       [ "/usr/share" "/run/current-system/sw/share" ]
       # "/usr/share/applications/"
@@ -126,9 +130,6 @@ let
     "dock/dock_manager_init.go" = [
       [ "/usr/share" "/run/current-system/sw/share" ]
       #? ddeDataDir     = "/usr/share/dde/data"
-    ];
-    "accounts/users/list.go" = [
-      #? /usr/etc/login.defs
     ];
     "accounts/handle_event.go" = [
       #? /usr/share/config/kdm/kdmrc
@@ -145,7 +146,6 @@ let
     "image_effect/utils.go" = [
       [ "runuser" "${util-linux.bin}/bin/runuser" ]
     ];
-    "misc/applications/deepin-toggle-desktop.desktop" = [ ];
   };
 in
 buildGoPackage rec {
@@ -161,6 +161,13 @@ buildGoPackage rec {
     sha256 = "sha256-KoYMv4z4IGBH0O422PuFHrIgDBEkU08Vepax+00nrGE=";
   };
 
+  patches = [
+    (substituteAll {
+      src = ./0001-patch_account_face_path_for_nix.patch;
+      actConfigDir = "\"${dde-account-faces}/share/lib/AccountsService\"";
+    })
+  ];
+
   postPatch = replaceAll "/usr/lib/deepin-api" "/run/current-system/sw/lib/deepin-api"
         + replaceAll "/usr/lib/deepin-daemon" "/run/current-system/sw/lib/deepin-daemon"
         + replaceAll "/usr/share/wallpapers" "/run/current-system/sw/share/wallpapers"
@@ -174,6 +181,7 @@ buildGoPackage rec {
         + replaceAll "/usr/bin/kwin_no_scale" "kwin_no_scale"
         + replaceAll "/usr/bin/deepin-system-monitor" "deepin-system-monitor"
         + replaceAll "/usr/bin/dde-launcher" "dde-launcher"
+        + replaceAll "/usr/bin/deepin-calculator" "deepin-calculator"
         + replaceAll "/usr/bin/systemd-detect-virt" "systemd-detect-virt"
         + replaceAll "/usr/share/zoneinfo" "${tzdata}/share/zoneinfo"
         + replaceAll "/usr/share/X11/xkb/rules/base.xml" "${xkeyboard_config}/share/X11/xkb/rules/base.xml" 
