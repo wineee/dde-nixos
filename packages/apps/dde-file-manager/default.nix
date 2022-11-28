@@ -2,6 +2,7 @@
 , lib
 , fetchFromGitHub
 , getUsrPatchFrom
+, replaceAll
 , fetchpatch
 , runtimeShell
 , dtk
@@ -17,7 +18,6 @@
 , deepin-gettext-tools
 , deepin-movie-reborn
 , deepin-desktop-schemas
-, deepin-wallpapers
 , qmake
 , qttools
 , qtx11extras
@@ -40,8 +40,8 @@
 , lucenepp
 , boost
 , taglib
+, cryptsetup
 , glib
-, dde-daemon
 , qtbase
 }:
 let
@@ -50,7 +50,6 @@ let
     "src/dde-file-manager-lib/dbusinterface/dbusinterface.pri" = [
  #     [ "/usr/share/dbus-1/interfaces/com.deepin.anything.xml" "${deepin-anything.server}/share/dbus-1/interfaces/com.deepin.anything.xml" ]
     ];
-
     ### INSTALL
     "src/dde-file-manager/dde-file-manager.pro" = [
       [ "/etc/xdg/autostart" "$out/etc/xdg/autostart" ]
@@ -62,6 +61,7 @@ let
     "src/gschema/gschema.pro" = [ ];
     "src/common/common.pri" = [
       [ "LIB_INSTALL_DIR = \\$\\$[QT_INSTALL_LIBS]" "" ]
+      [ "CONFIG += ENABLE_ANYTHING" "" ] # disable deepin-anything
     ];
     "src/dde-file-manager-daemon/dde-file-manager-daemon.pro" = [
       [ "/etc/dbus-1/system.d" "$out/etc/dbus-1/system.d" ]
@@ -88,83 +88,34 @@ let
     "src/dbusservices/com.deepin.dde.desktop.service" = [ ];
 
     ### CODE
-
-    "src/dde-zone/mainwindow.h" = [
-      [ "/usr/lib/deepin-daemon/desktop-toggle" "${dde-daemon}/lib/deepin-daemon/desktop-toggle" ]
-    ];
-    # SW_64 ...
-    "src/dde-file-manager-lib/sw_label/filemanagerlibrary.h" = [ ];
-    "src/dde-file-manager-lib/sw_label/llsdeepinlabellibrary.h" = [ ];
-
-    "src/dde-file-manager-lib/shutil/dsqlitehandle.h" = [
-      #["/usr/share/dde-file-manager/database" ] ## TODO
-    ];
     "src/dde-file-manager-lib/shutil/mimesappsmanager.cpp" = [
       [ "/usr/share/applications" "/run/current-system/sw/share/applications" ]
-      #"/usr/share/applications" ## TODO
     ];
-
     "src/dde-file-manager-lib/shutil/fileutils.cpp" = [
       [ "/usr/share" "/run/current-system/sw/share" ]
-      #["/usr/share/applications"] ## TODO
-      #["/usr/share/pixmaps"]
-      [ "/usr/lib/deepin-daemon" "/run/current-system/sw/lib/deepin-daemon" ]
     ];
-
     "src/dde-file-manager-lib/vault/vaultglobaldefine.h" = [
-      #["grep /usr/bin/deepin-compressor"]
+      [ "/usr/bin/deepin-compressor" "deepin-compressor" ]
     ];
-
-    "src/dde-file-manager-lib/gvfs/networkmanager.cpp" = [
-      #["/usr/lib/gvfs/gvfsd"]
-    ];
-
     "src/dde-file-manager-lib/interfaces/dfilemenumanager.cpp" = [
-      ## /usr/share/applications/dde-open.desktop 
+      # /usr/share/applications/dde-open.desktop 
     ];
 
     ## PLUGINS
     "src/dde-file-manager-lib/plugins/dfmadditionalmenu.cpp" = [
-      ## /usr/share/deepin/dde-file-manager/oem-menuextensions/
+      # /usr/share/deepin/dde-file-manager/oem-menuextensions/
     ];
-    "src/dde-file-manager-lib/plugins/schemepluginmanager.cpp" = [
-      ## /usr/lib/dde-file-manager/addons
-    ];
-
-    "src/dde-desktop/view/backgroundmanager.cpp" = [
-      [ "/usr/share/backgrounds/default_background.jpg" "${deepin-wallpapers}/share/wallpapers/deepin/desktop.jpg" ]
-    ];
-
     "src/dde-file-manager-lib/interfaces/customization/dcustomactiondefine.h" = [
-      ## /usr/share/applications/context-menus
+      # /usr/share/applications/context-menus
     ];
     "src/dde-desktop/view/canvasgridview.cpp" = [
-      ## /usr/share/deepin/dde-desktop-watermask.json
+      # /usr/share/deepin/dde-desktop-watermask.json
     ];
     "src/dde-file-manager-daemon/accesscontrol/accesscontrolmanager.cpp" = [
-      ## "/usr/bin/dmcg" << "/usr/bin/dde-file-manager"
-      [ "/etc/deepin" "$out/etc/deepin" ]
+      # "/usr/bin/dmcg" << "/usr/bin/dde-file-manager"
       # "/etc/deepin/devAccessConfig.json" "/etc/deepin/vaultAccessConfig.json"
     ];
-    "src/dde-wallpaper-chooser/frame.cpp" = [
-      [ "/usr/share/backgrounds/default_background.jpg" "${deepin-wallpapers}/share/wallpapers/deepin/desktop.jpg" ]
-    ];
-    "src/dde-file-manager-daemon/vault/vaultbruteforceprevention.cpp" = [
-      # {"/usr/bin/dde-file-manager", "/usr/bin/dde-desktop", "/usr/bin/dde-select-dialog-wayland", "/usr/bin/dde-select-dialog-x11"};
-    ];
-
-    "src/utils/utils.cpp" = [
-      [ "/bin/bash" "${runtimeShell}" ]
-    ];
-    "src/dde-file-manager-lib/controllers/fileeventprocessor.cpp" = [
-      [ "/bin/bash" "${runtimeShell}" ]
-    ];
-    "src/dde-advanced-property-plugin/dadvancedinfowidget.cpp" = [
-      [ "/bin/bash" "${runtimeShell}" ]
-    ];
-
-    ## src/dde-file-manager-lib/models/dfmrootfileinfo.cpp "/etc/%1/ab-recovery.json"
-
+    "src/dde-file-manager-daemon/vault/vaultbruteforceprevention.cpp" = [ ];
     # src/dde-file-manager-daemon/usershare/usersharemanager.cpp
     # ln -sf /lib/systemd/system/smbd.service /etc/systemd/system/multi-user.target.wants/smbd.service
   };
@@ -172,13 +123,13 @@ let
 in
 stdenv.mkDerivation rec {
   pname = "dde-file-manager";
-  version = "5.6.5";
+  version = "5.8.1";
 
   src = fetchFromGitHub {
     owner = "linuxdeepin";
     repo = pname;
-    rev = "a00b3c9b8c983a93e11e57fccd246d3f61baadbb";
-    sha256 = "sha256-KRQ0Dp4E6txShji+OimuWcrX/IJFenBj/r7dhhOqXkw=";
+    rev = version;
+    sha256 = "sha256-+pd0YLcaq3fGZImm6wt1QW/eIDnXkLoqmFOrwNexn80=";
   };
 
   nativeBuildInputs = [
@@ -190,26 +141,16 @@ stdenv.mkDerivation rec {
     wrapGAppsHook
   ];
   dontWrapGApps = true;
-  
-  patches = [
-    (fetchpatch {
-      name = "chore: avoid hardcode in Shebangs";
-      url = "https://github.com/linuxdeepin/dde-file-manager/commit/45f55e570a2ffb13881e5950a5e77694798cc4e4.patch";
-      sha256 = "sha256-bHVrKKjCCODyqCklZYxlH6e0etUFvxqicerq51nmjLU=";
-    })
-    (fetchpatch {
-      name = "chore: avoid hardcode";
-      url = "https://github.com/linuxdeepin/dde-file-manager/commit/f47acae84862fffeb5c6468c85a1672362261963.patch";
-      sha256 = "sha256-wjSeCtb8CdKAUiFUGzaXEPH5Y+oVmGjCjbaEUYMgktk=";
-    })
-    (fetchpatch {
-      name = "chore: avoid hardcode in desktop file";
-      url = "https://github.com/linuxdeepin/dde-file-manager/commit/5c720cabce0af873fea6744348148fb43bbfadb7.patch";
-      sha256 = "sha256-OjLFN5o7uKgnG0ZnFbbCgPSDpfDq3e3bfZPTbXV6rfQ=";
-    })
-  ];
 
-  postPatch = getUsrPatchFrom patchList + ''
+  postPatch = getUsrPatchFrom patchList 
+    + replaceAll "/bin/bash" "${runtimeShell}"
+    + replaceAll "/usr/bin/deepin-desktop-ts-convert" "deepin-desktop-ts-convert"
+    + replaceAll "/usr/lib/deepin-daemon" "/run/current-system/sw/lib/deepin-daemon"
+    + replaceAll "/usr/share/backgrounds" "/run/current-system/sw/share/backgrounds"
+    + replaceAll "/usr/lib/dde-file-manager" "$out/lib/dde-file-manager"
+    + replaceAll "/usr/lib/gvfs/gvfsd" "gvfsd" # TODO
+    + replaceAll "/usr/share/dde-file-manager/database" "/var/db/dde-file-manager/database"
+    + ''
     patchShebangs .
   '';
 
@@ -242,6 +183,7 @@ stdenv.mkDerivation rec {
     lucenepp
     boost
     taglib
+    cryptsetup
   ];
 
   enableParallelBuilding = true;
@@ -252,7 +194,7 @@ stdenv.mkDerivation rec {
     "PREFIX=${placeholder "out"}"
     "LIB_INSTALL_DIR=${placeholder "out"}/lib"
     "INCLUDE_INSTALL_DIR=${placeholder "out"}/include"
-    "CONFIG+=DISABLE_ANYTHING"
+    # "CONFIG+=ENABLE_ANYTHING"
   ];
 
   qtWrapperArgs = [
