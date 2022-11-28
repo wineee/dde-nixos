@@ -10,17 +10,18 @@
 , lxqt
 , dtkcore
 , dtkcommon
+, qtimageformats
 }:
 
 stdenv.mkDerivation rec {
   pname = "dtkgui";
-  version = "5.6.1+";
+  version = "5.6.2";
 
   src = fetchFromGitHub {
     owner = "linuxdeepin";
     repo = pname;
-    rev = "5204f570ef298afd3555edd2e3b718e6423681ac";
-    sha256 = "sha256-ioekMkhWZlI7aHc1eSQeL7/wmt7FCs1CFMdpUpN+ywA=";
+    rev = "1e305e8e384989fa7353523abd4476a4c6083cad";
+    sha256 = "sha256-5x5YeD60ShiB8YH6686oJpxnGrJoPDuAb6ro5F0YrjQ=";
   };
 
   nativeBuildInputs = [
@@ -33,8 +34,12 @@ stdenv.mkDerivation rec {
   buildInputs = [
     dtkcore
     dtkcommon
-    librsvg
     lxqt.libqtxdg
+  ];
+
+  propagatedBuildInputs = [
+    librsvg 
+    qtimageformats 
   ];
 
   cmakeFlags = [ 
