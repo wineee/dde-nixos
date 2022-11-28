@@ -11,13 +11,13 @@
 
 stdenv.mkDerivation rec {
   pname = "go-lib";
-  version = "5.8.26";
+  version = "5.8.27";
 
   src = fetchFromGitHub {
     owner = "linuxdeepin";
     repo = pname;
     rev = version;
-    sha256 = "sha256-92sXZWX0PoZX6i/I8wAobL5pIzyqUG903SZCuu4wjtk=";
+    sha256 = "sha256-ZV5zWu7UvNKVcVo79/iKMhF4H09rGyDCvEL61H05lZc=";
   };
 
   installPhase = ''
