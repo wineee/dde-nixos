@@ -14,17 +14,20 @@
 let
   patchList = {
     "dconfig-center/dde-dconfig-daemon/services/org.desktopspec.ConfigManager.service" = [ ];
+    "dconfig-center/dde-dconfig/main.cpp" = [
+      [ "/bin/dde-dconfig-editor" "dde-dconfig-editor" ]
+    ];
   };
 in
 stdenv.mkDerivation rec {
   pname = "dde-app-services";
-  version = "0.0.19";
+  version = "0.0.20";
 
   src = fetchFromGitHub {
     owner = "linuxdeepin";
     repo = pname;
     rev = version;
-    sha256 = "sha256-cB9mA99eKx8NrBBIUfDr/jyLUfWmwaW7m3ssm22iCLs=";
+    sha256 = "sha256-M9XXNV3N4CifOXitT6+UxaGsLoVuoNGqC5SO/mF+bLw=";
   };
 
   postPatch = replaceAll "/usr/share" "/run/current-system/sw/share"
