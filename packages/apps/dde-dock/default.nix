@@ -34,13 +34,13 @@ let
 in
 stdenv.mkDerivation rec {
   pname = "dde-dock";
-  version = "5.5.73";
+  version = "5.5.77";
 
   src = fetchFromGitHub {
     owner = "linuxdeepin";
     repo = pname;
     rev = version;
-    sha256 = "sha256-Jw2HO5RknN/FuItLZUOG/xSNkgZo+3COrh6n7QoAgUc=";
+    sha256 = "sha256-Oyh7HiHKfG1Uq65qx2dCLU03sr/oo1dYuLU1wJaT81A=";
   };
 
   postPatch = replaceAll "/usr/lib/deepin-daemon" "/run/current-system/sw/lib/deepin-daemon"
