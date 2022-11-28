@@ -10,13 +10,13 @@
 
 stdenv.mkDerivation rec {
   pname = "go-gir-generator";
-  version = "2.1.0";
+  version = "2.2.0";
 
   src = fetchFromGitHub {
     owner = "linuxdeepin";
     repo = pname;
     rev = version;
-    sha256 = "sha256-29+j0vznfZhoHvmhvDkgfddskwLvumHZVh+PKtg5pWg=";
+    sha256 = "sha256-lFseui/M3+TyfYoa+rnS0cGhN6gdLrgpzgOwqzYcyPk=";
   };
 
   nativeBuildInputs = [
