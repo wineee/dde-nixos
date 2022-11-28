@@ -293,9 +293,14 @@
                   services.udev.packages = [ packages.dde-daemon ];
                   systemd.packages = [ packages.dde-daemon ];
                   environment.pathsToLink = [ "/lib/deepin-daemon" ];
-                  environment.etc."polkit-1/localauthority/10-vendor.d/com.deepin.daemon.Accounts.pkla".source = "${packages.dde-daemon}/var/lib/polkit-1/localauthority/10-vendor.d/com.deepin.daemon.Accounts.pkla";
-                  environment.etc."polkit-1/localauthority/10-vendor.d/com.deepin.daemon.Fprintd.pkla".source = "${packages.dde-daemon}/var/lib/polkit-1/localauthority/10-vendor.d/com.deepin.daemon.Fprintd.pkla";
-                  environment.etc."polkit-1/localauthority/10-vendor.d/com.deepin.daemon.Grub2.pkla".source = "${packages.dde-daemon}/var/lib/polkit-1/localauthority/10-vendor.d/com.deepin.daemon.Grub2.pkla";
+                  environment.etc= {
+                    "lightdm/deepin/xsettingsd.conf".source = "${packages.dde-daemon}/lightdm/deepin/xsettingsd.conf";
+                    #"pam.d/deepin-auth-keyboard"
+                    "acpi/actions/deepin_lid.sh".source = "${packages.dde-daemon}/acpi/actions/deepin_lid.sh";
+                    "polkit-1/localauthority/10-vendor.d/com.deepin.daemon.Accounts.pkla".source = "${packages.dde-daemon}/var/lib/polkit-1/localauthority/10-vendor.d/com.deepin.daemon.Accounts.pkla";
+                    "polkit-1/localauthority/10-vendor.d/com.deepin.daemon.Fprintd.pkla".source = "${packages.dde-daemon}/var/lib/polkit-1/localauthority/10-vendor.d/com.deepin.daemon.Fprintd.pkla";
+                    "polkit-1/localauthority/10-vendor.d/com.deepin.daemon.Grub2.pkla".source = "${packages.dde-daemon}/var/lib/polkit-1/localauthority/10-vendor.d/com.deepin.daemon.Grub2.pkla";
+                  };
                })
 
                (mkIf config.services.dde.deepin-anything.enable {
