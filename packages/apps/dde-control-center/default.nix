@@ -35,6 +35,7 @@
 , gtest
 , runtimeShell
 , tzdata
+, dde-account-faces
 , dbus
 }:
 let
@@ -42,14 +43,11 @@ let
     "com.deepin.controlcenter.develop.policy" = [
       # "/usr/lib/dde-control-center/develop-tool"
     ];
-    "dde-control-center-autostart.desktop" = [
-      # /usr/bin/dde-control-center
-    ];
+    "dde-control-center-autostart.desktop" = [ ];
     "abrecovery/deepin-ab-recovery.desktop" = [
       # /usr/bin/abrecovery
     ];
     "com.deepin.dde.ControlCenter.service" = [
-      [ "/usr/bin/dbus-send" "${dbus}/bin/dbus-send" ]
       # "/usr/share/applications/dde-control-center.desktop
     ];
     "dde-control-center-wapper" = [
@@ -69,9 +67,6 @@ let
     ];
     "include/widgets/utils.h" = [ ];
     "src/reset-password-dialog/main.cpp" = [ ];
-    "src/frame/modules/datetime/timezone_dialog/timezone.cpp" = [
-      [ "usr/share/zoneinfo" "${tzdata}/share/zoneinfo" ]
-    ];
     "src/frame/modules/keyboard/customedit.cpp" = [
       [ "/usr/bin" "/run/current-system/sw/bin" ]
     ];
@@ -80,17 +75,26 @@ let
 in
 stdenv.mkDerivation rec {
   pname = "dde-control-center";
-  version = "5.5.157";
+  version = "5.5.164";
 
   src = fetchFromGitHub {
     owner = "linuxdeepin";
     repo = pname;
     rev = version;
-    sha256 = "sha256-DVZI4xa1ibfcvNuKzfGufVE22v5oUeRKQGLH/kMJCgo=";
+    sha256 = "sha256-Pd1vCkA0vDC6aGTt1hXreIxTi9feBWNZZhIdpjf26iw=";
   };
+
+  patches = [
+    (substituteAll {
+      src = ./0001-patch_account_face_path_for_nix.patch;
+      actConfigDir = "${dde-account-faces}/share/lib/AccountsService";
+    })
+  ];
 
   postPatch = replaceAll "/bin/bash" "${runtimeShell}"
     + replaceAll "/usr/lib/dde-control-center/modules" "/run/current-system/sw/lib/dde-control-center/modules"
+    + replaceAll "/usr/share/zoneinfo" "${tzdata}/share/zoneinfo"
+    + replaceAll "/usr/bin/dbus-send" "${dbus}/bin/dbus-send"
     + getUsrPatchFrom patchList;
 
   nativeBuildInputs = [
