@@ -32,7 +32,6 @@
 , libxcrypt
 , networkmanager-qt
 , glib
-, gtest
 , runtimeShell
 , tzdata
 , dde-account-faces
@@ -95,7 +94,9 @@ stdenv.mkDerivation rec {
     + replaceAll "/usr/lib/dde-control-center/modules" "/run/current-system/sw/lib/dde-control-center/modules"
     + replaceAll "/usr/share/zoneinfo" "${tzdata}/share/zoneinfo"
     + replaceAll "/usr/bin/dbus-send" "${dbus}/bin/dbus-send"
-    + getUsrPatchFrom patchList;
+    + getUsrPatchFrom patchList + ''
+      substituteInPlace CMakeLists.txt --replace 'add_subdirectory("tests")' ' '
+    '';
 
   nativeBuildInputs = [
     cmake
@@ -128,7 +129,6 @@ stdenv.mkDerivation rec {
     libsepol
     libxcrypt
     networkmanager-qt
-    gtest
   ];
 
   cmakeFlags = [
