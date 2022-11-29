@@ -46,17 +46,9 @@ stdenv.mkDerivation rec {
   src = fetchFromGitHub {
     owner = "linuxdeepin";
     repo = pname;
-    rev = "170e792fae34299da727fcabcbc51834018cfdae";
-    sha256 = "sha256-5D66hIhwB5NeKFuwMZnwcnUXfh7FQMt6Dgi4pvCyNdU=";
+    rev = "b9050177b740fa25c1333da78c655fd813f58724";
+    sha256 = "sha256-l7MtZe86Y+3bBjOWeaHjiTMGp2bDzAfa0NlGgLjlthY=";
   };
-
-  patches = [
-    (fetchpatch {
-      name = "chore: use GNUInstallDirs in CmakeLists";
-      url = "https://github.com/linuxdeepin/deepin-system-monitor/commit/e687b1c35961e8cd664c6e4982bd2c49375090d7.patch";
-      sha256 = "sha256-iR0X56OTUY6O8a9as2vF9eBygrbvzYGFcpf407b7jp0=";
-    })
-  ];
 
   postPatch = replaceAll "/usr/bin/renice" "renice"
     + replaceAll "/usr/bin/kill" "kill"
