@@ -41,13 +41,13 @@ let
 in
 stdenv.mkDerivation rec {
   pname = "deepin-system-monitor";
-  version = "5.9.27";
+  version = "5.9.31";
 
   src = fetchFromGitHub {
     owner = "linuxdeepin";
     repo = pname;
-    rev = "9d2e11693df27ad52bcfc078cb9e7b872d4ee35f";
-    sha256 = "sha256-AgW5qoxMIQzRpSQnrwaDLX1LJpFUBf5PDfhKnGg/eR8=";
+    rev = "170e792fae34299da727fcabcbc51834018cfdae";
+    sha256 = "sha256-5D66hIhwB5NeKFuwMZnwcnUXfh7FQMt6Dgi4pvCyNdU=";
   };
 
   patches = [
@@ -55,11 +55,6 @@ stdenv.mkDerivation rec {
       name = "chore: use GNUInstallDirs in CmakeLists";
       url = "https://github.com/linuxdeepin/deepin-system-monitor/commit/e687b1c35961e8cd664c6e4982bd2c49375090d7.patch";
       sha256 = "sha256-iR0X56OTUY6O8a9as2vF9eBygrbvzYGFcpf407b7jp0=";
-    })
-    (fetchpatch {
-      name = "fix option to disable kwayland";
-      url = "https://github.com/linuxdeepin/deepin-system-monitor/commit/5e60d4cdf6451c13ea531e0fe99de1f435ddc404.patch";
-      sha256 = "sha256-yi2hrJY2TKfq8YL+TAgEx+43wg1BNhn1horyJ5LzHZ8=";
     })
   ];
 
@@ -74,6 +69,9 @@ stdenv.mkDerivation rec {
       --replace "find_library(LIB_PROCPS NAMES procps REQUIRED)" "" 
     substituteInPlace deepin-system-monitor-plugin-popup/CMakeLists.txt \
       --replace "find_library(LIB_PROPS NAMES procps REQUIRED)" ""
+    substituteInPlace CMakeLists.txt \
+      --replace "ADD_SUBDIRECTORY(deepin-system-monitor-plugin)" "" \
+      --replace "ADD_SUBDIRECTORY(deepin-system-monitor-plugin-popup)" ""
   '';
 
   nativeBuildInputs = [
