@@ -21,55 +21,32 @@
 , runtimeShell
 , dde-daemon
 , dde-polkit-agent
-, dde-session-ui
-, dde-session-shell
 , dde-kwin
 , gnome
 , pciutils
 }:
 let
   patchList = {
-    "main.go" = [
-      [ "/usr/bin/dde-dock" "dde-dock" ]
-      [ "/usr/bin/dde-desktop" "dde-desktop" ]
-      [ "/usr/libexec/deepin/login-reminder-helper" "login-reminder-helper" ]
-      [ "/usr/bin/dde-hints-dialog" "dde-hints-dialog" ]
-    ];
     "session.go" = [
-      [ "/usr/share/applications/dde-lock.desktop" "${dde-session-shell}/share/applications/dde-lock.desktop" ]
-      [ "/usr/bin/dde-shutdown" "dde-shutdown" ]
-      [ "/usr/bin/dde-lock" "${dde-session-shell}/bin/dde-lock" ]
-      [ "/usr/bin/gnome-keyring-daemon" "${gnome.gnome-keyring}/bin/gnome-keyring-daemon" ]
-      #? [ "/usr/share/deepin-default-settings/fontconfig.json"  ] 
+      [ "/usr/share/applications/dde-lock.desktop" "/run/current-system/sw/share/applications/dde-lock.desktop" ]
     ];
     "misc/lightdm.conf" = [
       # "/usr/sbin/deepin-fix-xauthority-perm" 
     ];
     "misc/Xsession.d/00deepin-dde-env" = [
-      # "/usr/bin/startdde
       [ "/usr/share" "/run/current-system/sw/share" ]
-    ];
-    "misc/auto_launch/chinese.json" = [
-      [ "/usr/bin/dde-file-manager" "dde-file-manager" ]
-      [ "/usr/bin/dde-shutdown" "dde-shutdown" ]
     ];
     "launch_group.go" = [
       # "/usr/share/startdde/auto_launch.json" 
     ];
-    "testdata/desktop/dde-file-manager.desktop" = [
-      [ "/usr/bin/dde-file-manager" "dde-file-manager" ]
-    ];
     "memchecker/config.go" = [
       # /usr/share/startdde/memchecker.json 
-    ];
-    "display/wayland.go" = [
-      [ "/usr/bin/dde_wloutput" "dde_wloutput" ]
     ];
   };
 in
 buildGoPackage rec {
   pname = "startdde";
-  version = "5.9.50";
+  version = "5.10.1";
 
   goPackagePath = "github.com/linuxdeepin/startdde";
 
@@ -77,7 +54,7 @@ buildGoPackage rec {
     owner = "linuxdeepin";
     repo = pname;
     rev = version;
-    sha256 = "sha256-MHOaqvwYCliC7W54c7JBAdNFz+CwnTBPpYFoUgvXZ7w=";
+    sha256 = "sha256-dbTcYS7dEvT0eP45jKE8WiG9Pm4LU6jvR8hjMQv/yxU=";
   };
 
   postPatch = replaceAll "/bin/bash" "${runtimeShell}"
@@ -85,7 +62,15 @@ buildGoPackage rec {
     + replaceAll "/usr/bin/kwin_no_scale" "${dde-kwin}/bin/kwin_no_scale"
     + replaceAll "/usr/lib/deepin-daemon" "/run/current-system/sw/lib/deepin-daemon"
     + replaceAll "/usr/lib/polkit-1-dde/dde-polkit-agent" "${dde-polkit-agent}/lib/polkit-1-dde/dde-polkit-agent"
+    + replaceAll "/usr/bin/gnome-keyring-daemon" "${gnome.gnome-keyring}/bin/gnome-keyring-daemon"
     + replaceAll "/usr/bin/startdde" "$out/bin/startdde"
+    + replaceAll "/usr/bin/dde-shutdown" "dde-shutdown"
+    + replaceAll "/usr/bin/dde-file-manager" "dde-file-manager"
+    + replaceAll "/usr/bin/dde-lock" "dde-lock"
+    + replaceAll "/usr/bin/dde-dock" "dde-dock"
+    + replaceAll "/usr/bin/dde-desktop" "dde-desktop"
+    + replaceAll "/usr/bin/dde-hints-dialog" "dde-hints-dialog" 
+    + replaceAll "/usr/bin/dde_wloutput" "dde_wloutput"
     + replaceAll "\"lspci\"" "\"${pciutils}/bin/lspci\"" 
     + getUsrPatchFrom patchList + ''
       substituteInPlace "startmanager.go"\
