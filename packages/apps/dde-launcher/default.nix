@@ -2,6 +2,7 @@
 , lib
 , fetchFromGitHub
 , getUsrPatchFrom
+, replaceAll
 , dtk
 , dde-qt-dbus-factory
 , qt5integration
@@ -28,26 +29,21 @@ let
     "src/dbusservices/com.deepin.dde.Launcher.service" = [
       # "/usr/bin/dde-launcher-wapper"
     ];
-    "src/boxframe/backgroundmanager.cpp" = [
-      [ "/usr/share/backgrounds" "/run/current-system/sw/share/backgrounds" ]
-    ];
-    "src/boxframe/boxframe.cpp" = [
-      [ "/usr/share/backgrounds" "/run/current-system/sw/share/backgrounds" ]
-    ];
   };
 in
 stdenv.mkDerivation rec {
   pname = "dde-launcher";
-  version = "5.5.34";
+  version = "5.6.1";
 
   src = fetchFromGitHub {
     owner = "linuxdeepin";
     repo = pname;
     rev = version;
-    sha256 = "sha256-rKLINEctDbL2c0zBfjMLuKI9fw3YP/MdCbDaBPjWqWM=";
+    sha256 = "sha256-Td8R91892tgJx7FLV2IZ/aPBzDb+o6EYKpk3D8On7Ag=";
   };
 
-  postPatch = getUsrPatchFrom patchList;
+  postPatch = replaceAll "/usr/share/backgrounds" "/run/current-system/sw/share/backgrounds" 
+      + getUsrPatchFrom patchList;
 
   nativeBuildInputs = [
     cmake
