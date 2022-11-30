@@ -2,6 +2,7 @@
 , lib
 , fetchFromGitHub
 , getUsrPatchFrom
+, replaceAll
 , dtk
 , pkg-config
 , cmake
@@ -23,34 +24,10 @@
 , xkeyboard_config
 , qtbase
 , qt5integration
+, dbus
 }:
 let
   patchList = {
-    ### MISC
-    "dmemory-warning-dialog/com.deepin.dde.MemoryWarningDialog.service" = [
-      # "/usr/bin/dmemory-warning-dialog"
-    ];
-    "dde-warning-dialog/com.deepin.dde.WarningDialog.service" = [
-      # "/usr/lib/deepin-daemon/dde-warning-dialog"
-    ];
-    "dde-welcome/com.deepin.dde.welcome.service" = [
-      # "/usr/lib/deepin-daemon/dde-welcome"
-    ];
-    "dde-osd/files/com.deepin.dde.freedesktop.Notification.service" = [
-      # "/usr/lib/deepin-daemon/dde-osd"
-    ];
-    "dde-osd/files/com.deepin.dde.Notification.service" = [
-      # "/usr/lib/deepin-daemon/dde-osd"
-    ];
-    "dde-osd/files/com.deepin.dde.osd.service" = [
-      # "/usr/lib/deepin-daemon/dde-osd"
-    ];
-    ### CODE
-    "widgets/fullscreenbackground.cpp" = [
-      [ "/usr/share" "/run/current-system/sw/share" ]
-      #[ "/usr/share/wallpapers/deepin/desktop.jpg" ]
-      #[ "/usr/share/backgrounds/default_background.jpg" ]
-    ];
     "dde-lowpower/main.cpp" = [
       #"/usr/share/dde-session-ui/translations/dde-session-ui_" 
     ];
@@ -58,9 +35,6 @@ let
       # /usr/share/dde-session-ui/translations/dde-session-ui_
     ];
     "dde-touchscreen-dialog/main.cpp" = [ ];
-    "global_util/xkbparser.h" = [
-      [ "/usr/share/X11/xkb/rules/base.xml" "${xkeyboard_config}/share/X11/xkb/rules/base.xml" ]
-    ];
     "dnetwork-secret-dialog/main.cpp" = [ ];
     "dde-suspend-dialog/main.cpp" = [ ];
     "dde-warning-dialog/main.cpp" = [ ];
@@ -79,16 +53,23 @@ let
 in
 stdenv.mkDerivation rec {
   pname = "dde-session-ui";
-  version = "5.5.23";
+  version = "5.5.39";
 
   src = fetchFromGitHub {
     owner = "linuxdeepin";
     repo = pname;
     rev = version;
-    sha256 = "sha256-q8+aOUmU1PSs7nPYSlV28qq62FrOgPAAH72CKAbd60o=";
+    sha256 = "sha256-yLNsUEhYN9TTEdy8K9xWaHFCYIiQbksGEpmXjclCz7w=";
   };
 
-  postPatch = getUsrPatchFrom patchList;
+  postPatch = replaceAll "/usr/share/backgrounds" "/run/current-system/sw/share/backgrounds"
+      + replaceAll "/usr/share/wallpapers" "/run/current-system/sw/share/wallpapers"
+      + replaceAll "/usr/lib/deepin-daemon" "/run/current-system/sw/lib/deepin-daemon"
+      + replaceAll "/usr/share/X11/xkb/rules/base.xml" "${xkeyboard_config}/share/X11/xkb/rules/base.xml"
+      + replaceAll "/usr/bin/dbus-send" "${dbus}/bin/dbus-send"
+      + replaceAll "/usr/bin/dmemory-warning-dialog" "$out/bin/dmemory-warning-dialog"
+      + replaceAll "/usr/share/applications/dde-osd.desktop" "$out/share/applications/dde-osd.desktop"
+      + getUsrPatchFrom patchList;
 
   nativeBuildInputs = [
     cmake
