@@ -13,7 +13,7 @@
 
         {
         imports = [ "${nixpkgs}/nixos/modules/virtualisation/qemu-vm.nix" ];
-        environment.enableDebugInfo = true;
+        #environment.enableDebugInfo = true;
         environment.systemPackages = with pkgs; [
           htop
           firefox
@@ -33,8 +33,8 @@
           exa
           ffmpeg
         ] ++ (with dde-nixos.packages.${super.system}; [
-          deepin-draw
-          deepin-voice-note
+          # deepin-draw
+          # deepin-voice-note
         ]);
         services.xserver = {
           enable = true;
@@ -45,7 +45,7 @@
               user = "test";
             };
           };
-          desktopManager.plasma5.enable = true;
+          # desktopManager.plasma5.enable = true;
 
           desktopManager.deepin = {
             enable = true;
