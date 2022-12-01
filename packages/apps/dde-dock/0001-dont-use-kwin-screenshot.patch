@@ -1,0 +1,24 @@
+From 63e8b3dbd6fc33a70ee47625fa2e6c0dc01ba3a1 Mon Sep 17 00:00:00 2001
+From: rewine <lhongxu@outlook.com>
+Date: Thu, 1 Dec 2022 20:01:33 +0800
+Subject: [PATCH] dont use kwin screenshot
+
+---
+ frame/item/components/appsnapshot.cpp | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/frame/item/components/appsnapshot.cpp b/frame/item/components/appsnapshot.cpp
+index dea485d..6de5d13 100644
+--- a/frame/item/components/appsnapshot.cpp
++++ b/frame/item/components/appsnapshot.cpp
+@@ -504,6 +504,7 @@ void AppSnapshot::getWindowState()
+ 
+ bool AppSnapshot::isKWinAvailable()
+ {
++    return false;
+     if (QDBusConnection::sessionBus().interface()->isServiceRegistered(QStringLiteral("org.kde.KWin"))) {
+         QDBusInterface interface(QStringLiteral("org.kde.KWin"), QStringLiteral("/Effects"), QStringLiteral("org.kde.kwin.Effects"));
+         QDBusReply<bool> reply = interface.call(QStringLiteral("isEffectLoaded"), "screenshot");
+-- 
+2.38.0
+
