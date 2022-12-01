@@ -34,35 +34,14 @@ let
     "files/com.deepin.dde.lockFront.service" = [
       #/usr/share/applications/dde-lock.desktop
     ];
-    "files/lightdm-deepin-greeter.conf" = [
-      [ "/usr/share" "/run/current-system/sw/share" ]
-      # /usr/share/icons/bloom
-    ];
-    "files/wayland/lightdm-deepin-greeter-wayland.desktop" = [
-      # "/usr/bin/deepin-greeter"
-    ];
-    "files/lightdm-deepin-greeter.desktop" = [
-      # "/usr/bin/deepin-greeter"
-    ];
-    "files/dde-lock.desktop" = [
-      # "/usr/bin/dde-lock"
-    ];
-
+    "files/lightdm-deepin-greeter.conf" = [  ];
     ### CODE
     "scripts/lightdm-deepin-greeter" = [
       # "/usr/bin/lightdm-deepin-greeter"
     ];
-    "src/widgets/shutdownwidget.cpp" = [
-      [ "/usr/bin/deepin-system-monitor" "deepin-system-monitor" ]
-    ];
     "src/lightdm-deepin-greeter/greeterworker.cpp" = [
       [ "/usr/include/shadow.h" "shadow.h" ]
-      [ "/usr/sbin/lightdm" "lightdm" ]
       # /etc/deepin/no_suspend
-    ];
-    "src/session-widgets/auth_module.h" = [
-      # TODO
-      # "/usr/lib/dde-control-center/reset-password-dialog"
     ];
     "files/wayland/kwin_wayland_helper-wayland" = [
       [ "/usr/bin/kwin_wayland" "kwin_wayland" ]
@@ -71,61 +50,50 @@ let
       # export QML2_IMPORT_PATH=/usr/lib/x86_64-linux-gnu/qt5/qml
       # export XDG_DATA_DIRS=/usr/share
       [ "/usr/bin/kwin_wayland" "kwin_wayland" ]
-      # "/etc/xdg"
-      # "/etc/deepin/greeters.d/lightdm-deepin-greeter"
     ];
     "src/global_util/public_func.cpp" = [
-      # TODO
       # /usr/share/dde-session-shell/translations
-    ];
-    "src/global_util/xkbparser.h" = [
-      [ "/usr/share/X11/xkb/rules/base.xml" "${xkeyboard_config}/share/X11/xkb/rules/base.xml" ]
     ];
     "src/global_util/constants.h" = [
       [ "/usr/share/icons" "/run/current-system/sw/share/icons" ]
-      #"/usr/share/icons/default/index.theme"
-      #"/usr/share/dde-session-shell/dde-session-shell.conf",
-      #"/usr/share/dde-session-ui/dde-session-ui.conf"
-      #"/usr/share/dde-session-ui/dde-shutdown.conf
+      # /usr/share/icons/default/index.theme"
+      # /usr/share/dde-session-shell
     ];
     "files/wayland/lightdm-deepin-greeter-wayland" = [
       # "/usr/bin/lightdm-deepin-greeter"
       # TODO export QT_QPA_PLATFORM_PLUGIN_PATH...
     ];
-
     # scripts/lightdm-deepin-greeter /etc/lightdm/deepin/xsettingsd.conf
-    "files/deepin-greeter" = [
-      [ "/etc/deepin/greeters.d/" "$out/etc/deepin/greeters.d/" ]
-    ];
     # files/wayland/kwin_wayland_helper-wayland /etc/xdg/kglobalshortcutsrc
-
     "src/app/lightdm-deepin-greeter.cpp" = [
+      [ "/usr/share/icons" "/run/current-system/sw/share/icons" ]
       # /etc/lightdm/deepin/xsettingsd.conf
     ];
-    "src/lightdm-deepin-greeter/deepin-greeter" = [
-      # /etc/deepin/greeters.d/
-    ];
-
     "src/libdde-auth/deepinauthframework.cpp" = [
-      [ "common-auth" "lightdm" ]
+      [ "common-auth" "lightdm" ]  # fix dde lock auth
     ];
   };
 in
 stdenv.mkDerivation rec {
   pname = "dde-session-shell";
-  version = "5.5.81";
+  version = "5.6.1";
 
   src = fetchFromGitHub {
     owner = "linuxdeepin";
     repo = pname;
     rev = version;
-    sha256 = "sha256-sLrTgE3OuwhbY8LEnbVX2Rel3qmVSrpSm5eCeXfiMT8=";
+    sha256 = "sha256-lmchiLsXHkaDJCYg1GGMRaotdyW1gAFS2dlDtQ31Db0=";
   };
 
   postPatch = replaceAll "/usr/bin/dbus-send" "${dbus}/bin/dbus-send"
       + replaceAll "/usr/lib/deepin-daemon" "/run/current-system/sw/lib/deepin-daemon"
+      + replaceAll "/usr/lib/dde-control-center" "/run/current-system/sw/lib/dde-control-center"
       + replaceAll "/usr/share/backgrounds" "/run/current-system/sw/share/backgrounds"
       + replaceAll "/usr/lib/dde-session-shell/modules" "/run/current-system/sw/lib/dde-session-shell/modules" 
+      + replaceAll "/usr/bin/dde-lock" "dde-lock"
+      + replaceAll "/usr/bin/deepin-greeter" "deepin-greeter"
+      + replaceAll "/usr/sbin/lightdm" "lightdm"
+      + replaceAll "/usr/share/X11/xkb/rules/base.xml" "${xkeyboard_config}/share/X11/xkb/rules/base.xml"
       + getUsrPatchFrom patchList + ''
         patchShebangs files/deepin-greeter
       '';
