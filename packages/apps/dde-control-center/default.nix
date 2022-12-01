@@ -39,13 +39,7 @@
 }:
 let
   patchList = {
-    "com.deepin.controlcenter.develop.policy" = [
-      # "/usr/lib/dde-control-center/develop-tool"
-    ];
     "dde-control-center-autostart.desktop" = [ ];
-    "abrecovery/deepin-ab-recovery.desktop" = [
-      # /usr/bin/abrecovery
-    ];
     "com.deepin.dde.ControlCenter.service" = [
       # "/usr/share/applications/dde-control-center.desktop
     ];
@@ -88,12 +82,14 @@ stdenv.mkDerivation rec {
       src = ./0001-patch_account_face_path_for_nix.patch;
       actConfigDir = "${dde-account-faces}/share/lib/AccountsService";
     })
+    ./0002-remove-user-experience.patch
   ];
 
   postPatch = replaceAll "/bin/bash" "${runtimeShell}"
-    + replaceAll "/usr/lib/dde-control-center/modules" "/run/current-system/sw/lib/dde-control-center/modules"
+    + replaceAll "/usr/lib/dde-control-center" "/run/current-system/sw/lib/dde-control-center"
     + replaceAll "/usr/share/zoneinfo" "${tzdata}/share/zoneinfo"
     + replaceAll "/usr/bin/dbus-send" "${dbus}/bin/dbus-send"
+    + replaceAll "/usr/bin/abrecovery" "abrecovery"
     + getUsrPatchFrom patchList + ''
       substituteInPlace CMakeLists.txt --replace 'add_subdirectory("tests")' ' '
     '';
@@ -139,6 +135,7 @@ stdenv.mkDerivation rec {
     "-DDISABLE_RECOVERY=YES"
     "-DDISABLE_DEVELOPER_MODE=YES"
     "-DDISABLE_CLOUD_SYNC=YES"
+    # "-DDCC_DISABLE_GRUB=YES"
   ];
 
   qtWrapperArgs = [
@@ -153,7 +150,7 @@ stdenv.mkDerivation rec {
   meta = with lib; {
     description = "Control panel of Deepin Desktop Environment";
     homepage = "https://github.com/linuxdeepin/dde-control-center";
-    license = licenses.gpl3Plus;
+    license = licenses.lgpl3Plus;
     platforms = platforms.linux;
   };
 }

@@ -1,0 +1,60 @@
+From 4585fe702b2d8b3da72c0580615b6e5e19379e21 Mon Sep 17 00:00:00 2001
+From: rewine <lhongxu@outlook.com>
+Date: Thu, 1 Dec 2022 11:53:52 +0800
+Subject: [PATCH] remove user experience
+
+---
+ .../modules/commoninfo/commoninfowidget.cpp   |  2 --
+ .../modules/commoninfo/commoninfowork.cpp     | 23 -------------------
+ 2 files changed, 25 deletions(-)
+
+diff --git a/src/frame/window/modules/commoninfo/commoninfowidget.cpp b/src/frame/window/modules/commoninfo/commoninfowidget.cpp
+index fce83b5c8..0bed6e87a 100644
+--- a/src/frame/window/modules/commoninfo/commoninfowidget.cpp
++++ b/src/frame/window/modules/commoninfo/commoninfowidget.cpp
+@@ -98,8 +98,6 @@ void CommonInfoWidget::initData()
+                                   });
+             }
+         }
+-        m_itemList.append({"dcc_ue_plan", tr("User Experience Program"),
+-                           QMetaMethod::fromSignal(&CommonInfoWidget::requestShowUEPlanWidget), nullptr, "userExperienceProgram"});
+ 
+ #if 0
+         m_itemList.append({"", tr("Tablet Mode"),
+diff --git a/src/frame/window/modules/commoninfo/commoninfowork.cpp b/src/frame/window/modules/commoninfo/commoninfowork.cpp
+index 42f978a54..7469342dc 100644
+--- a/src/frame/window/modules/commoninfo/commoninfowork.cpp
++++ b/src/frame/window/modules/commoninfo/commoninfowork.cpp
+@@ -80,29 +80,6 @@ CommonInfoWork::CommonInfoWork(CommonInfoModel *model, QObject *parent)
+     licenseStateChangeSlot();
+ 
+     if (!IsCommunitySystem) {
+-        QDBusInterface dbusInterface("org.freedesktop.DBus",
+-            "/org/freedesktop/DBus",
+-            "org.freedesktop.DBus",
+-            QDBusConnection::sessionBus(), this);
+-
+-        QDBusMessage reply = dbusInterface.call("NameHasOwner", "com.deepin.userexperience.Daemon");
+-        QList<QVariant> outArgs = reply.arguments();
+-        if (QDBusMessage::ReplyMessage == reply.type() && !outArgs.isEmpty()) {
+-            bool value  = outArgs.first().toBool();
+-            if (value) {
+-                m_dBusUeProgram = new QDBusInterface(
+-                    "com.deepin.userexperience.Daemon",
+-                    "/com/deepin/userexperience/Daemon",
+-                    "com.deepin.userexperience.Daemon",
+-                    QDBusConnection::sessionBus(), this);
+-            } else {
+-                m_dBusUeProgram = new QDBusInterface(
+-                    "com.deepin.daemon.EventLog",
+-                    "/com/deepin/daemon/EventLog",
+-                    "com.deepin.daemon.EventLog",
+-                    QDBusConnection::sessionBus(), this);
+-            }
+-        }
+     }
+ 
+     m_commonModel->setIsLogin(m_deepinIdInter->isLogin());
+-- 
+2.38.0
+
