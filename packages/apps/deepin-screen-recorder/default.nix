@@ -122,7 +122,7 @@ stdenv.mkDerivation rec {
     gst_all_1.gst-plugins-base.dev
     kwayland
     libusb1
-    libv4l.dev
+    libv4l
     ffmpeg.dev
     ffmpegthumbnailer
     portaudio
@@ -141,6 +141,7 @@ stdenv.mkDerivation rec {
 
   preFixup = ''
       patchelf --add-needed ${udev}/lib/libudev.so $out/bin/deepin-screen-recorder
+      patchelf --add-needed ${libv4l}/lib/libv4l2.so $out/bin/deepin-screen-recorder
   '';
 
   meta = with lib; {
