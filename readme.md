@@ -32,7 +32,7 @@ In order to use DDE, you must enable [flakes](https://nixos.wiki/wiki/Flakes) to
             ];
             config.services.xserver.desktopManager.deepin.enable = true;
           })
-     };
+	];
      # ......
     };
 }
@@ -40,7 +40,7 @@ In order to use DDE, you must enable [flakes](https://nixos.wiki/wiki/Flakes) to
 
 ### Use NixOS DDE in Qemu
 
-
+Even if you aren't in NixOS, as long as you have installed nix, you can run dde-nixos in a virtual machine through `nix run`
 
 ``` bash
 git clone git@github.com:linuxdeepin/dde-nixos.git
