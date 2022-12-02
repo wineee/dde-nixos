@@ -1,6 +1,7 @@
 { stdenv
 , lib
 , fetchFromGitHub
+, replaceAll
 , dtk
 , dde-qt-dbus-factory
 , dde-dock
@@ -34,6 +35,11 @@ stdenv.mkDerivation rec {
     rev = version;
     sha256 = "sha256-IncVvM2tx6+LAg/eLekfnphOvywmaCkC5nkxDXQhmV8=";
   };
+
+
+  postPatch = replaceAll "/usr/share/applications" "/run/current-system/sw/share/applications"
+      + replaceAll "/usr/share/dss-network-plugin" "$out/share/dss-network-plugin"
+      + replaceAll "/usr/share/dock-network-plugin" "$out/share/dock-network-plugin";
 
   nativeBuildInputs = [
     cmake
