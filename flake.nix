@@ -155,7 +155,6 @@
                     "/share/sounds/deepin"
                   ];
 
-                  environment.etc."deepin-version".source = "${packages.deepin-desktop-base}/etc/deepin-version";
                   environment.etc."distribution.info".text = ''
                     [Distribution]
                     Name=NixOS
@@ -166,9 +165,10 @@
                     LogoTransparent=${packages.deepin-desktop-base}/share/pixmaps/distribution_logo_transparent.svg
                   '';
                   environment.etc = {
+                    # "profile.d/deepin-xdg-dir.sh" = "${packages.startdde}/etc/profile.d/deepin-xdg-dir.sh";
                     "X11/Xsession.d".source = "${packages.startdde}/etc/X11/Xsession.d";
                     #"lightdm/lightdm.conf".source = "${packages.startdde}/etc/lightdm/lightdm.conf";
-                    "deepin/dde-session-ui.conf".source = "${packages.dde-session-ui}/share/deepin/dde-session-ui.conf";
+                    #"deepin/dde-session-ui.conf".source = "${packages.dde-session-ui}/share/deepin/dde-session-ui.conf";
                     "deepin/greeters.d".source = "${packages.dde-session-shell}/etc/deepin/greeters.d";
                     "deepin/dde.conf".text = ''
                       [Password]
@@ -296,9 +296,9 @@
                   systemd.packages = [ packages.dde-daemon ];
                   environment.pathsToLink = [ "/lib/deepin-daemon" ];
                   environment.etc= {
-                    "lightdm/deepin/xsettingsd.conf".source = "${packages.dde-daemon}/lightdm/deepin/xsettingsd.conf";
+                    "lightdm/deepin/xsettingsd.conf".source = "${packages.dde-daemon}/etc/lightdm/deepin/xsettingsd.conf";
                     #"pam.d/deepin-auth-keyboard"
-                    "acpi/actions/deepin_lid.sh".source = "${packages.dde-daemon}/acpi/actions/deepin_lid.sh";
+                    "acpi/actions/deepin_lid.sh".source = "${packages.dde-daemon}/etc/acpi/actions/deepin_lid.sh";
                     "polkit-1/localauthority/10-vendor.d/com.deepin.daemon.Accounts.pkla".source = "${packages.dde-daemon}/var/lib/polkit-1/localauthority/10-vendor.d/com.deepin.daemon.Accounts.pkla";
                     "polkit-1/localauthority/10-vendor.d/com.deepin.daemon.Fprintd.pkla".source = "${packages.dde-daemon}/var/lib/polkit-1/localauthority/10-vendor.d/com.deepin.daemon.Fprintd.pkla";
                     "polkit-1/localauthority/10-vendor.d/com.deepin.daemon.Grub2.pkla".source = "${packages.dde-daemon}/var/lib/polkit-1/localauthority/10-vendor.d/com.deepin.daemon.Grub2.pkla";
