@@ -152,6 +152,7 @@
                     "/lib/dde-session-shell"
                     "/share/backgrounds"
                     "/share/wallpapers"
+                    "/share/sounds/deepin"
                   ];
 
                   environment.etc."deepin-version".source = "${packages.deepin-desktop-base}/etc/deepin-version";
