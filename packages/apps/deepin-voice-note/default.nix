@@ -12,37 +12,41 @@
 , qtmultimedia
 , qtwebengine
 , wrapQtAppsHook
+, wrapGAppsHook
 , libvlc
 , gst_all_1
 , gtest
 , qtbase
 }:
-
+let
+  gstPluginPath = lib.makeSearchPathOutput "lib" "lib/gstreamer-1.0" (with gst_all_1; [ gstreamer gst-plugins-base gst-plugins-good ]);
+in
 stdenv.mkDerivation rec {
   pname = "deepin-voice-note";
-  version = "5.10.18";
+  version = "5.10.22";
 
   src = fetchFromGitHub {
     owner = "linuxdeepin";
     repo = pname;
     rev = version;
-    sha256 = "sha256-h7eo2DNENJKbeYWCyYSfO9lwIcFx6A+7eY0kJHmKW0Q=";
+    sha256 = "sha256-ZDw/kGmhcoTPDUsZa9CYhrVbK4Uo75G0L4q4cCBPr7E=";
   };
 
-  patches = [
-    (fetchpatch {
-      name = "chore: use GNUInstallDirs in CmakeLists";
-      url = "https://github.com/linuxdeepin/deepin-voice-note/commit/3013c6bfcaef9c2969399286613e6810f8557f0a.patch";
-      sha256 = "sha256-MYAxDAVvkt62841naRQRnPX7Q4jdqFNtOfbeEuHKwBQ=";
-    })
-  ];
+  postPatch = ''
+    substituteInPlace src/common/audiowatcher.cpp \
+      --replace "/usr/share" "$out/share"
+    substituteInPlace assets/deepin-voice-note.desktop \
+      --replace "/usr/bin" "$out/bin"
+  '';
 
   nativeBuildInputs = [
     cmake
     pkg-config
     qttools
     wrapQtAppsHook
+    wrapGAppsHook
   ];
+  dontWrapGApps = true;
 
   buildInputs = [
     dtk
@@ -50,9 +54,12 @@ stdenv.mkDerivation rec {
     qtmultimedia
     qtwebengine
     libvlc
-    gst_all_1.gstreamer
     gtest
-  ];
+  ]  ++ ( with gst_all_1; [
+    gstreamer
+    gst-plugins-base
+    gst-plugins-good
+  ]);
 
   cmakeFlags = [ "-DVERSION=${version}" ];
 
@@ -60,7 +67,12 @@ stdenv.mkDerivation rec {
 
   qtWrapperArgs = [
     "--prefix QT_PLUGIN_PATH : ${qt5integration}/${qtbase.qtPluginPrefix}"
+    "--prefix GST_PLUGIN_SYSTEM_PATH_1_0 : ${gstPluginPath}"
   ];
+
+  preFixup = ''
+    qtWrapperArgs+=("''${gappsWrapperArgs[@]}")
+  '';
 
   meta = with lib; {
     description = "a simple memo software with texts and voice recordings";
