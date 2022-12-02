@@ -4,6 +4,54 @@ This project is dedicated to packaging DDE for NixOS
 
 [Packaging Progress](https://github.com/linuxdeepin/dde-nixos/projects/1)
 
+## USAGE
+
+### Enable DDE for NixOS
+
+In order to use DDE, you must enable [flakes](https://nixos.wiki/wiki/Flakes) to manage your system configuration.
+
+```nix
+{
+  inputs = {
+    nixpkgs.url = "nixpkgs/nixos-unstable";
+    dde-nixos = {
+      url = "github:linuxdeepin/dde-nixos";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+   };
+  outputs = { self, nixpkgs, dde-nixos, ... } @ inputs:
+    let
+      system = "x86_64-linux";
+    in {
+      nixosConfigurations.default = nixpkgs.lib.nixosSystem {
+        inherit system;
+        modules = [
+	  ({ pkgs, config, ... }: {
+            imports = [
+              dde-nixos.nixosModules.${system}
+            ];
+            config.services.xserver.desktopManager.deepin.enable = true;
+          })
+     };
+     # ......
+    };
+}
+```
+
+### Use NixOS DDE in Qemu
+
+
+
+``` bash
+git clone git@github.com:linuxdeepin/dde-nixos.git
+cd dde-nixos/vm
+# edit vm/falke.nix
+nix run -v -L
+```
+This can be done with a single command if you don't need custom configuration:
+
+`nix --experimental-features 'nix-command flakes' run "github:linuxdeepin/dde-nixos?dir=vm" -v -L --no-write-lock-file`
+
 ## Build
 
 ```bash
@@ -15,13 +63,8 @@ nix develop .#deepin-calculator
 git clone git@github.com:linuxdeepin/deepin-calculator.git
 git checkout 5.7.16
 ... # maintenance code
-mkdir build
-cd build
-cmake ..
-make
+cmake --build build
 ```
-
-Still need time to complete nixos module，dont use this as flake input before completed.
 
 ## References
 - [Status of packaging the Deepin Desktop Environment ](https://github.com/NixOS/nixpkgs/issues/94870)
