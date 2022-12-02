@@ -1,5 +1,4 @@
 result*
-vm/flake.lock
 vm/nixos.qcow2
 dde
 a
