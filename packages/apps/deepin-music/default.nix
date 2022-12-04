@@ -23,8 +23,11 @@
 , SDL2
 , gtest
 , qtbase
+, gst_all_1
 }:
-
+let
+  gstPluginPath = lib.makeSearchPathOutput "lib" "lib/gstreamer-1.0" (with gst_all_1; [ gstreamer gst-plugins-base gst-plugins-good ]);
+in
 stdenv.mkDerivation rec {
   pname = "deepin-music";
   version = "6.2.21";
@@ -58,10 +61,15 @@ stdenv.mkDerivation rec {
     gsettings-qt
     SDL2
     gtest
-  ];
+  ]  ++ ( with gst_all_1; [
+    gstreamer
+    gst-plugins-base
+    gst-plugins-good
+  ]);
 
   qtWrapperArgs = [
     "--prefix QT_PLUGIN_PATH : ${qt5integration}/${qtbase.qtPluginPrefix}"
+    "--prefix GST_PLUGIN_SYSTEM_PATH_1_0 : ${gstPluginPath}"
   ];
 
   cmakeFlags = [
