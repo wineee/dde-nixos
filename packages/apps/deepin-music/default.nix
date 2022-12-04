@@ -20,19 +20,20 @@
 , libcue
 , taglib
 , gsettings-qt
+, SDL2
 , gtest
 , qtbase
 }:
 
 stdenv.mkDerivation rec {
   pname = "deepin-music";
-  version = "6.2.19";
+  version = "6.2.21";
 
   src = fetchFromGitHub {
     owner = "linuxdeepin";
     repo = pname;
     rev = version;
-    sha256 = "sha256-d2vlOfxWWgtYi7DI2hMrr6JjrJyKhA5pXDBK2PjLhRQ=";
+    sha256 = "sha256-sN611COCWy1gF/BZZqZ154uYuRo9HsbJw2wXe9OJ+iQ=";
   };
 
   nativeBuildInputs = [
@@ -55,6 +56,7 @@ stdenv.mkDerivation rec {
     libcue
     taglib
     gsettings-qt
+    SDL2
     gtest
   ];
 
@@ -66,27 +68,16 @@ stdenv.mkDerivation rec {
     "-DVERSION=${version}"
   ];
 
-  patches = [
-    (fetchpatch {
-      name = "chore: use GNUInstallDirs in CmakeLists";
-      url = "https://github.com/linuxdeepin/deepin-music/commit/3762b6e1e7f8bb4be1ccf639ad270c8570e9933c.patch";
-      sha256 = "sha256-iVHQLPCig/VhIIJF6t4jebNWrEP6DDfLfqslkD7+KKQ=";
-    })
-  ];
-
-  fixIncludePatch = ''
+  postPatch = ''
     substituteInPlace src/music-player/CMakeLists.txt \
       --replace "include_directories(/usr/include/vlc)" "include_directories(${libvlc}/include/vlc)" \
-      --replace "include_directories(/usr/include/vlc/plugins)" "include_directories(${libvlc}/include/vlc/plugins)"
-  '';
-
-  fixDesktopPatch = ''
+      --replace "include_directories(/usr/include/vlc/plugins)" "include_directories(${libvlc}/include/vlc/plugins)" \
+      --replace "/usr/share" "$out/share"
+    substituteInPlace src/libmusic-plugin/CMakeLists.txt \
+      --replace "/usr/lib/deepin-aiassistant" "$out/lib/deepin-aiassistant"
     substituteInPlace src/music-player/data/deepin-music.desktop \
       --replace "/usr/bin/deepin-music" "$out/bin/deepin-music"
   '';
-
-  postPatch = fixIncludePatch + fixDesktopPatch;
-
   meta = with lib; {
     description = "Awesome music player with brilliant and tweakful UI Deepin-UI based";
     homepage = "https://github.com/linuxdeepin/deepin-music";
