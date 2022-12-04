@@ -44,9 +44,7 @@ stdenv.mkDerivation rec {
     pkg-config
     qttools
     wrapQtAppsHook
-    wrapGAppsHook
   ];
-  dontWrapGApps = true;
 
   buildInputs = [
     dtk
@@ -70,12 +68,8 @@ stdenv.mkDerivation rec {
     "--prefix GST_PLUGIN_SYSTEM_PATH_1_0 : ${gstPluginPath}"
   ];
 
-  preFixup = ''
-    qtWrapperArgs+=("''${gappsWrapperArgs[@]}")
-  '';
-
   meta = with lib; {
-    description = "a simple memo software with texts and voice recordings";
+    description = "Simple memo software with texts and voice recordings";
     homepage = "https://github.com/linuxdeepin/deepin-voice-note";
     license = licenses.gpl3Plus;
     platforms = platforms.linux;
