@@ -1,0 +1,748 @@
+From f57383d7a4f5a4033690ad75b7d2364be7f7146c Mon Sep 17 00:00:00 2001
+From: rewine <lhongxu@outlook.com>
+Date: Mon, 5 Dec 2022 11:03:26 +0800
+Subject: [PATCH] fix lib path
+
+---
+ src/backends/mpv/mpv_glwidget.cpp             |   3 +-
+ src/backends/mpv/mpv_proxy.cpp                |  13 +--
+ src/backends/mpv/mpv_proxy.h                  |  19 +---
+ src/common/hwdec_probe.cpp                    |  23 +---
+ src/common/libraryloader.cpp                  | 106 ++++++++++++++++++
+ src/common/libraryloader.h                    |  19 ++++
+ .../platform/platform_thumbnail_worker.cpp    |  20 +---
+ .../platform/platform_thumbnail_worker.h      |   1 -
+ src/common/thumbnail_worker.cpp               |  20 +---
+ src/common/thumbnail_worker.h                 |   1 -
+ src/libdmr/compositing_manager.cpp            |  10 +-
+ src/libdmr/filefilter.cpp                     |  25 +----
+ src/libdmr/filefilter.h                       |   2 -
+ src/libdmr/gstutils.cpp                       |  25 +----
+ src/libdmr/gstutils.h                         |   1 -
+ src/libdmr/player_engine.cpp                  |   6 +
+ src/libdmr/playlist_model.cpp                 |  28 +----
+ src/libdmr/playlist_model.h                   |   1 -
+ .../platform/platform_toolbox_proxy.cpp       |  19 +---
+ src/widgets/toolbox_proxy.cpp                 |  19 +---
+ 20 files changed, 170 insertions(+), 191 deletions(-)
+ create mode 100644 src/common/libraryloader.cpp
+ create mode 100644 src/common/libraryloader.h
+
+diff --git a/src/backends/mpv/mpv_glwidget.cpp b/src/backends/mpv/mpv_glwidget.cpp
+index 3d31fa3c..191832e5 100644
+--- a/src/backends/mpv/mpv_glwidget.cpp
++++ b/src/backends/mpv/mpv_glwidget.cpp
+@@ -7,6 +7,7 @@
+ 
+ #include "mpv_proxy.h"
+ #include "mpv_glwidget.h"
++#include "libraryloader.h"
+ 
+ #include <QtX11Extras/QX11Info>
+ #include <QLibrary>
+@@ -1009,7 +1010,7 @@ namespace dmr {
+     void MpvGLWidget::initMpvFuns()
+     {
+         qInfo() << "MpvGLWidget开始initMpvFuns";
+-        QLibrary mpvLibrary(libPath("libmpv.so.1"));
++        QLibrary mpvLibrary(LibraryLoader::libPath("libmpv.so"));
+         m_callback = reinterpret_cast<mpv_render_contextSet_update_callback>(mpvLibrary.resolve("mpv_render_context_set_update_callback"));
+         m_context_report = reinterpret_cast<mpv_render_contextReport_swap>(mpvLibrary.resolve("mpv_render_context_report_swap"));
+         m_renderContex = reinterpret_cast<mpv_renderContext_free>(mpvLibrary.resolve("mpv_render_context_free"));
+diff --git a/src/backends/mpv/mpv_proxy.cpp b/src/backends/mpv/mpv_proxy.cpp
+index 2be2d428..1506704d 100644
+--- a/src/backends/mpv/mpv_proxy.cpp
++++ b/src/backends/mpv/mpv_proxy.cpp
+@@ -10,6 +10,7 @@
+ #include "compositing_manager.h"
+ #include "player_engine.h"
+ #include "hwdec_probe.h"
++#include "libraryloader.h"
+ 
+ #ifndef _LIBDMR_
+ #include "dmr_settings.h"
+@@ -139,7 +140,7 @@ void MpvProxy::setDecodeModel(const QVariant &value)
+ 
+ void MpvProxy::initMpvFuns()
+ {
+-    QLibrary mpvLibrary(libPath("libmpv.so.1"));
++    QLibrary mpvLibrary(LibraryLoader::libPath("libmpv.so"));
+ 
+     m_waitEvent = reinterpret_cast<mpv_waitEvent>(mpvLibrary.resolve("mpv_wait_event"));
+     m_setOptionString = reinterpret_cast<mpv_set_optionString>(mpvLibrary.resolve("mpv_set_option_string"));
+@@ -159,12 +160,10 @@ void MpvProxy::initMpvFuns()
+ 
+ void MpvProxy::initGpuInfoFuns()
+ {
+-    QString path = QLibraryInfo::location(QLibraryInfo::LibrariesPath)+ QDir::separator() + "libgpuinfo.so";
+-    if(!QFileInfo(path).exists()) {
+-        m_gpuInfo = NULL;
+-        return;
+-    }
+-    QLibrary mpvLibrary(libPath("libgpuinfo.so"));
++    QString path = LibraryLoader::libGpuInfoPath();
++    if (path.size() == 0)
++      return;
++    QLibrary mpvLibrary(path);
+     m_gpuInfo = reinterpret_cast<void *>(mpvLibrary.resolve("vdp_Iter_decoderInfo"));
+ }
+ 
+diff --git a/src/backends/mpv/mpv_proxy.h b/src/backends/mpv/mpv_proxy.h
+index 0406e272..c2aed128 100644
+--- a/src/backends/mpv/mpv_proxy.h
++++ b/src/backends/mpv/mpv_proxy.h
+@@ -13,6 +13,7 @@
+ #include <xcb/xproto.h>
+ #undef Bool
+ #include "../../vendor/qthelper.hpp"
++#include "libraryloader.h"
+ 
+ typedef mpv_event *(*mpv_waitEvent)(mpv_handle *ctx, double timeout);
+ typedef int (*mpv_set_optionString)(mpv_handle *ctx, const char *name, const char *data);
+@@ -37,23 +38,7 @@ typedef int (*mpvinitialize)(mpv_handle *ctx);
+ typedef void (*mpv_freeNode_contents)(mpv_node *node);
+ typedef void (*mpv_terminateDestroy)(mpv_handle *ctx);
+ 
+-static QString libPath(const QString &sLib)
+-{
+-    QDir dir;
+-    QString path  = QLibraryInfo::location(QLibraryInfo::LibrariesPath);
+-    dir.setPath(path);
+-    QStringList list = dir.entryList(QStringList() << (sLib + "*"), QDir::NoDotAndDotDot | QDir::Files); //filter name with strlib
+-    if (list.contains(sLib)) {
+-        return sLib;
+-    } else {
+-        list.sort();
+-    }
+ 
+-    if(list.size() > 0)
+-        return list.last();
+-    else
+-        return QString();
+-}
+ 
+ class MpvHandle
+ {
+@@ -61,7 +46,7 @@ class MpvHandle
+         explicit container(mpv_handle *pHandle) : m_pHandle(pHandle) {}
+         ~container()
+         {
+-            mpv_terminateDestroy func = (mpv_terminateDestroy)QLibrary::resolve(libPath("libmpv.so.1"), "mpv_terminate_destroy");
++            mpv_terminateDestroy func = (mpv_terminateDestroy)QLibrary::resolve(LibraryLoader::libPath("libmpv.so"), "mpv_terminate_destroy");
+             func(m_pHandle);
+         }
+         mpv_handle *m_pHandle;
+diff --git a/src/common/hwdec_probe.cpp b/src/common/hwdec_probe.cpp
+index 90f6e257..f30256b7 100644
+--- a/src/common/hwdec_probe.cpp
++++ b/src/common/hwdec_probe.cpp
+@@ -5,6 +5,7 @@
+ 
+ 
+ #include "hwdec_probe.h"
++#include "libraryloader.h"
+ 
+ namespace dmr {
+ 
+@@ -82,27 +83,11 @@ bool HwdecProbe::isFileCanHwdec(const QUrl& url, QList<QString>& hwList)
+     return hwList.size() > 0;
+ }
+ 
+-static QString libPath(const QString &sLib)
+-{
+-    QDir dir;
+-    QString path  = QLibraryInfo::location(QLibraryInfo::LibrariesPath);
+-    dir.setPath(path);
+-    QStringList list = dir.entryList(QStringList() << (sLib + "*"), QDir::NoDotAndDotDot | QDir::Files); //filter name with strlib
+-    if (list.contains(sLib)) {
+-        return sLib;
+-    } else {
+-        list.sort();
+-    }
+-
+-    Q_ASSERT(list.size() > 0);
+-    return list.last();
+-}
+-
+ void HwdecProbe::initffmpegInterface()
+ {
+-    QLibrary avcodecLibrary(libPath("libavcodec.so"));
+-    QLibrary avformatLibrary(libPath("libavformat.so"));
+-    QLibrary avutilLibrary(libPath("libavutil.so"));
++    QLibrary avcodecLibrary(LibraryLoader::libPath("libavcodec.so"));
++    QLibrary avformatLibrary(LibraryLoader::libPath("libavformat.so"));
++    QLibrary avutilLibrary(LibraryLoader::libPath("libavutil.so"));
+ 
+     m_avHwdeviceCtxCreate  = reinterpret_cast<ffmAvHwdeviceCtxCreate>(avutilLibrary.resolve("av_hwdevice_ctx_create"));
+     m_avHwdeviceIterateTypes = reinterpret_cast<ffmAvHwdeviceIterateTypes>(avutilLibrary.resolve("av_hwdevice_iterate_types"));
+diff --git a/src/common/libraryloader.cpp b/src/common/libraryloader.cpp
+new file mode 100644
+index 00000000..8dbe11d8
+--- /dev/null
++++ b/src/common/libraryloader.cpp
+@@ -0,0 +1,106 @@
++#include "libraryloader.h"
++#include <QLibraryInfo>
++#include <QLibrary>
++#include <QDir>
++#include <QDebug>
++
++QStringList LibraryLoader::findAllLib(const QString &libname)
++{
++    QStringList paths;
++    paths = QString::fromLatin1(qgetenv("LD_LIBRARY_PATH"))
++            .split(QLatin1Char(':'), QString::SkipEmptyParts);
++    paths << QLatin1String("/usr/lib") << QLatin1String("/usr/local/lib");
++    paths << QLibraryInfo::location(QLibraryInfo::LibrariesPath);
++
++    QStringList foundLibs;
++    foreach (const QString &path, paths) {
++        QDir dir = QDir(path);
++        QStringList entryList = dir.entryList(QStringList() << QLatin1String("%1.*").arg(libname), QDir::NoDotAndDotDot | QDir::Files);
++        foreach (const QString &entry, entryList)
++            foundLibs << path + QLatin1Char('/') + entry;
++    }
++
++    return foundLibs;
++}
++
++bool LibraryLoader::isLibExists(const QString &libname)
++{
++    qDebug() << "isLibExists: " << libname << " " << (libPath(libname).size() > 0);
++    return libPath(libname).size() > 0;
++}
++
++QString LibraryLoader::libGpuInfoPath()
++{
++    QStringList paths = findAllLib("libgpuinfo.so");
++    QLibrary library;
++    foreach (const QString &path, paths) {
++      library.setFileName(path);
++      if (library.resolve("vdp_Iter_decoderInfo")) {
++        return path;
++      } else {
++        qDebug("Cannot resolve the symbol or load GpuInfo library");
++      }
++      qWarning() << library.errorString();
++    }
++    return QString();
++}
++
++QString LibraryLoader::libPath(const QString &sLib)
++{
++    QStringList paths;
++    paths = QString::fromLatin1(qgetenv("LD_LIBRARY_PATH"))
++            .split(QLatin1Char(':'), QString::SkipEmptyParts);
++    paths << QLatin1String("/usr/lib") << QLatin1String("/usr/local/lib");
++    paths << QLibraryInfo::location(QLibraryInfo::LibrariesPath);
++
++    QStringList foundLibs;
++    foreach (const QString &path, paths) {
++        QDir dir = QDir(path);
++        QStringList entryList = dir.entryList(QStringList() << QLatin1String("%1.*").arg(sLib), QDir::NoDotAndDotDot | QDir::Files);
++        if (entryList.contains(sLib)) {
++           qDebug() << "libPath: " << path << " " << sLib;
++           return sLib;
++        }
++        if (!entryList.empty()) {
++           qSort(entryList.begin(), entryList.end(), libGreaterThan);
++           qDebug() << "libPath: " << path << " " << entryList.first();
++           return entryList.first();
++        }
++    }
++    qDebug() << "not find:" << sLib;
++    return QString();
++}
++
++bool LibraryLoader::libGreaterThan(const QString &lhs, const QString &rhs)
++{
++    QStringList lhsparts = lhs.split(QLatin1Char('.'));
++    QStringList rhsparts = rhs.split(QLatin1Char('.'));
++    Q_ASSERT(lhsparts.count() > 1 && rhsparts.count() > 1);
++
++    for (int i = 1; i < rhsparts.count(); ++i) {
++        if (lhsparts.count() <= i)
++            // left hand side is shorter, so it's less than rhs
++            return false;
++
++        bool ok = false;
++        int b = 0;
++        int a = lhsparts.at(i).toInt(&ok);
++        if (ok)
++            b = rhsparts.at(i).toInt(&ok);
++        if (ok) {
++            // both toInt succeeded
++            if (a == b)
++                continue;
++            return a > b;
++        } else {
++            // compare as strings;
++            if (lhsparts.at(i) == rhsparts.at(i))
++                continue;
++            return lhsparts.at(i) > rhsparts.at(i);
++        }
++    }
++
++    // they compared strictly equally so far
++    // lhs cannot be less than rhs
++    return true;
++}
+diff --git a/src/common/libraryloader.h b/src/common/libraryloader.h
+new file mode 100644
+index 00000000..e43e2f97
+--- /dev/null
++++ b/src/common/libraryloader.h
+@@ -0,0 +1,19 @@
++#ifndef LIBRARYLOADER_H
++#define LIBRARYLOADER_H
++
++#include <QString>
++
++class LibraryLoader
++{
++public:
++    LibraryLoader() = default;
++    static QStringList findAllLib(const QString &libname);
++    static QString libPath(const QString &libname);
++    static bool isLibExists(const QString &libname);
++    static QString libGpuInfoPath();
++
++private:
++    static bool libGreaterThan(const QString &lhs, const QString &rhs);
++};
++
++#endif // LIBRARYLOADER_H
+diff --git a/src/common/platform/platform_thumbnail_worker.cpp b/src/common/platform/platform_thumbnail_worker.cpp
+index d5775cfe..6cd1e02f 100644
+--- a/src/common/platform/platform_thumbnail_worker.cpp
++++ b/src/common/platform/platform_thumbnail_worker.cpp
+@@ -5,6 +5,8 @@
+ 
+ #include "platform_thumbnail_worker.h"
+ #include "player_engine.h"
++#include "libraryloader.h"
++
+ #include <QLibrary>
+ #include <stdio.h>
+ #include <stdlib.h>
+@@ -86,25 +88,9 @@ Platform_ThumbnailWorker::Platform_ThumbnailWorker()
+     m_pCharTime = (char *)malloc(20);
+ }
+ 
+-QString Platform_ThumbnailWorker::libPath(const QString &strlib)
+-{
+-    QDir  dir;
+-    QString lib_path  = QLibraryInfo::location(QLibraryInfo::LibrariesPath);
+-    dir.setPath(lib_path);
+-    QStringList list = dir.entryList(QStringList() << (strlib + "*"), QDir::NoDotAndDotDot | QDir::Files); //filter name with strlib
+-    if (list.contains(strlib)) {
+-        return strlib;
+-    } else {
+-        list.sort();
+-    }
+-
+-    Q_ASSERT(list.size() > 0);
+-    return list.last();
+-}
+-
+ void Platform_ThumbnailWorker::initThumb()
+ {
+-    QLibrary library(libPath("libffmpegthumbnailer.so"));
++    QLibrary library(LibraryLoader::libPath("libffmpegthumbnailer.so"));
+     m_mvideo_thumbnailer = (mvideo_thumbnailer) library.resolve("video_thumbnailer_create");
+     m_mvideo_thumbnailer_destroy = (mvideo_thumbnailer_destroy) library.resolve("video_thumbnailer_destroy");
+     m_mvideo_thumbnailer_create_image_data = (mvideo_thumbnailer_create_image_data) library.resolve("video_thumbnailer_create_image_data");
+diff --git a/src/common/platform/platform_thumbnail_worker.h b/src/common/platform/platform_thumbnail_worker.h
+index 296201dc..76d0addf 100644
+--- a/src/common/platform/platform_thumbnail_worker.h
++++ b/src/common/platform/platform_thumbnail_worker.h
+@@ -69,7 +69,6 @@ private:
+     void run() override;
+     void runSingle(QPair<QUrl, int> w);
+     QPixmap genThumb(const QUrl &url, int secs);
+-    QString libPath(const QString &strlib);
+ 
+ private:
+     static std::atomic<Platform_ThumbnailWorker *> m_instance;
+diff --git a/src/common/thumbnail_worker.cpp b/src/common/thumbnail_worker.cpp
+index e27caf4e..22e0cd69 100644
+--- a/src/common/thumbnail_worker.cpp
++++ b/src/common/thumbnail_worker.cpp
+@@ -5,6 +5,8 @@
+ 
+ #include "thumbnail_worker.h"
+ #include "player_engine.h"
++#include "libraryloader.h"
++
+ #include <QLibrary>
+ #include <stdio.h>
+ #include <stdlib.h>
+@@ -86,25 +88,9 @@ ThumbnailWorker::ThumbnailWorker()
+     m_pCharTime = (char *)malloc(20);
+ }
+ 
+-QString ThumbnailWorker::libPath(const QString &strlib)
+-{
+-    QDir  dir;
+-    QString lib_path  = QLibraryInfo::location(QLibraryInfo::LibrariesPath);
+-    dir.setPath(lib_path);
+-    QStringList list = dir.entryList(QStringList() << (strlib + "*"), QDir::NoDotAndDotDot | QDir::Files); //filter name with strlib
+-    if (list.contains(strlib)) {
+-        return strlib;
+-    } else {
+-        list.sort();
+-    }
+-
+-    Q_ASSERT(list.size() > 0);
+-    return list.last();
+-}
+-
+ void ThumbnailWorker::initThumb()
+ {
+-    QLibrary library(libPath("libffmpegthumbnailer.so"));
++    QLibrary library(LibraryLoader::libPath("libffmpegthumbnailer.so"));
+     m_mvideo_thumbnailer = (mvideo_thumbnailer) library.resolve("video_thumbnailer_create");
+     m_mvideo_thumbnailer_destroy = (mvideo_thumbnailer_destroy) library.resolve("video_thumbnailer_destroy");
+     m_mvideo_thumbnailer_create_image_data = (mvideo_thumbnailer_create_image_data) library.resolve("video_thumbnailer_create_image_data");
+diff --git a/src/common/thumbnail_worker.h b/src/common/thumbnail_worker.h
+index d27ba0f0..21dc4191 100644
+--- a/src/common/thumbnail_worker.h
++++ b/src/common/thumbnail_worker.h
+@@ -69,7 +69,6 @@ private:
+     void run() override;
+     void runSingle(QPair<QUrl, int> w);
+     QPixmap genThumb(const QUrl &url, int secs);
+-    QString libPath(const QString &strlib);
+ 
+ private:
+     static std::atomic<ThumbnailWorker *> m_instance;
+diff --git a/src/libdmr/compositing_manager.cpp b/src/libdmr/compositing_manager.cpp
+index 75a16a51..80a83e27 100644
+--- a/src/libdmr/compositing_manager.cpp
++++ b/src/libdmr/compositing_manager.cpp
+@@ -9,6 +9,7 @@
+ #ifndef _LIBDMR_
+ #include "options.h"
+ #endif
++#include "libraryloader.h"
+ 
+ #include <iostream>
+ #include <unistd.h>
+@@ -268,14 +269,7 @@ void CompositingManager::setCanHwdec(bool bCanHwdec)
+ 
+ bool CompositingManager::isMpvExists()
+ {
+-    QDir dir;
+-    QString path  = QLibraryInfo::location(QLibraryInfo::LibrariesPath);
+-    dir.setPath(path);
+-    QStringList list = dir.entryList(QStringList() << (QString("libmpv.so.1") + "*"), QDir::NoDotAndDotDot | QDir::Files);
+-    if (list.contains("libmpv.so.1")) {
+-        return true;
+-    }
+-    return false;
++    return LibraryLoader::isLibExists("libmpv.so");
+ }
+ 
+ bool CompositingManager::isZXIntgraphics() const
+diff --git a/src/libdmr/filefilter.cpp b/src/libdmr/filefilter.cpp
+index c9fd75f4..7e7c03ec 100644
+--- a/src/libdmr/filefilter.cpp
++++ b/src/libdmr/filefilter.cpp
+@@ -5,6 +5,7 @@
+ 
+ #include "filefilter.h"
+ #include "compositing_manager.h"
++#include "libraryloader.h"
+ 
+ #include <iostream>
+ #include <functional>
+@@ -28,14 +29,14 @@ FileFilter::FileFilter()
+     m_pLoop = nullptr;
+     m_miType = MediaType::Other;
+ 
+-    QLibrary avformatLibrary(libPath("libavformat.so"));
++    QLibrary avformatLibrary(LibraryLoader::libPath("libavformat.so"));
+ 
+     g_mvideo_avformat_open_input = (mvideo_avformat_open_input) avformatLibrary.resolve("avformat_open_input");
+     g_mvideo_avformat_find_stream_info = (mvideo_avformat_find_stream_info) avformatLibrary.resolve("avformat_find_stream_info");
+     g_mvideo_avformat_close_input = (mvideo_avformat_close_input) avformatLibrary.resolve("avformat_close_input");
+ 
+-    QLibrary gstreamerLibrary(libPath("libgstreamer-1.0.so"));
+-    QLibrary gstpbutilsLibrary(libPath("libgstpbutils-1.0.so"));
++    QLibrary gstreamerLibrary(LibraryLoader::libPath("libgstreamer-1.0.so"));
++    QLibrary gstpbutilsLibrary(LibraryLoader::libPath("libgstpbutils-1.0.so"));
+ 
+     g_mvideo_gst_init = (mvideo_gst_init) gstreamerLibrary.resolve("gst_init");
+     g_mvideo_gst_discoverer_new = (mvideo_gst_discoverer_new) gstpbutilsLibrary.resolve("gst_discoverer_new");
+@@ -68,24 +69,6 @@ FileFilter::FileFilter()
+     g_mvideo_gst_discoverer_start(m_pDiscoverer);
+ }
+ 
+-QString FileFilter::libPath(const QString &strlib)
+-{
+-    QDir  dir;
+-    QString path  = QLibraryInfo::location(QLibraryInfo::LibrariesPath);
+-    dir.setPath(path);
+-    QStringList list = dir.entryList(QStringList() << (strlib + "*"), QDir::NoDotAndDotDot | QDir::Files); //filter name with strlib
+-    if (list.contains(strlib)) {
+-        return strlib;
+-    } else {
+-        list.sort();
+-    }
+-
+-    if(list.size() > 0)
+-        return list.last();
+-    else
+-        return QString();
+-}
+-
+ FileFilter::~FileFilter()
+ {
+     g_mvideo_gst_discoverer_stop(m_pDiscoverer);
+diff --git a/src/libdmr/filefilter.h b/src/libdmr/filefilter.h
+index bb32001b..b6ef4a8c 100644
+--- a/src/libdmr/filefilter.h
++++ b/src/libdmr/filefilter.h
+@@ -119,8 +119,6 @@ public:
+ private:
+     FileFilter();
+ 
+-    QString libPath(const QString &strlib);
+-
+ private:
+     static FileFilter* m_pFileFilter;
+     QMap<QUrl, bool> m_mapCheckAudio;//检测播放文件中的音视频信息
+diff --git a/src/libdmr/gstutils.cpp b/src/libdmr/gstutils.cpp
+index cb0708b4..b5b12a8f 100644
+--- a/src/libdmr/gstutils.cpp
++++ b/src/libdmr/gstutils.cpp
+@@ -4,7 +4,7 @@
+ // SPDX-License-Identifier: GPL-3.0-or-later
+ 
+ #include "gstutils.h"
+-#include "gstutils.h"
++#include "libraryloader.h"
+ 
+ #include <QDebug>
+ 
+@@ -32,8 +32,8 @@ GstUtils* GstUtils::m_pGstUtils = new GstUtils;
+ 
+ GstUtils::GstUtils()
+ {
+-    QLibrary gstreamerLibrary(libPath("libgstreamer-1.0.so"));
+-    QLibrary gstpbutilsLibrary(libPath("libgstpbutils-1.0.so"));
++    QLibrary gstreamerLibrary(LibraryLoader::libPath("libgstreamer-1.0.so"));
++    QLibrary gstpbutilsLibrary(LibraryLoader::libPath("libgstpbutils-1.0.so"));
+ 
+     g_mvideo_gst_init = (mvideo_gst_init) gstreamerLibrary.resolve("gst_init");
+     g_mvideo_gst_discoverer_new = (mvideo_gst_discoverer_new) gstpbutilsLibrary.resolve("gst_discoverer_new");
+@@ -77,25 +77,6 @@ GstUtils::GstUtils()
+     g_mvideo_gst_discoverer_start(m_gstData.discoverer);
+ }
+ 
+-QString GstUtils::libPath(const QString &strlib)
+-{
+-    QDir  dir;
+-    QString path  = QLibraryInfo::location(QLibraryInfo::LibrariesPath);
+-    dir.setPath(path);
+-    QStringList list = dir.entryList(QStringList() << (strlib + "*"), QDir::NoDotAndDotDot | QDir::Files); //filter name with strlib
+-    if (list.contains(strlib)) {
+-        return strlib;
+-    } else {
+-        list.sort();
+-    }
+-
+-    if(list.size() > 0)
+-        return list.last();
+-    else
+-        return QString();
+-}
+-
+-
+ void GstUtils::discovered(GstDiscoverer *discoverer, GstDiscovererInfo *info, GError *err, CustomData *data)
+ {
+     Q_UNUSED(discoverer);
+diff --git a/src/libdmr/gstutils.h b/src/libdmr/gstutils.h
+index 8aa209a7..b2d0ef63 100644
+--- a/src/libdmr/gstutils.h
++++ b/src/libdmr/gstutils.h
+@@ -65,7 +65,6 @@ public:
+ 
+ private:
+     GstUtils();
+-    QString libPath(const QString &strlib);
+ 
+ private:
+     static MovieInfo m_movieInfo;
+diff --git a/src/libdmr/player_engine.cpp b/src/libdmr/player_engine.cpp
+index 8399194f..b73631ad 100644
+--- a/src/libdmr/player_engine.cpp
++++ b/src/libdmr/player_engine.cpp
+@@ -163,6 +163,12 @@ void PlayerEngine::updateSubStyles()
+ 
+     int fontId = pFontOpt->value().toInt();
+     int size = pSizeOpt->value().toInt();
++
++    if (fontId >= pFontOpt->data("items").toStringList().size() || fontId < 0)
++    {
++        return;
++    }
++
+     QString font = pFontOpt->data("items").toStringList()[fontId];
+ 
+     if (_state != CoreState::Idle) {
+diff --git a/src/libdmr/playlist_model.cpp b/src/libdmr/playlist_model.cpp
+index 33c39d8f..2cb0406c 100644
+--- a/src/libdmr/playlist_model.cpp
++++ b/src/libdmr/playlist_model.cpp
+@@ -12,6 +12,7 @@
+ #include "dvd_utils.h"
+ #include "compositing_manager.h"
+ #include "gstutils.h"
++#include "libraryloader.h"
+ 
+ #include <QSvgRenderer>
+ 
+@@ -447,26 +448,9 @@ PlaylistModel::PlaylistModel(PlayerEngine *e)
+ #endif
+ }
+ 
+-QString PlaylistModel::libPath(const QString &strlib)
+-{
+-    QDir  dir;
+-    QString path  = QLibraryInfo::location(QLibraryInfo::LibrariesPath);
+-    dir.setPath(path);
+-    QStringList list = dir.entryList(QStringList() << (strlib + "*"), QDir::NoDotAndDotDot | QDir::Files); //filter name with strlib
+-    if (list.contains(strlib)) {
+-        return strlib;
+-    } else {
+-        list.sort();
+-    }
+-    if (list.size()>0)
+-        return list.last();
+-    else
+-        return QString();
+-}
+-
+ void PlaylistModel::initThumb()
+ {
+-    QLibrary library(libPath("libffmpegthumbnailer.so"));
++    QLibrary library(LibraryLoader::libPath("libffmpegthumbnailer.so"));
+     m_mvideo_thumbnailer = (mvideo_thumbnailer) library.resolve("video_thumbnailer_create");
+     m_mvideo_thumbnailer_destroy = (mvideo_thumbnailer_destroy) library.resolve("video_thumbnailer_destroy");
+     m_mvideo_thumbnailer_create_image_data = (mvideo_thumbnailer_create_image_data) library.resolve("video_thumbnailer_create_image_data");
+@@ -490,9 +474,9 @@ void PlaylistModel::initThumb()
+ 
+ void PlaylistModel::initFFmpeg()
+ {
+-    QLibrary avcodecLibrary(libPath("libavcodec.so"));
+-    QLibrary avformatLibrary(libPath("libavformat.so"));
+-    QLibrary avutilLibrary(libPath("libavutil.so"));
++    QLibrary avcodecLibrary(LibraryLoader::libPath("libavcodec.so"));
++    QLibrary avformatLibrary(LibraryLoader::libPath("libavformat.so"));
++    QLibrary avutilLibrary(LibraryLoader::libPath("libavutil.so"));
+ 
+     g_mvideo_avformat_open_input = (mvideo_avformat_open_input) avformatLibrary.resolve("avformat_open_input");
+     g_mvideo_avformat_find_stream_info = (mvideo_avformat_find_stream_info) avformatLibrary.resolve("avformat_find_stream_info");
+@@ -1380,7 +1364,7 @@ bool PlaylistModel::getMusicPix(const QFileInfo &fi, QPixmap &rImg)
+         return false;
+     }
+ 
+-    QLibrary library(libPath("libavformat.so"));
++    QLibrary library(LibraryLoader::libPath("libavformat.so"));
+     mvideo_avformat_open_input g_mvideo_avformat_open_input_temp = (mvideo_avformat_open_input) library.resolve("avformat_open_input");
+     mvideo_avformat_close_input g_mvideo_avformat_close_input = (mvideo_avformat_close_input) library.resolve("avformat_close_input");
+     mvideo_avformat_find_stream_info g_mvideo_avformat_find_stream_info_temp = (mvideo_avformat_find_stream_info) library.resolve("avformat_find_stream_info");
+diff --git a/src/libdmr/playlist_model.h b/src/libdmr/playlist_model.h
+index bb1675b8..a4b142e7 100644
+--- a/src/libdmr/playlist_model.h
++++ b/src/libdmr/playlist_model.h
+@@ -263,7 +263,6 @@ private:
+     bool getMusicPix(const QFileInfo &fi, QPixmap &rImg);
+     struct MovieInfo parseFromFile(const QFileInfo &fi, bool *ok = nullptr);
+     struct MovieInfo parseFromFileByQt(const QFileInfo &fi, bool *ok = nullptr);
+-    QString libPath(const QString &strlib);
+     // when app starts, and the first time to load playlist
+     bool _firstLoad {true};
+     int _count {0};
+diff --git a/src/widgets/platform/platform_toolbox_proxy.cpp b/src/widgets/platform/platform_toolbox_proxy.cpp
+index 59302dd3..2be27fc4 100644
+--- a/src/widgets/platform/platform_toolbox_proxy.cpp
++++ b/src/widgets/platform/platform_toolbox_proxy.cpp
+@@ -17,6 +17,7 @@
+ #include "tip.h"
+ #include "utils.h"
+ #include "filefilter.h"
++#include "libraryloader.h"
+ 
+ //#include <QtWidgets>
+ #include <DImageButton>
+@@ -697,25 +698,9 @@ private:
+     bool m_bIsWM{false};
+ };
+ 
+-static QString libPath(const QString &strlib)
+-{
+-    QDir  dir;
+-    QString path  = QLibraryInfo::location(QLibraryInfo::LibrariesPath);
+-    dir.setPath(path);
+-    QStringList list = dir.entryList(QStringList() << (strlib + "*"), QDir::NoDotAndDotDot | QDir::Files); //filter name with strlib
+-    if (list.contains(strlib)) {
+-        return strlib;
+-    } else {
+-        list.sort();
+-    }
+-
+-    Q_ASSERT(list.size() > 0);
+-    return list.last();
+-}
+-
+ void Platform_viewProgBarLoad::initThumb()
+ {
+-    QLibrary library(libPath("libffmpegthumbnailer.so"));
++    QLibrary library(LibraryLoader::libPath("libffmpegthumbnailer.so"));
+     m_mvideo_thumbnailer = (mvideo_thumbnailer) library.resolve("video_thumbnailer_create");
+     m_mvideo_thumbnailer_destroy = (mvideo_thumbnailer_destroy) library.resolve("video_thumbnailer_destroy");
+     m_mvideo_thumbnailer_create_image_data = (mvideo_thumbnailer_create_image_data) library.resolve("video_thumbnailer_create_image_data");
+diff --git a/src/widgets/toolbox_proxy.cpp b/src/widgets/toolbox_proxy.cpp
+index 9cf1e575..86b5ab67 100644
+--- a/src/widgets/toolbox_proxy.cpp
++++ b/src/widgets/toolbox_proxy.cpp
+@@ -17,6 +17,7 @@
+ #include "tip.h"
+ #include "utils.h"
+ #include "filefilter.h"
++#include "libraryloader.h"
+ 
+ //#include <QtWidgets>
+ #include <DImageButton>
+@@ -748,25 +749,9 @@ private:
+     bool m_bIsWM{false};
+ };
+ 
+-static QString libPath(const QString &strlib)
+-{
+-    QDir  dir;
+-    QString path  = QLibraryInfo::location(QLibraryInfo::LibrariesPath);
+-    dir.setPath(path);
+-    QStringList list = dir.entryList(QStringList() << (strlib + "*"), QDir::NoDotAndDotDot | QDir::Files); //filter name with strlib
+-    if (list.contains(strlib)) {
+-        return strlib;
+-    } else {
+-        list.sort();
+-    }
+-
+-    Q_ASSERT(list.size() > 0);
+-    return list.last();
+-}
+-
+ void viewProgBarLoad::initThumb()
+ {
+-    QLibrary library(libPath("libffmpegthumbnailer.so"));
++    QLibrary library(LibraryLoader::libPath("libffmpegthumbnailer.so"));
+     m_mvideo_thumbnailer = (mvideo_thumbnailer) library.resolve("video_thumbnailer_create");
+     m_mvideo_thumbnailer_destroy = (mvideo_thumbnailer_destroy) library.resolve("video_thumbnailer_destroy");
+     m_mvideo_thumbnailer_create_image_data = (mvideo_thumbnailer_create_image_data) library.resolve("video_thumbnailer_create_image_data");
+-- 
+2.38.1
+

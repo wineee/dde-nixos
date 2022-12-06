@@ -1,0 +1,24 @@
+From a36d0583bf004029507ef92523b5feed0b469c3c Mon Sep 17 00:00:00 2001
+From: rewine <lhongxu@outlook.com>
+Date: Mon, 5 Dec 2022 11:03:26 +0800
+Subject: [PATCH] set mpv exist
+
+---
+ src/libdmr/compositing_manager.cpp | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/src/libdmr/compositing_manager.cpp b/src/libdmr/compositing_manager.cpp
+index 75a16a51..df98d8f9 100644
+--- a/src/libdmr/compositing_manager.cpp
++++ b/src/libdmr/compositing_manager.cpp
+@@ -268,6 +268,7 @@ void CompositingManager::setCanHwdec(bool bCanHwdec)
+ 
+ bool CompositingManager::isMpvExists()
+ {
++    return true;
+     QDir dir;
+     QString path  = QLibraryInfo::location(QLibraryInfo::LibrariesPath);
+     dir.setPath(path);
+-- 
+2.38.1
+

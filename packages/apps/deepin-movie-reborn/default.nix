@@ -2,6 +2,7 @@
 , lib
 , fetchFromGitHub
 , fetchpatch
+, replaceAll
 , dtk
 , qt5integration
 , qt5platform-plugins
@@ -38,62 +39,31 @@
 , qtbase
 }:
 let
-  replaceLibPath = filePath: ''
-    substituteInPlace ${filePath} \
-      --replace 'libPath("libavcodec.so")'            '"${ffmpeg.out}/lib/libavcodec.so"' \
-      --replace 'libPath("libavformat.so")'           '"${ffmpeg.out}/lib/libavformat.so"' \
-      --replace 'libPath("libavutil.so")'             '"${ffmpeg.out}/lib/libavutil.so"' \
-      --replace 'libPath("libffmpegthumbnailer.so")'  '"${ffmpegthumbnailer.out}/lib/libffmpegthumbnailer.so"' \
-      --replace 'libPath("libmpv.so.1")'              '"${mpv}/lib/libmpv.so.1"' \
-      --replace 'libPath("libgstreamer-1.0.so")'      '"${gst_all_1.gstreamer.out}/lib/libgstreamer-1.0.so"' \
-      --replace 'libPath("libgstpbutils-1.0.so")'     '"${gst_all_1.gst-plugins-base.out}/lib/libgstpbutils-1.0.so"'
-
-  '' + lib.optionalString cudaSupport '' 
-    substituteInPlace ${filePath} \
-      --replace 'libPath("libgpuinfo.so")'     '"${cudaPackages.cudatoolkit}/lib/libgpuinfo.so"'
-      
-  '';
-  ### TODO src/backends/mpv/mpv_proxy.cpp libgpuinfo.so
-
+  gstPluginPath = lib.makeSearchPathOutput "lib" "lib/gstreamer-1.0" (with gst_all_1; [ gstreamer gst-plugins-base gst-plugins-good ]);
 in
 stdenv.mkDerivation rec {
   pname = "deepin-movie-reborn";
-  version = "5.10.8";
+  version = "5.10.17";
 
   src = fetchFromGitHub {
     owner = "linuxdeepin";
     repo = pname;
-    rev = version;
-    sha256 = "sha256-tBUeYbsJDwuzcOt89nMeP+taZPz4lb27qEQjCxZsMck=";
+    rev = "bce4cdf08b8e786f06c5cc32c657d873be6c5346";
+    sha256 = "sha256-XlnHSiGV02WQUCLgeidY1tCR8WjO1IGuQUOWwMT7ru8";
   };
 
   patches = [
-    (fetchpatch {
-      name = "chore: use GNUInstallDirs in CmakeLists";
-      url = "https://github.com/linuxdeepin/deepin-movie-reborn/commit/15627ec622f8da9445fd25d2775a9b0f67618f07.patch";
-      sha256 = "sha256-p3kJE7lSeqasLSswVOj91CFRZk8kRekT13ZAGKenwvU=";
-    })
     (fetchpatch {
       name = "chore: dont use </usr/include/linux/cdrom.h>";
       url = "https://github.com/linuxdeepin/deepin-movie-reborn/commit/2afc63541589adab8b0c8c48e290f03535ec2996.patch";
       sha256 = "sha256-Q9dv5L5sUGeuvNxF8ypQlZuZVuU4NIR/8d8EyP/Q5wk=";
     })
+    ./0001-fix-lib-path.patch
   ];
 
-  fixLoadLibPatch = lib.concatMapStrings replaceLibPath [
-    "src/backends/mpv/mpv_proxy.cpp"
-    "src/common/hwdec_probe.cpp"
-    "src/common/thumbnail_worker.cpp"
-    "src/common/platform/platform_thumbnail_worker.cpp"
-    "src/libdmr/gstutils.cpp"
-    "src/libdmr/filefilter.cpp"
-    "src/libdmr/playlist_model.cpp"
-    "src/widgets/toolbox_proxy.cpp"
-    "src/widgets/platform/platform_toolbox_proxy.cpp"
-    "src/backends/mpv/mpv_glwidget.cpp"
-  ];
-
-  postPatch = fixLoadLibPatch;
+  postPatch = ''
+    substituteInPlace CMakeLists.txt --replace "add_subdirectory(examples/test)" " "
+  '';
 
   outputs = [ "out" "dev" ];
 
@@ -124,8 +94,11 @@ stdenv.mkDerivation rec {
     gtest
     xorg.xcbproto
     libpulseaudio
-    gst_all_1.gstreamer
-  ] ++ lib.optional cudaSupport [ cudaPackages.cudatoolkit ];
+  ]  ++ (with gst_all_1; [
+    gstreamer
+    gst-plugins-base
+    gst-plugins-good
+  ]) ++ lib.optional cudaSupport [ cudaPackages.cudatoolkit ];
 
   propagatedBuildInputs = [
     qtmultimedia
@@ -136,6 +109,8 @@ stdenv.mkDerivation rec {
   qtWrapperArgs = [ 
     "--prefix QT_PLUGIN_PATH : ${qt5integration}/${qtbase.qtPluginPrefix}"
     "--prefix XDG_DATA_DIRS : ${placeholder "out"}/share/gsettings-schemas/${pname}-${version}"
+    "--prefix GST_PLUGIN_SYSTEM_PATH_1_0 : ${gstPluginPath}"
+    "--prefix LD_LIBRARY_PATH : ${lib.makeLibraryPath [ mpv ffmpeg ffmpegthumbnailer gst_all_1.gstreamer gst_all_1.gst-plugins-base gst_all_1.gst-plugins-good ] }"
   ];
 
   NIX_CFLAGS_COMPILE = [
