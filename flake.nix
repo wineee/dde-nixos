@@ -36,7 +36,7 @@
              }
           ) deepinPkgs;
 
-          nixosModules = { config, lib, pkgs, ... }:
+          nixosModules = { config, lib, pkgs, utils, ... }:
             with lib;
             let
               xcfg = config.services.xserver;
@@ -49,6 +49,12 @@
             in
             {
               options = {
+                environment.deepin.excludePackages = mkOption {
+                  default = [];
+                  type = types.listOf types.package;
+                  description = lib.mdDoc "Which Deepin packages should exclude from systemPackages";
+                };
+
                 services.xserver.desktopManager.deepin = {
                   enable = mkOption {
                     type = types.bool;
@@ -190,7 +196,7 @@
                     dde-top-panel
                   ];
 
-                  environment.systemPackages = with packages; [
+                  environment.systemPackages = with packages; (utils.removePackagesByName [
                     dde-top-panel
                     qt5platform-plugins #TODO nixos/modules/config/qt5.nix
                     dde-introduction
@@ -238,7 +244,7 @@
                     deepin-gomoku
                     deepin-lianliankan
                     deepin-font-manager
-                  ] ++ (with pkgs; [
+                  ] config.environment.deepin.excludePackages) ++ (with pkgs; [
                     socat
                     xdotool
                     glib # for gsettings program / gdbus
