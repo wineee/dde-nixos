@@ -10,6 +10,10 @@
 , cmake
 , qttools
 , pkg-config
+, gst_all_1
+, mpv
+, ffmpeg
+, ffmpegthumbnailer
 , wrapQtAppsHook
 , qtbase
 , gtest
@@ -20,6 +24,7 @@ let
     "src/modules/videowidget.cpp" = [ ];
     "src/widgets/bottomnavigation.cpp" = [ ];
   }; 
+  gstPluginPath = lib.makeSearchPathOutput "lib" "lib/gstreamer-1.0" (with gst_all_1; [ gstreamer gst-plugins-base gst-plugins-good ]);
 in stdenv.mkDerivation rec {
   pname = "dde-introduction";
   version = "unstable-2022-09-23";
@@ -53,6 +58,8 @@ in stdenv.mkDerivation rec {
 
   qtWrapperArgs = [
     "--prefix QT_PLUGIN_PATH : ${qt5integration}/${qtbase.qtPluginPrefix}"
+    "--prefix GST_PLUGIN_SYSTEM_PATH_1_0 : ${gstPluginPath}"
+    "--prefix LD_LIBRARY_PATH : ${lib.makeLibraryPath [ mpv ffmpeg ffmpegthumbnailer gst_all_1.gstreamer gst_all_1.gst-plugins-base ] }"
   ];
 
   meta = with lib; {
