@@ -1,4 +1,4 @@
-From f57383d7a4f5a4033690ad75b7d2364be7f7146c Mon Sep 17 00:00:00 2001
+From 5d1bc7d01ba0497a804035727621bfd0dd706ced Mon Sep 17 00:00:00 2001
 From: rewine <lhongxu@outlook.com>
 Date: Mon, 5 Dec 2022 11:03:26 +0800
 Subject: [PATCH] fix lib path
@@ -6,25 +6,26 @@ Subject: [PATCH] fix lib path
 ---
  src/backends/mpv/mpv_glwidget.cpp             |   3 +-
  src/backends/mpv/mpv_proxy.cpp                |  13 +--
- src/backends/mpv/mpv_proxy.h                  |  19 +---
+ src/backends/mpv/mpv_proxy.h                  |  19 +--
  src/common/hwdec_probe.cpp                    |  23 +---
- src/common/libraryloader.cpp                  | 106 ++++++++++++++++++
- src/common/libraryloader.h                    |  19 ++++
+ src/common/libraryloader.cpp                  | 110 ++++++++++++++++++
+ src/common/libraryloader.h                    |  19 +++
  .../platform/platform_thumbnail_worker.cpp    |  20 +---
  .../platform/platform_thumbnail_worker.h      |   1 -
  src/common/thumbnail_worker.cpp               |  20 +---
  src/common/thumbnail_worker.h                 |   1 -
+ src/libdmr/CMakeLists.txt                     |   3 +-
  src/libdmr/compositing_manager.cpp            |  10 +-
- src/libdmr/filefilter.cpp                     |  25 +----
+ src/libdmr/filefilter.cpp                     |  25 +---
  src/libdmr/filefilter.h                       |   2 -
- src/libdmr/gstutils.cpp                       |  25 +----
+ src/libdmr/gstutils.cpp                       |  25 +---
  src/libdmr/gstutils.h                         |   1 -
  src/libdmr/player_engine.cpp                  |   6 +
  src/libdmr/playlist_model.cpp                 |  28 +----
  src/libdmr/playlist_model.h                   |   1 -
- .../platform/platform_toolbox_proxy.cpp       |  19 +---
- src/widgets/toolbox_proxy.cpp                 |  19 +---
- 20 files changed, 170 insertions(+), 191 deletions(-)
+ .../platform/platform_toolbox_proxy.cpp       |  19 +--
+ src/widgets/toolbox_proxy.cpp                 |  19 +--
+ 21 files changed, 176 insertions(+), 192 deletions(-)
  create mode 100644 src/common/libraryloader.cpp
  create mode 100644 src/common/libraryloader.h
 
@@ -177,39 +178,67 @@ index 90f6e257..f30256b7 100644
      m_avHwdeviceIterateTypes = reinterpret_cast<ffmAvHwdeviceIterateTypes>(avutilLibrary.resolve("av_hwdevice_iterate_types"));
 diff --git a/src/common/libraryloader.cpp b/src/common/libraryloader.cpp
 new file mode 100644
-index 00000000..8dbe11d8
+index 00000000..bf89ba7c
 --- /dev/null
 +++ b/src/common/libraryloader.cpp
-@@ -0,0 +1,106 @@
+@@ -0,0 +1,110 @@
 +#include "libraryloader.h"
 +#include <QLibraryInfo>
 +#include <QLibrary>
 +#include <QDir>
 +#include <QDebug>
 +
-+QStringList LibraryLoader::findAllLib(const QString &libname)
++QStringList LibraryLoader::findAllLib(const QString &sLib)
 +{
 +    QStringList paths;
 +    paths = QString::fromLatin1(qgetenv("LD_LIBRARY_PATH"))
 +            .split(QLatin1Char(':'), QString::SkipEmptyParts);
 +    paths << QLatin1String("/usr/lib") << QLatin1String("/usr/local/lib");
-+    paths << QLibraryInfo::location(QLibraryInfo::LibrariesPath);
++    const QString qtLibPath = QLibraryInfo::location(QLibraryInfo::LibrariesPath);
++    if (qtLibPath != "/usr/lib" && qtLibPath != "/usr/local/lib")
++        paths << qtLibPath;
 +
 +    QStringList foundLibs;
 +    foreach (const QString &path, paths) {
 +        QDir dir = QDir(path);
-+        QStringList entryList = dir.entryList(QStringList() << QLatin1String("%1.*").arg(libname), QDir::NoDotAndDotDot | QDir::Files);
++        QStringList entryList = dir.entryList(QStringList() << QLatin1String("%1.*").arg(sLib), QDir::NoDotAndDotDot | QDir::Files);
++        qSort(entryList.begin(), entryList.end(), libGreaterThan);
 +        foreach (const QString &entry, entryList)
 +            foundLibs << path + QLatin1Char('/') + entry;
 +    }
-+
 +    return foundLibs;
 +}
 +
-+bool LibraryLoader::isLibExists(const QString &libname)
++QString LibraryLoader::libPath(const QString &sLib)
 +{
-+    qDebug() << "isLibExists: " << libname << " " << (libPath(libname).size() > 0);
-+    return libPath(libname).size() > 0;
++    QStringList paths;
++    paths = QString::fromLatin1(qgetenv("LD_LIBRARY_PATH"))
++            .split(QLatin1Char(':'), QString::SkipEmptyParts);
++    paths << QLatin1String("/usr/lib") << QLatin1String("/usr/local/lib");
++    const QString qtLibPath = QLibraryInfo::location(QLibraryInfo::LibrariesPath);
++    if (qtLibPath != "/usr/lib" && qtLibPath != "/usr/local/lib")
++        paths << qtLibPath;
++    foreach (const QString &path, paths) {
++        QDir dir = QDir(path);
++        QStringList entryList = dir.entryList(QStringList() << QLatin1String("%1.*").arg(sLib), QDir::NoDotAndDotDot | QDir::Files);
++        if (entryList.contains(sLib)) {
++           qDebug() << "libPath: " << path << " " << sLib;
++           return path + "/" + sLib;
++        }
++        if (!entryList.empty()) {
++           qSort(entryList.begin(), entryList.end(), libGreaterThan);
++           qDebug() << "libPath: " << path << " " << entryList.first();
++           return path + "/" + entryList.first();
++        }
++    }
++    qDebug() << "libPath: not find:" << sLib;
++    return QString();
++}
++
++bool LibraryLoader::isLibExists(const QString &sLib)
++{
++    // qDebug() << "isLibExists: " << sLib << " " << (libPath(sLib).size() > 0);
++    return libPath(sLib).size() > 0;
 +}
 +
 +QString LibraryLoader::libGpuInfoPath()
@@ -219,38 +248,14 @@ index 00000000..8dbe11d8
 +    foreach (const QString &path, paths) {
 +      library.setFileName(path);
 +      if (library.resolve("vdp_Iter_decoderInfo")) {
++        qDebug() << "libGpuInfoPath: find " << path;
 +        return path;
 +      } else {
-+        qDebug("Cannot resolve the symbol or load GpuInfo library");
++        qDebug() << "libGpuInfoPath: " << path << "Cannot resolve the symbol or load GpuInfo library";
++        qDebug() << library.errorString();
 +      }
-+      qWarning() << library.errorString();
 +    }
-+    return QString();
-+}
-+
-+QString LibraryLoader::libPath(const QString &sLib)
-+{
-+    QStringList paths;
-+    paths = QString::fromLatin1(qgetenv("LD_LIBRARY_PATH"))
-+            .split(QLatin1Char(':'), QString::SkipEmptyParts);
-+    paths << QLatin1String("/usr/lib") << QLatin1String("/usr/local/lib");
-+    paths << QLibraryInfo::location(QLibraryInfo::LibrariesPath);
-+
-+    QStringList foundLibs;
-+    foreach (const QString &path, paths) {
-+        QDir dir = QDir(path);
-+        QStringList entryList = dir.entryList(QStringList() << QLatin1String("%1.*").arg(sLib), QDir::NoDotAndDotDot | QDir::Files);
-+        if (entryList.contains(sLib)) {
-+           qDebug() << "libPath: " << path << " " << sLib;
-+           return sLib;
-+        }
-+        if (!entryList.empty()) {
-+           qSort(entryList.begin(), entryList.end(), libGreaterThan);
-+           qDebug() << "libPath: " << path << " " << entryList.first();
-+           return entryList.first();
-+        }
-+    }
-+    qDebug() << "not find:" << sLib;
++    qDebug() << "libGpuInfoPath: not find";
 +    return QString();
 +}
 +
@@ -289,7 +294,7 @@ index 00000000..8dbe11d8
 +}
 diff --git a/src/common/libraryloader.h b/src/common/libraryloader.h
 new file mode 100644
-index 00000000..e43e2f97
+index 00000000..e4b48690
 --- /dev/null
 +++ b/src/common/libraryloader.h
 @@ -0,0 +1,19 @@
@@ -302,9 +307,9 @@ index 00000000..e43e2f97
 +{
 +public:
 +    LibraryLoader() = default;
-+    static QStringList findAllLib(const QString &libname);
-+    static QString libPath(const QString &libname);
-+    static bool isLibExists(const QString &libname);
++    static QStringList findAllLib(const QString &sLib);
++    static QString libPath(const QString &sLib);
++    static bool isLibExists(const QString &sLib);
 +    static QString libGpuInfoPath();
 +
 +private:
@@ -416,6 +421,20 @@ index d27ba0f0..21dc4191 100644
  
  private:
      static std::atomic<ThumbnailWorker *> m_instance;
+diff --git a/src/libdmr/CMakeLists.txt b/src/libdmr/CMakeLists.txt
+index c264f7e8..21d16e9b 100644
+--- a/src/libdmr/CMakeLists.txt
++++ b/src/libdmr/CMakeLists.txt
+@@ -18,7 +18,8 @@ file(GLOB_RECURSE SRCS LIST_DIRECTORIES false *.cpp)
+ file(GLOB_RECURSE MPV_SRCS LIST_DIRECTORIES false ../backends/mpv/*.cpp)
+ file(GLOB_RECURSE MEDIAPLAYER_SRCS LIST_DIRECTORIES false ../backends/mediaplayer/*.cpp)
+ file(GLOB_RECURSE HWDEC_SRCS ../common/hwdec_probe.cpp)
+-list(APPEND SRCS player_widget.cpp ${MPV_SRCS} ${MEDIAPLAYER_SRCS} ${HWDEC_SRCS})
++file(GLOB_RECURSE LIBLOADER_SRCS ../common/libraryloader.cpp)
++list(APPEND SRCS player_widget.cpp ${MPV_SRCS} ${MEDIAPLAYER_SRCS} ${HWDEC_SRCS} ${LIBLOADER_SRCS})
+ 
+ add_library(${CMD_NAME} SHARED ${SRCS})
+ set_target_properties(${CMD_NAME} PROPERTIES VERSION 0.1.0 SOVERSION 0.1)
 diff --git a/src/libdmr/compositing_manager.cpp b/src/libdmr/compositing_manager.cpp
 index 75a16a51..80a83e27 100644
 --- a/src/libdmr/compositing_manager.cpp

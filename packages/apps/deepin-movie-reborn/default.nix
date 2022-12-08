@@ -61,9 +61,9 @@ stdenv.mkDerivation rec {
     ./0001-fix-lib-path.patch
   ];
 
-  postPatch = ''
-    substituteInPlace CMakeLists.txt --replace "add_subdirectory(examples/test)" " "
-  '';
+  # postPatch = ''
+  #  substituteInPlace CMakeLists.txt --replace "add_subdirectory(examples/test)" " "
+  # '';
 
   outputs = [ "out" "dev" ];
 
@@ -110,7 +110,7 @@ stdenv.mkDerivation rec {
     "--prefix QT_PLUGIN_PATH : ${qt5integration}/${qtbase.qtPluginPrefix}"
     "--prefix XDG_DATA_DIRS : ${placeholder "out"}/share/gsettings-schemas/${pname}-${version}"
     "--prefix GST_PLUGIN_SYSTEM_PATH_1_0 : ${gstPluginPath}"
-    "--prefix LD_LIBRARY_PATH : ${lib.makeLibraryPath [ mpv ffmpeg ffmpegthumbnailer gst_all_1.gstreamer gst_all_1.gst-plugins-base gst_all_1.gst-plugins-good ] }"
+    "--prefix LD_LIBRARY_PATH : ${lib.makeLibraryPath [ mpv ffmpeg ffmpegthumbnailer gst_all_1.gstreamer gst_all_1.gst-plugins-base ] }"
   ];
 
   NIX_CFLAGS_COMPILE = [
