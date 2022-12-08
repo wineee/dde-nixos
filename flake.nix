@@ -277,7 +277,6 @@
                     deepin-camera
                     dde-clipboard
                    # dde-grand-search
-
                     dde-dock
                   ];
 

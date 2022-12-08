@@ -38,6 +38,8 @@ In order to use DDE, you must enable [flakes](https://nixos.wiki/wiki/Flakes) to
 }
 ```
 
+(Take my configuration as an example)[https://github.com/wineee/nixos-config/commit/37c70c2c3b2a8e8ee00eba8ea336f67690683de1]
+
 ### Use NixOS DDE in Qemu
 
 Even if you aren't in NixOS, as long as you have installed nix, you can run dde-nixos in a virtual machine through `nix run`
