@@ -22,22 +22,14 @@
 
 stdenv.mkDerivation rec {
   pname = "deepin-album";
-  version = "5.10.5";
+  version = "5.10.9";
 
   src = fetchFromGitHub {
     owner = "linuxdeepin";
     repo = pname;
     rev = version;
-    sha256 = "sha256-4IJoz7JRaiVfarkUD/05nJAKNeDXxK9wXar5eR5qC0s=";
+    sha256 = "sha256-S/oVRD72dtpnvfGV6YfN5/syrmWA44H/1BbmAe0xjAY=";
   };
-
-  patches = [
-    (fetchpatch {
-      name = "use_pkg-config_to_find_libimageviewer";
-      url = "https://github.com/linuxdeepin/deepin-album/commit/8a8ba283129e336b9598531505840ebf7f915e17.patch";
-      sha256 = "sha256-YY1VahcXRgmbuUts6Oa5agyKznnf7bnaADA6iWj5rn4=";
-    })
-  ];
 
   postPatch = ''
     substituteInPlace libUnionImage/CMakeLists.txt \
