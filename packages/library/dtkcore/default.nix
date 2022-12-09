@@ -21,6 +21,8 @@ stdenv.mkDerivation rec {
     sha256 = "sha256-EpZvqnqueSffNokzc7BldEUaF/6wSqoqz8ByXeylW4M=";
   };
 
+  patches = [ ./0001-feat-add-foreignProductTypeName-func.patch ];
+
   postPatch = ''
     substituteInPlace src/dsysinfo.cpp \
       --replace "/usr/share/deepin/distribution.info" "/etc/distribution.info" \

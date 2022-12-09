@@ -1,0 +1,136 @@
+From f03223abacae1102a7c3c41ef4a7f7f38e0363bd Mon Sep 17 00:00:00 2001
+From: rewine <lhongxu@outlook.com>
+Date: Fri, 9 Dec 2022 15:06:59 +0800
+Subject: [PATCH] feat: add foreignProductTypeName func
+
+---
+ ...feat-add-foreignProductTypeName-func.patch | 64 +++++++++++++++++++
+ include/global/dsysinfo.h                     |  3 +
+ src/dsysinfo.cpp                              | 26 ++++++++
+ 3 files changed, 93 insertions(+)
+ create mode 100644 0001-feat-add-foreignProductTypeName-func.patch
+
+diff --git a/0001-feat-add-foreignProductTypeName-func.patch b/0001-feat-add-foreignProductTypeName-func.patch
+new file mode 100644
+index 0000000..2ade4f3
+--- /dev/null
++++ b/0001-feat-add-foreignProductTypeName-func.patch
+@@ -0,0 +1,64 @@
++From d3d0b5ef73bdac6e67e8f3a33256044213738e2d Mon Sep 17 00:00:00 2001
++From: rewine <lhongxu@outlook.com>
++Date: Fri, 9 Dec 2022 15:06:59 +0800
++Subject: [PATCH] feat: add foreignProductTypeName func
++
++---
++ include/global/dsysinfo.h |  3 +++
++ src/dsysinfo.cpp          | 26 ++++++++++++++++++++++++++
++ 2 files changed, 29 insertions(+)
++
++diff --git a/include/global/dsysinfo.h b/include/global/dsysinfo.h
++index e711fed..a202d5b 100644
++--- a/include/global/dsysinfo.h
+++++ b/include/global/dsysinfo.h
++@@ -150,6 +150,9 @@ public:
++     static QString majorVersion();
++     static QString minorVersion();
++     static QString buildVersion(); // xyzs
+++
+++    static bool isForeignDistribution();
+++    static QString foreignProductTypeName();
++ #endif
++ 
++     Q_DECL_DEPRECATED_X("Use distributionInfoPath() instead") static QString deepinDistributionInfoPath();
++diff --git a/src/dsysinfo.cpp b/src/dsysinfo.cpp
++index 9f92ff8..18a0f9c 100644
++--- a/src/dsysinfo.cpp
+++++ b/src/dsysinfo.cpp
++@@ -828,6 +828,32 @@ QString DSysInfo::buildVersion()
++     QString osb = entry.stringValue("OsBuild", "Version");
++     return osb.mid(6).trimmed();
++ }
+++
+++bool DSysInfo::isForeignDistribution()
+++{
+++    siGlobal->ensureReleaseInfo();
+++    return productType() != Deepin && productType() != Uos;
+++}
+++
+++QString foreignProductTypeName()
+++{
+++    siGlobal->ensureReleaseInfo();
+++    switch (productType())
+++    {
+++        case ProductType::ArchLinux: return "Arch Linux";
+++        case ProductType::CentOS: return "CentOS";
+++        case ProductType::Debian: return "Debian";
+++        case ProductType::Fedora: return "Fedora";
+++        case ProductType::LinuxMint: return "Linux Mint";
+++        case ProductType::Manjaro: return "Manjaro";
+++        case ProductType::openSUSE: return "openSUSE";
+++        case ProductType::SailfishOS: return "SailfishOS";
+++        case ProductType::Ubuntu: return "Ubuntu";
+++        case ProductType::Gentoo: return "Gentoo";
+++        case ProductType::NixOS: return "NixOS";
+++    }
+++    return "unknow";
+++}
++ #endif
++ 
++ QString DSysInfo::deepinDistributionInfoPath()
++-- 
++2.38.1
++
+diff --git a/include/global/dsysinfo.h b/include/global/dsysinfo.h
+index e711fed..a202d5b 100644
+--- a/include/global/dsysinfo.h
++++ b/include/global/dsysinfo.h
+@@ -150,6 +150,9 @@ public:
+     static QString majorVersion();
+     static QString minorVersion();
+     static QString buildVersion(); // xyzs
++
++    static bool isForeignDistribution();
++    static QString foreignProductTypeName();
+ #endif
+ 
+     Q_DECL_DEPRECATED_X("Use distributionInfoPath() instead") static QString deepinDistributionInfoPath();
+diff --git a/src/dsysinfo.cpp b/src/dsysinfo.cpp
+index 9f92ff8..4614e87 100644
+--- a/src/dsysinfo.cpp
++++ b/src/dsysinfo.cpp
+@@ -828,6 +828,32 @@ QString DSysInfo::buildVersion()
+     QString osb = entry.stringValue("OsBuild", "Version");
+     return osb.mid(6).trimmed();
+ }
++
++bool DSysInfo::isForeignDistribution()
++{
++    siGlobal->ensureReleaseInfo();
++    return productType() != Deepin && productType() != Uos;
++}
++
++QString DSysInfo::foreignProductTypeName()
++{
++    siGlobal->ensureReleaseInfo();
++    switch (productType())
++    {
++        case ProductType::ArchLinux: return "Arch Linux";
++        case ProductType::CentOS: return "CentOS";
++        case ProductType::Debian: return "Debian";
++        case ProductType::Fedora: return "Fedora";
++        case ProductType::LinuxMint: return "Linux Mint";
++        case ProductType::Manjaro: return "Manjaro";
++        case ProductType::openSUSE: return "openSUSE";
++        case ProductType::SailfishOS: return "SailfishOS";
++        case ProductType::Ubuntu: return "Ubuntu";
++        case ProductType::Gentoo: return "Gentoo";
++        case ProductType::NixOS: return "NixOS";
++    }
++    return "unknow";
++}
+ #endif
+ 
+ QString DSysInfo::deepinDistributionInfoPath()
+-- 
+2.38.1
+
