@@ -41,8 +41,8 @@ stdenv.mkDerivation rec {
   src = fetchFromGitHub {
     owner = "justforlxz";
     repo = pname;
-    rev = "6a354a9d215d13601dc0dd738046d025a0fb3954";
-    sha256 = "sha256-gk9W6SdMoQBiec5F511+1NbbdrcQZ2YQzWG9O+kxHkw=";
+    rev = "2e4eb120de6eef57f3d4ceab32a02fc6eabdd49e";
+    sha256 = "sha256-ttn0CxdzbUHZgZNfAgxKT535vGnrqbUPZC/n8yp48cA=";
   };
 
   nativeBuildInputs = [
