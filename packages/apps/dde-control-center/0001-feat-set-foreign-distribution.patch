@@ -1,0 +1,110 @@
+From 53337565d5a5633c879bae60616052a8d617674d Mon Sep 17 00:00:00 2001
+From: rewine <lhongxu@outlook.com>
+Date: Fri, 9 Dec 2022 15:56:24 +0800
+Subject: [PATCH] feat: set foreign distribution
+
+---
+ src/frame/modules/systeminfo/systeminfowork.cpp | 17 ++++++++++++++---
+ .../modules/commoninfo/commoninfowidget.cpp     |  2 +-
+ .../modules/commoninfo/commoninfowork.cpp       |  2 +-
+ src/frame/window/utils.h                        |  1 +
+ 4 files changed, 17 insertions(+), 5 deletions(-)
+
+diff --git a/src/frame/modules/systeminfo/systeminfowork.cpp b/src/frame/modules/systeminfo/systeminfowork.cpp
+index 20b280cfd..3560bbdcc 100644
+--- a/src/frame/modules/systeminfo/systeminfowork.cpp
++++ b/src/frame/modules/systeminfo/systeminfowork.cpp
+@@ -10,6 +10,7 @@
+ 
+ #include <QFutureWatcher>
+ #include <QtConcurrent>
++#include <QDebug>
+ 
+ DCORE_USE_NAMESPACE
+ 
+@@ -143,18 +144,22 @@ void SystemInfoWork::activate()
+     m_model->setDistroID(m_systemInfoInter->distroID());
+     m_model->setDistroVer(m_systemInfoInter->distroVer());
+     m_model->setDisk(m_systemInfoInter->diskCap());
++qDebug() << "333333333333: " << DSysInfo::isForeignDistribution();
+ 
++qDebug() << "333333333333: " << DSysInfo::foreignProductTypeName() << " " << DSysInfo::productVersion();
+     if (DSysInfo::uosType() == DSysInfo::UosType::UosServer ||
+             (DSysInfo::uosType() == DSysInfo::UosType::UosDesktop)) {
+         QString productName = QString("%1").arg(DSysInfo::uosSystemName());
+         m_model->setProductName(productName);
+         QString versionNumber = QString("%1").arg(DSysInfo::majorVersion());
+         m_model->setVersionNumber(versionNumber);
++qDebug() << "Uos1";
+     }
+     QString version;
+     if (DSysInfo::uosType() == DSysInfo::UosServer || DSysInfo::uosEditionType() == DSysInfo::UosEuler) {
+         version = QString("%1%2").arg(DSysInfo::minorVersion())
+                                   .arg(DSysInfo::uosEditionName());
++qDebug() << "isUos2";
+     } else if (DSysInfo::isDeepin()) {
+         QDBusConnection::systemBus().connect("com.deepin.license",
+                                              "/com/deepin/license/Info",
+@@ -163,12 +168,18 @@ void SystemInfoWork::activate()
+                                              this, SLOT(onLicenseAuthorizationProperty()));
+ 
+         onLicenseAuthorizationProperty();
+-    } else {
+-        version = QString("%1 %2").arg(DSysInfo::productVersion())
+-                                  .arg(DSysInfo::productTypeString());
++qDebug() << "isDeepin";
++    } else if (DSysInfo::isForeignDistribution()) {
++
++        m_model->setProductName(DSysInfo::foreignProductTypeName());
++        m_model->setVersionNumber(DSysInfo::productVersion());
++qDebug() << "in: " << DSysInfo::isForeignDistribution();
++qDebug() << "in: " << DSysInfo::foreignProductTypeName() << " " << DSysInfo::productVersion();
+     }
+     m_model->setType(QSysInfo::WordSize);
++qDebug() << "233333333333: " << DSysInfo::isForeignDistribution();
+ 
++qDebug() << "233333333333: " << DSysInfo::foreignProductTypeName() << " " << DSysInfo::productVersion();
+     if (m_systemInfo->isValid()) {
+         m_model->setMemory(static_cast<qulonglong>(DSysInfo::memoryTotalSize()), m_systemInfo->property("MemorySize").toULongLong());
+     } else {
+diff --git a/src/frame/window/modules/commoninfo/commoninfowidget.cpp b/src/frame/window/modules/commoninfo/commoninfowidget.cpp
+index fce83b5c8..45f337e49 100644
+--- a/src/frame/window/modules/commoninfo/commoninfowidget.cpp
++++ b/src/frame/window/modules/commoninfo/commoninfowidget.cpp
+@@ -87,7 +87,7 @@ void CommonInfoWidget::initData()
+                        QMetaMethod::fromSignal(&CommonInfoWidget::requestShowBootWidget), nullptr, "bootMenu"});
+ 
+     //以下模块只在非服务器版本使用
+-    if (!IsServerSystem && !IsCommunitySystem) {
++    if (!IsServerSystem && !IsCommunitySystem && !IsForeignDistribution) {
+         if (DSysInfo::uosEditionType() != DSysInfo::UosEuler || DSysInfo::uosEditionType() != DSysInfo::UosEnterpriseC) {
+             if (!DisableDeveloperMode) {
+                 m_itemList.append({ "dcc_developer_mode",
+diff --git a/src/frame/window/modules/commoninfo/commoninfowork.cpp b/src/frame/window/modules/commoninfo/commoninfowork.cpp
+index 42f978a54..b3a86b6bf 100644
+--- a/src/frame/window/modules/commoninfo/commoninfowork.cpp
++++ b/src/frame/window/modules/commoninfo/commoninfowork.cpp
+@@ -79,7 +79,7 @@ CommonInfoWork::CommonInfoWork(CommonInfoModel *model, QObject *parent)
+ 
+     licenseStateChangeSlot();
+ 
+-    if (!IsCommunitySystem) {
++    if (!IsCommunitySystem && !IsForeignDistribution) {
+         QDBusInterface dbusInterface("org.freedesktop.DBus",
+             "/org/freedesktop/DBus",
+             "org.freedesktop.DBus",
+diff --git a/src/frame/window/utils.h b/src/frame/window/utils.h
+index 49eb76232..f71a0084d 100644
+--- a/src/frame/window/utils.h
++++ b/src/frame/window/utils.h
+@@ -55,6 +55,7 @@ const bool IsProfessionalSystem = (DSysInfo::UosProfessional == UosEdition);//
+ const bool IsHomeSystem = (DSysInfo::UosHome == UosEdition);//是否是个人版
+ const bool IsEducationSystem = (DSysInfo::UosEducation == UosEdition); // 是否是教育版
+ const bool IsDeepinDesktop = (DSysInfo::DeepinDesktop == DSysInfo::deepinType());//是否是Deepin桌面
++const bool IsForeignDistribution = DSysInfo::isForeignDistribution(); // 是否外部发行版，如 Arch Linux
+ const bool DisableDeveloperMode = {
+ #ifdef DISABLE_DEVELOPER_MODE
+   true
+-- 
+2.38.1
+

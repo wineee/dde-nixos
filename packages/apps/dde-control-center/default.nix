@@ -82,7 +82,7 @@ stdenv.mkDerivation rec {
       src = ./0001-patch_account_face_path_for_nix.patch;
       actConfigDir = "${dde-account-faces}/share/lib/AccountsService";
     })
-    ./0002-remove-user-experience.patch
+    ./0001-feat-set-foreign-distribution.patch 
   ];
 
   postPatch = replaceAll "/bin/bash" "${runtimeShell}"
@@ -133,8 +133,7 @@ stdenv.mkDerivation rec {
     "-DDISABLE_ACTIVATOR=YES"
     "-DDISABLE_SYS_UPDATE=YES"
     "-DDISABLE_RECOVERY=YES"
-    "-DDISABLE_DEVELOPER_MODE=YES"
-    "-DDISABLE_CLOUD_SYNC=YES"
+    #"-DDISABLE_CLOUD_SYNC=YES"
     # "-DDCC_DISABLE_GRUB=YES"
   ];
 
