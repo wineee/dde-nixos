@@ -1,17 +1,45 @@
-From 53337565d5a5633c879bae60616052a8d617674d Mon Sep 17 00:00:00 2001
+From 530e2be329c903a00f4f8d1a683088aa5637b907 Mon Sep 17 00:00:00 2001
 From: rewine <lhongxu@outlook.com>
 Date: Fri, 9 Dec 2022 15:56:24 +0800
 Subject: [PATCH] feat: set foreign distribution
 
 ---
- src/frame/modules/systeminfo/systeminfowork.cpp | 17 ++++++++++++++---
- .../modules/commoninfo/commoninfowidget.cpp     |  2 +-
- .../modules/commoninfo/commoninfowork.cpp       |  2 +-
- src/frame/window/utils.h                        |  1 +
- 4 files changed, 17 insertions(+), 5 deletions(-)
+ src/frame/modules/systeminfo/systeminfomodel.cpp      |  1 +
+ src/frame/modules/systeminfo/systeminfomodel.h        |  2 +-
+ src/frame/modules/systeminfo/systeminfowork.cpp       |  9 +++++----
+ .../window/modules/commoninfo/commoninfowidget.cpp    |  2 +-
+ .../window/modules/commoninfo/commoninfowork.cpp      |  2 +-
+ .../window/modules/systeminfo/nativeinfowidget.cpp    | 11 +++++++++--
+ src/frame/window/utils.h                              |  1 +
+ 7 files changed, 19 insertions(+), 9 deletions(-)
 
+diff --git a/src/frame/modules/systeminfo/systeminfomodel.cpp b/src/frame/modules/systeminfo/systeminfomodel.cpp
+index 49658796a..bdab18dee 100644
+--- a/src/frame/modules/systeminfo/systeminfomodel.cpp
++++ b/src/frame/modules/systeminfo/systeminfomodel.cpp
+@@ -5,6 +5,7 @@
+ #include "systeminfomodel.h"
+ 
+ #include "math.h"
++#include <QDebug>
+ 
+ namespace dcc{
+ namespace systeminfo{
+diff --git a/src/frame/modules/systeminfo/systeminfomodel.h b/src/frame/modules/systeminfo/systeminfomodel.h
+index 8cdb1fa42..dd42e433f 100644
+--- a/src/frame/modules/systeminfo/systeminfomodel.h
++++ b/src/frame/modules/systeminfo/systeminfomodel.h
+@@ -61,7 +61,7 @@ Q_SIGNALS:
+     void backgroundChanged(const QPixmap &pixmap);
+     void distroidChanged(const QString& distroid);
+     void distroverChanged(const QString& distrover);
+-    void productNameChanged(const QString& version);
++    void productNameChanged(const QString& name);
+     void versionNumberChanged(const QString& version);
+     void versionChanged(const QString& version);
+     void typeChanged(const QString& type);
 diff --git a/src/frame/modules/systeminfo/systeminfowork.cpp b/src/frame/modules/systeminfo/systeminfowork.cpp
-index 20b280cfd..3560bbdcc 100644
+index 20b280cfd..abb236086 100644
 --- a/src/frame/modules/systeminfo/systeminfowork.cpp
 +++ b/src/frame/modules/systeminfo/systeminfowork.cpp
 @@ -10,6 +10,7 @@
@@ -22,51 +50,24 @@ index 20b280cfd..3560bbdcc 100644
  
  DCORE_USE_NAMESPACE
  
-@@ -143,18 +144,22 @@ void SystemInfoWork::activate()
-     m_model->setDistroID(m_systemInfoInter->distroID());
-     m_model->setDistroVer(m_systemInfoInter->distroVer());
-     m_model->setDisk(m_systemInfoInter->diskCap());
-+qDebug() << "333333333333: " << DSysInfo::isForeignDistribution();
- 
-+qDebug() << "333333333333: " << DSysInfo::foreignProductTypeName() << " " << DSysInfo::productVersion();
-     if (DSysInfo::uosType() == DSysInfo::UosType::UosServer ||
-             (DSysInfo::uosType() == DSysInfo::UosType::UosDesktop)) {
-         QString productName = QString("%1").arg(DSysInfo::uosSystemName());
-         m_model->setProductName(productName);
-         QString versionNumber = QString("%1").arg(DSysInfo::majorVersion());
-         m_model->setVersionNumber(versionNumber);
-+qDebug() << "Uos1";
-     }
-     QString version;
-     if (DSysInfo::uosType() == DSysInfo::UosServer || DSysInfo::uosEditionType() == DSysInfo::UosEuler) {
-         version = QString("%1%2").arg(DSysInfo::minorVersion())
-                                   .arg(DSysInfo::uosEditionName());
-+qDebug() << "isUos2";
-     } else if (DSysInfo::isDeepin()) {
-         QDBusConnection::systemBus().connect("com.deepin.license",
-                                              "/com/deepin/license/Info",
-@@ -163,12 +168,18 @@ void SystemInfoWork::activate()
+@@ -163,13 +164,13 @@ void SystemInfoWork::activate()
                                               this, SLOT(onLicenseAuthorizationProperty()));
  
          onLicenseAuthorizationProperty();
 -    } else {
 -        version = QString("%1 %2").arg(DSysInfo::productVersion())
 -                                  .arg(DSysInfo::productTypeString());
-+qDebug() << "isDeepin";
 +    } else if (DSysInfo::isForeignDistribution()) {
-+
 +        m_model->setProductName(DSysInfo::foreignProductTypeName());
 +        m_model->setVersionNumber(DSysInfo::productVersion());
-+qDebug() << "in: " << DSysInfo::isForeignDistribution();
-+qDebug() << "in: " << DSysInfo::foreignProductTypeName() << " " << DSysInfo::productVersion();
      }
      m_model->setType(QSysInfo::WordSize);
-+qDebug() << "233333333333: " << DSysInfo::isForeignDistribution();
  
-+qDebug() << "233333333333: " << DSysInfo::foreignProductTypeName() << " " << DSysInfo::productVersion();
-     if (m_systemInfo->isValid()) {
+-    if (m_systemInfo->isValid()) {
++    if (m_systemInfo->isValid() && m_systemInfo->property("MemorySize").toULongLong() > 0) {
          m_model->setMemory(static_cast<qulonglong>(DSysInfo::memoryTotalSize()), m_systemInfo->property("MemorySize").toULongLong());
      } else {
+         m_model->setMemory(static_cast<qulonglong>(DSysInfo::memoryTotalSize()), static_cast<qulonglong>(DSysInfo::memoryInstalledSize()));
 diff --git a/src/frame/window/modules/commoninfo/commoninfowidget.cpp b/src/frame/window/modules/commoninfo/commoninfowidget.cpp
 index fce83b5c8..45f337e49 100644
 --- a/src/frame/window/modules/commoninfo/commoninfowidget.cpp
@@ -93,6 +94,49 @@ index 42f978a54..b3a86b6bf 100644
          QDBusInterface dbusInterface("org.freedesktop.DBus",
              "/org/freedesktop/DBus",
              "org.freedesktop.DBus",
+diff --git a/src/frame/window/modules/systeminfo/nativeinfowidget.cpp b/src/frame/window/modules/systeminfo/nativeinfowidget.cpp
+index 754edd945..eb0f4e3d6 100644
+--- a/src/frame/window/modules/systeminfo/nativeinfowidget.cpp
++++ b/src/frame/window/modules/systeminfo/nativeinfowidget.cpp
+@@ -110,7 +110,7 @@ void NativeInfoWidget::initWidget()
+     logo->setLogo(DSysInfo::distributionOrgLogo(DSysInfo::Distribution, DSysInfo::Normal));
+ 
+     if (DSysInfo::uosType() == DSysInfo::UosType::UosServer ||
+-            (DSysInfo::uosType() == DSysInfo::UosType::UosDesktop)) {
++            (DSysInfo::uosType() == DSysInfo::UosType::UosDesktop) || DSysInfo::isForeignDistribution()) {
+         m_productName = new TitleValueItem(frame);
+         //~ contents_path /systeminfo/About This PC
+         //~ child_page About This PC
+@@ -173,6 +173,11 @@ void NativeInfoWidget::initWidget()
+         connect(m_model, &SystemInfoModel::hostNameChanged, this, &NativeInfoWidget::onHostNameChanged);
+         connect(m_model, &SystemInfoModel::setHostNameError, this, &NativeInfoWidget::onSetHostNameError);
+ 
++        if (DSysInfo::foreignProductTypeName() == "NixOS") {
++            m_hostNameBtn->setVisible(false);
++            m_hostNameLayout->setContentsMargins(10, 10, 10, 10);
++        }
++
+         //~ contents_path /systeminfo/About This PC
+         //~ child_page About This PC
+         m_productName->setTitle(tr("OS Name") + ':');
+@@ -190,6 +195,8 @@ void NativeInfoWidget::initWidget()
+     m_version->setTitle(tr("Edition") + ':');
+     m_version->setValue(m_model->version());
+     GSettingWatcher::instance()->bind("edition", m_version);
++    if (DSysInfo::isForeignDistribution())
++        m_version->setVisible(false);
+     m_type = new TitleValueItem(frame);
+     //~ contents_path /systeminfo/About This PC
+     //~ child_page About This PC
+@@ -233,7 +240,7 @@ void NativeInfoWidget::initWidget()
+ 
+     logoGroup->appendItem(logo);
+     if (DSysInfo::uosType() == DSysInfo::UosType::UosServer ||
+-            (DSysInfo::uosType() == DSysInfo::UosType::UosDesktop)) {
++            (DSysInfo::uosType() == DSysInfo::UosType::UosDesktop) || DSysInfo::isForeignDistribution()) {
+         infoGroup->appendItem(m_productName);
+         infoGroup->appendItem(m_versionNumber);
+     }
 diff --git a/src/frame/window/utils.h b/src/frame/window/utils.h
 index 49eb76232..f71a0084d 100644
 --- a/src/frame/window/utils.h

@@ -133,8 +133,6 @@ stdenv.mkDerivation rec {
     "-DDISABLE_ACTIVATOR=YES"
     "-DDISABLE_SYS_UPDATE=YES"
     "-DDISABLE_RECOVERY=YES"
-    #"-DDISABLE_CLOUD_SYNC=YES"
-    # "-DDCC_DISABLE_GRUB=YES"
   ];
 
   qtWrapperArgs = [
@@ -144,6 +142,7 @@ stdenv.mkDerivation rec {
   preFixup = ''
     glib-compile-schemas ${glib.makeSchemaPath "$out" "${pname}-${version}"}
     qtWrapperArgs+=("''${gappsWrapperArgs[@]}")
+    
   '';
 
   meta = with lib; {
