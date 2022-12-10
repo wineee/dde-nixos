@@ -6,13 +6,13 @@
 }:
 stdenv.mkDerivation rec {
   pname = "deepin-wayland-protocols";
-  version = "1.6.0-deepin.1.1";
+  version = "1.6.0-deepin.1.2";
 
   src = fetchFromGitHub {
     owner = "justforlxz";
     repo = pname;
     rev = version;
-    sha256 = "sha256-OW3Eiu0apa3sRrjet4bRUg6vsMycH6oejePZCxznH6Y=";
+    sha256 = "sha256-8Im3CueC8sYA5mwRU/Z7z8HA4mPQvVSqcTD813QCYxo";
   };
 
   nativeBuildInputs = [
