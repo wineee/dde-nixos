@@ -2,6 +2,7 @@
 , lib
 , fetchFromGitHub
 , fetchpatch
+, getUsrPatchFrom
 , dtk
 , gsettings-qt
 , qt5integration
@@ -27,6 +28,10 @@ stdenv.mkDerivation rec {
     repo = pname;
     rev = "5d51ae46bce1bd3d2cf175879eac06426ece94b9";
     sha256 = "sha256-/Oi+t/rFW+1D+++0ChOMBW9zTOec8RLZMMIJnC15DU0=";
+  };
+
+  postPatch = getUsrPatchFrom {
+    "${pname}.desktop" = [ ];
   };
 
   nativeBuildInputs = [
