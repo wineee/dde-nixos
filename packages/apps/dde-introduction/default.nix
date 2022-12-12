@@ -20,6 +20,7 @@
 }:
 let
   patchList = {
+    "dde-introduction.desktop" = [ ];
     "src/mainwindow.h" = [ ];
     "src/modules/videowidget.cpp" = [ ];
     "src/widgets/bottomnavigation.cpp" = [ ];
