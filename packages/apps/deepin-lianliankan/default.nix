@@ -2,6 +2,7 @@
 , lib
 , fetchpatch
 , fetchFromGitHub
+, getUsrPatchFrom
 , dtk
 , qt5integration
 , qt5platform-plugins
@@ -33,6 +34,10 @@ stdenv.mkDerivation rec {
       sha256 = "sha256-JMeS1wClRTqMJDKFC2RxEfK0ceHQDvzz4mCs4PGvjWo=";
     })
   ];
+
+  postPatch = getUsrPatchFrom {
+    "translations/desktop/${pname}.desktop" = [ ];
+  };
 
   nativeBuildInputs = [
     cmake
