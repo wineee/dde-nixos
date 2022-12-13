@@ -49,17 +49,16 @@
             in
             {
               options = {
-                environment.deepin.excludePackages = mkOption {
-                  default = [];
-                  type = types.listOf types.package;
-                  description = lib.mdDoc "Which Deepin packages should exclude from systemPackages";
-                };
-
                 services.xserver.desktopManager.deepin = {
                   enable = mkOption {
                     type = types.bool;
                     default = false;
                     description = "Enable Deepin desktop manager";
+                  };
+                  full = mkOption {
+                    type = types.bool;
+                    default = false;
+                    description = "Install all deepin software";
                   };
                   extraGSettingsOverrides = mkOption {
                     default = "";
@@ -71,6 +70,12 @@
                     type = types.listOf types.path;
                     description = "List of packages for which gsettings are overridden.";
                   };
+                };
+
+                environment.deepin.excludePackages = mkOption {
+                  default = [];
+                  type = types.listOf types.package;
+                  description = lib.mdDoc "Which Deepin packages should exclude from systemPackages";
                 };
 
                 services.dde = {
@@ -134,8 +139,8 @@
                   xdg.mime.enable = true;
                   xdg.menus.enable = true;
                   xdg.icons.enable = true;
-                  xdg.portal.enable = true;
-                  xdg.portal.extraPortals = [ 
+                  xdg.portal.enable = mkDefault true;
+                  xdg.portal.extraPortals = mkDefault [ 
                     (pkgs.xdg-desktop-portal-gtk.override {
                       buildPortalsInGnome = false;
                     })
@@ -171,7 +176,6 @@
                     LogoTransparent=${packages.deepin-desktop-base}/share/pixmaps/distribution_logo_transparent.svg
                   '';
                   environment.etc = {
-                    # "profile.d/deepin-xdg-dir.sh" = "${packages.startdde}/etc/profile.d/deepin-xdg-dir.sh";
                     "X11/Xsession.d".source = "${packages.startdde}/etc/X11/Xsession.d";
                     #"lightdm/lightdm.conf".source = "${packages.startdde}/etc/lightdm/lightdm.conf";
                     #"deepin/dde-session-ui.conf".source = "${packages.dde-session-ui}/share/deepin/dde-session-ui.conf";
@@ -192,59 +196,11 @@
                     '';
                   };
 
-                  services.xserver.desktopManager.deepin.extraGSettingsOverridePackages = with packages; [
-                    dde-top-panel
-                  ];
+                  #services.xserver.desktopManager.deepin.extraGSettingsOverridePackages = with packages; [
+                  #  dde-top-panel
+                  #];
 
-                  environment.systemPackages = with packages; (utils.removePackagesByName [
-                    dde-top-panel
-                    qt5platform-plugins #TODO nixos/modules/config/qt5.nix
-                    dde-introduction
-                    dde-network-core
-                    dde-kwin
-                    deepin-kwin
-                    deepin-terminal
-                    deepin-album
-                    deepin-image-viewer
-                    deepin-calculator
-                    deepin-editor
-                    deepin-music
-                    deepin-movie-reborn
-                    dde-file-manager
-                    dde-launcher
-                    dde-calendar 
-                    deepin-camera
-                    dde-dock
-                    dde-session-ui
-                    dde-session-shell
-                    deepin-system-monitor
-                    dde-control-center
-                    deepin-picker
-                    deepin-shortcut-viewer
-                    startdde
-                    deepin-screen-recorder
-                    dde-clipboard
-                  #  dde-grand-search
-                    
-                    deepin-desktop-schemas
-                    dpa-ext-gnomekeyring
-
-                    dde-polkit-agent
-                    dde-account-faces
-                    deepin-voice-note
-                    deepin-turbo
-                    deepin-icon-theme
-                    deepin-sound-theme
-                    deepin-gtk-theme
-                    deepin-wallpapers
-
-                    deepin-reader
-                    deepin-draw
-                    deepin-boot-maker
-                    deepin-gomoku
-                    deepin-lianliankan
-                    deepin-font-manager
-                  ] config.environment.deepin.excludePackages) ++ (with pkgs; [
+                  environment.systemPackages = with pkgs; [
                     socat
                     xdotool
                     glib # for gsettings program / gdbus
@@ -255,30 +211,86 @@
                     #busybox # lspci startdde
                     lshw
                     libsForQt5.kglobalaccel
-                  ]);
-
-                  services.dbus.packages = with packages; [
-                    deepin-pw-check
+                  ] ++ (with packages; (utils.removePackagesByName ([
                     dde-kwin
                     deepin-kwin
+                    qt5platform-plugins #TODO nixos/modules/config/qt5.nix
 
+                    startdde
+                    dde-session-ui
+                    dde-session-shell
+                    dde-control-center
                     dde-launcher
+                    dde-dock
+                    dde-network-core
+                    dde-calendar 
+                    dde-clipboard
+                    dde-file-manager
+                    dpa-ext-gnomekeyring
+                    dde-polkit-agent
+                    
+                    dde-account-faces
+                    deepin-icon-theme
+                    deepin-sound-theme
+                    deepin-gtk-theme
+                    deepin-wallpapers
+                    deepin-desktop-schemas
+
+                    deepin-turbo
+                    deepin-pw-check
+                    deepin-terminal
+                    deepin-album
+                    deepin-draw
+                    deepin-image-viewer
+                    deepin-calculator
+                    deepin-editor
+                    deepin-music
+                    deepin-camera
+                    deepin-movie-reborn
+                    deepin-system-monitor
+                    deepin-shortcut-viewer
+                    deepin-picker
+                    deepin-font-manager
+                    deepin-screen-recorder
+                    deepin-compressor
+                  ] ++ lib.optionals cfg.full [
+                    dde-grand-search # FIXME
+                    deepin-boot-maker
+                    deepin-reader
+                    deepin-voice-note
+                    deepin-downloader
+                    deepin-lianliankan
+                    deepin-gomoku
+                    dde-introduction
+                    dde-top-panel
+                    dmarked
+                    # deepin-devicemanager # FIXME
+                    deepin-clone
+                    dde-device-formatter
+                  ]) config.environment.deepin.excludePackages));
+
+                  services.dbus.packages = with packages; (utils.removePackagesByName ([
+                    dde-kwin
+                    deepin-kwin
+                    dde-launcher
+                    dde-dock
                     dde-session-ui
                     dde-session-shell
                     dde-file-manager
                     dde-control-center
                     dde-calendar
+                    deepin-pw-check
                     deepin-picker
                     deepin-draw
                     deepin-image-viewer
                     deepin-screen-recorder
                     deepin-system-monitor
-                    deepin-boot-maker
                     deepin-camera
                     dde-clipboard
-                   # dde-grand-search
-                    dde-dock
-                  ];
+                  ] ++ lib.optionals cfg.full [
+                    dde-grand-search
+                    deepin-boot-maker
+                  ]) config.environment.deepin.excludePackages);
 
                   systemd.packages = with packages; [
                     deepin-kwin
@@ -291,6 +303,7 @@
                   services.dde.dde-daemon.enable = mkForce true;
                   services.dde.dde-api.enable = mkForce true;
                   services.dde.app-services.enable = mkForce true;
+
                   services.dde.deepin-anything.enable = true;
                 })
 
