@@ -38,7 +38,7 @@ In order to use DDE, you must enable [flakes](https://nixos.wiki/wiki/Flakes) to
 }
 ```
 
-(Take my configuration as an example)[https://github.com/wineee/nixos-config/commit/37c70c2c3b2a8e8ee00eba8ea336f67690683de1]
+[an example](https://github.com/wineee/nixos-config/commit/37c70c2c3b2a8e8ee00eba8ea336f67690683de1)
 
 ### Use NixOS DDE in Qemu
 
@@ -68,10 +68,16 @@ git checkout 5.7.16
 cmake --build build
 ```
 
+## Project use dde-nixos
+
+- [nixos-dde-iso](https://github.com/SamLukeYes/nixos-dde-iso) NixOS live image with DDE @[SamLukeYes](https://github.com/SamLukeYes)
+- [dmarked](https://github.com/DMarked/DMarked)  dtk based markdown editor
+
 ## References
 - [Status of packaging the Deepin Desktop Environment ](https://github.com/NixOS/nixpkgs/issues/94870)
 - [Nix User Repository](https://github.com/nix-community/NUR)
 - [nix-cutefish](https://github.com/p3psi-boo/nix-cutefish)
+- [budgie-nix](https://github.com/FedericoSchonborn/budgie-nix)
 
 ## License
 
