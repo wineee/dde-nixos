@@ -1,5 +1,9 @@
 {
-  description = "dde for nixos";
+  description = "deepin desktop environment for nixos";
+
+  nixConfig.extra-substituters = "https://cache.garnix.io";
+  nixConfig.extra-trusted-public-keys = "cache.garnix.io:CTFPyKSLcx5RMJKfLo5EEPUObbA78b0YQ2DTCJXqr9g=";
+
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
     flake-utils.url = "github:numtide/flake-utils";
@@ -155,6 +159,7 @@
                   environment.variables = {
                     QT_QPA_PLATFORMTHEME = "dxcb"; # nixos/modules/config/qt5.nix
                     QT_STYLE_OVERRIDE = "chameleon";
+                    # D_PROXY_ICON_ENGINE = "KIconEngine";
                   };
 
                   environment.pathsToLink = [
@@ -195,10 +200,6 @@
                       FIRST_LETTER_UPPERCASE = false
                     '';
                   };
-
-                  #services.xserver.desktopManager.deepin.extraGSettingsOverridePackages = with packages; [
-                  #  dde-top-panel
-                  #];
 
                   environment.systemPackages = with pkgs; [
                     socat
