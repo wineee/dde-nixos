@@ -91,6 +91,13 @@ stdenv.mkDerivation rec {
     xorg.libXtst
   ];
 
+  cmakeFlags = [
+    "-DKWIN_BUILD_KCMS=OFF"
+    "-DKWIN_BUILD_TABBOX=ON"
+    "-DKWIN_BUILD_CMS=OFF"
+    "-DKWIN_BUILD_RUNNERS=OFF"
+  ];
+
   meta = with lib; {
     description = "Easy to use, but flexible, composited Window Manager";
     homepage = "https://github.com/linuxdeepin/deepin-kwin";
