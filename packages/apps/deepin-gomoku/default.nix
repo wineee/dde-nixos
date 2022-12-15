@@ -2,6 +2,7 @@
 , lib
 , fetchFromGitHub
 , fetchpatch
+, getUsrPatchFrom
 , dtk
 , qt5integration
 , qt5platform-plugins
@@ -33,6 +34,10 @@ stdenv.mkDerivation rec {
       sha256 = "sha256-pOOuBC9kxz09XsssnAsi+xh6Z8ldkvNzFks1IhfXsIw=";
     })
   ];
+
+  postPatch = getUsrPatchFrom {
+    "gomoku/assets/${pname}.desktop" = [ ];
+  };
 
   nativeBuildInputs = [
     cmake

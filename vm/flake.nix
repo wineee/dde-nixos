@@ -46,11 +46,14 @@
             };
           };
           # desktopManager.plasma5.enable = true;
-
           desktopManager.deepin = {
             enable = true;
+            full = true;
           };
         };
+        #environment.deepin.excludePackages = with dde-nixos.packages.${system}; [
+        #  deepin-draw
+        #];
         time.timeZone = "Asia/Shanghai";
         fonts = {
           fonts = with pkgs; [
@@ -72,7 +75,7 @@
           diskSize = 16384;
           resolution = { x = 1024; y = 768; };
         };
-        system.stateVersion = "22.11";
+        system.stateVersion = "23.05";
       }];
     };
     packages.${system}.default = self.nixosConfigurations.vm.config.system.build.vm;

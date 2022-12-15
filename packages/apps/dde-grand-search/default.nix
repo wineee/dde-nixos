@@ -8,6 +8,7 @@
 , dde-dock
 , qt5integration
 , qt5platform-plugins
+, image-editor
 , cmake
 , qttools
 , pkg-config
@@ -28,24 +29,26 @@ let
   patchList = {
     "src/grand-search-daemon/data/dde-grand-search-daemon.desktop" = [ ];
     "src/grand-search-daemon/data/com.deepin.dde.daemon.GrandSearch.service" = [
-        [ "/usr/bin/dbus-send" "${dbus}/bin/dbus-send" ]
+      [ "/usr/bin/dbus-send" "${dbus}/bin/dbus-send" ]
     ];
     "src/grand-search/contacts/services/com.deepin.dde.GrandSearch.service" = [ ];
 
     "src/grand-search/utils/utils.cpp" = [
-        [ "/usr/share/applications/dde-control-center.desktop"  "/run/current-system/sw/share/applications/dde-control-center.desktop" ]
+      [ "/usr/share/applications/dde-control-center.desktop"  "/run/current-system/sw/share/applications/dde-control-center.desktop" ]
     ];
-    "src/libgrand-search-daemon/dbusservice/grandsearchinterface.cpp" = [ ];
+    "src/libgrand-search-daemon/dbusservice/grandsearchinterface.cpp" = [
+      [ "/usr/bin/dde-grand-search" "$out/bin/.dde-grand-search-wrapped" ] # fix access permit to daemon
+    ];
   }; 
 in stdenv.mkDerivation rec {
   pname = "dde-grand-search";
-  version = "5.3.2+";
+  version = "5.4.2";
 
   src = fetchFromGitHub {
     owner = "linuxdeepin";
     repo = pname;
-    rev = "e2e6142dcac9242e933b3bf40b0844bd5889d6fa";
-    sha256 = "sha256-lXPWU1PoO3310BiFlExj5oSF+NpVlerVuLJ9+I7gz1s=";
+    rev = version;
+    sha256 = "sha256-OMLZgPE2OH1jItbfGiUAi9SkzcUVLNLbSwgKafAGC10=";
   };
 
   postPatch = getUsrPatchFrom patchList;
@@ -70,6 +73,7 @@ in stdenv.mkDerivation rec {
     libsepol.dev
     util-linux.dev
     ffmpegthumbnailer
+    image-editor
   ];
 
   cmakeFlags = [ 
@@ -78,6 +82,7 @@ in stdenv.mkDerivation rec {
 
   qtWrapperArgs = [
     "--prefix QT_PLUGIN_PATH : ${qt5integration}/${qtbase.qtPluginPrefix}"
+    "--prefix LD_LIBRARY_PATH : ${lib.makeLibraryPath [ image-editor ]}"
   ];
 
   meta = with lib; {
