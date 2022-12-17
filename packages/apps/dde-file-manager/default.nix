@@ -77,7 +77,11 @@ let
 #      [ "\\$\\$system(\\$\\$PKG_CONFIG --variable libdir deepin-anything-server-lib)/deepin-anything-server-lib/plugins/handlers" "$out/lib/deepin-anything-server-lib/plugins/handlers" ]
 #    ];
 
-    ### MISC
+    ### POLKIT
+    "src/dde-file-manager/pkexec/com.deepin.pkexec.dde-file-manager.policy" = [ ];
+    "src/dde-file-manager-lib/pkexec/com.deepin.pkexec.dde-file-manager.policy" = [ ];
+
+    ### SERVICES
     "src/dde-file-manager-daemon/dbusservice/dde-filemanager-daemon.service" = [ ];
     "src/dde-file-manager-daemon/dbusservice/com.deepin.filemanager.daemon.service" = [ ];
     "src/dde-desktop/dbus/filemanager1/org.freedesktop.FileManager.service" = [ ];
