@@ -1,6 +1,7 @@
 { stdenv
 , lib
 , fetchFromGitHub
+, getUsrPatchFrom
 , dtk
 , qt5integration
 , qt5platform-plugins
@@ -59,7 +60,9 @@ stdenv.mkDerivation rec {
       --replace "/usr/lib/" "$out/lib/"
   '';
 
-  postPatch = fixPluginLoadPatch;
+  postPatch = fixPluginLoadPatch + getUsrPatchFrom {
+    "src/desktop/${pname}.desktop" = [ ];
+  };
 
   meta = with lib; {
     description = "A fast and lightweight application for creating and extracting archives";
