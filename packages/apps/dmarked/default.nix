@@ -1,5 +1,6 @@
 { stdenv
 , lib
+, getUsrPatchFrom
 , fetchFromGitHub
 , dtk
 , qt5integration
@@ -22,6 +23,10 @@ stdenv.mkDerivation rec {
     fetchSubmodules = true;
     rev = "d3eb1ed77a0b1f8af0a7f2ce4c24226925755592";
     sha256 = "sha256-d3oTzNC/h4RZqu7Q7PTCtop79+EHeypp8vYenJL9YcE=";
+  };
+
+  postPatch = getUsrPatchFrom {
+    "${pname}.desktop" = [ ];
   };
 
   nativeBuildInputs = [
