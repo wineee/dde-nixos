@@ -1,7 +1,6 @@
 { stdenv
 , lib
 , fetchFromGitHub
-, fetchpatch
 , pkg-config
 , cmake
 , gsettings-qt
@@ -20,8 +19,6 @@ stdenv.mkDerivation rec {
     rev = "a148240c0852939660780d367df2f118680631d6";
     sha256 = "sha256-EpZvqnqueSffNokzc7BldEUaF/6wSqoqz8ByXeylW4M=";
   };
-
-  patches = [ ./0001-feat-add-foreignProductTypeName-func.patch ];
 
   postPatch = ''
     substituteInPlace src/dsysinfo.cpp \
