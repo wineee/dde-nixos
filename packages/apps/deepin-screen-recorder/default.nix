@@ -46,38 +46,29 @@ let
     "assets/screenRecorder.json" = [
       # /usr/share/deepin-screen-recorder/tablet_resources/fast-icon_recording_normal.svg
     ];
-    "com.deepin.Screenshot.service" = [
-      # /usr/share/applications/deepin-screen-recorder.desktop
-    ];
+    "com.deepin.Screenshot.service" = [  ];
     "src/dbusservice/com.deepin.Screenshot.service" = [
       [ "/usr/bin/deepin-turbo-invoker" "deepin-turbo-invoker" ]
       # /usr/bin/deepin-screenshot
     ];
-    "src/pin_screenshots/com.deepin.PinScreenShots.service" = [
-      # /usr/bin/deepin-pin-screenshots
-    ];
-    "assets/com.deepin.Screenshot.service" = [
-      #/usr/bin/deepin-screen-recorder
-    ];
-    "assets/com.deepin.ScreenRecorder.service" = [
-      # /usr/bin/deepin-screen-recorder
-    ];
-
-    ### CODE
+    "src/pin_screenshots/com.deepin.PinScreenShots.service" = [ ];
+    "assets/com.deepin.Screenshot.service" = [ ];
+    "assets/com.deepin.ScreenRecorder.service" = [ ];
+    
     "src/recordertablet.cpp" = [
-      #/usr/share/deepin-screen-recorder/tablet_resources
+      # "/usr/share/deepin-screen-recorder/tablet_resources" 
     ];
   };
 in
 stdenv.mkDerivation rec {
   pname = "deepin-screen-recorder";
-  version = "5.11.10";
+  version = "5.11.15";
 
   src = fetchFromGitHub {
     owner = "linuxdeepin";
     repo = pname;
     rev = version;
-    sha256 = "sha256-N/jscymVdvfO5/jpDfHH5APlufeHaeIvD0Ky33DL0oc=";
+    sha256 = "sha256-X9eqi6zDtWOc0J8zIwR1y6EWhTG09vEVViLVwRPuAGo=";
   };
 
   patches = [
@@ -92,12 +83,6 @@ stdenv.mkDerivation rec {
 
   qmakeFlags = [
     "PREFIX=${placeholder "out"}"
-    "BINDIR=${placeholder "out"}/bin"
-    "ICONDIR=${placeholder "out"}/share/icons/hicolor/scalable/apps"
-    "APPDIR=${placeholder "out"}/share/applications"
-    "DSRDIR=${placeholder "out"}/share/deepin-screen-recorder"
-    "DOCDIR=${placeholder "out"}/share/dman/deepin-screen-recorder"
-    "ETCDIR=${placeholder "out"}/etc"
   ];
 
   nativeBuildInputs = [
@@ -134,6 +119,7 @@ stdenv.mkDerivation rec {
   ]);
 
   qtWrapperArgs = [
+    "--prefix PATH : ${lib.makeBinPath [ ffmpeg ]}"
     "--prefix QT_PLUGIN_PATH : ${qt5integration}/${qtbase.qtPluginPrefix}"
     "--prefix GST_PLUGIN_SYSTEM_PATH_1_0 : ${gstPluginPath}"
   ];
