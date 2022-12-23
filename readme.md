@@ -26,13 +26,12 @@ In order to use DDE, you must enable [flakes](https://nixos.wiki/wiki/Flakes) to
       nixosConfigurations.default = nixpkgs.lib.nixosSystem {
         inherit system;
         modules = [
-	  ({ pkgs, config, ... }: {
-            imports = [
-              dde-nixos.nixosModules.${system}
-            ];
-            config.services.xserver.desktopManager.deepin.enable = true;
-          })
-	];
+          dde-nixos.nixosModules.${system}
+          {
+            services.xserver.desktopManager.deepin.enable = true;
+          }
+        ];
+      };
      # ......
     };
 }
