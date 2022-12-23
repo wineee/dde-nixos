@@ -11,13 +11,13 @@
 }:
 stdenv.mkDerivation rec {
   pname = "deepin-anything";
-  version = "unstable-2022-10-21";
+  version = "6.0.3";
 
   src = fetchFromGitHub {
     owner = "linuxdeepin";
     repo = pname;
-    rev = "2d227f08400f65810312aa2bf607246bce18208d";
-    sha256 = "sha256-ro+UyS3crPbtXg8JTHO/XnKZke/RBjZQH4NeRLfUFsg=";
+    rev = version;
+    sha256 = "sha256-S8m6qn4o+eW52R/vr3r6usZHNQhdI8vmWfx3CKju7a0=";
   };
 
   outputs = [ "out" "server" "dkms" ];
@@ -39,13 +39,14 @@ stdenv.mkDerivation rec {
   dontUseQmakeConfigure = true;
 
   postPatch = ''
-    substituteInPlace server/backend/backend.pro \
+    substituteInPlace src/server/backend/backend.pro \
       --replace '/usr/share/dbus-1/interfaces' '/share/dbus-1/interfaces' \
       --replace '/usr/include/libnl3' '${libnl.dev}/include/libnl3'
   '';
 
   buildPhase = ''
-    sed 's|@@VERSION@@|${version}|g' debian/deepin-anything-dkms.dkms.in | tee debian/deepin-anything-dkms.dkms
+    cd src
+    sed 's|@@VERSION@@|${version}|g' ../debian/deepin-anything-dkms.dkms.in | tee ../debian/deepin-anything-dkms.dkms
     make -C library all
     (cd server 
       qmake -makefile -nocache QMAKE_STRIP=: PREFIX=/ LIB_INSTALL_DIR=/lib deepin-anything-backend.pro 
@@ -53,7 +54,7 @@ stdenv.mkDerivation rec {
     )
   '';
 
-  # FIXME out/usr/lib/modules-load.d/anything.conf ?
+  # # FIXME out/usr/lib/modules-load.d/anything.conf ?
   installPhase = ''
     runHook preInstall
     mkdir -p $out/lib
@@ -64,8 +65,8 @@ stdenv.mkDerivation rec {
     mkdir -p ${placeholder "dkms"}/lib/modules-load.d
     echo "" | tee ${placeholder "dkms"}/lib/modules-load.d/anything.conf
     
-    install -D debian/deepin-anything-dkms.dkms ${placeholder "dkms"}/src/deepin-anything-${version}/dkms.conf
-    install -D debian/deepin-anything-libs.lintian-overrides $out/share/lintian/overrides/deepin-anything-libs
+    install -D ../debian/deepin-anything-dkms.dkms ${placeholder "dkms"}/src/deepin-anything-${version}/dkms.conf
+    install -D ../debian/deepin-anything-libs.lintian-overrides $out/share/lintian/overrides/deepin-anything-libs
 
     mkdir -p $out/include/deepin-anything
     cp -r library/inc/* $out/include/deepin-anything
