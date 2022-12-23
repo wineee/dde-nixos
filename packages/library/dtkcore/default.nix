@@ -11,13 +11,13 @@
 
 stdenv.mkDerivation rec {
   pname = "dtkcore";
-  version = "5.6.2";
+  version = "5.6.3";
 
   src = fetchFromGitHub {
     owner = "linuxdeepin";
     repo = pname;
-    rev = "a148240c0852939660780d367df2f118680631d6";
-    sha256 = "sha256-EpZvqnqueSffNokzc7BldEUaF/6wSqoqz8ByXeylW4M=";
+    rev = version;
+    sha256 = "sha256-DEpo/eKMjtTVGEkq5JofkRNSHtTOZ1t2QNjrdulUtPQ=";
   };
 
   postPatch = ''
