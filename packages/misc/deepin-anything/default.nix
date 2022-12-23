@@ -54,7 +54,6 @@ stdenv.mkDerivation rec {
     )
   '';
 
-  # # FIXME out/usr/lib/modules-load.d/anything.conf ?
   installPhase = ''
     runHook preInstall
     mkdir -p $out/lib
@@ -90,9 +89,7 @@ stdenv.mkDerivation rec {
   '';
 
   postInstall = ''
-    mkdir -p ${placeholder "server"}/lib/pkg-config
-    touch ${placeholder "server"}/lib/pkg-config/deepin-anything-server-lib.pc
-    echo -e ${lib.strings.escapeShellArg deepin_anything_backend_pc} > ${placeholder "server"}/lib/pkg-config/deepin-anything-server-lib.pc
+    echo -e ${lib.strings.escapeShellArg deepin_anything_backend_pc} > ${placeholder "server"}/lib/pkgconfig/deepin-anything-server-lib.pc
   '';
 
   dontFixup = true;
