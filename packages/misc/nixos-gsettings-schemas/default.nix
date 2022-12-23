@@ -14,6 +14,7 @@
 , deepin-movie-reborn
 , dde-file-manager
 , dde-grand-search
+, deepin-screen-recorder
 , deepin-desktop-schemas
 , extraGSettingsOverrides ? ""
 , extraGSettingsOverridePackages ? [ ]
@@ -31,6 +32,7 @@ let
     deepin-movie-reborn
     dde-file-manager
     dde-grand-search
+    deepin-screen-recorder
     deepin-desktop-schemas
     gsettings-desktop-schemas
   ] ++ extraGSettingsOverridePackages;
