@@ -135,8 +135,8 @@ let
 
     #### OS-SPECIFIC
     ## pkgs/top-level/linux-kernels.nix
-    deepin-anything-module =  callPackage ./os-specific/deepin-anything-module {
-      inherit (pkgs.linuxPackages) kernel;
+    deepin-anything-module = _kernel: callPackage ./os-specific/deepin-anything-module {
+      kernel = _kernel;
     };
   };
 in

@@ -335,7 +335,7 @@
                     group = "deepin-anything-server";
                     isSystemUser = true;
                   };
-                  boot.extraModulePackages = [ packages.deepin-anything-module ];
+                  boot.extraModulePackages = [ (deepinScope.deepin-anything-module config.boot.kernelPackages.kernel) ];
                   boot.kernelModules = [ "vfs_monitor" ];
                })
 

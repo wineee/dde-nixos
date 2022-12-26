@@ -62,6 +62,7 @@
             noto-fonts-emoji
           ];
         };
+        
         users.users.test = {
           isNormalUser = true;
           uid = 1000;
