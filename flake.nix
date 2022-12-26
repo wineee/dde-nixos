@@ -329,6 +329,7 @@
                   services.dbus.packages = [ packages.deepin-anything ];
                   systemd.packages = [ packages.deepin-anything ];
                   environment.pathsToLink = [ "/lib/deepin-anything-server-lib" ];
+                  environment.sessionVariables.DAS_PLUGIN_PATH = [ "/run/current-system/sw/lib/deepin-anything-server-lib/plugins/handlers" ];
                   users.groups.deepin-anything-server = { };
                   users.users.deepin-anything-server = {
                     description = "Deepin Anything Server";
