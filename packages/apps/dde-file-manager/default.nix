@@ -48,7 +48,7 @@ let
   patchList = {
     ### BUILD
     "src/dde-file-manager-lib/dbusinterface/dbusinterface.pri" = [
-      [ "/usr/share/dbus-1/interfaces/com.deepin.anything.xml" "${deepin-anything.server}/share/dbus-1/interfaces/com.deepin.anything.xml" ]
+      [ "/usr/share/dbus-1/interfaces/com.deepin.anything.xml" "${deepin-anything}/share/dbus-1/interfaces/com.deepin.anything.xml" ]
     ];
     ### INSTALL
     "src/dde-file-manager/dde-file-manager.pro" = [
@@ -127,13 +127,13 @@ let
 in
 stdenv.mkDerivation rec {
   pname = "dde-file-manager";
-  version = "5.8.1";
+  version = "5.8.3";
 
   src = fetchFromGitHub {
     owner = "linuxdeepin";
     repo = pname;
     rev = version;
-    sha256 = "sha256-+pd0YLcaq3fGZImm6wt1QW/eIDnXkLoqmFOrwNexn80=";
+    sha256 = "sha256-GJwEM2adZWiBSDM+oiIzglimPcTEeYZ/S5ZekjaoZxk=";
   };
 
   nativeBuildInputs = [
@@ -167,7 +167,6 @@ stdenv.mkDerivation rec {
     docparser
     dde-dock.dev
     deepin-anything
-    deepin-anything.server
     deepin-movie-reborn.dev
     deepin-desktop-schemas
     qtx11extras
