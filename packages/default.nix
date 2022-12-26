@@ -5,7 +5,7 @@ let
   newScope = pkgs.libsForQt5.newScope;
 
   functions = with pkgs.lib; rec {
-    getPatchFrom = commonRp:
+    getPatchFrom' = commonRp:
       let
         rpstr = a: b: " --replace \"${a}\" \"${b}\"";
         rpstrL = l: if length l == 2 then rpstr (head l) (last l) else (throw "input must be a 2-tuple");
@@ -19,7 +19,8 @@ let
         (s: s + "\n")
       ];
     
-    getUsrPatchFrom = getPatchFrom [ [ "/usr" "$out" ] ];
+    getPatchFrom = getPatchFrom' [ ];
+    getUsrPatchFrom = getPatchFrom' [ [ "/usr" "$out" ] ];
 
     replaceAll = x: y: ''
       echo Replacing "${x}" to "${y}":
@@ -131,6 +132,12 @@ let
     dde-grand-search = callPackage ./apps/dde-grand-search { };
     dde-network-core = callPackage ./apps/dde-network-core { };
     dde-top-panel = callPackage ./apps/dde-top-panel { };
+
+    #### OS-SPECIFIC
+    ## pkgs/top-level/linux-kernels.nix
+    deepin-anything-module =  callPackage ./os-specific/deepin-anything-module {
+      inherit (pkgs.linuxPackages) kernel;
+    };
   };
 in
 makeScope newScope packages
