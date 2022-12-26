@@ -1,9 +1,11 @@
 { stdenv
 , lib
 , fetchFromGitHub
+, getUsrPatchFrom
 , dtkcore
 , qmake
 , pkg-config
+, wrapQtAppsHook
 , udisks2-qt5
 , util-linux
 , libnl
@@ -11,20 +13,21 @@
 }:
 stdenv.mkDerivation rec {
   pname = "deepin-anything";
-  version = "6.0.3";
+  version = "5.0.18";
 
   src = fetchFromGitHub {
     owner = "linuxdeepin";
     repo = pname;
     rev = version;
-    sha256 = "sha256-S8m6qn4o+eW52R/vr3r6usZHNQhdI8vmWfx3CKju7a0=";
+    sha256 = "sha256-md1ITvzzH19VRWoYCAr81BmftT5/oXAcz0gzenjM5/A=";
   };
 
-  outputs = [ "out" "server" "dkms" ];
+  outputs = [ "out" "modsrc" ];
 
   nativeBuildInputs = [
     qmake
     pkg-config
+    wrapQtAppsHook
   ];
 
   buildInputs = [
@@ -35,21 +38,23 @@ stdenv.mkDerivation rec {
     pcre
   ];
 
-  dontWrapQtApps = true;
+  #dontWrapQtApps = true;
   dontUseQmakeConfigure = true;
 
-  postPatch = ''
-    substituteInPlace src/server/backend/backend.pro \
-      --replace '/usr/share/dbus-1/interfaces' '/share/dbus-1/interfaces' \
-      --replace '/usr/include/libnl3' '${libnl.dev}/include/libnl3'
-  '';
+  postPatch = getUsrPatchFrom {
+    "server/tool/tool.pro" = [
+      [ "/usr/share/dbus-1" "/share/dbus-1"]
+    ];
+    "server/monitor/deepin-anything-monitor.service" = [ ];
+    "server/tool/com.deepin.anything.service" = [ ];
+    "server/tool/deepin-anything-tool.service" = [ ];
+  };
 
   buildPhase = ''
-    cd src
-    sed 's|@@VERSION@@|${version}|g' ../debian/deepin-anything-dkms.dkms.in | tee ../debian/deepin-anything-dkms.dkms
+    sed 's|@@VERSION@@|${version}|g' debian/deepin-anything-dkms.dkms.in | tee debian/deepin-anything-dkms.dkms
     make -C library all
     (cd server 
-      qmake -makefile -nocache QMAKE_STRIP=: PREFIX=/ LIB_INSTALL_DIR=/lib deepin-anything-backend.pro 
+      qmake -makefile -nocache QMAKE_STRIP=: PREFIX=/ LIB_INSTALL_DIR=/lib deepin-anything-server.pro 
       make all
     )
   '';
@@ -59,25 +64,25 @@ stdenv.mkDerivation rec {
     mkdir -p $out/lib
     cp library/bin/release/* $out/lib
     
-    mkdir -p ${placeholder "dkms"}/src/deepin-anything-${version}
-    cp -r kernelmod/* ${placeholder "dkms"}/src/deepin-anything-${version}
-    mkdir -p ${placeholder "dkms"}/lib/modules-load.d
-    echo "" | tee ${placeholder "dkms"}/lib/modules-load.d/anything.conf
+    mkdir -p ${placeholder "modsrc"}/src/deepin-anything-${version}
+    cp -r kernelmod/* ${placeholder "modsrc"}/src/deepin-anything-${version}
+    mkdir -p ${placeholder "modsrc"}/lib/modules-load.d
+    echo "" | tee ${placeholder "modsrc"}/lib/modules-load.d/anything.conf
     
-    install -D ../debian/deepin-anything-dkms.dkms ${placeholder "dkms"}/src/deepin-anything-${version}/dkms.conf
-    install -D ../debian/deepin-anything-libs.lintian-overrides $out/share/lintian/overrides/deepin-anything-libs
+    install -D debian/deepin-anything-dkms.dkms ${placeholder "modsrc"}/src/deepin-anything-${version}/dkms.conf
+    install -D debian/deepin-anything-libs.lintian-overrides $out/share/lintian/overrides/deepin-anything-libs
 
     mkdir -p $out/include/deepin-anything
     cp -r library/inc/* $out/include/deepin-anything
-    cp -r kernelmod/vfs_genl.h  $out/include/deepin-anything
+    cp -r kernelmod/vfs_change_uapi.h  $out/include/deepin-anything
     cp -r kernelmod/vfs_change_consts.h $out/include/deepin-anything
 
-    make -C server install INSTALL_ROOT=${placeholder "server"}
+    make -C server install INSTALL_ROOT=$out
     runHook postInstall
   '';
 
   deepin_anything_backend_pc = ''
-    prefix=${placeholder "server"}
+    prefix=${placeholder "out"}
     exec_prefix=''${prefix}
     libdir=''${prefix}/lib
     includedir=''${prefix}/include/deepin-anything-server-lib
@@ -89,16 +94,16 @@ stdenv.mkDerivation rec {
   '';
 
   postInstall = ''
-    echo -e ${lib.strings.escapeShellArg deepin_anything_backend_pc} > ${placeholder "server"}/lib/pkgconfig/deepin-anything-server-lib.pc
+    echo -e ${lib.strings.escapeShellArg deepin_anything_backend_pc} > $out/lib/pkgconfig/deepin-anything-server-lib.pc
   '';
 
-  dontFixup = true;
+  # dontFixup = true;
 
   meta = with lib; {
     description = "Deepin Anything file search tool";
     homepage = "https://github.com/linuxdeepin/deepin-anything";
     license = licenses.gpl3Plus;
     platforms = platforms.linux;
-    outputsToInstall = [ "out" "server" "dkms" ];
+    outputsToInstall = [ "out" ];
   };
 }
