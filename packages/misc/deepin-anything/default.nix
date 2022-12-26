@@ -85,7 +85,7 @@ stdenv.mkDerivation rec {
     prefix=${placeholder "out"}
     exec_prefix=''${prefix}
     libdir=''${prefix}/lib
-    includedir=''${prefix}/include/deepin-anything-server-lib
+    includedir=''${prefix}/include/deepin-anything-server
     Name: deepin-anything-server-lib
     Description: Deepin anything backend library
     Version: ${version}
@@ -94,7 +94,7 @@ stdenv.mkDerivation rec {
   '';
 
   postInstall = ''
-    echo -e ${lib.strings.escapeShellArg deepin_anything_backend_pc} > $out/lib/pkgconfig/deepin-anything-server-lib.pc
+    echo ${lib.strings.escapeShellArg deepin_anything_backend_pc} > $out/lib/pkgconfig/deepin-anything-server-lib.pc
   '';
 
   # dontFixup = true;
