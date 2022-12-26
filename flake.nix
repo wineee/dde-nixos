@@ -326,15 +326,16 @@
 
                (mkIf config.services.dde.deepin-anything.enable {
                   environment.systemPackages = [ packages.deepin-anything ];
-                  services.dbus.packages = [ packages.deepin-anything.server ];
-                  systemd.packages = [ packages.deepin-anything.server ];
+                  services.dbus.packages = [ packages.deepin-anything ];
+                  systemd.packages = [ packages.deepin-anything ];
+                  environment.pathsToLink = [ "/lib/deepin-anything-server-lib" ];
                   users.groups.deepin-anything-server = { };
                   users.users.deepin-anything-server = {
                     description = "Deepin Anything Server";
                     group = "deepin-anything-server";
                     isSystemUser = true;
                   };
-                  boot.extraModulePackages = [ packages.deepin-anything.dkms ];
+                  boot.extraModulePackages = [ packages.deepin-anything-module ];
                   boot.kernelModules = [ "vfs_monitor" ];
                })
 
