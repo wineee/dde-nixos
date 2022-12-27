@@ -1,7 +1,7 @@
 { stdenv
 , lib
 , fetchFromGitHub
-, fetchpatch
+, replaceAll
 , dtk
 , qt5integration
 , qt5platform-plugins
@@ -19,29 +19,24 @@
 
 stdenv.mkDerivation rec {
   pname = "deepin-font-manager";
-  version = "5.9.13";
+  version = "5.9.14";
 
   src = fetchFromGitHub {
     owner = "linuxdeepin";
     repo = pname;
     rev = version;
-    sha256 = "sha256-eYx6biiK3ADNKel9cYqVH/P3sNPIzO1qKMeziBIu0Rg=";
+    sha256 = "sha256-is5WxuWEKSMuOcdaYCmxE9fDOt48CXI0WJ/smr3g7ro=";
   };
-
-  patches = [
-    (fetchpatch {
-      name = "chore: use GNUInstallDirs in CmakeLists";
-      url = "https://github.com/linuxdeepin/deepin-font-manager/commit/2aafa8e86a36ab5e39f42263556d832bbdeaedd6.patch";
-      sha256 = "sha256-1cmrOeZu3Fof3HMuarc7BzN8BlfRRApcEfd8s9pC9Do=";
-    })
-  ];
 
   rmPluginPatch = ''
     substituteInPlace CMakeLists.txt \
       --replace "ADD_SUBDIRECTORY(deepin-font-preview-plugin)" " " 
   '';
 
-  postPatch = lib.optionalString (!fileManagerPlugins) rmPluginPatch;
+  postPatch = lib.optionalString (!fileManagerPlugins) rmPluginPatch 
+      + replaceAll "/usr/share/fonts" "/run/current-system/sw/share/X11/fonts"
+      + replaceAll "/usr/share/deepin-font-manager" "$out/share/deepin-font-manager"
+      + replaceAll "/usr/share/icons" "/run/current-system/sw/share/icons";
 
   nativeBuildInputs = [
     cmake
