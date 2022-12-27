@@ -366,7 +366,7 @@
                       RestartSec = 10;
                     };
                     wantedBy = [ "multi-user.target" ];
-                    path = with pkgs; [ util-linux ]; # ionice
+                    path =  [ pkgs.util-linux packages.deepin-anything ]; # ionice
                   };
                   systemd.services.deepin-anything-monitor = {
                     unitConfig = {
@@ -385,7 +385,7 @@
                       RestartSec = 10;
                     };
                     wantedBy = [ "multi-user.target" ];
-                    path = with pkgs; [ kmod ]; # modprobe/rmmod
+                    path = [ pkgs.kmod packages.deepin-anything ]; # modprobe/rmmod
                   };
                })
 
