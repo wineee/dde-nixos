@@ -185,6 +185,7 @@
                     #"lightdm/lightdm.conf".source = "${packages.startdde}/etc/lightdm/lightdm.conf";
                     #"deepin/dde-session-ui.conf".source = "${packages.dde-session-ui}/share/deepin/dde-session-ui.conf";
                     "deepin/greeters.d".source = "${packages.dde-session-shell}/etc/deepin/greeters.d";
+                    "polkit-1/localauthority/10-vendor.d/10-network-manager.pkla".source = "${packages.dde-network-core}/var/lib/polkit-1/localauthority/10-vendor.d/10-network-manager.pkla";
                     "deepin/dde.conf".text = ''
                       [Password]
                       STRONG_PASSWORD = true
