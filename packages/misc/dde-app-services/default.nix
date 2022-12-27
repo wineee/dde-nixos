@@ -43,11 +43,13 @@ stdenv.mkDerivation rec {
     gtest
   ];
 
-  cmakeFlags = [ "-DDVERSION=${version}" ];
+  cmakeFlags = [
+    "-DDVERSION=${version}"
+    "-DDSG_DATA_DIR=/run/current-system/sw/share/dsg"  
+  ];
 
   qtWrapperArgs = [
     "--prefix QT_PLUGIN_PATH : ${qt5integration}/${qtbase.qtPluginPrefix}"
-    "--prefix XDG_DATA_DIRS : \"/run/current-system/sw/share\""
   ];
 
   meta = with lib; {
