@@ -70,7 +70,7 @@ let
       # /etc/lightdm/deepin/xsettingsd.conf
     ];
     "src/libdde-auth/deepinauthframework.cpp" = [
-      [ "common-auth" "lightdm" ]  # fix dde lock auth
+      [ "common-auth" "deepin-auth-keyboard" ]  # fix dde lock auth
     ];
   };
 in
