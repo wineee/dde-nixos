@@ -377,8 +377,8 @@
                       User = "root";
                       Group = "deepin-anything-server";
                       ExecStart = "${packages.deepin-anything}/bin/deepin-anything-monitor";
-                      ExecStartPre = "modprobe vfs_monitor";
-                      ExecStopPost = "rmmod vfs_monitor";
+                      ExecStartPre = "${pkgs.kmod}/bin/modprobe vfs_monitor";
+                      ExecStopPost = "${pkgs.kmod}/bin/rmmod vfs_monitor";
                       Environment = [ "DAS_DEBUG_PLUGINS=1" ];
                       Restart = "always";
                       RestartSec = 10;
