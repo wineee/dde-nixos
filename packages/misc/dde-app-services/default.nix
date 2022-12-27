@@ -7,7 +7,6 @@
 , dtk
 , cmake
 , wrapQtAppsHook
-, gtest
 , qt5integration
 , qtbase
 }:
@@ -16,6 +15,10 @@ let
     "dconfig-center/dde-dconfig-daemon/services/org.desktopspec.ConfigManager.service" = [ ];
     "dconfig-center/dde-dconfig/main.cpp" = [
       [ "/bin/dde-dconfig-editor" "dde-dconfig-editor" ]
+    ];
+    "dconfig-center/CMakeLists.txt" = [
+      [ "add_subdirectory(\"example\")" " " ]
+      [ "add_subdirectory(\"tests\")"   " " ]
     ];
   };
 in
@@ -40,7 +43,6 @@ stdenv.mkDerivation rec {
 
   buildInputs = [
     dtk
-    gtest
   ];
 
   cmakeFlags = [
