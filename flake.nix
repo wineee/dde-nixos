@@ -323,6 +323,17 @@
                     "polkit-1/localauthority/10-vendor.d/com.deepin.daemon.Fprintd.pkla".source = "${packages.dde-daemon}/var/lib/polkit-1/localauthority/10-vendor.d/com.deepin.daemon.Fprintd.pkla";
                     "polkit-1/localauthority/10-vendor.d/com.deepin.daemon.Grub2.pkla".source = "${packages.dde-daemon}/var/lib/polkit-1/localauthority/10-vendor.d/com.deepin.daemon.Grub2.pkla";
                   };
+                  security.pam.services.deepin-auth-keyboard.text = ''
+                    # original at {dde-daemon}/etc/pam.d/deepin-auth-keyboard
+                    auth    [success=5 default=ignore]      pam_unix.so nullok_secure
+                    -auth   [success=4 default=ignore]      pam_lsass.so
+                    -auth   [authinfo_unavail=ignore success=3 default=ignore]      pam_ldap.so minimum_uid=1000 use_first_pass
+                    -auth   [success=2 default=ignore] pam_ccreds.so minimum_uid=1000 action=validate use_first_pass
+                    -auth   [default=ignore] pam_ccreds.so minimum_uid=1000 action=update
+                    auth    requisite       pam_deny.so
+                    auth    required        pam_permit.so
+                    -auth   optional        pam_ccreds.so minimum_uid=1000 action=store
+                  '';
                })
 
                (mkIf config.services.dde.deepin-anything.enable {
