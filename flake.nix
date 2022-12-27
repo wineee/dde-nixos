@@ -379,7 +379,7 @@
                       ExecStart = "${packages.deepin-anything}/bin/deepin-anything-monitor";
                       ExecStartPre = "modprobe vfs_monitor";
                       ExecStopPost = "rmmod vfs_monitor";
-                      Environment = "DAS_DEBUG_PLUGINS=1";
+                      Environment = [ "DAS_DEBUG_PLUGINS=1" ];
                       Restart = "always";
                       RestartSec = 10;
                     };
