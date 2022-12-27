@@ -2,7 +2,6 @@
 , lib
 , fetchFromGitHub
 , fetchpatch
-, getUsrPatchFrom
 , replaceAll
 , dtk
 , cmake
@@ -10,18 +9,6 @@
 , qt5integration
 , qtbase
 }:
-let
-  patchList = {
-    "dconfig-center/dde-dconfig-daemon/services/org.desktopspec.ConfigManager.service" = [ ];
-    "dconfig-center/dde-dconfig/main.cpp" = [
-      [ "/bin/dde-dconfig-editor" "dde-dconfig-editor" ]
-    ];
-    "dconfig-center/CMakeLists.txt" = [
-      [ "add_subdirectory(\"example\")" " " ]
-      [ "add_subdirectory(\"tests\")"   " " ]
-    ];
-  };
-in
 stdenv.mkDerivation rec {
   pname = "dde-app-services";
   version = "0.0.20";
@@ -33,17 +20,22 @@ stdenv.mkDerivation rec {
     sha256 = "sha256-M9XXNV3N4CifOXitT6+UxaGsLoVuoNGqC5SO/mF+bLw=";
   };
 
-  postPatch = replaceAll "/usr/share" "/run/current-system/sw/share"
-      + getUsrPatchFrom patchList;
+  postPatch = replaceAll "/usr/share" "/run/current-system/sw/share" + ''
+    substituteInPlace dconfig-center/dde-dconfig-daemon/services/org.desktopspec.ConfigManager.service \
+      --replace "/usr" "$out"
+    substituteInPlace dconfig-center/dde-dconfig/main.cpp \
+      --replace "/bin/dde-dconfig-editor" "dde-dconfig-editor"
+    substituteInPlace dconfig-center/CMakeLists.txt \
+      --replace 'add_subdirectory("example")' " " \
+      --replace 'add_subdirectory("tests")'   " "
+  '';
 
   nativeBuildInputs = [
     cmake
     wrapQtAppsHook
   ];
 
-  buildInputs = [
-    dtk
-  ];
+  buildInputs = [ dtk ];
 
   cmakeFlags = [
     "-DDVERSION=${version}"
