@@ -27,19 +27,19 @@
 }:
 stdenv.mkDerivation rec {
   pname = "dde-network-core";
-  version = "1.0.69";
+  version = "1.1.8";
 
   src = fetchFromGitHub {
     owner = "linuxdeepin";
     repo = pname;
     rev = version;
-    sha256 = "sha256-IncVvM2tx6+LAg/eLekfnphOvywmaCkC5nkxDXQhmV8=";
+    sha256 = "sha256-ysmdB9CT7mhN/0r8CRT4FQsK12HkhjbezGXwWiNScqg=";
   };
-
 
   postPatch = replaceAll "/usr/share/applications" "/run/current-system/sw/share/applications"
       + replaceAll "/usr/share/dss-network-plugin" "$out/share/dss-network-plugin"
-      + replaceAll "/usr/share/dock-network-plugin" "$out/share/dock-network-plugin";
+      + replaceAll "/usr/share/dock-network-plugin" "$out/share/dock-network-plugin"
+      + replaceAll "/usr/share/dcc-network-plugin" "$out/share/dcc-network-plugin";
 
   nativeBuildInputs = [
     cmake
