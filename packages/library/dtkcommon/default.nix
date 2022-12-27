@@ -1,6 +1,7 @@
 { stdenv
 , lib
 , fetchFromGitHub
+, replaceAll
 , pkg-config
 , cmake
 , qtbase
@@ -19,6 +20,8 @@ stdenv.mkDerivation rec {
     rev = version;
     sha256 = "sha256-9gFJ0Uun0q/XVaegxTUu4Kkc+/GE09eAV68VZgWurrM=";
   };
+
+  postPatch = replaceAll "/usr/share/dsg" "/run/current-system/sw/share/dsg";
 
   nativeBuildInputs = [
     cmake
