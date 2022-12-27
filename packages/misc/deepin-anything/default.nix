@@ -48,9 +48,6 @@ stdenv.mkDerivation rec {
     "server/monitor/deepin-anything-monitor.service" = [ ];
     "server/tool/com.deepin.anything.service" = [ ];
     "server/tool/deepin-anything-tool.service" = [ ];
-    "server/tool/deepin-anything-tool-ionice" = [
-      "ionice" "${util-linux}/bin/ionice"
-    ];
   };
 
   buildPhase = ''

@@ -339,7 +339,7 @@
                (mkIf config.services.dde.deepin-anything.enable {
                   environment.systemPackages = [ packages.deepin-anything ];
                   services.dbus.packages = [ packages.deepin-anything ];
-                  systemd.packages = [ packages.deepin-anything ];
+                  # systemd.packages = [ packages.deepin-anything ];
                   environment.pathsToLink = [ "/lib/deepin-anything-server-lib" ];
                   environment.sessionVariables.DAS_PLUGIN_PATH = [ "/run/current-system/sw/lib/deepin-anything-server-lib/plugins/handlers" ];
                   users.groups.deepin-anything-server = { };
@@ -350,6 +350,42 @@
                   };
                   boot.extraModulePackages = [ (deepinScope.deepin-anything-module config.boot.kernelPackages.kernel) ];
                   boot.kernelModules = [ "vfs_monitor" ];
+                  systemd.services.deepin-anything-tool = {
+                    unitConfig = {
+                      Description = "Deepin anything tool service";
+                      After = [ "dbus.service" "udisks2.service" ];
+                      Before = [ "deepin-anything-monitor.service" ];
+                    };
+                    serviceConfig = {
+                      Type = "dbus";
+                      User = "root";
+                      Group = "root";
+                      BusName = "com.deepin.anything";
+                      ExecStart = "${packages.deepin-anything}/bin/deepin-anything-tool-ionice --dbus";
+                      Restart = "on-failure";
+                      RestartSec = 10;
+                    };
+                    wantedBy = [ "multi-user.target" ];
+                    path = with pkgs; [ util-linux ]; # ionice
+                  };
+                  systemd.services.deepin-anything-monitor = {
+                    unitConfig = {
+                      Description = "Deepin anything service";
+                      After = [ "deepin-anything-tool.service" ];
+                    };
+                    serviceConfig = {
+                      User = "root";
+                      Group = "deepin-anything-server";
+                      BusName = "com.deepin.anything";
+                      ExecStart = "${packages.deepin-anything}/bin/deepin-anything-monitor";
+                      ExecStartPre = "modprobe vfs_monitor";
+                      ExecStopPost = "rmmod vfs_monitor";
+                      Restart = "always";
+                      RestartSec = 10;
+                    };
+                    wantedBy = [ "multi-user.target" ];
+                    path = with pkgs; [ kmod ]; # modprobe/rmmod
+                  };
                })
 
                (mkIf config.services.dde.dde-api.enable {
