@@ -376,7 +376,6 @@
                     serviceConfig = {
                       User = "root";
                       Group = "deepin-anything-server";
-                      BusName = "com.deepin.anything";
                       ExecStart = "${packages.deepin-anything}/bin/deepin-anything-monitor";
                       ExecStartPre = "modprobe vfs_monitor";
                       ExecStopPost = "rmmod vfs_monitor";
