@@ -42,7 +42,10 @@
 , taglib
 , cryptsetup
 , glib
+, gst_all_1
 , qtbase
+, mpv
+, ffmpeg
 }:
 let
   patchList = {
@@ -123,7 +126,6 @@ let
     # src/dde-file-manager-daemon/usershare/usersharemanager.cpp
     # ln -sf /lib/systemd/system/smbd.service /etc/systemd/system/multi-user.target.wants/smbd.service
   };
-
 in
 stdenv.mkDerivation rec {
   pname = "dde-file-manager";
@@ -201,6 +203,7 @@ stdenv.mkDerivation rec {
 
   qtWrapperArgs = [
     "--prefix QT_PLUGIN_PATH : ${qt5integration}/${qtbase.qtPluginPrefix}"
+    "--prefix LD_LIBRARY_PATH : ${lib.makeLibraryPath [ mpv ffmpeg ffmpegthumbnailer gst_all_1.gstreamer gst_all_1.gst-plugins-base ]}"
   ];
 
   preFixup = ''
