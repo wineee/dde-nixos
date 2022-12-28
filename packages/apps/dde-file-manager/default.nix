@@ -152,7 +152,7 @@ stdenv.mkDerivation rec {
     + replaceAll "/usr/bin/deepin-desktop-ts-convert" "deepin-desktop-ts-convert"
     + replaceAll "/usr/lib/deepin-daemon" "/run/current-system/sw/lib/deepin-daemon"
     + replaceAll "/usr/share/backgrounds" "/run/current-system/sw/share/backgrounds"
-    + replaceAll "/usr/lib/dde-file-manager" "$out/lib/dde-file-manager"
+    + replaceAll "/usr/lib/dde-file-manager" "/run/current-system/sw/lib/dde-file-manager"
     + replaceAll "/usr/lib/gvfs/gvfsd" "gvfsd" # TODO
     + replaceAll "/usr/share/dde-file-manager/database" "/var/db/dde-file-manager/database"
     + getUsrPatchFrom patchList
