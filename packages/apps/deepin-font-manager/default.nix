@@ -2,6 +2,7 @@
 , lib
 , fetchFromGitHub
 , replaceAll
+, runtimeShell
 , dtk
 , qt5integration
 , qt5platform-plugins
@@ -34,9 +35,18 @@ stdenv.mkDerivation rec {
   '';
 
   postPatch = lib.optionalString (!fileManagerPlugins) rmPluginPatch 
-      + replaceAll "/usr/share/fonts" "/run/current-system/sw/share/X11/fonts"
       + replaceAll "/usr/share/deepin-font-manager" "$out/share/deepin-font-manager"
-      + replaceAll "/usr/share/icons" "/run/current-system/sw/share/icons";
+      + replaceAll "/usr/share/icons" "/run/current-system/sw/share/icons"
+      + replaceAll "/bin/bash" "${runtimeShell}"
+      + ''
+        substituteInPlace deepin-font-manager/views/dfinstallnormalwindow.cpp \
+         --replace 'contains("/usr/share/")' 'contains("/nix/store")'
+        substituteInPlace libdeepin-font-manager/dfontinfomanager.cpp \
+          --replace 'FONT_SYSTEM_DIR = "/usr/share/fonts/"' 'FONT_SYSTEM_DIR = "/run/current-system/sw/share/X11/fonts"' \
+          --replace 'contains("/usr/share/fonts/")' 'contains("/nix/store")'
+        substituteInPlace libdeepin-font-manager/dfmdbmanager.h \
+          --replace 'contains("/usr/share/fonts/")' 'contains("/nix/store")'
+      '';
 
   nativeBuildInputs = [
     cmake
