@@ -47,3 +47,9 @@ builds:
     - 'packages.x86_64-linux.deepin-reader'
     - 'packages.x86_64-linux.deepin-voice-note'
     - 'packages.x86_64-linux.deepin-downloader'
+    # Tier 3
+    - 'packages.x86_64-linux.dde-introduction'
+    - 'packages.x86_64-linux.deepin-lianliankan'
+    - 'packages.x86_64-linux.deepin-gomoku'
+    - 'packages.x86_64-linux.dde-device-formatter'
+    - 'packages.x86_64-linux.dde-top-panel'
