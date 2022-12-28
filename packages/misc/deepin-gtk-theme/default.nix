@@ -1,10 +1,10 @@
-{ stdenv
+{ stdenvNoCC
 , lib
 , fetchFromGitHub
 , gtk-engine-murrine
 }:
 
-stdenv.mkDerivation rec {
+stdenvNoCC.mkDerivation rec {
   pname = "deepin-gtk-theme";
   version = "unstable-2022-07-26";
 
