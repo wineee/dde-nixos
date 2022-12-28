@@ -157,10 +157,10 @@
                   };
 
                   environment.variables = {
-                    QT_PLUGIN_PATH = [
-                      "{packages.qt5platform-plugins}/${pkgs.libsForQt5.qtbase.qtPluginPrefix}"
-                      "{packages.qt5integration}/${pkgs.libsForQt5.qtbase.qtPluginPrefix}" 
-                    ];
+                    # QT_PLUGIN_PATH = [
+                    #   "{packages.qt5platform-plugins}/${pkgs.libsForQt5.qtbase.qtPluginPrefix}"
+                    #   "{packages.qt5integration}/${pkgs.libsForQt5.qtbase.qtPluginPrefix}" 
+                    # ];
                     QT_QPA_PLATFORMTHEME = "dxcb"; # nixos/modules/config/qt5.nix
                     QT_STYLE_OVERRIDE = "chameleon";
                     # D_PROXY_ICON_ENGINE = "KIconEngine";
