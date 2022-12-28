@@ -46,9 +46,6 @@
 }:
 let
   goCodePatchs = {
-    "grub2/modify_manger.go" = [
-      [ "/usr/local/sbin:" "PATH:/usr/local/sbin" ]
-    ];
     "gesture/config.go" = [
       # "/usr/share/dde-daemon/gesture.json"
     ];
@@ -77,9 +74,6 @@ let
       #? fprintd 0.8 in deepin but 1.9in nixos
       # services.fprintd.enable
       [ "/usr/lib/fprintd/fprintd" "${fprintd}/libexec/fprintd" ]
-    ];
-    "bin/dde-system-daemon/main.go" = [
-       [ "/usr/local/sbin:" "PATH:/usr/local/sbin" ]
     ];
     "system/gesture/config.go" = [
       [ "/usr/share" "/run/current-system/sw/share" ]
@@ -166,6 +160,7 @@ buildGoPackage rec {
       src = ./0001-patch_account_face_path_for_nix.patch;
       actConfigDir = "\"${dde-account-faces}/share/lib/AccountsService\"";
     })
+    ./0002-fix-PATH-when-was-launched-by-dbus.patch
   ];
 
   postPatch = replaceAll "/usr/lib/deepin-api" "/run/current-system/sw/lib/deepin-api"
