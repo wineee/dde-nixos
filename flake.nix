@@ -153,10 +153,14 @@
                   environment.sessionVariables = {
                     NIX_GSETTINGS_OVERRIDES_DIR = "${nixos-gsettings-desktop-schemas}/share/gsettings-schemas/nixos-gsettings-overrides/glib-2.0/schemas";
                     DDE_POLKIT_AGENT_PLUGINS_DIRS = [ "${packages.dpa-ext-gnomekeyring}/lib/polkit-1-dde/plugins" ];
-                    #QT_QPA_PLATFORM_PLUGIN_PATH = [ "{qt5platform-plugins}/${qtbase.qtPluginPrefix}"];
+                    #
                   };
 
                   environment.variables = {
+                    QT_PLUGIN_PATH = [
+                      "{packages.qt5platform-plugins}/${pkgs.libsForQt5.qtbase.qtPluginPrefix}"
+                      "{packages.qt5integration}/${pkgs.libsForQt5.qtbase.qtPluginPrefix}" 
+                    ];
                     QT_QPA_PLATFORMTHEME = "dxcb"; # nixos/modules/config/qt5.nix
                     QT_STYLE_OVERRIDE = "chameleon";
                     # D_PROXY_ICON_ENGINE = "KIconEngine";
