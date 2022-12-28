@@ -33,12 +33,6 @@ let
   patchList = {
     "lunar-calendar/huangli.go" = [ ];
     "adjust-grub-theme/main.go" = [ ];
-    "locale-helper/main.go" = [
-      [ "/usr/local/sbin:" "PATH:/usr/local/sbin" ]
-    ];
-    "device/main.go" = [
-      [ "/usr/local/sbin:" "PATH:/usr/local/sbin" ]
-    ];
     "i18n_dependent/i18n_dependent.go" = [ share_to_sw ];
     "themes/theme.go" = [ share_to_sw ];
     "themes/settings.go" = [ share_to_sw ];
@@ -57,6 +51,8 @@ buildGoPackage rec {
     rev = version;
     sha256 = "sha256-F+vEOSpysqVtjs8de5mCmeANuCbYUQ860ZHl5rwNYac=";
   };
+
+  patches = [ ./0001-fix-PATH-for-NixOS.patch ];
 
   postPatch = replaceAll "/usr/lib/deepin-api" "/run/current-system/sw/lib/deepin-api"
       + replaceAll "/usr/bin/dbus-send" "${dbus}/bin/dbus-send"

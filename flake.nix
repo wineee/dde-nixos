@@ -215,7 +215,8 @@
                     xdg-user-dirs # Update user dirs as described in http://freedesktop.org/wiki/Software/xdg-user-dirs/
                     util-linux # runuser
                     polkit_gnome
-                    #busybox # lspci startdde
+                    librsvg # dde-api use rsvg-convert
+                    kde-gtk-config # deepin-api/gtk-thumbnailer need
                     lshw
                     libsForQt5.kglobalaccel
                   ] ++ (with packages; (utils.removePackagesByName ([
