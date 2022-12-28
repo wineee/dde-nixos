@@ -1,0 +1,30 @@
+From 8374f3005ee02d9a88ab11daa920d4fe8f1d3e8e Mon Sep 17 00:00:00 2001
+From: rewine <luhongxu@deepin.org>
+Date: Wed, 28 Dec 2022 17:31:28 +0800
+Subject: [PATCH] fix IsDir for symlink
+
+Log: symlinkIsDir is wrong, just use os.Stat
+---
+ utils/file.go | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/utils/file.go b/utils/file.go
+index 4e3cb0a..12aaa96 100644
+--- a/utils/file.go
++++ b/utils/file.go
+@@ -77,9 +77,9 @@ func IsFileExist(path string) bool {
+ func IsDir(path string) bool {
+ 	// if is uri path, ensure it decoded
+ 	path = DecodeURI(path)
+-	if IsSymlink(path) {
+-		return symlinkIsDir(path)
+-	}
++	// if IsSymlink(path) {
++	// 	return symlinkIsDir(path)
++	// }
+ 
+ 	f, err := os.Stat(path)
+ 	if err != nil {
+-- 
+2.38.1
+

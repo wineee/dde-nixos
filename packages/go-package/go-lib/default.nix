@@ -22,6 +22,8 @@ stdenv.mkDerivation rec {
     sha256 = "sha256-ZV5zWu7UvNKVcVo79/iKMhF4H09rGyDCvEL61H05lZc=";
   };
 
+  patches = [ ./0001-fix-IsDir-for-symlink.patch ];
+
   postPatch = replaceAll "/bin/sh" "${runtimeShell}";
 
   propagatedBuildInputs = [
