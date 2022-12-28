@@ -31,22 +31,6 @@ let
           --replace "${x}" "${y}"
       done
     '';
-
-    release = pkgs.callPackage ./release.nix { };
-
-    fetchFromDeepin = { pname, sha256 }:
-      pkgs.fetchFromGitHub {
-        inherit sha256;
-        owner = "linuxdeepin";
-        repo = pname;
-        rev = readVersion pname;
-      };
-
-    readVersion = pname:
-      let
-        v = with builtins; fromJSON (readFile ./../release/tags/${pname}.json);
-      in
-      v.data.tag;
   };
 
   packages = self: with self; functions // {
