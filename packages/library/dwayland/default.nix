@@ -15,9 +15,9 @@ stdenv.mkDerivation rec {
   version = "5.24.3-deepin.1.4";
 
   src = fetchFromGitHub {
-    owner = "justforlxz";
+    owner = "linuxdeepin";
     repo = pname;
-    rev = version;
+    rev = "3e2d16d4278959c2aa76e1e1f4c0cff9f52a109f";
     sha256 = "sha256-/aWS4uvhxi9azxJWjRE+Bw+veURFO+mC8l9yypseclU=";
   };
 
