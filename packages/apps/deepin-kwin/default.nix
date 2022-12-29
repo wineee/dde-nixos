@@ -50,12 +50,10 @@ stdenv.mkDerivation rec {
   patches = [
     (fetchpatch {
       name = "disable_dde-dock_preview_notify";
-      url = "https://github.com/linuxdeepin/deepin-kwin/commit/29e1de078bbd03e1a1e1d4b9cfd830c0e15dd7cb.patch";
-      sha256 = "sha256-0MY4wLBBz/7nk7RS8fELe6kRB4Rn1nZvtb7tTUuzxHs=";
+      url = "https://github.com/linuxdeepin/deepin-kwin/commit/a874f798b5c3118f3f62d7dd9dfc0322d3cb88ef.patch";
+      sha256 = "sha256-ANcQ5HU52A78gOkROfiGOuYSdz+0NOm9KYkkeGLw660=";
     })
   ];
-
-  postPatch = replaceAll "/usr/bin/dde-dock" "/run/current-system/sw/bin/dde-dock";
 
   nativeBuildInputs = [
     cmake
@@ -108,6 +106,7 @@ stdenv.mkDerivation rec {
     "-DKWIN_BUILD_TABBOX=ON"
     "-DKWIN_BUILD_CMS=OFF"
     "-DKWIN_BUILD_RUNNERS=OFF"
+    "-DDEFINE_DDE_DOCK_PATH=/run/current-system/sw/bin"
   ];
 
   meta = with lib; {
