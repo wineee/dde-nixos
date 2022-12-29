@@ -1,6 +1,8 @@
 { stdenv
 , lib
 , fetchFromGitHub
+, fetchpatch
+, replaceAll
 , cmake
 , pkg-config
 , wayland
@@ -36,14 +38,24 @@
 }:
 stdenv.mkDerivation rec {
   pname = "deepin-kwin";
-  version = "unstable-2022-11-25";
+  version = "unstable-2022-12-29";
 
   src = fetchFromGitHub {
-    owner = "justforlxz";
+    owner = "linuxdeepin";
     repo = pname;
-    rev = "2e4eb120de6eef57f3d4ceab32a02fc6eabdd49e";
-    sha256 = "sha256-ttn0CxdzbUHZgZNfAgxKT535vGnrqbUPZC/n8yp48cA=";
+    rev = "6bb381c00deb7427ccb319b5bbc2aeb3290b9c51";
+    sha256 = "sha256-DEOSXd+BvCv286KyTsNYlz/1yu86phN4irJNucnj7vk=";
   };
+
+  patches = [
+    (fetchpatch {
+      name = "disable_dde-dock_preview_notify";
+      url = "https://github.com/linuxdeepin/deepin-kwin/commit/29e1de078bbd03e1a1e1d4b9cfd830c0e15dd7cb.patch";
+      sha256 = "sha256-0MY4wLBBz/7nk7RS8fELe6kRB4Rn1nZvtb7tTUuzxHs=";
+    })
+  ];
+
+  postPatch = replaceAll "/usr/bin/dde-dock" "/run/current-system/sw/bin/dde-dock";
 
   nativeBuildInputs = [
     cmake
