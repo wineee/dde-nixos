@@ -3,6 +3,7 @@
 , replaceAll
 , pkg-config
 , fetchFromGitHub
+, fetchpatch
 , cmake
 , kwayland
 , qtbase
@@ -24,14 +25,22 @@
 }:
 stdenv.mkDerivation rec {
   pname = "dde-kwin";
-  version = "5.5.22";
+  version = "5.6.5";
 
   src = fetchFromGitHub {
-    owner = "wineee";
+    owner = "linuxdeepin";
     repo = pname;
-    rev = "54b63c1285bc54108796df2ce708cb1b6295b7f0";
-    sha256 = "sha256-l7YeCBilSFLH7fPU7ClkaWDf55lXTNunsUCZHo+x5p8=";
+    rev = "889664378f54b986a21b5297df08f6b6177fed35";
+    sha256 = "sha256-6ttr+yG5kvLDi9XAw38Lzb7ODEjgSAgUnHoDtt+eQr4=";
   };
+
+  patches = [
+    (fetchpatch {
+      name = "use_GNUInstallDirs_set_path";
+      url = "https://github.com/linuxdeepin/dde-kwin/commit/941df38899ea219cbc36ab69e47341620fd86229.patch";
+      sha256 = "sha256-kw4xu7q+lv6h4EoFi2nSq4QqdHMBKUPCNNnz72/31iI=";
+    })
+  ];
 
   postPatch = replaceAll "/usr/include/KWaylandServer" "${kwayland.dev}/include/KWaylandServer"
     + replaceAll "/usr/lib/deepin-daemon" "/run/current-system/sw/lib/deepin-daemon"
@@ -58,11 +67,9 @@ stdenv.mkDerivation rec {
     kconfig
     kwindowsystem
     kglobalaccel
-
     dtk
     qtx11extras
     gsettings-qt
-    
     xorg.libXdmcp
     libepoxy.dev
   ];
@@ -73,18 +80,7 @@ stdenv.mkDerivation rec {
 
   cmakeFlags = [
     "-DPROJECT_VERSION=${version}"
-    #"-DKWIN_VERSION=${kwin.version}"
-    #"-DPLUGIN_INSTALL_PATH=${placeholder "out"}/lib/plugins/platforms"
-    #"-DKWIN_LIBRARY_PATH=${libkwin}/lib"
     "-DQT_INSTALL_PLUGINS=${placeholder "out"}/${qtbase.qtPluginPrefix}"
-
-    #"-DUSE_WINDOW_TOOL=OFF"
-    #"-DENABLE_BUILTIN_BLUR=OFF" 
-    #"-DENABLE_KDECORATION=ON"
-    #"-DENABLE_BUILTIN_MULTITASKING=OFF"
-    #"-DENABLE_BUILTIN_BLACK_SCREEN=OFF"
-    #"-DUSE_DEEPIN_WAYLAND=OFF"
-    #"-DENABLE_BUILTIN_SCISSOR_WINDOW=ON"
   ];
 
   postFixup = ''
