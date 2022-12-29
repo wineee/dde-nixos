@@ -12,6 +12,7 @@ stdenvNoCC.mkDerivation rec {
   installPhase = ''
     mkdir -p $out/${qtbase.qtPluginPrefix}
     ln -s $src/${qtbase.qtPluginPrefix}/styles  $out/${qtbase.qtPluginPrefix}/styles
+    ln -s $src/${qtbase.qtPluginPrefix}/platformthemes  $out/${qtbase.qtPluginPrefix}/platformthemes
   '';
   meta = qt5integration.meta // {
     description = "Qt style theme for qt5integration";
