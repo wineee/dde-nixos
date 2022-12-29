@@ -9,10 +9,10 @@ stdenv.mkDerivation rec {
   version = "1.6.0-deepin.1.2";
 
   src = fetchFromGitHub {
-    owner = "justforlxz";
+    owner = "linuxdeepin";
     repo = pname;
-    rev = version;
-    sha256 = "sha256-8Im3CueC8sYA5mwRU/Z7z8HA4mPQvVSqcTD813QCYxo";
+    rev = "193899bc0a8a9a726d01bbc96d42d5c4664cfb0a";
+    sha256 = "sha256-8Im3CueC8sYA5mwRU/Z7z8HA4mPQvVSqcTD813QCYxo=";
   };
 
   nativeBuildInputs = [
