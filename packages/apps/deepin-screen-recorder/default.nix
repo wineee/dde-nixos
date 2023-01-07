@@ -74,8 +74,8 @@ stdenv.mkDerivation rec {
   patches = [
     (fetchpatch {
       name = "fix: don't hardcode /usr/bin path";
-      url = "https://github.com/linuxdeepin/deepin-screen-recorder/pull/227/commits/292c2b7975496e936b5289b52920a36effc05477.patch";
-      sha256 = "sha256-oMVfM4s1gvHJgG8o+gGrEAbqRNMZQjjqs53kcIS1oYU=";
+      url = "https://github.com/linuxdeepin/deepin-screen-recorder/commit/ba5b80521b729946a907dc6c285bb8ca4b6dd8b3.patch";
+      sha256 = "sha256-MTRozOJo1HUBpi6HZRaXPl/XKyr/dSyRC0xRucaCapY";
     })
   ];
 
