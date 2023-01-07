@@ -181,8 +181,8 @@
                     Name=NixOS
                     WebsiteName=www.nixos.org
                     Website=https://www.nixos.org
-                    Logo=${packages.deepin-desktop-base}/share/pixmaps/distribution_logo.svg
-                    LogoLight=${packages.deepin-desktop-base}/share/pixmaps/distribution_logo_light.svg
+                    Logo=${pkgs.nixos-icons}/share/icons/hicolor/96x96/apps/nix-snowflake.png
+                    LogoLight=${pkgs.nixos-icons}/share/icons/hicolor/32x32/apps/nix-snowflake.png
                     LogoTransparent=${packages.deepin-desktop-base}/share/pixmaps/distribution_logo_transparent.svg
                   '';
                   environment.etc = {
