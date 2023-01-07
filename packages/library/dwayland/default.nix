@@ -34,7 +34,7 @@ stdenv.mkDerivation rec {
     wayland-protocols
     deepin-wayland-protocols
   ];
-  
+
   dontWrapQtApps = true;
 
   meta = with lib; {

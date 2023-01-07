@@ -43,7 +43,7 @@ stdenv.mkDerivation rec {
 
   postPatch = getUsrPatchFrom {
     "server/tool/tool.pro" = [
-      [ "/usr/share/dbus-1" "/share/dbus-1"]
+      [ "/usr/share/dbus-1" "/share/dbus-1" ]
     ];
     "server/monitor/deepin-anything-monitor.service" = [ ];
     "server/tool/com.deepin.anything.service" = [ ];

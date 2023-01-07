@@ -46,7 +46,7 @@ stdenv.mkDerivation rec {
     wrapQtAppsHook
   ];
 
-  buildInputs = [ dtk  ];
+  buildInputs = [ dtk ];
 
   cmakeFlags = [ "-DVERSION=${version}" ];
 

@@ -69,14 +69,14 @@ buildGoPackage rec {
     + replaceAll "/usr/bin/dde-lock" "dde-lock"
     + replaceAll "/usr/bin/dde-dock" "dde-dock"
     + replaceAll "/usr/bin/dde-desktop" "dde-desktop"
-    + replaceAll "/usr/bin/dde-hints-dialog" "dde-hints-dialog" 
+    + replaceAll "/usr/bin/dde-hints-dialog" "dde-hints-dialog"
     + replaceAll "/usr/bin/dde_wloutput" "dde_wloutput"
-    + replaceAll "\"lspci\"" "\"${pciutils}/bin/lspci\"" 
+    + replaceAll "\"lspci\"" "\"${pciutils}/bin/lspci\""
     + getUsrPatchFrom patchList + ''
-      substituteInPlace "startmanager.go"\
-        --replace "/usr/share/startdde/app_startup.conf" "$out/share/startdde/app_startup.conf"
-      substituteInPlace misc/xsessions/deepin.desktop.in --subst-var-by PREFIX $out
-    '';
+    substituteInPlace "startmanager.go"\
+      --replace "/usr/share/startdde/app_startup.conf" "$out/share/startdde/app_startup.conf"
+    substituteInPlace misc/xsessions/deepin.desktop.in --subst-var-by PREFIX $out
+  '';
 
   goDeps = ./deps.nix;
 

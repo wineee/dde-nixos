@@ -24,9 +24,10 @@ let
     "src/mainwindow.h" = [ ];
     "src/modules/videowidget.cpp" = [ ];
     "src/widgets/bottomnavigation.cpp" = [ ];
-  }; 
+  };
   gstPluginPath = lib.makeSearchPathOutput "lib" "lib/gstreamer-1.0" (with gst_all_1; [ gstreamer gst-plugins-base gst-plugins-good ]);
-in stdenv.mkDerivation rec {
+in
+stdenv.mkDerivation rec {
   pname = "dde-introduction";
   version = "unstable-2022-09-23";
 
@@ -54,7 +55,7 @@ in stdenv.mkDerivation rec {
   ];
 
   cmakeFlags = [
-    "-DVERSION=${version}" 
+    "-DVERSION=${version}"
   ];
 
   qtWrapperArgs = [

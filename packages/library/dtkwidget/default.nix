@@ -29,7 +29,7 @@ stdenv.mkDerivation rec {
     rev = version;
     sha256 = "sha256-APk2p8pdLsaKvPp95HtEI1F1LM4ySUL+fhGsC5vHasU=";
   };
- 
+
   postPatch = ''
     substituteInPlace src/widgets/dapplication.cpp \
       --replace "auto dataDirs = DStandardPaths::standardLocations(QStandardPaths::GenericDataLocation);" \

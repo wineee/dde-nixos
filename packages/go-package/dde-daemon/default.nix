@@ -57,7 +57,7 @@ let
       [ "/usr/share" "/run/current-system/sw/share" ]
       # return []string{"/usr/share", "/usr/local/share"}
     ];
-   
+
     "appearance/ifc.go" = [ ];
     "launcher/manager.go" = [
       [ "/usr/share" "/run/current-system/sw/share" ]
@@ -164,25 +164,25 @@ buildGoPackage rec {
   ];
 
   postPatch = replaceAll "/usr/lib/deepin-api" "/run/current-system/sw/lib/deepin-api"
-        + replaceAll "/usr/lib/deepin-daemon" "/run/current-system/sw/lib/deepin-daemon"
-        + replaceAll "/usr/share/wallpapers" "/run/current-system/sw/share/wallpapers"
-        + replaceAll "/usr/share/backgrounds" "/run/current-system/sw/share/backgrounds"
-        + replaceAll "/bin/bash" "${runtimeShell}"
-        + replaceAll "/bin/sh" "${runtimeShell}"
-        + replaceAll "/usr/bin/setxkbmap" "${xorg.setxkbmap}/bin/setxkbmap"
-        + replaceAll "/usr/bin/xdotool" "${xdotool}/bin/xdotool"
-        + replaceAll "/usr/bin/getconf" "${getconf}/bin/getconf"
-        + replaceAll "/usr/bin/dbus-send" "${dbus}/bin/dbus-send"
-        + replaceAll "/usr/bin/kwin_no_scale" "kwin_no_scale"
-        + replaceAll "/usr/bin/deepin-system-monitor" "deepin-system-monitor"
-        + replaceAll "/usr/bin/dde-launcher" "dde-launcher"
-        + replaceAll "/usr/bin/deepin-calculator" "deepin-calculator"
-        + replaceAll "/usr/bin/systemd-detect-virt" "systemd-detect-virt"
-        + replaceAll "/usr/share/zoneinfo" "${tzdata}/share/zoneinfo"
-        + replaceAll "/usr/share/X11/xkb/rules/base.xml" "${xkeyboard_config}/share/X11/xkb/rules/base.xml" 
-        + getUsrPatchFrom goCodePatchs +  ''
-            patchShebangs .
-        '';
+    + replaceAll "/usr/lib/deepin-daemon" "/run/current-system/sw/lib/deepin-daemon"
+    + replaceAll "/usr/share/wallpapers" "/run/current-system/sw/share/wallpapers"
+    + replaceAll "/usr/share/backgrounds" "/run/current-system/sw/share/backgrounds"
+    + replaceAll "/bin/bash" "${runtimeShell}"
+    + replaceAll "/bin/sh" "${runtimeShell}"
+    + replaceAll "/usr/bin/setxkbmap" "${xorg.setxkbmap}/bin/setxkbmap"
+    + replaceAll "/usr/bin/xdotool" "${xdotool}/bin/xdotool"
+    + replaceAll "/usr/bin/getconf" "${getconf}/bin/getconf"
+    + replaceAll "/usr/bin/dbus-send" "${dbus}/bin/dbus-send"
+    + replaceAll "/usr/bin/kwin_no_scale" "kwin_no_scale"
+    + replaceAll "/usr/bin/deepin-system-monitor" "deepin-system-monitor"
+    + replaceAll "/usr/bin/dde-launcher" "dde-launcher"
+    + replaceAll "/usr/bin/deepin-calculator" "deepin-calculator"
+    + replaceAll "/usr/bin/systemd-detect-virt" "systemd-detect-virt"
+    + replaceAll "/usr/share/zoneinfo" "${tzdata}/share/zoneinfo"
+    + replaceAll "/usr/share/X11/xkb/rules/base.xml" "${xkeyboard_config}/share/X11/xkb/rules/base.xml"
+    + getUsrPatchFrom goCodePatchs + ''
+    patchShebangs .
+  '';
 
   goDeps = ./deps.nix;
 

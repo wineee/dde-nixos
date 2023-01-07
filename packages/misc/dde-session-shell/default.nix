@@ -34,7 +34,7 @@ let
     "files/com.deepin.dde.lockFront.service" = [
       #/usr/share/applications/dde-lock.desktop
     ];
-    "files/lightdm-deepin-greeter.conf" = [  ];
+    "files/lightdm-deepin-greeter.conf" = [ ];
     ### CODE
     "scripts/lightdm-deepin-greeter" = [
       # "/usr/bin/lightdm-deepin-greeter"
@@ -70,7 +70,7 @@ let
       # /etc/lightdm/deepin/xsettingsd.conf
     ];
     "src/libdde-auth/deepinauthframework.cpp" = [
-      [ "common-auth" "deepin-auth-keyboard" ]  # fix dde lock auth
+      [ "common-auth" "deepin-auth-keyboard" ] # fix dde lock auth
     ];
   };
 in
@@ -86,17 +86,17 @@ stdenv.mkDerivation rec {
   };
 
   postPatch = replaceAll "/usr/bin/dbus-send" "${dbus}/bin/dbus-send"
-      + replaceAll "/usr/lib/deepin-daemon" "/run/current-system/sw/lib/deepin-daemon"
-      + replaceAll "/usr/lib/dde-control-center" "/run/current-system/sw/lib/dde-control-center"
-      + replaceAll "/usr/share/backgrounds" "/run/current-system/sw/share/backgrounds"
-      + replaceAll "/usr/lib/dde-session-shell/modules" "/run/current-system/sw/lib/dde-session-shell/modules" 
-      + replaceAll "/usr/bin/dde-lock" "dde-lock"
-      + replaceAll "/usr/bin/deepin-greeter" "deepin-greeter"
-      + replaceAll "/usr/sbin/lightdm" "lightdm"
-      + replaceAll "/usr/share/X11/xkb/rules/base.xml" "${xkeyboard_config}/share/X11/xkb/rules/base.xml"
-      + getUsrPatchFrom patchList + ''
-        patchShebangs files/deepin-greeter
-      '';
+    + replaceAll "/usr/lib/deepin-daemon" "/run/current-system/sw/lib/deepin-daemon"
+    + replaceAll "/usr/lib/dde-control-center" "/run/current-system/sw/lib/dde-control-center"
+    + replaceAll "/usr/share/backgrounds" "/run/current-system/sw/share/backgrounds"
+    + replaceAll "/usr/lib/dde-session-shell/modules" "/run/current-system/sw/lib/dde-session-shell/modules"
+    + replaceAll "/usr/bin/dde-lock" "dde-lock"
+    + replaceAll "/usr/bin/deepin-greeter" "deepin-greeter"
+    + replaceAll "/usr/sbin/lightdm" "lightdm"
+    + replaceAll "/usr/share/X11/xkb/rules/base.xml" "${xkeyboard_config}/share/X11/xkb/rules/base.xml"
+    + getUsrPatchFrom patchList + ''
+    patchShebangs files/deepin-greeter
+  '';
 
   nativeBuildInputs = [
     cmake

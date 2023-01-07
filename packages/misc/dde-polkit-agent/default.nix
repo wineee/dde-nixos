@@ -17,7 +17,7 @@
 let
   patchList = {
     "AuthDialog.cpp" = [
-      [ "/usr/share/dde-session-shell/dde-session-shell.conf"  "${dde-session-shell}/share/dde-session-shell/dde-session-shell.conf" ]
+      [ "/usr/share/dde-session-shell/dde-session-shell.conf" "${dde-session-shell}/share/dde-session-shell/dde-session-shell.conf" ]
     ];
   };
 in

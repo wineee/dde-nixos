@@ -46,7 +46,7 @@ stdenv.mkDerivation rec {
     + replaceAll "/usr/lib/deepin-daemon" "/run/current-system/sw/lib/deepin-daemon"
     + replaceAll "/usr/share/backgrounds" "/run/current-system/sw/share/backgrounds"
     + replaceAll "/usr/share/wallpapers" "/run/current-system/sw/share/wallpapers"
-  + ''
+    + ''
     patchShebangs .
   '';
 

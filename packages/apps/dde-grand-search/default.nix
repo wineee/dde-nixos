@@ -34,13 +34,14 @@ let
     "src/grand-search/contacts/services/com.deepin.dde.GrandSearch.service" = [ ];
 
     "src/grand-search/utils/utils.cpp" = [
-      [ "/usr/share/applications/dde-control-center.desktop"  "/run/current-system/sw/share/applications/dde-control-center.desktop" ]
+      [ "/usr/share/applications/dde-control-center.desktop" "/run/current-system/sw/share/applications/dde-control-center.desktop" ]
     ];
     "src/libgrand-search-daemon/dbusservice/grandsearchinterface.cpp" = [
       [ "/usr/bin/dde-grand-search" "$out/bin/.dde-grand-search-wrapped" ] # fix access permit to daemon
     ];
-  }; 
-in stdenv.mkDerivation rec {
+  };
+in
+stdenv.mkDerivation rec {
   pname = "dde-grand-search";
   version = "5.4.2";
 
@@ -60,7 +61,7 @@ in stdenv.mkDerivation rec {
     wrapQtAppsHook
   ];
 
-  buildInputs = [ 
+  buildInputs = [
     dtk
     dde-dock
     dde-qt-dbus-factory
@@ -76,8 +77,8 @@ in stdenv.mkDerivation rec {
     image-editor
   ];
 
-  cmakeFlags = [ 
-    "-DVERSION=${version}" 
+  cmakeFlags = [
+    "-DVERSION=${version}"
   ];
 
   qtWrapperArgs = [

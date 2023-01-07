@@ -1,6 +1,6 @@
 { stdenv
 , deepin-anything
-, kernel 
+, kernel
 }:
 
 stdenv.mkDerivation {
@@ -15,7 +15,7 @@ stdenv.mkDerivation {
   '';
 
   installPhase = ''
-     install -D -t $out/lib/modules/${kernel.modDirVersion}/extra src/deepin-anything-${deepin-anything.version}/*.ko
+    install -D -t $out/lib/modules/${kernel.modDirVersion}/extra src/deepin-anything-${deepin-anything.version}/*.ko
   '';
 
   meta = deepin-anything.meta // {

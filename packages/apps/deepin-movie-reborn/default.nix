@@ -94,7 +94,7 @@ stdenv.mkDerivation rec {
     gtest
     xorg.xcbproto
     libpulseaudio
-  ]  ++ (with gst_all_1; [
+  ] ++ (with gst_all_1; [
     gstreamer
     gst-plugins-base
     gst-plugins-good
@@ -106,7 +106,7 @@ stdenv.mkDerivation rec {
     ffmpegthumbnailer
   ];
 
-  qtWrapperArgs = [ 
+  qtWrapperArgs = [
     "--prefix QT_PLUGIN_PATH : ${qt5integration}/${qtbase.qtPluginPrefix}"
     "--prefix XDG_DATA_DIRS : ${placeholder "out"}/share/gsettings-schemas/${pname}-${version}"
     "--prefix GST_PLUGIN_SYSTEM_PATH_1_0 : ${gstPluginPath}"

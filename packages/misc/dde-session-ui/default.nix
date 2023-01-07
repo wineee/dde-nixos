@@ -63,13 +63,13 @@ stdenv.mkDerivation rec {
   };
 
   postPatch = replaceAll "/usr/share/backgrounds" "/run/current-system/sw/share/backgrounds"
-      + replaceAll "/usr/share/wallpapers" "/run/current-system/sw/share/wallpapers"
-      + replaceAll "/usr/lib/deepin-daemon" "/run/current-system/sw/lib/deepin-daemon"
-      + replaceAll "/usr/share/X11/xkb/rules/base.xml" "${xkeyboard_config}/share/X11/xkb/rules/base.xml"
-      + replaceAll "/usr/bin/dbus-send" "${dbus}/bin/dbus-send"
-      + replaceAll "/usr/bin/dmemory-warning-dialog" "$out/bin/dmemory-warning-dialog"
-      + replaceAll "/usr/share/applications/dde-osd.desktop" "$out/share/applications/dde-osd.desktop"
-      + getUsrPatchFrom patchList;
+    + replaceAll "/usr/share/wallpapers" "/run/current-system/sw/share/wallpapers"
+    + replaceAll "/usr/lib/deepin-daemon" "/run/current-system/sw/lib/deepin-daemon"
+    + replaceAll "/usr/share/X11/xkb/rules/base.xml" "${xkeyboard_config}/share/X11/xkb/rules/base.xml"
+    + replaceAll "/usr/bin/dbus-send" "${dbus}/bin/dbus-send"
+    + replaceAll "/usr/bin/dmemory-warning-dialog" "$out/bin/dmemory-warning-dialog"
+    + replaceAll "/usr/share/applications/dde-osd.desktop" "$out/share/applications/dde-osd.desktop"
+    + getUsrPatchFrom patchList;
 
   nativeBuildInputs = [
     cmake

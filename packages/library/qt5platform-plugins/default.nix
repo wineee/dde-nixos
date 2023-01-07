@@ -42,7 +42,7 @@ stdenv.mkDerivation rec {
 
   qmakeFlags = [
     "INSTALL_PATH=${placeholder "out"}/${qtbase.qtPluginPrefix}/platforms"
-  ] 
+  ]
   ++ lib.optional (!waylandSupport) [ "CONFIG+=DISABLE_WAYLAND" ];
 
   meta = with lib; {

@@ -55,7 +55,7 @@ stdenv.mkDerivation rec {
     dde-file-manager
   ];
 
-  cmakeFlags = [ 
+  cmakeFlags = [
     "-DVERSION=${version}"
     "-DDISABLE_DFM_PLUGIN=YES"
   ];

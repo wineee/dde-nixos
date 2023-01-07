@@ -46,10 +46,10 @@ stdenv.mkDerivation rec {
   # patches = [ ./0001-dont-use-kwin-screenshot.patch ];
 
   postPatch = replaceAll "/usr/lib/deepin-daemon" "/run/current-system/sw/lib/deepin-daemon"
-      + replaceAll "/usr/lib/dde-dock/plugins" "/run/current-system/sw/lib/dde-dock/plugins"
-      + replaceAll "/usr/bin/pkexec" "pkexec"
-      + replaceAll "/usr/sbin/overlayroot-disable" "overlayroot-disable"
-      + getUsrPatchFrom patchList;
+    + replaceAll "/usr/lib/dde-dock/plugins" "/run/current-system/sw/lib/dde-dock/plugins"
+    + replaceAll "/usr/bin/pkexec" "pkexec"
+    + replaceAll "/usr/sbin/overlayroot-disable" "overlayroot-disable"
+    + getUsrPatchFrom patchList;
 
   nativeBuildInputs = [
     cmake

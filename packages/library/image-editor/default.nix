@@ -31,10 +31,10 @@ stdenv.mkDerivation rec {
       url = "https://github.com/linuxdeepin/image-editor/commit/dae86e848cf53ba0ece879d81e8d5335d61a7473.patch";
       sha256 = "sha256-lxmR+nIrMWVyhl1jpA17x2yqJ40h5vnpqKKcjd8j9RY=";
     })
-    (fetchpatch {                                                                    
-      name = "feat: use FULL install path";                                          
-      url = "https://github.com/linuxdeepin/image-editor/commit/855ae53a0444ac628aa0fe893932df6263b82e2e.patch";                                                            
-      sha256 = "sha256-3Dynlwl/l/b6k6hOHjTdoDQ/VGBDfyRz9b8QY8FEsCc=";                
+    (fetchpatch {
+      name = "feat: use FULL install path";
+      url = "https://github.com/linuxdeepin/image-editor/commit/855ae53a0444ac628aa0fe893932df6263b82e2e.patch";
+      sha256 = "sha256-3Dynlwl/l/b6k6hOHjTdoDQ/VGBDfyRz9b8QY8FEsCc=";
     })
   ];
 

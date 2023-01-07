@@ -46,7 +46,7 @@ let
     "assets/screenRecorder.json" = [
       # /usr/share/deepin-screen-recorder/tablet_resources/fast-icon_recording_normal.svg
     ];
-    "com.deepin.Screenshot.service" = [  ];
+    "com.deepin.Screenshot.service" = [ ];
     "src/dbusservice/com.deepin.Screenshot.service" = [
       [ "/usr/bin/deepin-turbo-invoker" "deepin-turbo-invoker" ]
       # /usr/bin/deepin-screenshot
@@ -54,7 +54,7 @@ let
     "src/pin_screenshots/com.deepin.PinScreenShots.service" = [ ];
     "assets/com.deepin.Screenshot.service" = [ ];
     "assets/com.deepin.ScreenRecorder.service" = [ ];
-    
+
     "src/recordertablet.cpp" = [
       # "/usr/share/deepin-screen-recorder/tablet_resources" 
     ];
@@ -111,7 +111,7 @@ stdenv.mkDerivation rec {
     ffmpegthumbnailer
     portaudio
     udev
-  ] ++ ( with gst_all_1; [
+  ] ++ (with gst_all_1; [
     gstreamer
     gst-plugins-base
     gst-plugins-good
@@ -125,9 +125,9 @@ stdenv.mkDerivation rec {
   ];
 
   preFixup = ''
-      patchelf --add-needed ${udev}/lib/libudev.so $out/bin/deepin-screen-recorder
-      patchelf --add-needed ${libv4l}/lib/libv4l2.so $out/bin/deepin-screen-recorder
-      glib-compile-schemas ${glib.makeSchemaPath "$out" "${pname}-${version}"}
+    patchelf --add-needed ${udev}/lib/libudev.so $out/bin/deepin-screen-recorder
+    patchelf --add-needed ${libv4l}/lib/libv4l2.so $out/bin/deepin-screen-recorder
+    glib-compile-schemas ${glib.makeSchemaPath "$out" "${pname}-${version}"}
   '';
 
   meta = with lib; {

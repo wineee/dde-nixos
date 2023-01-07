@@ -18,7 +18,7 @@ let
         (concatStringsSep "\n")
         (s: s + "\n")
       ];
-    
+
     getPatchFrom = getPatchFrom' [ ];
     getUsrPatchFrom = getPatchFrom' [ [ "/usr" "$out" ] ];
 
@@ -50,7 +50,7 @@ let
     dwayland = callPackage ./library/dwayland { };
     deepin-wayland-protocols = callPackage ./library/deepin-wayland-protocols { };
     dtk = [ dtkcommon dtkcore dtkgui dtkwidget /*qt5integration*/ qt5platform-plugins ];
-    qt5integration-styles = callPackage ./library/qt5integration-styles { }; 
+    qt5integration-styles = callPackage ./library/qt5integration-styles { };
 
     #### MISC
     dde-polkit-agent = callPackage ./misc/dde-polkit-agent { };

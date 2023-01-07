@@ -37,9 +37,9 @@ stdenv.mkDerivation rec {
   };
 
   postPatch = replaceAll "/usr/share/applications" "/run/current-system/sw/share/applications"
-      + replaceAll "/usr/share/dss-network-plugin" "$out/share/dss-network-plugin"
-      + replaceAll "/usr/share/dock-network-plugin" "$out/share/dock-network-plugin"
-      + replaceAll "/usr/share/dcc-network-plugin" "$out/share/dcc-network-plugin";
+    + replaceAll "/usr/share/dss-network-plugin" "$out/share/dss-network-plugin"
+    + replaceAll "/usr/share/dock-network-plugin" "$out/share/dock-network-plugin"
+    + replaceAll "/usr/share/dcc-network-plugin" "$out/share/dcc-network-plugin";
 
   nativeBuildInputs = [
     cmake
@@ -48,7 +48,7 @@ stdenv.mkDerivation rec {
     wrapQtAppsHook
   ];
 
-  buildInputs = [ 
+  buildInputs = [
     dtk
     dde-dock
     dde-control-center
@@ -65,7 +65,7 @@ stdenv.mkDerivation rec {
     gtest
   ];
 
-  cmakeFlags = [ 
+  cmakeFlags = [
     "-DVERSION=${version}"
   ];
 

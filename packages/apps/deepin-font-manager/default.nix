@@ -34,19 +34,19 @@ stdenv.mkDerivation rec {
       --replace "ADD_SUBDIRECTORY(deepin-font-preview-plugin)" " " 
   '';
 
-  postPatch = lib.optionalString (!fileManagerPlugins) rmPluginPatch 
-      + replaceAll "/usr/share/deepin-font-manager" "$out/share/deepin-font-manager"
-      + replaceAll "/usr/share/icons" "/run/current-system/sw/share/icons"
-      + replaceAll "/bin/bash" "${runtimeShell}"
-      + ''
-        substituteInPlace deepin-font-manager/views/dfinstallnormalwindow.cpp \
-         --replace 'contains("/usr/share/")' 'contains("/nix/store")'
-        substituteInPlace libdeepin-font-manager/dfontinfomanager.cpp \
-          --replace 'FONT_SYSTEM_DIR = "/usr/share/fonts/"' 'FONT_SYSTEM_DIR = "/run/current-system/sw/share/X11/fonts"' \
-          --replace 'contains("/usr/share/fonts/")' 'contains("/nix/store")'
-        substituteInPlace libdeepin-font-manager/dfmdbmanager.h \
-          --replace 'contains("/usr/share/fonts/")' 'contains("/nix/store")'
-      '';
+  postPatch = lib.optionalString (!fileManagerPlugins) rmPluginPatch
+    + replaceAll "/usr/share/deepin-font-manager" "$out/share/deepin-font-manager"
+    + replaceAll "/usr/share/icons" "/run/current-system/sw/share/icons"
+    + replaceAll "/bin/bash" "${runtimeShell}"
+    + ''
+    substituteInPlace deepin-font-manager/views/dfinstallnormalwindow.cpp \
+     --replace 'contains("/usr/share/")' 'contains("/nix/store")'
+    substituteInPlace libdeepin-font-manager/dfontinfomanager.cpp \
+      --replace 'FONT_SYSTEM_DIR = "/usr/share/fonts/"' 'FONT_SYSTEM_DIR = "/run/current-system/sw/share/X11/fonts"' \
+      --replace 'contains("/usr/share/fonts/")' 'contains("/nix/store")'
+    substituteInPlace libdeepin-font-manager/dfmdbmanager.h \
+      --replace 'contains("/usr/share/fonts/")' 'contains("/nix/store")'
+  '';
 
   nativeBuildInputs = [
     cmake

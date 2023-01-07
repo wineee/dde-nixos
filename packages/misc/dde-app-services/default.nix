@@ -39,7 +39,7 @@ stdenv.mkDerivation rec {
 
   cmakeFlags = [
     "-DDVERSION=${version}"
-    "-DDSG_DATA_DIR=/run/current-system/sw/share/dsg"  
+    "-DDSG_DATA_DIR=/run/current-system/sw/share/dsg"
   ];
 
   qtWrapperArgs = [

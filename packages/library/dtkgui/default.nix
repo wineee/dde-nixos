@@ -39,8 +39,8 @@ stdenv.mkDerivation rec {
   ];
 
   propagatedBuildInputs = [
-    librsvg 
-    qtimageformats 
+    librsvg
+    qtimageformats
     freeimage
   ];
 

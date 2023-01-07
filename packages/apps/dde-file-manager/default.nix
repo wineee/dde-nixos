@@ -59,7 +59,7 @@ let
     ];
     "src/dde-select-dialog-x11/dde-select-dialog-x11.pro" = [ ];
     "src/dde-dock-plugins/disk-mount/disk-mount.pro" = [
-       ["/usr/include/dde-dock" "${dde-dock.dev}/include/dde-dock"]
+      [ "/usr/include/dde-dock" "${dde-dock.dev}/include/dde-dock" ]
     ];
     "src/gschema/gschema.pro" = [ ];
     "src/common/common.pri" = [

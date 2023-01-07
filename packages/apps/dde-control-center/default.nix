@@ -88,7 +88,7 @@ stdenv.mkDerivation rec {
       src = ./0001-patch_account_face_path_for_nix.patch;
       actConfigDir = "${dde-account-faces}/share/lib/AccountsService";
     })
-    ./0002-fix-svg-render-for-themeitem.patch 
+    ./0002-fix-svg-render-for-themeitem.patch
   ];
 
   postPatch = replaceAll "/bin/bash" "${runtimeShell}"
@@ -97,8 +97,8 @@ stdenv.mkDerivation rec {
     + replaceAll "/usr/bin/dbus-send" "${dbus}/bin/dbus-send"
     + replaceAll "/usr/bin/abrecovery" "abrecovery"
     + getUsrPatchFrom patchList + ''
-      substituteInPlace CMakeLists.txt --replace 'add_subdirectory("tests")' ' '
-    '';
+    substituteInPlace CMakeLists.txt --replace 'add_subdirectory("tests")' ' '
+  '';
 
   nativeBuildInputs = [
     cmake

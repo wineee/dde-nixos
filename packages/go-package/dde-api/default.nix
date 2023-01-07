@@ -55,11 +55,11 @@ buildGoPackage rec {
   patches = [ ./0001-fix-PATH-for-NixOS.patch ];
 
   postPatch = replaceAll "/usr/lib/deepin-api" "/run/current-system/sw/lib/deepin-api"
-      + replaceAll "/usr/bin/dbus-send" "${dbus}/bin/dbus-send"
-      + replaceAll "/usr/bin/true" "${coreutils}/bin/true"
-      + replaceAll "/usr/sbin/alsactl" "alsactl"
-      + replaceAll "/usr/share/i18n" "/run/current-system/sw/share/i18n"
-      + getUsrPatchFrom patchList;
+    + replaceAll "/usr/bin/dbus-send" "${dbus}/bin/dbus-send"
+    + replaceAll "/usr/bin/true" "${coreutils}/bin/true"
+    + replaceAll "/usr/sbin/alsactl" "alsactl"
+    + replaceAll "/usr/share/i18n" "/run/current-system/sw/share/i18n"
+    + getUsrPatchFrom patchList;
 
   goDeps = ./deps.nix;
 

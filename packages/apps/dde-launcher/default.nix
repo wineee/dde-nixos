@@ -42,8 +42,8 @@ stdenv.mkDerivation rec {
     sha256 = "sha256-Td8R91892tgJx7FLV2IZ/aPBzDb+o6EYKpk3D8On7Ag=";
   };
 
-  postPatch = replaceAll "/usr/share/backgrounds" "/run/current-system/sw/share/backgrounds" 
-      + getUsrPatchFrom patchList;
+  postPatch = replaceAll "/usr/share/backgrounds" "/run/current-system/sw/share/backgrounds"
+    + getUsrPatchFrom patchList;
 
   nativeBuildInputs = [
     cmake

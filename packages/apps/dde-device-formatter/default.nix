@@ -40,7 +40,7 @@ stdenv.mkDerivation rec {
       sha256 = "sha256-i/VqJ6EmCyhE6weHKUB66bW6b51gLyssIAzb5li4aJM=";
     })
   ];
-  
+
   postPatch = getUsrPatchFrom patchList + ''
     patchShebangs *.sh
   '';
