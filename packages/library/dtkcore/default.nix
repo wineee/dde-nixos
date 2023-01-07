@@ -38,6 +38,7 @@ stdenv.mkDerivation rec {
   ];
 
   cmakeFlags = [
+    "-DDVERSION=${version}"
     "-DBUILD_DOCS=OFF"
     "-DDSG_PREFIX_PATH='/run/current-system/sw'"
     "-DMKSPECS_INSTALL_DIR=${placeholder "out"}/mkspecs/modules"

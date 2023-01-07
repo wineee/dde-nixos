@@ -57,7 +57,8 @@ stdenv.mkDerivation rec {
     xorg.libXdmcp
   ];
 
-  cmakeFlags = [ 
+  cmakeFlags = [
+    "-DDVERSION=${version}"
     "-DBUILD_DOCS=OFF"
     "-DMKSPECS_INSTALL_DIR=${placeholder "out"}/mkspecs/modules"
   ];
