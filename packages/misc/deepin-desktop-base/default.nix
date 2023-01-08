@@ -15,6 +15,7 @@ stdenvNoCC.mkDerivation rec {
 
   makeFlags = [ "DESTDIR=${placeholder "out"}" ];
 
+  # distribution_logo_transparent.svg come form nixos-artwork/logo/nixos-white.svg under CC-BY license, used for dde-lock
   postInstall = ''
     rm -r $out/etc
     rm -r $out/usr/share/python-apt
@@ -22,10 +23,8 @@ stdenvNoCC.mkDerivation rec {
     rm -r $out/usr/share/distro-info
     mv $out/usr/* $out/
     rm -r $out/usr
-
     install -D ${./distribution_logo_transparent.svg} $out/share/pixmaps/distribution_logo_transparent.svg
   '';
-  # distribution_logo_transparent.svg come form nixos-artwork/logo/nixos-white.svg, used for dde-lock
 
   meta = with lib; {
     description = "Base assets and definitions for Deepin Desktop Environment";
