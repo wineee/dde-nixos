@@ -1,5 +1,5 @@
 From 84bd7e4fcd34f463bc8cae0dc33849dc62edbb0d Mon Sep 17 00:00:00 2001
-From: rewine <lhongxu@outlook.com>
+From: rewine <luhongxu@deepin.org>
 Date: Thu, 22 Dec 2022 21:42:42 +0800
 Subject: [PATCH] fix-svg-render-for-themeitem
 

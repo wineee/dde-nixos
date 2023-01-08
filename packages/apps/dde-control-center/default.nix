@@ -80,7 +80,7 @@ stdenv.mkDerivation rec {
 
   patches = [
     (fetchpatch {
-      name = "fix version for other distributions";
+      name = "fix info for other distributions";
       url = "https://github.com/linuxdeepin/dde-control-center/commit/32394aa84f4b575e0a84a0813ba07b72cb1ba137.patch";
       sha256 = "sha256-r21oczFyhKarMuEkL8Ruzd8jqB/T+MfuUGrLNeQdZB8=";
     })
@@ -89,6 +89,7 @@ stdenv.mkDerivation rec {
       actConfigDir = "${dde-account-faces}/share/lib/AccountsService";
     })
     ./0002-fix-svg-render-for-themeitem.patch
+    ./0003-dont-show-endUserLicenseAgreement-for-deepinos.patch
   ];
 
   postPatch = replaceAll "/bin/bash" "${runtimeShell}"
