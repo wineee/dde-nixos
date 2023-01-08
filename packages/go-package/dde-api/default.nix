@@ -27,7 +27,7 @@
 , gdk-pixbuf-xlib
 , dbus
 , coreutils
-, glibc
+, deepin-desktop-base
 }:
 let
   share_to_sw = [ "/usr/share" "/run/current-system/sw/share" ];
@@ -59,7 +59,7 @@ buildGoPackage rec {
     + replaceAll "/usr/bin/dbus-send" "${dbus}/bin/dbus-send"
     + replaceAll "/usr/bin/true" "${coreutils}/bin/true"
     + replaceAll "/usr/sbin/alsactl" "alsactl"
-    + replaceAll "/usr/share/i18n" "${glibc}/share/i18n"
+    + replaceAll "/usr/share/i18n/language_info.json" "${deepin-desktop-base}/share/i18n/language_info.json"
     + getUsrPatchFrom patchList;
 
   goDeps = ./deps.nix;
