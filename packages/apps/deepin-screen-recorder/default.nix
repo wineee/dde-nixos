@@ -79,7 +79,7 @@ stdenv.mkDerivation rec {
     })
   ];
 
-  postPatch = getUsrPatchFrom patchList + replaceAll "/usr/bin/dbus-send" "${dbus}/bin/dbus-send";
+  postPatch = replaceAll "/usr/bin/dbus-send" "${dbus}/bin/dbus-send" + getUsrPatchFrom patchList;
 
   qmakeFlags = [
     "PREFIX=${placeholder "out"}"
