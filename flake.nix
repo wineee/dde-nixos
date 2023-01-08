@@ -205,6 +205,9 @@
                       DICT_PATH = 
                       FIRST_LETTER_UPPERCASE = false
                     '';
+                    "deepin-installer.conf".text = ''
+                      system_info_vendor_name="Copyright (c) 2003-2023 NixOS contributors"
+                    '';
                   };
 
                   environment.systemPackages = with pkgs; [
