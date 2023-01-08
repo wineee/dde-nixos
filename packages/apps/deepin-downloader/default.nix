@@ -2,6 +2,7 @@
 , lib
 , fetchFromGitHub
 , fetchpatch
+, replaceAll
 , dtk
 , qt5integration
 , qt5platform-plugins
@@ -33,6 +34,10 @@ stdenv.mkDerivation rec {
       sha256 = "sha256-xu+rnkfnsnvVolbzvnHJCZSwbV5CYxrWJ+UO9s+Bk6g=";
     })
   ];
+
+  postPatch = replaceAll "/usr/bin/touch" "touch" + replaceAll "/usr/share/downloader/database/" "/var/db/downloader/database/";
+  #    replaceAll "/usr/share/applications/" "/run/current-system/sw/share/applications/"
+  #   + replaceAll "/usr/bin/touch" "touch";
 
   nativeBuildInputs = [
     cmake
