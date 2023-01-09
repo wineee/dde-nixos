@@ -1,0 +1,33 @@
+From b893975e08e3d85d3eca8d1adb83feaa4ea6d69c Mon Sep 17 00:00:00 2001
+From: rewine <lhongxu@outlook.com>
+Date: Mon, 9 Jan 2023 13:21:25 +0800
+Subject: [PATCH] dont chown Xdeepin
+
+---
+ Makefile | 3 ---
+ 1 file changed, 3 deletions(-)
+
+diff --git a/Makefile b/Makefile
+index c941db1..12b6612 100755
+--- a/Makefile
++++ b/Makefile
+@@ -1,7 +1,6 @@
+ #!/bin/bash
+ 
+ .PHONY:all kelvinu-dm install preinstall
+-GOPATH := /usr/share/gocode
+ GOPATH_DIR = gopath
+ GOBUILD = go build -v
+ export GO111MODULE = off
+@@ -27,8 +26,6 @@ install::
+ 	install startdde-x11 ${DESTDIR}/usr/bin/
+ 	install runkwin-x11.sh ${DESTDIR}/usr/bin/
+ 	install kwin_wayland-x11_helper ${DESTDIR}/usr/bin/
+-	chown root Xdeepin
+-	chgrp root Xdeepin
+ 	install -Dm4755 Xdeepin ${DESTDIR}/usr/bin
+ 
+ uninstall:
+-- 
+2.38.1
+

@@ -78,6 +78,7 @@ let
     dde-daemon = callPackage ./go-package/dde-daemon { };
     deepin-pw-check = callPackage ./go-package/deepin-pw-check { };
     startdde = callPackage ./go-package/startdde { };
+    dde-wayland-config = callPackage ./go-package/dde-wayland-config { };
 
     #### Dtk Application
     dde-kwin = callPackage ./apps/dde-kwin { };
