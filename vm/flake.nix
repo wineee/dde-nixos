@@ -36,6 +36,7 @@
           # deepin-draw
           # deepin-voice-note
         ]);
+        
         services.xserver = {
           enable = true;
           displayManager = {
@@ -44,12 +45,21 @@
               enable = false;
               user = "test";
             };
+            session = [{
+              manage = "desktop";
+              name = "xterm";
+              start = ''
+                ${pkgs.xterm}/bin/xterm -ls &
+                waitPID=$!
+              '';
+            }];
           };
-          # desktopManager.plasma5.enable = true;
+          #desktopManager.plasma5.enable = true;
           desktopManager.deepin = {
             enable = true;
             full = true;
           };
+
         };
         #environment.deepin.excludePackages = with dde-nixos.packages.${system}; [
         #  deepin-draw
