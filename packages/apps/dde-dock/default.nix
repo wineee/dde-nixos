@@ -34,13 +34,13 @@ let
 in
 stdenv.mkDerivation rec {
   pname = "dde-dock";
-  version = "5.5.77";
+  version = "5.5.81";
 
   src = fetchFromGitHub {
     owner = "linuxdeepin";
     repo = pname;
     rev = version;
-    sha256 = "sha256-Oyh7HiHKfG1Uq65qx2dCLU03sr/oo1dYuLU1wJaT81A=";
+    sha256 = "sha256-x8U5QPfIykaQLjwbErZiYbZC+JyPQQ+jd6MBjDQyUjs=";
   };
 
   # patches = [ ./0001-dont-use-kwin-screenshot.patch ];
