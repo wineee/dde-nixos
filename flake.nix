@@ -95,6 +95,11 @@
                 (mkIf cfg.enable {
                   services.xserver.displayManager.sessionPackages = [ packages.startdde ];
                   services.xserver.displayManager.defaultSession = "deepin";
+
+                  services.xserver.displayManager.sessionCommands = ''
+                      ${lib.getBin pkgs.dbus}/bin/dbus-update-activation-environment --systemd --all
+                  '';
+                  
                   #services.xserver.displayManager.lightdm.greeters.gtk.enable = false;
                   #services.xserver.displayManager.lightdm.greeter = mkDefault {
                   #  package = packages.dde-session-shell.xgreeters;
