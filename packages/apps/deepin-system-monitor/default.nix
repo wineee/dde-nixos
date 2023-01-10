@@ -22,13 +22,6 @@
 }:
 let
   patchList = {
-    "deepin-system-monitor-daemon/com.deepin.SystemMonitor.Daemon.service" = [ ];
-    "deepin-system-monitor-plugin-popup/com.deepin.SystemMonitorPluginPopup.service" = [ ];
-    "deepin-system-monitor-daemon/deepin-system-monitor-daemon.desktop" = [ ];
-    "deepin-system-monitor-plugin-popup/deepin-system-monitor-plugin-popup.desktop" = [ ];
-    "deepin-system-monitor-plugin/deepin-system-monitor-plugin.pc.in" = [ ];
-    "deepin-system-monitor-daemon/systemmonitorservice.cpp" = [ ];
-    "deepin-system-monitor-daemon/main.cpp" = [ ];
     "deepin-system-monitor-main/process/desktop_entry_cache.cpp" = [
       [ "/usr/share" "/run/current-system/sw/share" ]
     ];
@@ -36,34 +29,38 @@ let
       [ "/usr/bin" "/run/current-system/sw/bin" ]
     ];
     "deepin-system-monitor-main/gui/dialog/systemprotectionsetting.cpp" = [ ];
+    "deepin-system-monitor-daemon/com.deepin.SystemMonitor.Daemon.service" = [ ];
+    "deepin-system-monitor-daemon/deepin-system-monitor-daemon.desktop" = [ ];
+    "deepin-system-monitor-daemon/systemmonitorservice.cpp" = [ ];
+    "deepin-system-monitor-daemon/main.cpp" = [ ];
+    "deepin-system-monitor-plugin/deepin-system-monitor-plugin.pc.in" = [ ];
     "deepin-system-monitor-plugin/gui/monitor_plugin.cpp" = [ ];
+    "deepin-system-monitor-plugin-popup/com.deepin.SystemMonitorPluginPopup.service" = [ ];
+    "deepin-system-monitor-plugin-popup/deepin-system-monitor-plugin-popup.desktop" = [ ];
+    "deepin-system-monitor-plugin-popup/common/datacommon.h" = [ ];
   };
 in
 stdenv.mkDerivation rec {
   pname = "deepin-system-monitor";
-  version = "5.9.31";
+  version = "5.9.32";
 
   src = fetchFromGitHub {
     owner = "linuxdeepin";
     repo = pname;
-    rev = "b9050177b740fa25c1333da78c655fd813f58724";
-    sha256 = "sha256-l7MtZe86Y+3bBjOWeaHjiTMGp2bDzAfa0NlGgLjlthY=";
+    rev = version;
+    sha256 = "sha256-jze5Pigk4edjojmpNNwaVVfcpk5Aed/S0y9YE0HdC0A";
   };
 
   postPatch = replaceAll "/usr/bin/renice" "renice"
     + replaceAll "/usr/bin/kill" "kill"
     + replaceAll "/usr/bin/systemctl" "systemctl"
     + replaceAll "/usr/bin/pkexec" "pkexec"
-    + replaceAll "/usr/bin/deepin-system-monitor" "deepin-system-monitor"
-    + replaceAll "/usr/include/dde-dock/pluginsiteminterface.h" "dde-dock/pluginsiteminterface.h"
+    + replaceAll "/usr/bin/deepin-system-monitor" "$out/bin/deepin-system-monitor"
     + getUsrPatchFrom patchList + ''
     substituteInPlace deepin-system-monitor-main/CMakeLists.txt \
       --replace "find_library(LIB_PROCPS NAMES procps REQUIRED)" "" 
     substituteInPlace deepin-system-monitor-plugin-popup/CMakeLists.txt \
       --replace "find_library(LIB_PROPS NAMES procps REQUIRED)" ""
-    substituteInPlace CMakeLists.txt \
-      --replace "ADD_SUBDIRECTORY(deepin-system-monitor-plugin)" "" \
-      --replace "ADD_SUBDIRECTORY(deepin-system-monitor-plugin-popup)" ""
   '';
 
   nativeBuildInputs = [
