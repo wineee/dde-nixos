@@ -53,13 +53,13 @@ let
 in
 stdenv.mkDerivation rec {
   pname = "dde-session-ui";
-  version = "5.5.39";
+  version = "5.6.2";
 
   src = fetchFromGitHub {
     owner = "linuxdeepin";
     repo = pname;
     rev = version;
-    sha256 = "sha256-yLNsUEhYN9TTEdy8K9xWaHFCYIiQbksGEpmXjclCz7w=";
+    sha256 = "sha256-3lW/M07b6gXzGcvQYB+Ojqdq7TfJBaMIKfmfG7o3wWg=";
   };
 
   postPatch = replaceAll "/usr/share/backgrounds" "/run/current-system/sw/share/backgrounds"
