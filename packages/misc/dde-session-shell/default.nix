@@ -76,13 +76,13 @@ let
 in
 stdenv.mkDerivation rec {
   pname = "dde-session-shell";
-  version = "5.6.1";
+  version = "5.6.4";
 
   src = fetchFromGitHub {
     owner = "linuxdeepin";
     repo = pname;
     rev = version;
-    sha256 = "sha256-lmchiLsXHkaDJCYg1GGMRaotdyW1gAFS2dlDtQ31Db0=";
+    sha256 = "sha256-mrdGu4t86d3No23IrnjypVLx1jxaySatr0xPMY9l5S4";
   };
 
   postPatch = replaceAll "/usr/bin/dbus-send" "${dbus}/bin/dbus-send"
