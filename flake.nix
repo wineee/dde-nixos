@@ -227,6 +227,7 @@
                     kde-gtk-config # deepin-api/gtk-thumbnailer need
                     lshw
                     libsForQt5.kglobalaccel
+                    onboard # dde-dock plugin
                   ] ++ (with packages; (utils.removePackagesByName ([
                     dde-kwin
                     deepin-kwin
