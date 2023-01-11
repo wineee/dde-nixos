@@ -52,21 +52,37 @@ let
     dtk = [ dtkcommon dtkcore dtkgui dtkwidget /*qt5integration*/ qt5platform-plugins ];
     qt5integration-styles = callPackage ./library/qt5integration-styles { };
 
+    #### artwork
+    deepin-icon-theme = callPackage ./artwork/deepin-icon-theme { };
+    deepin-gtk-theme = callPackage ./artwork/deepin-gtk-theme { };
+    deepin-wallpapers = callPackage ./artwork/deepin-wallpapers { };
+    deepin-sound-theme = callPackage ./artwork/deepin-sound-theme { };
+    dde-account-faces = callPackage ./artwork/dde-account-faces { };
+
+    #### TOOLS
+    deepin-gettext-tools = callPackage ./tools/deepin-gettext-tools { };
+    deepin-anything = callPackage ./tools/deepin-anything { };
+    dde-device-formatter = callPackage ./tools/dde-device-formatter { };
+
+    ### CORE
+    dde-kwin = callPackage ./core/dde-kwin { };
+    deepin-kwin = callPackage ./core/deepin-kwin { };
+    dde-dock = callPackage ./core/dde-dock { };
+    dde-launcher = callPackage ./core/dde-launcher { };
+    dde-control-center = callPackage ./core/dde-control-center { };
+    dde-file-manager = callPackage ./core/dde-file-manager { };
+    dde-calendar = callPackage ./core/dde-calendar { };
+    dde-clipboard = callPackage ./core/dde-clipboard { };
+    dde-app-services = callPackage ./core/dde-app-services { };
+    dde-network-core = callPackage ./core/dde-network-core { };
+    dde-session-shell = callPackage ./core/dde-session-shell { };
+    dde-session-ui = callPackage ./core/dde-session-ui { };
+    dde-polkit-agent = callPackage ./core/dde-polkit-agent { };
+    dpa-ext-gnomekeyring = callPackage ./core/dpa-ext-gnomekeyring { };
+
     #### MISC
-    dde-polkit-agent = callPackage ./misc/dde-polkit-agent { };
-    dpa-ext-gnomekeyring = callPackage ./misc/dpa-ext-gnomekeyring { };
     deepin-desktop-base = callPackage ./misc/deepin-desktop-base { };
-    deepin-gettext-tools = callPackage ./misc/deepin-gettext-tools { };
-    deepin-icon-theme = callPackage ./misc/deepin-icon-theme { };
-    deepin-anything = callPackage ./misc/deepin-anything { };
-    deepin-wallpapers = callPackage ./misc/deepin-wallpapers { };
-    deepin-sound-theme = callPackage ./misc/deepin-sound-theme { };
-    deepin-gtk-theme = callPackage ./misc/deepin-gtk-theme { };
     deepin-turbo = callPackage ./misc/deepin-turbo { };
-    dde-session-shell = callPackage ./misc/dde-session-shell { };
-    dde-session-ui = callPackage ./misc/dde-session-ui { };
-    dde-account-faces = callPackage ./misc/dde-account-faces { };
-    dde-app-services = callPackage ./misc/dde-app-services { };
     nixos-gsettings-schemas = callPackage ./misc/nixos-gsettings-schemas { };
 
     #### Go Packages
@@ -80,13 +96,8 @@ let
     startdde = callPackage ./go-package/startdde { };
 
     #### Dtk Application
-    dde-kwin = callPackage ./apps/dde-kwin { };
-    deepin-kwin = callPackage ./apps/deepin-kwin { };
-    dde-calendar = callPackage ./apps/dde-calendar { };
-    dde-clipboard = callPackage ./apps/dde-clipboard { };
-    dde-dock = callPackage ./apps/dde-dock { };
+    dde-grand-search = callPackage ./apps/dde-grand-search { };
     dde-introduction = callPackage ./apps/dde-introduction { };
-    dde-device-formatter = callPackage ./apps/dde-device-formatter { };
     deepin-compressor = callPackage ./apps/deepin-compressor { };
     deepin-terminal = callPackage ./apps/deepin-terminal { };
     deepin-editor = callPackage ./apps/deepin-editor { };
@@ -98,13 +109,9 @@ let
     deepin-calculator = callPackage ./apps/deepin-calculator { };
     deepin-font-manager = callPackage ./apps/deepin-font-manager { };
     deepin-system-monitor = callPackage ./apps/deepin-system-monitor { };
-    dmarked = callPackage ./apps/dmarked { };
     deepin-picker = callPackage ./apps/deepin-picker { };
     deepin-draw = callPackage ./apps/deepin-draw { };
-    dde-control-center = callPackage ./apps/dde-control-center { };
-    dde-launcher = callPackage ./apps/dde-launcher { };
     deepin-camera = callPackage ./apps/deepin-camera { };
-    dde-file-manager = callPackage ./apps/dde-file-manager { };
     deepin-devicemanager = callPackage ./apps/deepin-devicemanager { };
     deepin-screen-recorder = callPackage ./apps/deepin-screen-recorder { };
     deepin-clone = callPackage ./apps/deepin-clone { };
@@ -114,15 +121,16 @@ let
     deepin-reader = callPackage ./apps/deepin-reader { };
     deepin-gomoku = callPackage ./apps/deepin-gomoku { };
     deepin-lianliankan = callPackage ./apps/deepin-lianliankan { };
-    dde-grand-search = callPackage ./apps/dde-grand-search { };
-    dde-network-core = callPackage ./apps/dde-network-core { };
-    dde-top-panel = callPackage ./apps/dde-top-panel { };
 
     #### OS-SPECIFIC
     ## pkgs/top-level/linux-kernels.nix
     deepin-anything-module = _kernel: callPackage ./os-specific/deepin-anything-module {
       kernel = _kernel;
     };
+
+    #### THIRD-PARTY
+    dde-top-panel = callPackage ./third-party/dde-top-panel { };
+    dmarked = callPackage ./third-party/dmarked { };
   };
 in
 makeScope newScope packages

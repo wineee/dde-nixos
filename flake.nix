@@ -233,6 +233,7 @@
                     dde-kwin
                     deepin-kwin
                     qt5platform-plugins #TODO nixos/modules/config/qt5.nix
+                    # qt5integration
 
                     startdde
                     dde-session-ui
