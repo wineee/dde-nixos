@@ -1,6 +1,7 @@
 { stdenv
 , lib
 , fetchFromGitHub
+, fetchpatch
 , dtkcommon
 , dtkcore
 , dtkgui
@@ -28,6 +29,14 @@ stdenv.mkDerivation rec {
     rev = version;
     sha256 = "sha256-MZkhTvjTyBrlntgFq2F3iGK7WvfmnGJQLk5B1OM5kQo=";
   };
+
+  patches = [
+    (fetchpatch {
+      name = "basic_support_for_ColorScheme_Highlight";
+      url = "https://github.com/linuxdeepin/qt5integration/commit/1f985ea13133235707ab1e37c6371d25850fed10.patch";
+      sha256 = "sha256-cHR5kfsRQO3jqEXQNYl/TEHqjxgr0Sbf65UmFn+xSTA=";
+    })
+  ];
 
   nativeBuildInputs = [ qmake pkg-config wrapQtAppsHook ];
 
