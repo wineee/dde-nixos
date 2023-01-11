@@ -57,7 +57,7 @@
           #desktopManager.plasma5.enable = true;
           desktopManager.deepin = {
             enable = true;
-            full = true;
+            full = false;
           };
 
         };
