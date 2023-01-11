@@ -100,11 +100,11 @@
                       ${lib.getBin pkgs.dbus}/bin/dbus-update-activation-environment --systemd --all
                   '';
                   
-                  services.xserver.displayManager.lightdm.greeters.gtk.enable = false;
-                  services.xserver.displayManager.lightdm.greeter = mkDefault {
-                    package = packages.dde-session-shell.xgreeters;
-                    name = "lightdm-deepin-greeter";
-                  };
+                  #services.xserver.displayManager.lightdm.greeters.gtk.enable = false;
+                  #services.xserver.displayManager.lightdm.greeter = mkDefault {
+                  #  package = packages.dde-session-shell.xgreeters;
+                  #  name = "lightdm-deepin-greeter";
+                  #};
 
                   #services.xserver.displayManager.lightdm.theme = mkDefault "deepin";
                   
