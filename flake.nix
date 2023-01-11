@@ -100,11 +100,11 @@
                       ${lib.getBin pkgs.dbus}/bin/dbus-update-activation-environment --systemd --all
                   '';
                   
-                  #services.xserver.displayManager.lightdm.greeters.gtk.enable = false;
-                  #services.xserver.displayManager.lightdm.greeter = mkDefault {
-                  #  package = packages.dde-session-shell.xgreeters;
-                  #  name = "lightdm-deepin-greeter";
-                  #};
+                  services.xserver.displayManager.lightdm.greeters.gtk.enable = false;
+                  services.xserver.displayManager.lightdm.greeter = mkDefault {
+                    package = packages.dde-session-shell.xgreeters;
+                    name = "lightdm-deepin-greeter";
+                  };
 
                   #services.xserver.displayManager.lightdm.theme = mkDefault "deepin";
                   
@@ -228,6 +228,7 @@
                     lshw
                     libsForQt5.kglobalaccel
                     onboard # dde-dock plugin
+                    xsettingsd # lightdm-deepin-greeter
                   ] ++ (with packages; (utils.removePackagesByName ([
                     dde-kwin
                     deepin-kwin
@@ -348,6 +349,13 @@
                     auth    requisite       pam_deny.so
                     auth    required        pam_permit.so
                     -auth   optional        pam_ccreds.so minimum_uid=1000 action=store
+                  '';
+                  security.pam.services.dde-lock.text = ''
+                    # original at {dde-session-shell}/etc/pam.d/dde-lock
+                    auth      substack      login
+                    account   include       login
+                    password  substack      login
+                    session   include       login
                   '';
                })
 

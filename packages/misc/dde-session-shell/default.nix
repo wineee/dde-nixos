@@ -69,9 +69,6 @@ let
       [ "/usr/share/icons" "/run/current-system/sw/share/icons" ]
       # /etc/lightdm/deepin/xsettingsd.conf
     ];
-    "src/libdde-auth/deepinauthframework.cpp" = [
-      [ "common-auth" "deepin-auth-keyboard" ] # fix dde lock auth
-    ];
   };
 in
 stdenv.mkDerivation rec {
@@ -129,13 +126,14 @@ stdenv.mkDerivation rec {
   preFixup = ''
     glib-compile-schemas ${glib.makeSchemaPath "$out" "${pname}-${version}"}
     qtWrapperArgs+=("''${gappsWrapperArgs[@]}")
+    chmod +x $out/bin/deepin-greeter
   '';
 
-  postFixup = ''
-    for binary in $out/etc/deepin/greeters.d/*; do
-      wrapQtApp $binary
-    done
-  '';
+  #postFixup = ''
+  #  for binary in $out/etc/deepin/greeters.d/*; do
+  #    wrapQtApp $binary
+  #  done
+  #'';
 
   passthru.xgreeters = linkFarm "deepin-greeter-xgreeters" [{
     path = "${dde-session-shell}/share/xgreeters/lightdm-deepin-greeter.desktop";
