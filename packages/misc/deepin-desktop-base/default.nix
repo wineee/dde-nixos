@@ -29,7 +29,7 @@ stdenvNoCC.mkDerivation rec {
   meta = with lib; {
     description = "Base assets and definitions for Deepin Desktop Environment";
     homepage = "https://github.com/linuxdeepin/deepin-desktop-base";
-    license = licenses.gpl3Plus; 
+    license = licenses.gpl3Plus;
     platforms = platforms.linux;
   };
 }
