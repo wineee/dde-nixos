@@ -4,7 +4,6 @@
 , fetchpatch
 , dtk
 , qt5integration
-, qt5platform-plugins
 , dde-qt-dbus-factory
 , cmake
 , qttools
@@ -17,13 +16,13 @@
 
 stdenv.mkDerivation rec {
   pname = "deepin-calculator";
-  version = "5.7.21+";
+  version = "5.8.23";
 
   src = fetchFromGitHub {
     owner = "linuxdeepin";
     repo = pname;
-    rev = "493d1cba8ee9cc7f3af8af05d4f58bdd656dfdb4";
-    sha256 = "sha256-4p7pdhIbAdFZ59UL/ZrMXIW58hKZlQk7/W6ecFlng98=";
+    rev = version;
+    sha256 = "sha256-MczQWYIQfpSkyA3144y3zly66N0vgcVvTYR6B7Hq1aw=";
   };
 
   nativeBuildInputs = [
