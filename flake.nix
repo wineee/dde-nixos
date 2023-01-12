@@ -112,16 +112,12 @@
                   hardware.pulseaudio.enable = mkDefault true;
 
                   security.polkit.enable = true;
-                  services.colord.enable = mkDefault true; # Need this?
-                  services.fwupd.enable = mkDefault true;  # Need this?
-
+                  services.colord.enable = mkDefault true;
                   
                   services.accounts-daemon.enable = true;
+                  services.gvfs.enable = true;
+                  services.gnome.glib-networking.enable = true;
                   services.gnome.gnome-keyring.enable = true;
-                  services.gnome.at-spi2-core.enable = true; # Need this?
-                  services.gvfs.enable = true;  # Need this?
-                  services.gnome.glib-networking.enable = true;  # Need this?
-
 
                   services.bamf.enable = true;
                   
@@ -131,10 +127,10 @@
                   services.xserver.gdk-pixbuf.modulePackages = [ pkgs.librsvg ];
 
                   services.udisks2.enable = true;
-                  services.upower.enable = true;
-                  services.tumbler.enable = true;
+                  services.upower.enable = mkDefault config.powerManagement.enable;
+                  # services.tumbler.enable = mkDefault true;
                   
-                  services.power-profiles-daemon.enable = true;
+                  # services.power-profiles-daemon.enable = true;
                   networking.networkmanager.enable = mkDefault true;
                   
                   programs.dconf.enable = true;
