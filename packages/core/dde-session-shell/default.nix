@@ -67,7 +67,6 @@ let
     # files/wayland/kwin_wayland_helper-wayland /etc/xdg/kglobalshortcutsrc
     "src/app/lightdm-deepin-greeter.cpp" = [
       [ "/usr/share/icons" "/run/current-system/sw/share/icons" ]
-      # /etc/lightdm/deepin/xsettingsd.conf
     ];
   };
 in
@@ -128,12 +127,6 @@ stdenv.mkDerivation rec {
     qtWrapperArgs+=("''${gappsWrapperArgs[@]}")
     chmod +x $out/bin/deepin-greeter
   '';
-
-  #postFixup = ''
-  #  for binary in $out/etc/deepin/greeters.d/*; do
-  #    wrapQtApp $binary
-  #  done
-  #'';
 
   passthru.xgreeters = linkFarm "deepin-greeter-xgreeters" [{
     path = "${dde-session-shell}/share/xgreeters/lightdm-deepin-greeter.desktop";

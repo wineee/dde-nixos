@@ -7,7 +7,6 @@
 , dde-qt-dbus-factory
 , dde-dock
 , qt5integration
-, qt5platform-plugins
 , image-editor
 , cmake
 , qttools

@@ -20,9 +20,9 @@ stdenv.mkDerivation rec {
     sha256 = "sha256-M9XXNV3N4CifOXitT6+UxaGsLoVuoNGqC5SO/mF+bLw=";
   };
 
-  postPatch = replaceAll "/usr/share" "/run/current-system/sw/share" + ''
+  postPatch = replaceAll "/usr/share/dsg" "/run/current-system/sw/share/dsg" + ''
     substituteInPlace dconfig-center/dde-dconfig-daemon/services/org.desktopspec.ConfigManager.service \
-      --replace "/usr" "$out"
+      --replace "/usr/bin/dde-dconfig-daemon" "$out/bin/dde-dconfig-daemon"
     substituteInPlace dconfig-center/dde-dconfig/main.cpp \
       --replace "/bin/dde-dconfig-editor" "dde-dconfig-editor"
     substituteInPlace dconfig-center/CMakeLists.txt \

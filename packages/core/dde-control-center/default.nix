@@ -7,7 +7,6 @@
 , dtk
 , substituteAll
 , qt5integration
-, qt5platform-plugins
 , dde-qt-dbus-factory
 , deepin-pw-check
 , deepin-desktop-schemas
@@ -56,7 +55,7 @@ let
       # /usr/share/dde-control-center/translations/keyboard_language_
     ];
     "src/frame/window/mainwindow.cpp" = [
-      #? /usr/share/icons/bloom/apps/64/preferences-system.svg
+      # /usr/share/icons/bloom/apps/64/preferences-system.svg
       [ "/usr/share/icons" "/run/current-system/sw/share/icons" ]
     ];
     "include/widgets/utils.h" = [ ];

@@ -8,7 +8,6 @@
 , dde-control-center
 , dde-session-shell
 , qt5integration
-, qt5platform-plugins
 , gio-qt
 , cmake
 , qttools

@@ -6,7 +6,6 @@
 , dtk
 , deepin-gettext-tools
 , qt5integration
-, qt5platform-plugins
 , qmake
 , qttools
 , qtx11extras

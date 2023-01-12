@@ -6,7 +6,6 @@
 , replaceAll
 , dtk
 , qt5integration
-, qt5platform-plugins
 , dde-qt-dbus-factory
 , dde-dock
 , image-editor

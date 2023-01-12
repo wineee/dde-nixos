@@ -6,7 +6,6 @@
 , dde-qt-dbus-factory
 , deepin-movie-reborn
 , qt5integration
-, qt5platform-plugins
 , cmake
 , qttools
 , pkg-config

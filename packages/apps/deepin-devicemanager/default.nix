@@ -3,7 +3,6 @@
 , fetchFromGitHub
 , dtk
 , qt5integration
-, qt5platform-plugins
 , dde-qt-dbus-factory
 , cmake
 , qttools

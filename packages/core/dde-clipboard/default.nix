@@ -4,7 +4,6 @@
 , getUsrPatchFrom
 , dtk
 , qt5integration
-, qt5platform-plugins
 , dde-qt-dbus-factory
 , gio-qt
 , cmake
@@ -27,21 +26,18 @@ let
     "misc/com.deepin.dde.Clipboard.service" = [
       [ "/usr/bin/qdbus" "${qttools}/bin/qdbus" ]
     ];
-    "dde-clipboard-daemon/dbus_manager.cpp" = [ ];
   };
 in
 stdenv.mkDerivation rec {
   pname = "dde-clipboard";
-  version = "5.4.7+";
+  version = "5.4.25";
 
   src = fetchFromGitHub {
-    owner = "wineee";
+    owner = "linuxdeepin";
     repo = pname;
-    rev = "8a985ca4edf9cad634121128c13abcddaf46d4a1";
-    sha256 = "sha256-iHqFTHIKXPebRxuGFC5lQhZoN2u3CLO7jkczGtKOuRU=";
+    rev = version;
+    sha256 = "sha256-oFATOBXf4NvGxjVMlfxwfQkBffeKut8ao+X6T9twb/I=";
   };
-
-  #patches = [ ./0001-feat-remove-wayland-support.patch ];
 
   postPatch = getUsrPatchFrom patchList + ''
     patchShebangs translate_generation.sh generate_gtest_report.sh
@@ -63,7 +59,6 @@ stdenv.mkDerivation rec {
     gtest
   ];
 
-  # NIX_CFLAGS_COMPILE = [ "-I${kwayland.dev}/include/KF5/KWayland" ];
   cmakeFlags = [
     "-DUSE_DEEPIN_WAYLAND=OFF"
   ];

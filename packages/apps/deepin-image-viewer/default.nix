@@ -4,7 +4,6 @@
 , fetchpatch
 , dtk
 , qt5integration
-, qt5platform-plugins
 , gio-qt
 , udisks2-qt5
 , image-editor

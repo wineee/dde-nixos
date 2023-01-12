@@ -4,7 +4,6 @@
 , getUsrPatchFrom
 , dtk
 , qt5integration
-, qt5platform-plugins
 , dde-file-manager
 , cmake
 , libuuid

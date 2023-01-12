@@ -38,7 +38,7 @@
 }:
 stdenv.mkDerivation rec {
   pname = "deepin-kwin";
-  version = "unstable-2022-12-29";
+  version = "5.24.3-deepin.1.9";
 
   src = fetchFromGitHub {
     owner = "linuxdeepin";

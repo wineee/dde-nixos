@@ -5,7 +5,6 @@
 , dtk
 , qtsvg
 , qt5integration
-, qt5platform-plugins
 , cmake
 , qttools
 , pkg-config

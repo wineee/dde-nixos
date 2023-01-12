@@ -7,7 +7,6 @@
 , runtimeShell
 , dtk
 , qt5integration
-, qt5platform-plugins
 , dde-qt-dbus-factory
 , udisks2-qt5
 , gio-qt
@@ -71,9 +70,7 @@ let
     ];
     "src/dde-select-dialog-wayland/dde-select-dialog-wayland.pro" = [ ];
     "src/dde-desktop/development.pri" = [ ];
-    "src/dde-file-manager-lib/dde-file-manager-lib.pro" = [
-      # /usr/include/boost/
-    ];
+    "src/dde-file-manager-lib/dde-file-manager-lib.pro" = [ ];
     "src/dde-desktop/dbus/filedialog/filedialog.pri" = [ ];
     "src/dde-desktop/dbus/filemanager1/filemanager1.pri" = [ ];
     "src/deepin-anything-server-plugins/dde-anythingmonitor/dde-anythingmonitor.pro" = [
@@ -124,7 +121,7 @@ let
     ];
     "src/dde-file-manager-daemon/vault/vaultbruteforceprevention.cpp" = [ ];
     # src/dde-file-manager-daemon/usershare/usersharemanager.cpp
-    # ln -sf /lib/systemd/system/smbd.service /etc/systemd/system/multi-user.target.wants/smbd.service
+    # TODO:ln -sf /lib/systemd/system/smbd.service /etc/systemd/system/multi-user.target.wants/smbd.service
   };
 in
 stdenv.mkDerivation rec {

@@ -6,7 +6,6 @@
 , dtk
 , dde-qt-dbus-factory
 , qt5integration
-, qt5platform-plugins
 , dde-control-center
 , dde-daemon
 , deepin-desktop-schemas
@@ -23,15 +22,6 @@
 , gtest
 , qtbase
 }:
-let
-  rpetc = [ "/etc" "$out/etc" ];
-  patchList = {
-    "plugins/dcc-dock-plugin/settings_module.cpp" = [ ];
-    "plugins/tray/system-trays/systemtrayscontroller.cpp" = [ ];
-    "plugins/tray/indicatortray.cpp" = [ rpetc ];
-    "plugins/tray/trayplugin.cpp" = [ rpetc ];
-  };
-in
 stdenv.mkDerivation rec {
   pname = "dde-dock";
   version = "5.5.81";
@@ -43,13 +33,14 @@ stdenv.mkDerivation rec {
     sha256 = "sha256-x8U5QPfIykaQLjwbErZiYbZC+JyPQQ+jd6MBjDQyUjs=";
   };
 
-  # patches = [ ./0001-dont-use-kwin-screenshot.patch ];
-
   postPatch = replaceAll "/usr/lib/deepin-daemon" "/run/current-system/sw/lib/deepin-daemon"
     + replaceAll "/usr/lib/dde-dock/plugins" "/run/current-system/sw/lib/dde-dock/plugins"
     + replaceAll "/usr/bin/pkexec" "pkexec"
     + replaceAll "/usr/sbin/overlayroot-disable" "overlayroot-disable"
-    + getUsrPatchFrom patchList;
+    + getUsrPatchFrom {
+      "plugins/dcc-dock-plugin/settings_module.cpp" = [ ];
+      "plugins/tray/system-trays/systemtrayscontroller.cpp" = [ ];
+    };
 
   nativeBuildInputs = [
     cmake
@@ -80,12 +71,7 @@ stdenv.mkDerivation rec {
 
   qtWrapperArgs = [
     "--prefix QT_PLUGIN_PATH : ${qt5integration}/${qtbase.qtPluginPrefix}"
-    #"--prefix DSG_DATA_DIRS : ${placeholder "out"}"
   ];
-
-  # postInstall = ''
-  #   glib-compile-schemas "$out/share/glib-2.0/schemas"
-  # '';
 
   preFixup = ''
     glib-compile-schemas ${glib.makeSchemaPath "$out" "${pname}-${version}"}
@@ -95,6 +81,7 @@ stdenv.mkDerivation rec {
   meta = with lib; {
     description = "Deepin desktop-environment - dock module";
     homepage = "https://github.com/linuxdeepin/dde-dock";
+    platforms = platforms.linux;
     license = licenses.lgpl3Plus;
   };
 }

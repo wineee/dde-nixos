@@ -9,7 +9,6 @@
 , qtx11extras
 , wrapQtAppsHook
 , qt5integration
-, qt5platform-plugins
 , mtools
 , p7zip
 , syslinux

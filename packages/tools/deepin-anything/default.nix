@@ -51,12 +51,14 @@ stdenv.mkDerivation rec {
   };
 
   buildPhase = ''
+    runHook preBuild
     sed 's|@@VERSION@@|${version}|g' debian/deepin-anything-dkms.dkms.in | tee debian/deepin-anything-dkms.dkms
     make -C library all
     (cd server 
       qmake -makefile -nocache QMAKE_STRIP=: PREFIX=/ LIB_INSTALL_DIR=/lib deepin-anything-server.pro 
       make all
     )
+    runHook postBuild
   '';
 
   installPhase = ''

@@ -4,7 +4,6 @@
 , fetchFromGitHub
 , dtk
 , qt5integration
-, qt5platform-plugins
 , qmake
 , qttools
 , pkg-config

@@ -4,7 +4,6 @@
 , fetchpatch
 , dtk
 , qt5integration
-, qt5platform-plugins
 , deepin-gettext-tools
 , dde-qt-dbus-factory
 , image-editor
@@ -105,12 +104,12 @@ stdenv.mkDerivation rec {
       --replace "/usr/share/libimagevisualresult/filter_cube" "${image-editor}/share/libimagevisualresult/filter_cube"
   '';
 
+  # qtchooser: /usr/bin/qdbus
   postPatch = fixLoadLibPatch + fixLurDirPatch + ''
     substituteInPlace src/com.deepin.Camera.service \
       --replace "/usr/bin/qdbus" "qdbus" \
       --replace "/usr/share/applications/deepin-camera.desktop" "$out/share/applications/deepin-camera.desktop"
   '';
-  ## qtchooser: /usr/bin/qdbus
 
   cmakeFlags = [ "-DVERSION=${version}" ];
 

@@ -29,10 +29,10 @@
 let
   patchList = {
     "dde-lowpower/main.cpp" = [
-      #"/usr/share/dde-session-ui/translations/dde-session-ui_" 
+      # /usr/share/dde-session-ui/translations
     ];
     "dmemory-warning-dialog/main.cpp" = [
-      # /usr/share/dde-session-ui/translations/dde-session-ui_
+      # /usr/share/dde-session-ui/translations
     ];
     "dde-touchscreen-dialog/main.cpp" = [ ];
     "dnetwork-secret-dialog/main.cpp" = [ ];
@@ -103,7 +103,6 @@ stdenv.mkDerivation rec {
   '';
 
   postFixup = ''
-    # wrapGAppsHook or wrapQtAppsHook does not work with binaries outside of $out/bin or $out/libexec
     for binary in $out/lib/deepin-daemon/*; do
       wrapProgram $binary "''${qtWrapperArgs[@]}"
     done

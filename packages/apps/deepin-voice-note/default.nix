@@ -4,7 +4,6 @@
 , fetchpatch
 , dtk
 , qt5integration
-, qt5platform-plugins
 , dde-qt-dbus-factory
 , cmake
 , pkg-config
