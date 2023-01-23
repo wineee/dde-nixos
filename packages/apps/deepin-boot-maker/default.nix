@@ -26,14 +26,20 @@ stdenv.mkDerivation rec {
     sha256 = "sha256-Ks35LDZrldilCRu+U41n2b03vFpqgIaJSvKqphzp6gM=";
   };
 
+  patches = [ ./0001-fix-path-for-nixos.patch ];
+
   postPatch = ''
     substituteInPlace src/src.pro \
       --replace "/usr/share/deepin-boot-maker/translations" "$out/share/deepin-boot-maker/translations"
     substituteInPlace deepin-boot-maker.pro \
       --replace "/usr/share/deepin-manual/manual-assets/application" "$out/share/deepin-manual/manual-assets/application"
-    
+
     substituteInPlace src/service/data/com.deepin.bootmaker.service \
-      --replace "/usr/lib/deepin-daemon/deepin-boot-maker-service" "/run/current-system/sw/lib/deepin-daemon/deepin-boot-maker-service"
+      --replace "/usr/lib/deepin-daemon/deepin-boot-maker-service" "$out/lib/deepin-daemon/deepin-boot-maker-service"
+
+    substituteInPlace src/vendor/src/libxsys/DiskUtil/Syslinux.cpp \
+      --replace "/usr/lib/syslinux" "${syslinux}/share/syslinux" \
+      --replace "/usr/share/syslinux" "${syslinux}/share/syslinux"
   '';
 
   nativeBuildInputs = [
