@@ -6,7 +6,10 @@
 , wrapQtAppsHook
 , glibmm
 , doxygen
-, buildDocs ? false
+, qttools
+, qtbase
+, qtdeclarative
+, buildDocs ? true
 }:
 
 stdenv.mkDerivation rec {
@@ -20,15 +23,23 @@ stdenv.mkDerivation rec {
     sha256 = "sha256-dlY1CTlXywgGZUonBBe3cDwx8h2xXrPY6Ft/D59nlug=";
   };
 
-  nativeBuildInputs = [ cmake pkg-config wrapQtAppsHook ];
+  patchPhase = ''
+    # qt.qpa.plugin: Could not find the Qt platform plugin "minimal"
+    # A workaround is to set QT_PLUGIN_PATH explicitly.
+    export QT_PLUGIN_PATH=${qtbase.bin}/${qtbase.qtPluginPrefix}
+    substituteInPlace CMakeLists.txt --replace "qhelpgenerator" "${qttools.dev}/bin/qhelpgenerator"
+  '';
+
+  nativeBuildInputs = [ 
+    cmake
+    pkg-config
+    wrapQtAppsHook 
+  ] ++ lib.optional buildDocs [ doxygen qttools ];
 
   cmakeFlags = [
     "-DCMAKE_INSTALL_LIBDIR=lib"
     "-DPROJECT_VERSION=${version}"
-  ]
-  ++ lib.optional (!buildDocs) [ "-DBUILD_DOCS=OFF" ];
-
-  buildInputs = lib.optional buildDocs doxygen;
+  ] ++ lib.optional (!buildDocs) [ "-DBUILD_DOCS=OFF" ];
 
   propagatedBuildInputs = [ glibmm ];
 
