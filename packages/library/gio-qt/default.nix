@@ -8,7 +8,6 @@
 , doxygen
 , qttools
 , qtbase
-, qtdeclarative
 , buildDocs ? true
 }:
 
@@ -23,18 +22,11 @@ stdenv.mkDerivation rec {
     sha256 = "sha256-dlY1CTlXywgGZUonBBe3cDwx8h2xXrPY6Ft/D59nlug=";
   };
 
-  patchPhase = ''
-    # qt.qpa.plugin: Could not find the Qt platform plugin "minimal"
-    # A workaround is to set QT_PLUGIN_PATH explicitly.
-    export QT_PLUGIN_PATH=${qtbase.bin}/${qtbase.qtPluginPrefix}
-    substituteInPlace CMakeLists.txt --replace "qhelpgenerator" "${qttools.dev}/bin/qhelpgenerator"
-  '';
-
-  nativeBuildInputs = [ 
+  nativeBuildInputs = [
     cmake
     pkg-config
-    wrapQtAppsHook 
-  ] ++ lib.optional buildDocs [ doxygen qttools ];
+    wrapQtAppsHook
+  ] ++ lib.optional buildDocs [ doxygen qttools.dev ];
 
   cmakeFlags = [
     "-DCMAKE_INSTALL_LIBDIR=lib"
@@ -42,6 +34,12 @@ stdenv.mkDerivation rec {
   ] ++ lib.optional (!buildDocs) [ "-DBUILD_DOCS=OFF" ];
 
   propagatedBuildInputs = [ glibmm ];
+
+  preConfigure = ''
+    # qt.qpa.plugin: Could not find the Qt platform plugin "minimal"
+    # A workaround is to set QT_PLUGIN_PATH explicitly
+    export QT_PLUGIN_PATH=${qtbase.bin}/${qtbase.qtPluginPrefix}
+  '';
 
   meta = with lib; {
     description = "Gio wrapper for Qt applications";
