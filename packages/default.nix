@@ -4,18 +4,18 @@ let
 
   newScope = pkgs.libsForQt5.newScope;
 
-  functions = with pkgs.lib; rec {
+  functions = with pkgs; rec {
     getPatchFrom' = commonRp:
       let
         rpstr = a: b: " --replace \"${a}\" \"${b}\"";
-        rpstrL = l: if length l == 2 then rpstr (head l) (last l) else (throw "input must be a 2-tuple");
+        rpstrL = l: if lib.length l == 2 then rpstr (lib.head l) (lib.last l) else (throw "input must be a list of 2 string: [original  ]");
         rpfile = filePath: replaceLists:
-          "substituteInPlace ${filePath}" + concatMapStrings rpstrL replaceLists;
+          "substituteInPlace ${filePath}" + lib.concatMapStrings rpstrL replaceLists;
       in
-      x: pipe x [
-        (x: mapAttrs (name: value: value ++ commonRp) x)
-        (x: mapAttrsToList (name: value: rpfile name value) x)
-        (concatStringsSep "\n")
+      x: lib.pipe x [
+        (x: lib.mapAttrs (name: value: value ++ commonRp) x)
+        (x: lib.mapAttrsToList (name: value: rpfile name value) x)
+        (lib.concatStringsSep "\n")
         (s: s + "\n")
       ];
 
