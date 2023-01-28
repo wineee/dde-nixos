@@ -2,9 +2,6 @@
 , lib
 , fetchFromGitHub
 , fetchpatch
-, dtkcommon
-, dtkcore
-, dtkgui
 , dtkwidget
 , qmake
 , qtbase
@@ -33,9 +30,6 @@ stdenv.mkDerivation rec {
   nativeBuildInputs = [ qmake pkg-config wrapQtAppsHook ];
 
   buildInputs = [
-    dtkcommon
-    dtkcore
-    dtkgui
     dtkwidget
     qtx11extras
     qt5platform-plugins

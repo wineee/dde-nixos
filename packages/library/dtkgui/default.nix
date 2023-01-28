@@ -33,8 +33,6 @@ stdenv.mkDerivation rec {
   ];
 
   buildInputs = [
-    dtkcore
-    dtkcommon
     lxqt.libqtxdg
   ];
 
@@ -42,6 +40,7 @@ stdenv.mkDerivation rec {
     librsvg
     qtimageformats
     freeimage
+    dtkcore
   ];
 
   cmakeFlags = [

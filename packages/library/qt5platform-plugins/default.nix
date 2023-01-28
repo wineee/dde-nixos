@@ -9,6 +9,10 @@
 , mtdev
 , cairo
 , xorg
+, wayland-scanner
+, qtwayland
+, dwayland
+, wayland
 , waylandSupport ? false
 }:
 
@@ -38,12 +42,20 @@ stdenv.mkDerivation rec {
     qtbase
     qtx11extras
     xorg.libSM
+  ] ++ lib.optional (!waylandSupport) [
+    qtwayland
+    dwayland
+    wayland
+    wayland-scanner
   ];
 
   qmakeFlags = [
     "INSTALL_PATH=${placeholder "out"}/${qtbase.qtPluginPrefix}/platforms"
-  ]
-  ++ lib.optional (!waylandSupport) [ "CONFIG+=DISABLE_WAYLAND" ];
+  ] ++ lib.optional (!waylandSupport) [ 
+    "CONFIG+=DISABLE_WAYLAND" 
+  ];
+
+  NIX_CFLAGS_COMPILE = lib.optionalString waylandSupport "-I${wayland-scanner}/include";
 
   meta = with lib; {
     description = "Qt platform plugins for DDE";

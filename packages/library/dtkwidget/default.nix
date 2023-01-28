@@ -14,7 +14,6 @@
 , wrapQtAppsHook
 , cups
 , gsettings-qt
-, librsvg
 , libstartup_notification
 , xorg
 }:
@@ -44,18 +43,16 @@ stdenv.mkDerivation rec {
   ];
 
   buildInputs = [
-    dtkcore
-    dtkgui
-    dtkcommon
     qtmultimedia
     qtsvg
     qtx11extras
     cups
     gsettings-qt
-    librsvg
     libstartup_notification
     xorg.libXdmcp
   ];
+
+  propagatedBuildInputs = [ dtkgui ];
 
   cmakeFlags = [
     "-DDVERSION=${version}"

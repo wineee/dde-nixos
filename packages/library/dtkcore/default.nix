@@ -34,8 +34,9 @@ stdenv.mkDerivation rec {
   buildInputs = [
     gsettings-qt
     lshw
-    dtkcommon
   ];
+
+  propagatedBuildInputs = [ dtkcommon ];
 
   cmakeFlags = [
     "-DDVERSION=${version}"
