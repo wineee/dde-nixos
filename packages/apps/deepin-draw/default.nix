@@ -2,7 +2,7 @@
 , lib
 , fetchFromGitHub
 , fetchpatch
-, dtk
+, dtkwidget
 , qtsvg
 , qt5integration
 , cmake
@@ -31,12 +31,10 @@ stdenv.mkDerivation rec {
     })
   ];
 
-  fixServicePatch = ''
+  postPatch = ''
     substituteInPlace com.deepin.Draw.service \
       --replace "/usr/bin/deepin-draw" "$out/bin/deepin-draw"
   '';
-
-  postPatch = fixServicePatch;
 
   nativeBuildInputs = [
     cmake
@@ -45,15 +43,13 @@ stdenv.mkDerivation rec {
     wrapQtAppsHook
   ];
 
-  buildInputs = [ dtk ];
+  buildInputs = [ dtkwidget ];
 
   cmakeFlags = [ "-DVERSION=${version}" ];
 
   qtWrapperArgs = [
     "--prefix QT_PLUGIN_PATH : ${qt5integration}/${qtbase.qtPluginPrefix}"
   ];
-
-  #separateDebugInfo = true;
 
   meta = with lib; {
     description = "Lightweight drawing tool for users to freely draw and simply edit images";
