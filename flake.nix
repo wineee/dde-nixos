@@ -215,6 +215,11 @@
                     '';
                   };
 
+                  systemd.tmpfiles.rules = [
+                    "d /var/lib/AccountsService 0775 root root - -"
+                    "C /var/lib/AccountsService/icons 0775 root root - ${packages.dde-account-faces}/var/lib/AccountsService/icons"
+                  ];
+
                   environment.systemPackages = with pkgs; [
                     socat
                     xdotool

@@ -156,10 +156,10 @@ buildGoPackage rec {
   };
 
   patches = [
-    (substituteAll {
-      src = ./0001-patch_account_face_path_for_nix.patch;
-      actConfigDir = "\"${dde-account-faces}/share/lib/AccountsService\"";
-    })
+    # (substituteAll {
+    #   src = ./0001-patch_account_face_path_for_nix.patch;
+    #   actConfigDir = "\"${dde-account-faces}/share/lib/AccountsService\"";
+    # })
     ./0002-fix-PATH-when-was-launched-by-dbus.patch
   ];
 

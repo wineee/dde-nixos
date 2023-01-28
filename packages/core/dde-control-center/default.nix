@@ -83,10 +83,10 @@ stdenv.mkDerivation rec {
       url = "https://github.com/linuxdeepin/dde-control-center/commit/32394aa84f4b575e0a84a0813ba07b72cb1ba137.patch";
       sha256 = "sha256-r21oczFyhKarMuEkL8Ruzd8jqB/T+MfuUGrLNeQdZB8=";
     })
-    (substituteAll {
-      src = ./0001-patch_account_face_path_for_nix.patch;
-      actConfigDir = "${dde-account-faces}/share/lib/AccountsService";
-    })
+    # (substituteAll {
+    #   src = ./0001-patch_account_face_path_for_nix.patch;
+    #   actConfigDir = "${dde-account-faces}/share/lib/AccountsService";
+    # })
     ./0002-fix-svg-render-for-themeitem.patch
     ./0003-dont-show-endUserLicenseAgreement-for-deepinos.patch
   ];

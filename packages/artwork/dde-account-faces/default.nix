@@ -1,9 +1,9 @@
-{ stdenv
+{ stdenvNoCC
 , lib
 , fetchFromGitHub
 }:
 
-stdenv.mkDerivation rec {
+stdenvNoCC.mkDerivation rec {
   pname = "dde-account-faces";
   version = "1.0.12.1";
 
@@ -14,11 +14,7 @@ stdenv.mkDerivation rec {
     sha256 = "sha256-NWjR8qxWi2IrcP0cSF+lLxBJ/GrVpk1BfTjVH0ytinY=";
   };
 
-  # It should be installed to /var，but this can't be done directly on nixos, so move to $out/share
-  # we need patch dde-control-center / dde-daemon also
-  installPhase = ''
-    make install DESTDIR="$out/share" PREFIX="/"
-  '';
+  makeFlags = [ "PREFIX=${placeholder "out"}/var" ];
 
   meta = with lib; {
     description = "Account faces of deepin desktop environment";
