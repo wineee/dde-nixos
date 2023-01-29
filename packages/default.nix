@@ -120,6 +120,7 @@ let
     deepin-reader = callPackage ./apps/deepin-reader { };
     deepin-gomoku = callPackage ./apps/deepin-gomoku { };
     deepin-lianliankan = callPackage ./apps/deepin-lianliankan { };
+    deepin-ocr = callPackage ./apps/deepin-ocr { };
 
     #### OS-SPECIFIC
     ## pkgs/top-level/linux-kernels.nix
