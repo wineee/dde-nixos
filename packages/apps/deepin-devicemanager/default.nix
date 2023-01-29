@@ -1,7 +1,7 @@
 { stdenv
 , lib
 , fetchFromGitHub
-, dtk
+, dtkwidget
 , qt5integration
 , dde-qt-dbus-factory
 , cmake
@@ -37,7 +37,7 @@ stdenv.mkDerivation rec {
   ];
 
   buildInputs = [
-    dtk
+    dtkwidget
     dde-qt-dbus-factory
     polkit-qt
     kmod

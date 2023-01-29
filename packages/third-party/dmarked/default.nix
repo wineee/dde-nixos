@@ -2,8 +2,9 @@
 , lib
 , getUsrPatchFrom
 , fetchFromGitHub
-, dtk
+, dtkwidget
 , qt5integration
+, qt5platform-plugins
 , qmake
 , qttools
 , pkg-config
@@ -36,12 +37,13 @@ stdenv.mkDerivation rec {
   ];
 
   buildInputs = [
-    dtk
+    dtkwidget
     qtwebengine
   ];
 
   qtWrapperArgs = [
     "--prefix QT_PLUGIN_PATH : ${qt5integration}/${qtbase.qtPluginPrefix}"
+    "--prefix QT_QPA_PLATFORM_PLUGIN_PATH : ${qt5platform-plugins}/${qtbase.qtPluginPrefix}"
   ];
 
   qmakeFlags = [

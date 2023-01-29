@@ -3,10 +3,11 @@
 , getUsrPatchFrom
 , fetchpatch
 , fetchFromGitHub
-, dtk
+, dtkwidget
 , dde-qt-dbus-factory
 , dde-dock
 , qt5integration
+, qt5platform-plugins
 , image-editor
 , cmake
 , qttools
@@ -61,7 +62,7 @@ stdenv.mkDerivation rec {
   ];
 
   buildInputs = [
-    dtk
+    dtkwidget
     dde-dock
     dde-qt-dbus-factory
     gsettings-qt
@@ -82,6 +83,7 @@ stdenv.mkDerivation rec {
 
   qtWrapperArgs = [
     "--prefix QT_PLUGIN_PATH : ${qt5integration}/${qtbase.qtPluginPrefix}"
+    "--prefix QT_QPA_PLATFORM_PLUGIN_PATH : ${qt5platform-plugins}/${qtbase.qtPluginPrefix}"
     "--prefix LD_LIBRARY_PATH : ${lib.makeLibraryPath [ image-editor ]}"
   ];
 

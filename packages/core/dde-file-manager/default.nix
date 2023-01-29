@@ -5,8 +5,9 @@
 , replaceAll
 , fetchpatch
 , runtimeShell
-, dtk
+, dtkwidget
 , qt5integration
+, qt5platform-plugins
 , dde-qt-dbus-factory
 , udisks2-qt5
 , gio-qt
@@ -158,7 +159,7 @@ stdenv.mkDerivation rec {
   '';
 
   buildInputs = [
-    dtk
+    dtkwidget
     dde-qt-dbus-factory
     udisks2-qt5
     disomaster
@@ -200,6 +201,7 @@ stdenv.mkDerivation rec {
 
   qtWrapperArgs = [
     "--prefix QT_PLUGIN_PATH : ${qt5integration}/${qtbase.qtPluginPrefix}"
+    "--prefix QT_QPA_PLATFORM_PLUGIN_PATH : ${qt5platform-plugins}/${qtbase.qtPluginPrefix}"
     "--prefix LD_LIBRARY_PATH : ${lib.makeLibraryPath [ mpv ffmpeg ffmpegthumbnailer gst_all_1.gstreamer gst_all_1.gst-plugins-base ]}"
   ];
 

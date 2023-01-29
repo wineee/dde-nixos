@@ -4,8 +4,9 @@
 , fetchFromGitHub
 , getUsrPatchFrom
 , replaceAll
-, dtk
+, dtkwidget
 , qt5integration
+, qt5platform-plugins
 , dde-qt-dbus-factory
 , dde-dock
 , image-editor
@@ -92,7 +93,7 @@ stdenv.mkDerivation rec {
   ];
 
   buildInputs = [
-    dtk
+    dtkwidget
     dde-qt-dbus-factory
     dde-dock
     image-editor
@@ -120,6 +121,7 @@ stdenv.mkDerivation rec {
   qtWrapperArgs = [
     "--prefix PATH : ${lib.makeBinPath [ ffmpeg ]}"
     "--prefix QT_PLUGIN_PATH : ${qt5integration}/${qtbase.qtPluginPrefix}"
+    "--prefix QT_QPA_PLATFORM_PLUGIN_PATH : ${qt5platform-plugins}/${qtbase.qtPluginPrefix}"
     "--prefix GST_PLUGIN_SYSTEM_PATH_1_0 : ${gstPluginPath}"
   ];
 

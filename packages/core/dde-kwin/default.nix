@@ -12,7 +12,7 @@
 , wrapQtAppsHook
 , deepin-gettext-tools
 , extra-cmake-modules
-, dtk
+, dtkwidget
 , gsettings-qt
 , xorg
 , libepoxy
@@ -67,7 +67,7 @@ stdenv.mkDerivation rec {
     kconfig
     kwindowsystem
     kglobalaccel
-    dtk
+    dtkwidget
     qtx11extras
     gsettings-qt
     xorg.libXdmcp

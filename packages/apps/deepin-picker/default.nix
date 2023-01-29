@@ -1,8 +1,9 @@
 { stdenv
 , lib
 , fetchFromGitHub
-, dtk
+, dtkwidget
 , qt5integration
+, qt5platform-plugins
 , dde-qt-dbus-factory
 , qmake
 , qttools
@@ -32,7 +33,7 @@ stdenv.mkDerivation rec {
   ];
 
   buildInputs = [
-    dtk
+    dtkwidget
     qtsvg
     xorg.libXtst
   ];
@@ -47,6 +48,7 @@ stdenv.mkDerivation rec {
 
   qtWrapperArgs = [
     "--prefix QT_PLUGIN_PATH : ${qt5integration}/${qtbase.qtPluginPrefix}"
+    "--prefix QT_QPA_PLATFORM_PLUGIN_PATH : ${qt5platform-plugins}/${qtbase.qtPluginPrefix}"
   ];
 
   postPatch = ''

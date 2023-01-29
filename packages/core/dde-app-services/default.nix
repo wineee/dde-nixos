@@ -3,10 +3,11 @@
 , fetchFromGitHub
 , fetchpatch
 , replaceAll
-, dtk
+, dtkwidget
 , cmake
 , wrapQtAppsHook
 , qt5integration
+, qt5platform-plugins
 , qtbase
 }:
 stdenv.mkDerivation rec {
@@ -35,7 +36,7 @@ stdenv.mkDerivation rec {
     wrapQtAppsHook
   ];
 
-  buildInputs = [ dtk ];
+  buildInputs = [ dtkwidget ];
 
   cmakeFlags = [
     "-DDVERSION=${version}"
@@ -44,6 +45,7 @@ stdenv.mkDerivation rec {
 
   qtWrapperArgs = [
     "--prefix QT_PLUGIN_PATH : ${qt5integration}/${qtbase.qtPluginPrefix}"
+    "--prefix QT_QPA_PLATFORM_PLUGIN_PATH : ${qt5platform-plugins}/${qtbase.qtPluginPrefix}"
   ];
 
   meta = with lib; {

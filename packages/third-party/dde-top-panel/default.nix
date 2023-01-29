@@ -3,9 +3,10 @@
 , fetchFromGitHub
 , fetchpatch
 , getUsrPatchFrom
-, dtk
+, dtkwidget
 , gsettings-qt
 , qt5integration
+, qt5platform-plugins
 , udisks2-qt5
 , cmake
 , qttools
@@ -42,7 +43,7 @@ stdenv.mkDerivation rec {
   ];
 
   buildInputs = [
-    dtk
+    dtkwidget
     gsettings-qt
     qtx11extras
     kwindowsystem
@@ -53,6 +54,7 @@ stdenv.mkDerivation rec {
 
   qtWrapperArgs = [
     "--prefix QT_PLUGIN_PATH : ${qt5integration}/${qtbase.qtPluginPrefix}"
+    "--prefix QT_QPA_PLATFORM_PLUGIN_PATH : ${qt5platform-plugins}/${qtbase.qtPluginPrefix}"
   ];
 
   cmakeFlags = [

@@ -3,7 +3,7 @@
 , fetchFromGitHub
 , getUsrPatchFrom
 , replaceAll
-, dtk
+, dtkwidget
 , pkg-config
 , cmake
 , dde-dock
@@ -24,6 +24,7 @@
 , xkeyboard_config
 , qtbase
 , qt5integration
+, qt5platform-plugins
 , dbus
 }:
 let
@@ -80,7 +81,7 @@ stdenv.mkDerivation rec {
   ];
 
   buildInputs = [
-    dtk
+    dtkwidget
     dde-dock
     dde-qt-dbus-factory
     gsettings-qt
@@ -95,6 +96,7 @@ stdenv.mkDerivation rec {
 
   qtWrapperArgs = [
     "--prefix QT_PLUGIN_PATH : ${qt5integration}/${qtbase.qtPluginPrefix}"
+    "--prefix QT_QPA_PLATFORM_PLUGIN_PATH : ${qt5platform-plugins}/${qtbase.qtPluginPrefix}"
   ];
 
   preFixup = ''

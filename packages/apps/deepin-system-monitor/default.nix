@@ -4,8 +4,9 @@
 , fetchpatch
 , getUsrPatchFrom
 , replaceAll
-, dtk
+, dtkwidget
 , qt5integration
+, qt5platform-plugins
 , deepin-gettext-tools
 , dde-qt-dbus-factory
 , dde-dock
@@ -72,7 +73,7 @@ stdenv.mkDerivation rec {
   ];
 
   buildInputs = [
-    dtk
+    dtkwidget
     dde-qt-dbus-factory
     qtx11extras
     dde-dock.dev
@@ -90,6 +91,7 @@ stdenv.mkDerivation rec {
 
   qtWrapperArgs = [
     "--prefix QT_PLUGIN_PATH : ${qt5integration}/${qtbase.qtPluginPrefix}"
+    "--prefix QT_QPA_PLATFORM_PLUGIN_PATH : ${qt5platform-plugins}/${qtbase.qtPluginPrefix}"
   ];
 
   meta = with lib; {

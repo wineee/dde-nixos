@@ -2,8 +2,9 @@
 , lib
 , fetchFromGitHub
 , getUsrPatchFrom
-, dtk
+, dtkwidget
 , qt5integration
+, qt5platform-plugins
 , dde-file-manager
 , cmake
 , libuuid
@@ -50,7 +51,7 @@ stdenv.mkDerivation rec {
   ];
 
   buildInputs = [
-    dtk
+    dtkwidget
     dde-file-manager
   ];
 
@@ -61,6 +62,7 @@ stdenv.mkDerivation rec {
 
   qtWrapperArgs = [
     "--prefix QT_PLUGIN_PATH : ${qt5integration}/${qtbase.qtPluginPrefix}"
+    "--prefix QT_QPA_PLATFORM_PLUGIN_PATH : ${qt5platform-plugins}/${qtbase.qtPluginPrefix}"
   ];
 
   postInstall = ''

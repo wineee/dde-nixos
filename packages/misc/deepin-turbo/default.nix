@@ -3,7 +3,7 @@
 , fetchFromGitHub
 , fetchpatch
 , getUsrPatchFrom
-, dtk
+, dtkwidget
 , cmake
 , pkg-config
 , wrapQtAppsHook
@@ -41,7 +41,7 @@ stdenv.mkDerivation rec {
     wrapQtAppsHook
   ];
 
-  buildInputs = [ dtk ];
+  buildInputs = [ dtkwidget ];
 
   postPatch = getUsrPatchFrom patchList;
 

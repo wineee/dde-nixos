@@ -2,8 +2,9 @@
 , lib
 , fetchFromGitHub
 , fetchpatch
-, dtk
+, dtkwidget
 , qt5integration
+, qt5platform-plugins
 , udisks2-qt5
 , gio-qt
 , image-editor
@@ -43,7 +44,7 @@ stdenv.mkDerivation rec {
   nativeBuildInputs = [ cmake pkg-config qttools wrapQtAppsHook ];
 
   buildInputs = [
-    dtk
+    dtkwidget
     udisks2-qt5
     gio-qt
     image-editor
@@ -56,6 +57,7 @@ stdenv.mkDerivation rec {
 
   qtWrapperArgs = [
     "--prefix QT_PLUGIN_PATH : ${qt5integration}/${qtbase.qtPluginPrefix}"
+    "--prefix QT_QPA_PLATFORM_PLUGIN_PATH : ${qt5platform-plugins}/${qtbase.qtPluginPrefix}"
   ];
 
   cmakeFlags = [ "-DVERSION=${version}" ];

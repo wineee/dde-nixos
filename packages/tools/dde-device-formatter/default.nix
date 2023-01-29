@@ -3,7 +3,7 @@
 , fetchFromGitHub
 , fetchpatch
 , getUsrPatchFrom
-, dtk
+, dtkwidget
 , deepin-gettext-tools
 , qt5integration
 , qmake
@@ -53,7 +53,7 @@ stdenv.mkDerivation rec {
   ];
 
   buildInputs = [
-    dtk
+    dtkwidget
     udisks2-qt5
     qtx11extras
   ];

@@ -2,12 +2,13 @@
 , lib
 , fetchFromGitHub
 , replaceAll
-, dtk
+, dtkwidget
 , dde-qt-dbus-factory
 , dde-dock
 , dde-control-center
 , dde-session-shell
 , qt5integration
+, qt5platform-plugins
 , gio-qt
 , cmake
 , qttools
@@ -48,7 +49,7 @@ stdenv.mkDerivation rec {
   ];
 
   buildInputs = [
-    dtk
+    dtkwidget
     dde-dock
     dde-control-center
     dde-session-shell
@@ -70,6 +71,7 @@ stdenv.mkDerivation rec {
 
   qtWrapperArgs = [
     "--prefix QT_PLUGIN_PATH : ${qt5integration}/${qtbase.qtPluginPrefix}"
+    "--prefix QT_QPA_PLATFORM_PLUGIN_PATH : ${qt5platform-plugins}/${qtbase.qtPluginPrefix}"
   ];
 
   meta = with lib; {

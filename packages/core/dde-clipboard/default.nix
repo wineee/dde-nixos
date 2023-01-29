@@ -2,8 +2,9 @@
 , lib
 , fetchFromGitHub
 , getUsrPatchFrom
-, dtk
+, dtkwidget
 , qt5integration
+, qt5platform-plugins
 , dde-qt-dbus-factory
 , gio-qt
 , cmake
@@ -51,7 +52,7 @@ stdenv.mkDerivation rec {
   ];
 
   buildInputs = [
-    dtk
+    dtkwidget
     dde-qt-dbus-factory
     gio-qt
     kwayland
@@ -65,6 +66,7 @@ stdenv.mkDerivation rec {
 
   qtWrapperArgs = [
     "--prefix QT_PLUGIN_PATH : ${qt5integration}/${qtbase.qtPluginPrefix}"
+    "--prefix QT_QPA_PLATFORM_PLUGIN_PATH : ${qt5platform-plugins}/${qtbase.qtPluginPrefix}"
   ];
 
   meta = with lib; {

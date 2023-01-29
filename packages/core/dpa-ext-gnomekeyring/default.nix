@@ -1,7 +1,7 @@
 { stdenv
 , lib
 , fetchFromGitHub
-, dtk
+, dtkwidget
 , dde-polkit-agent
 , qt5integration
 , cmake
@@ -36,7 +36,7 @@ stdenv.mkDerivation rec {
   ];
 
   buildInputs = [
-    dtk
+    dtkwidget
     dde-polkit-agent
     qt5integration
     libgnome-keyring

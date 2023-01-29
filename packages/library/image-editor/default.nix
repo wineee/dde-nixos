@@ -2,7 +2,7 @@
 , lib
 , fetchFromGitHub
 , fetchpatch
-, dtk
+, dtkwidget
 , cmake
 , qttools
 , pkg-config
@@ -49,7 +49,7 @@ stdenv.mkDerivation rec {
   nativeBuildInputs = [ cmake pkg-config qttools wrapQtAppsHook ];
 
   buildInputs = [
-    dtk
+    dtkwidget
     opencv
     freeimage
     libmediainfo
@@ -62,7 +62,7 @@ stdenv.mkDerivation rec {
   ];
 
   meta = with lib; {
-    description = "image editor lib for dtk";
+    description = "image editor lib for dtkwidget";
     homepage = "https://github.com/linuxdeepin/image-editor";
     license = licenses.gpl3Plus;
     platforms = platforms.linux;

@@ -3,9 +3,10 @@
 , fetchFromGitHub
 , getUsrPatchFrom
 , replaceAll
-, dtk
+, dtkwidget
 , dde-qt-dbus-factory
 , qt5integration
+, qt5platform-plugins
 , dde-control-center
 , dde-daemon
 , deepin-desktop-schemas
@@ -52,7 +53,7 @@ stdenv.mkDerivation rec {
   dontWrapGApps = true;
 
   buildInputs = [
-    dtk
+    dtkwidget
     dde-qt-dbus-factory
     dde-control-center
     qtx11extras
@@ -71,6 +72,7 @@ stdenv.mkDerivation rec {
 
   qtWrapperArgs = [
     "--prefix QT_PLUGIN_PATH : ${qt5integration}/${qtbase.qtPluginPrefix}"
+    "--prefix QT_QPA_PLATFORM_PLUGIN_PATH : ${qt5platform-plugins}/${qtbase.qtPluginPrefix}"
   ];
 
   preFixup = ''

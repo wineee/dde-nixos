@@ -5,6 +5,7 @@
 , dtkwidget
 , qtsvg
 , qt5integration
+, qt5platform-plugins
 , cmake
 , qttools
 , pkg-config
@@ -49,6 +50,7 @@ stdenv.mkDerivation rec {
 
   qtWrapperArgs = [
     "--prefix QT_PLUGIN_PATH : ${qt5integration}/${qtbase.qtPluginPrefix}"
+    "--prefix QT_QPA_PLATFORM_PLUGIN_PATH : ${qt5platform-plugins}/${qtbase.qtPluginPrefix}"
   ];
 
   meta = with lib; {

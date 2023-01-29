@@ -1,7 +1,7 @@
 { stdenv
 , lib
 , fetchFromGitHub
-, dtk
+, dtkwidget
 , qmake
 , pkg-config
 , qtbase
@@ -9,6 +9,7 @@
 , qtx11extras
 , wrapQtAppsHook
 , qt5integration
+, qt5platform-plugins
 , mtools
 , p7zip
 , syslinux
@@ -50,7 +51,7 @@ stdenv.mkDerivation rec {
   ];
 
   buildInputs = [
-    dtk
+    dtkwidget
     qtx11extras
     mtools
     p7zip
@@ -64,6 +65,7 @@ stdenv.mkDerivation rec {
 
   qtWrapperArgs = [
     "--prefix QT_PLUGIN_PATH : ${qt5integration}/${qtbase.qtPluginPrefix}"
+    "--prefix QT_QPA_PLATFORM_PLUGIN_PATH : ${qt5platform-plugins}/${qtbase.qtPluginPrefix}"
   ];
 
   postFixup = ''
