@@ -277,6 +277,7 @@
                     deepin-font-manager
                     deepin-screen-recorder
                     deepin-compressor
+                    deepin-ocr
                   ] ++ lib.optionals cfg.full [
                     dde-grand-search # FIXME
                     deepin-boot-maker
@@ -311,6 +312,7 @@
                     deepin-system-monitor
                     deepin-camera
                     dde-clipboard
+                    deepin-ocr
                   ] ++ lib.optionals cfg.full [
                     dde-grand-search
                     deepin-boot-maker
