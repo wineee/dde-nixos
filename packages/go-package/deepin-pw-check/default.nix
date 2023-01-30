@@ -4,7 +4,6 @@
 , buildGoPackage
 , pkg-config
 , deepin-gettext-tools
-, go
 , go-dbus-factory
 , go-gir-generator
 , go-lib
@@ -19,15 +18,15 @@
 
 buildGoPackage rec {
   pname = "deepin-pw-check";
-  version = "5.1.17";
+  version = "5.1.18";
 
   goPackagePath = "github.com/linuxdeepin/deepin-pw-check";
 
   src = fetchFromGitHub {
     owner = "linuxdeepin";
     repo = pname;
-    rev = "87d7034cad5d322271c01f38258ce3aacb7ded12";
-    sha256 = "sha256-EaKSux/g9zmc/LuOZR+OGOc0DqZZOGXkJzKF2hdWcZk=";
+    rev = version;
+    sha256 = "sha256-v1Z4ArkrejjOCO1vD+BhfEl9pTfuvKgLM6Ont0IUCQk=";
   };
 
   goDeps = ./deps.nix;
@@ -53,9 +52,7 @@ buildGoPackage rec {
   postPatch = ''
     sed -i 's|iniparser/||' */*.c
     substituteInPlace misc/pkgconfig/libdeepin_pw_check.pc \
-      --replace "/usr" "$out" \
-      --replace "Version: 0.0.0.1" "Version: ${version}"
-    
+      --replace "/usr" "$out"
     substituteInPlace misc/system-services/com.deepin.daemon.PasswdConf.service \
       --replace "/usr/lib/deepin-pw-check/deepin-pw-check" "$out/lib/deepin-pw-check/deepin-pw-check"
   '';
@@ -70,7 +67,13 @@ buildGoPackage rec {
   '';
 
   installPhase = ''
-    make install DESTDIR="$out" PREFIX="/" PKG_FILE_DIR="/lib/pkg-config" -C go/src/${goPackagePath}
+    runHook preInstall
+    make install PREFIX="$out" PKG_FILE_DIR=$out/lib/pkg-config PAM_MODULE_DIR=$out/etc/pam.d -C go/src/${goPackagePath}
+    runHook postInstall
+  '';
+
+  postInstall = ''
+    # https://github.com/linuxdeepin/deepin-pw-check/blob/d5597482678a489077a506a87f06d2b6c4e7e4ed/debian/rules#L21
     ln -s $out/lib/libdeepin_pw_check.so $out/lib/libdeepin_pw_check.so.1
   '';
 
