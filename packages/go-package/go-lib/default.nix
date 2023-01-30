@@ -2,7 +2,6 @@
 , lib
 , fetchFromGitHub
 , replaceAll
-, go
 , glib
 , xorg
 , gdk-pixbuf
@@ -27,7 +26,6 @@ stdenv.mkDerivation rec {
   postPatch = replaceAll "/bin/sh" "${runtimeShell}";
 
   propagatedBuildInputs = [
-    go
     glib
     xorg.libX11
     gdk-pixbuf
@@ -36,9 +34,11 @@ stdenv.mkDerivation rec {
   ];
 
   installPhase = ''
+    runHook preInstall
     mkdir -p $out/share/gocode/src/github.com/linuxdeepin/go-lib
     cp -a * $out/share/gocode/src/github.com/linuxdeepin/go-lib
     rm -r $out/share/gocode/src/github.com/linuxdeepin/go-lib/debian
+    runHook postInstall
   '';
 
   meta = with lib; {
