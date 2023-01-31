@@ -70,17 +70,18 @@ let
     "audio/audio_config.go" = [
       # "/usr/share/dde-daemon/audio/echoCancelEnable.sh"
     ];
-    "bin/dde-authority/fprint_transaction.go" = [
-      #? fprintd 0.8 in deepin but 1.9in nixos
-      # services.fprintd.enable
-      [ "/usr/lib/fprintd/fprintd" "${fprintd}/libexec/fprintd" ]
-    ];
+    # "bin/dde-authority/fprint_transaction.go" = [
+    #   #? fprintd 0.8 in deepin but 1.9in nixos
+    #   # services.fprintd.enable
+    #   [ "/usr/lib/fprintd/fprintd" "${fprintd}/libexec/fprintd" ]
+    # ];
     "system/gesture/config.go" = [
       [ "/usr/share" "/run/current-system/sw/share" ]
     ];
-    "system/power/manager_lmt.go" = [
-      [ "/usr/sbin/laptop_mode" "laptop_mode" ] # TODO https://github.com/rickysarraf/laptop-mode-tools
-    ];
+    #"system/power/manager_lmt.go" = [
+    #  "/usr/sbin/laptop_mode" 
+    #  TODO https://github.com/rickysarraf/laptop-mode-tools
+    #];
     "bin/user-config/config_datas.go" = [
       [ "/usr/share" "/run/current-system/sw/share" ]
       # "/usr/share/doc/deepin-manuals"
@@ -109,7 +110,6 @@ let
       [ "/usr/bin/dde-control-center" "dde-control-center" ]
       [ "/usr/share" "/run/current-system/sw/share" ]
       #/usr/share/xsessions
-      [ "/var/lib/AccountsService/icons" "${dde-account-faces}/share/lib/AccountsService/icons" ]
     ];
     "dock/desktop_file_path.go" = [
       [ "/usr/share" "/run/current-system/sw/share" ]
@@ -131,15 +131,9 @@ let
     "accounts/manager.go" = [
       # /usr/share/dde-daemon/accounts/dbus-udcp.json
     ];
-    "system/timedated/manager.go" = [
-      #? /etc/systemd/timesyncd.conf.d/deepin.conf
-    ];
-    "accounts/users/manager.go" = [
-      #? "/etc/adduser.conf"
-    ];
-    "image_effect/utils.go" = [
-      [ "runuser" "${util-linux.bin}/bin/runuser" ]
-    ];
+    # "image_effect/utils.go" = [
+    #   [ "runuser" "${util-linux.bin}/bin/runuser" ]
+    # ];
   };
 in
 buildGoPackage rec {
@@ -160,6 +154,7 @@ buildGoPackage rec {
     #   src = ./0001-patch_account_face_path_for_nix.patch;
     #   actConfigDir = "\"${dde-account-faces}/share/lib/AccountsService\"";
     # })
+    ./0001-fix-wrapped-name-for-verifyExe.patch
     ./0002-fix-PATH-when-was-launched-by-dbus.patch
   ];
 
@@ -191,7 +186,6 @@ buildGoPackage rec {
     deepin-gettext-tools
     gettext
     networkmanager
-    #networkmanager.dev
     python3
     makeWrapper
     wrapGAppsHook
