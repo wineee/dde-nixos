@@ -62,7 +62,7 @@ buildGoPackage rec {
     GOPATH="$GOPATH:${go-dbus-factory}/share/gocode"
     GOPATH="$GOPATH:${go-gir-generator}/share/gocode"
     GOPATH="$GOPATH:${go-lib}/share/gocode"
-    make -C go/src/''${goPackagePath}
+    make -C go/src/${goPackagePath}
     runHook postBuild
   '';
 
