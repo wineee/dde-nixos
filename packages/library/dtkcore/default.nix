@@ -6,18 +6,19 @@
 , gsettings-qt
 , wrapQtAppsHook
 , lshw
+, libuchardet
 , dtkcommon
 }:
 
 stdenv.mkDerivation rec {
   pname = "dtkcore";
-  version = "5.6.3";
+  version = "5.6.4";
 
   src = fetchFromGitHub {
     owner = "linuxdeepin";
     repo = pname;
     rev = version;
-    sha256 = "sha256-DEpo/eKMjtTVGEkq5JofkRNSHtTOZ1t2QNjrdulUtPQ=";
+    sha256 = "sha256-opTmNjZ3USDt7VjsvKQPTbWyo2ulojZ1vTLe86K70bI=";
   };
 
   postPatch = ''
@@ -31,9 +32,12 @@ stdenv.mkDerivation rec {
     wrapQtAppsHook
   ];
 
+  dontWrapQtApps = true;
+
   buildInputs = [
     gsettings-qt
     lshw
+    libuchardet
   ];
 
   propagatedBuildInputs = [ dtkcommon ];
@@ -43,6 +47,8 @@ stdenv.mkDerivation rec {
     "-DBUILD_DOCS=OFF"
     "-DDSG_PREFIX_PATH='/run/current-system/sw'"
     "-DMKSPECS_INSTALL_DIR=${placeholder "out"}/mkspecs/modules"
+    "-DCMAKE_INSTALL_LIBDIR=lib"
+    "-DCMAKE_INSTALL_INCLUDEDIR=include"
   ];
 
   meta = with lib; {
