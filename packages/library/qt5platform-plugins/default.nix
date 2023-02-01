@@ -9,23 +9,26 @@
 , mtdev
 , cairo
 , xorg
-, wayland-scanner
 , qtwayland
 , dwayland
 , wayland
-, waylandSupport ? false
+, waylandSupport ? true
 }:
 
 stdenv.mkDerivation rec {
   pname = "qt5platform-plugins";
-  version = "5.6.3";
+  version = "5.6.4";
 
   src = fetchFromGitHub {
     owner = "linuxdeepin";
     repo = pname;
     rev = version;
-    sha256 = "sha256-AySltMI9x5mfquy532h1QfGpfwSfI9+h6BtIHPyNWGk=";
+    sha256 = "sha256-1EQomcJixq5I6AntpRP2UMqvvn7j38Z80y6nFDiXxDM=";
   };
+
+  # patches = [
+  #   ./0001-chore-find-wayland-scanner-by-pkg-config.patch
+  # ];
 
   ## https://github.com/linuxdeepin/qt5platform-plugins/pull/119 
   postPatch = ''
@@ -42,20 +45,24 @@ stdenv.mkDerivation rec {
     qtbase
     qtx11extras
     xorg.libSM
-  ] ++ lib.optional (!waylandSupport) [
-    qtwayland
-    dwayland
+  ] ++ lib.optional waylandSupport [
+    #qtwayland
+    #dwayland
     wayland
-    wayland-scanner
   ];
 
   qmakeFlags = [
+    "VERSION=${version}"
     "INSTALL_PATH=${placeholder "out"}/${qtbase.qtPluginPrefix}/platforms"
   ] ++ lib.optional (!waylandSupport) [ 
     "CONFIG+=DISABLE_WAYLAND" 
   ];
 
-  NIX_CFLAGS_COMPILE = lib.optionalString waylandSupport "-I${wayland-scanner}/include";
+  NIX_CFLAGS_COMPILE = lib.optional waylandSupport [ 
+    "-I${wayland.dev}/include"
+  ];
+
+  enableParallelBuilding = false;
 
   meta = with lib; {
     description = "Qt platform plugins for DDE";

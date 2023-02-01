@@ -1,0 +1,25 @@
+From 4980d1309db264865135d3ede77bf94d19bef93a Mon Sep 17 00:00:00 2001
+From: rewine <luhongxu@deepin.org>
+Date: Wed, 1 Feb 2023 17:18:47 +0800
+Subject: [PATCH] chore: find wayland-scanner by pkg-config
+
+---
+ wayland/dwayland/dwayland.pro | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/wayland/dwayland/dwayland.pro b/wayland/dwayland/dwayland.pro
+index 7431bff..6497adb 100644
+--- a/wayland/dwayland/dwayland.pro
++++ b/wayland/dwayland/dwayland.pro
+@@ -8,7 +8,7 @@ TARGET = dwayland
+ TEMPLATE = lib
+ 
+ CONFIG += link_pkgconfig plugin
+-PKGCONFIG += Qt5WaylandClient
++PKGCONFIG += Qt5WaylandClient  wayland-cursor
+ 
+ # Qt >= 5.8
+ greaterThan(QT_MINOR_VERSION, 7): QT += gui-private
+-- 
+2.39.1
+
