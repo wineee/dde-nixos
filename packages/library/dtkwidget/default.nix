@@ -20,13 +20,13 @@
 
 stdenv.mkDerivation rec {
   pname = "dtkwidget";
-  version = "5.6.3";
+  version = "5.6.4";
 
   src = fetchFromGitHub {
     owner = "linuxdeepin";
     repo = pname;
     rev = version;
-    sha256 = "sha256-APk2p8pdLsaKvPp95HtEI1F1LM4ySUL+fhGsC5vHasU=";
+    sha256 = "sha256-dUoTN9XEAX3CIH4cdGz7A+Z50Lewlxu4FOveWYT9wkA=";
   };
 
   postPatch = ''
@@ -58,6 +58,8 @@ stdenv.mkDerivation rec {
     "-DDVERSION=${version}"
     "-DBUILD_DOCS=OFF"
     "-DMKSPECS_INSTALL_DIR=${placeholder "out"}/mkspecs/modules"
+    "-DCMAKE_INSTALL_LIBDIR=lib"
+    "-DCMAKE_INSTALL_INCLUDEDIR=include"
   ];
 
   meta = with lib; {
