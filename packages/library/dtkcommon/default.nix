@@ -3,31 +3,28 @@
 , fetchFromGitHub
 , pkg-config
 , cmake
-, qtbase
 , qttools
-, wrapQtAppsHook
 , glib
 }:
 
 stdenv.mkDerivation rec {
   pname = "dtkcommon";
-  version = "5.6.3";
+  version = "5.6.4";
 
   src = fetchFromGitHub {
     owner = "linuxdeepin";
     repo = pname;
     rev = version;
-    sha256 = "sha256-9gFJ0Uun0q/XVaegxTUu4Kkc+/GE09eAV68VZgWurrM=";
+    sha256 = "sha256-3g84nTwRuxhWPuJ0+SdziPxxc44zMo7UzwZEKIPCX30=";
   };
 
   nativeBuildInputs = [
     cmake
     pkg-config
     qttools
-    wrapQtAppsHook
   ];
 
-  buildInputs = [ qtbase ];
+  dontWrapQtApps = true;
 
   qmakeFlags = [ "PREFIX=${placeholder "out"}" ];
 
