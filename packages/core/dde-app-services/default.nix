@@ -12,13 +12,13 @@
 }:
 stdenv.mkDerivation rec {
   pname = "dde-app-services";
-  version = "0.0.20";
+  version = "0.0.20.p2";
 
   src = fetchFromGitHub {
     owner = "linuxdeepin";
     repo = pname;
-    rev = version;
-    sha256 = "sha256-M9XXNV3N4CifOXitT6+UxaGsLoVuoNGqC5SO/mF+bLw=";
+    rev = "20f96230b97337ab061f2357813a195eb0f67b9c";
+    sha256 = "sha256-bgpaAGgvYWaWCl6rLDI3BCnPQlJCYpdEk9mp/8731p8=";
   };
 
   postPatch = replaceAll "/usr/share/dsg" "/run/current-system/sw/share/dsg" + ''
@@ -38,8 +38,9 @@ stdenv.mkDerivation rec {
 
   buildInputs = [ dtkwidget ];
 
+  enableParallelBuilding = false;
+
   cmakeFlags = [
-    "-DDVERSION=${version}"
     "-DDSG_DATA_DIR=/run/current-system/sw/share/dsg"
   ];
 
