@@ -1,6 +1,7 @@
 { stdenv
 , lib
 , fetchFromGitHub
+, fetchpatch
 , getUsrPatchFrom
 , replaceAll
 , dtkwidget
@@ -41,6 +42,14 @@ stdenv.mkDerivation rec {
     rev = version;
     sha256 = "sha256-Td8R91892tgJx7FLV2IZ/aPBzDb+o6EYKpk3D8On7Ag=";
   };
+
+  patches = [
+    (fetchpatch {
+      name = "fix: ambiguous reference to DRegionMonitor ";
+      url = "https://github.com/linuxdeepin/dde-launcher/commit/40d0e004cb8035e96d46b87c7f9b2ff56e80366d.patch";
+      sha256 = "sha256-zs512/LQe3x/awZp89N3fj4yDOY7mPTeBwh66Pjtcqc=";
+    })
+  ];
 
   postPatch = replaceAll "/usr/share/backgrounds" "/run/current-system/sw/share/backgrounds"
     + getUsrPatchFrom patchList;
