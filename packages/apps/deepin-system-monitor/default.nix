@@ -20,6 +20,8 @@
 , libpcap
 , libnl
 , qtbase
+, dtkcore
+, dtkgui
 }:
 let
   patchList = {
@@ -87,6 +89,12 @@ stdenv.mkDerivation rec {
   cmakeFlags = [
     "-DVERSION=${version}"
     "-DUSE_DEEPIN_WAYLAND=OFF"
+  ];
+
+  # https://github.com/linuxdeepin/deepin-system-monitor/commit/59d1e3de903a3756afa75b2d3f47c3b0857736e3
+  NIX_CFLAGS_COMPILE = [
+    "-I${dtkcore}/include/dtk5/DCore"
+    "-I${dtkgui}/include/dtk5/DGui"
   ];
 
   qtWrapperArgs = [
