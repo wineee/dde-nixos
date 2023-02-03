@@ -237,7 +237,7 @@
                   ] ++ (with packages; (utils.removePackagesByName ([
                     dde-kwin
                     deepin-kwin
-                    qt5platform-plugins #TODO nixos/modules/config/qt5.nix
+                    # qt5platform-plugins #TODO nixos/modules/config/qt5.nix
                     # qt5integration
 
                     startdde
@@ -288,12 +288,11 @@
                     deepin-gomoku
                     dde-introduction
                     dde-top-panel
-                    dmarked
+                    # dmarked
                     # deepin-devicemanager # FIXME
                     deepin-clone
                     dde-device-formatter
                   ]) config.environment.deepin.excludePackages));
-
                   services.dbus.packages = with packages; (utils.removePackagesByName ([
                     dde-kwin
                     deepin-kwin
@@ -332,7 +331,6 @@
 
                   services.dde.deepin-anything.enable = true;
                 })
-
                 (mkIf config.services.dde.dde-daemon.enable {
                   environment.systemPackages = [ packages.dde-daemon ];
                   services.dbus.packages = [ packages.dde-daemon ];
