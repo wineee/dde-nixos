@@ -14,6 +14,8 @@
 , wrapQtAppsHook
 , gtest
 , qtbase
+, dtkcore
+, dtkgui
 }:
 
 stdenv.mkDerivation rec {
@@ -54,6 +56,11 @@ stdenv.mkDerivation rec {
   ];
 
   cmakeFlags = [ "-DVERSION=${version}" ];
+
+  NIX_CFLAGS_COMPILE = [
+    "-I${dtkcore}/include/dtk5/DCore"
+    "-I${dtkgui}/include/dtk5/DGui"
+  ];
 
   qtWrapperArgs = [
     "--prefix QT_PLUGIN_PATH : ${qt5integration}/${qtbase.qtPluginPrefix}"
