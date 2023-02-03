@@ -2,11 +2,6 @@
 , lib
 , fetchFromGitHub
 , replaceAll
-, glib
-, xorg
-, gdk-pixbuf
-, pulseaudio
-, mobile-broadband-provider-info
 , runtimeShell
 }:
 
@@ -24,14 +19,6 @@ stdenv.mkDerivation rec {
   patches = [ ./0001-fix-IsDir-for-symlink.patch ];
 
   postPatch = replaceAll "/bin/sh" "${runtimeShell}";
-
-  propagatedBuildInputs = [
-    glib
-    xorg.libX11
-    gdk-pixbuf
-    pulseaudio
-    mobile-broadband-provider-info
-  ];
 
   installPhase = ''
     runHook preInstall

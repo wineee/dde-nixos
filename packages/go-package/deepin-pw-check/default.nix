@@ -69,12 +69,9 @@ buildGoPackage rec {
   installPhase = ''
     runHook preInstall
     make install PREFIX="$out" PKG_FILE_DIR=$out/lib/pkg-config PAM_MODULE_DIR=$out/etc/pam.d -C go/src/${goPackagePath}
-    runHook postInstall
-  '';
-
-  postInstall = ''
     # https://github.com/linuxdeepin/deepin-pw-check/blob/d5597482678a489077a506a87f06d2b6c4e7e4ed/debian/rules#L21
     ln -s $out/lib/libdeepin_pw_check.so $out/lib/libdeepin_pw_check.so.1
+    runHook postInstall
   '';
 
   meta = with lib; {
