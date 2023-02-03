@@ -13,6 +13,7 @@
 , libgnome-keyring
 , gtk3
 , alsa-lib
+, pulseaudio
 , libgudev
 , libsecret
 , jq
@@ -96,6 +97,7 @@ buildGoPackage rec {
     libgnome-keyring
     gtk3
     alsa-lib
+    pulseaudio
     libgudev
     libsecret
   ];

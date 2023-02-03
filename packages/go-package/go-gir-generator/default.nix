@@ -1,7 +1,6 @@
 { stdenv
 , lib
 , fetchFromGitHub
-, go-lib
 , go
 , pkg-config
 , libgudev
@@ -25,8 +24,8 @@ stdenv.mkDerivation rec {
   ];
 
   buildInputs = [
-    gobject-introspection
     libgudev
+    gobject-introspection
   ];
 
   makeFlags = [
