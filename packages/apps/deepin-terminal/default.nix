@@ -46,23 +46,24 @@ stdenv.mkDerivation rec {
     qttools
     pkg-config
     wrapQtAppsHook
+    lxqt.lxqt-build-tools
   ];
 
   buildInputs = [
     dtkwidget
+    qt5platform-plugins
     dde-qt-dbus-factory
     qtx11extras
     at-spi2-core
     libsecret
     chrpath
-    lxqt.lxqt-build-tools
     gtest
   ];
 
   qtWrapperArgs = [
     "--prefix QT_PLUGIN_PATH : ${qt5integration}/${qtbase.qtPluginPrefix}"
-    "--prefix QT_QPA_PLATFORM_PLUGIN_PATH : ${qt5platform-plugins}/${qtbase.qtPluginPrefix}"
   ];
+  
 
   meta = with lib; {
     description = "An advanced terminal emulator with workspace,multiple windows,remote management,quake mode and other features";
