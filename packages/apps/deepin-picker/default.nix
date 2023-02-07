@@ -2,8 +2,6 @@
 , lib
 , fetchFromGitHub
 , dtkwidget
-, qt5integration
-, qt5platform-plugins
 , dde-qt-dbus-factory
 , qmake
 , qttools
@@ -44,11 +42,6 @@ stdenv.mkDerivation rec {
     "APPDIR=${placeholder "out"}/share/applications"
     "DSRDIR=${placeholder "out"}/share/deepin-picker"
     "DOCDIR=${placeholder "out"}/share/dman/deepin-picker"
-  ];
-
-  qtWrapperArgs = [
-    "--prefix QT_PLUGIN_PATH : ${qt5integration}/${qtbase.qtPluginPrefix}"
-    "--prefix QT_QPA_PLATFORM_PLUGIN_PATH : ${qt5platform-plugins}/${qtbase.qtPluginPrefix}"
   ];
 
   postPatch = ''
