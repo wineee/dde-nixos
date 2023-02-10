@@ -102,9 +102,6 @@ stdenv.mkDerivation rec {
   ];
 
   cmakeFlags = [
-    "-DKWIN_BUILD_KCMS=OFF"
-    "-DKWIN_BUILD_TABBOX=ON"
-    "-DKWIN_BUILD_CMS=OFF"
     "-DKWIN_BUILD_RUNNERS=OFF"
     "-DDEFINE_DDE_DOCK_PATH=/run/current-system/sw/bin"
   ];
