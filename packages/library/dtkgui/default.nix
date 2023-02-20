@@ -12,17 +12,18 @@
 , dtkcommon
 , qtimageformats
 , freeimage
+, libraw
 }:
 
 stdenv.mkDerivation rec {
   pname = "dtkgui";
-  version = "5.6.4";
+  version = "5.6.5";
 
   src = fetchFromGitHub {
     owner = "linuxdeepin";
     repo = pname;
     rev = version;
-    sha256 = "sha256-Jh5aCGqmd9dECHG8TCokJpY0yeApNxDUEB1JUcisrRQ=";
+    sha256 = "sha256-DeusmlVaNLaRLYXqsUZu8HcP936LunmlEjyyjJAR0J8=";
   };
 
   nativeBuildInputs = [
@@ -36,6 +37,7 @@ stdenv.mkDerivation rec {
     lxqt.libqtxdg
     librsvg
     freeimage
+    libraw
   ];
 
   propagatedBuildInputs = [
