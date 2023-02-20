@@ -16,7 +16,7 @@
 , gtest
 }:
 let 
-  aaa =  lxqt.libqtxdg.overrideAttrs(drv: {
+  libqtxdg =  lxqt.libqtxdg.overrideAttrs(drv: {
       patches = [ ./fix-icon.patch ];
   });
 in
@@ -38,7 +38,7 @@ stdenv.mkDerivation rec {
     qtx11extras
     qt5platform-plugins
     mtdev
-    aaa
+    libqtxdg
     xorg.xcbutilrenderutil
     gtest
   ];
