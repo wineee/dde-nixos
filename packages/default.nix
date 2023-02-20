@@ -50,6 +50,7 @@ let
     dwayland = callPackage ./library/dwayland { };
     deepin-wayland-protocols = callPackage ./library/deepin-wayland-protocols { };
     qt5integration-styles = callPackage ./library/qt5integration-styles { };
+    dtkdeclarative = callPackage ./library/dtkdeclarative { };
 
     #### artwork
     deepin-icon-theme = callPackage ./artwork/deepin-icon-theme { };
