@@ -15,16 +15,20 @@
 , xorg
 , gtest
 }:
-
+let
+  libqtxdg =  lxqt.libqtxdg.overrideAttrs(drv: {
+      patches = [ ./fix-icon.patch ];
+  });
+in
 stdenv.mkDerivation rec {
   pname = "qt5integration";
-  version = "5.6.4";
+  version = "5.6.5";
 
   src = fetchFromGitHub {
     owner = "linuxdeepin";
     repo = pname;
     rev = version;
-    sha256 = "sha256-MZkhTvjTyBrlntgFq2F3iGK7WvfmnGJQLk5B1OM5kQo=";
+    sha256 = "";
   };
 
   nativeBuildInputs = [ qmake pkg-config wrapQtAppsHook ];
@@ -34,7 +38,7 @@ stdenv.mkDerivation rec {
     qtx11extras
     qt5platform-plugins
     mtdev
-    lxqt.libqtxdg
+    libqtxdg
     xorg.xcbutilrenderutil
     gtest
   ];
