@@ -1,0 +1,175 @@
+From a9d0ca7366733a64897293eae4684951445bd523 Mon Sep 17 00:00:00 2001
+From: rewine <luhongxu@deepin.org>
+Date: Mon, 20 Feb 2023 15:56:59 +0800
+Subject: [PATCH] feat: add build flag to disable deepin ocr
+
+Log: add build flag to disable deepin ocr
+     use -DDDE_OCR_ENABLE=OFF to disable
+---
+ src/CMakeLists.txt      | 19 +++++++++++++++++--
+ src/main.cpp            |  5 ++++-
+ src/src/filecontrol.cpp | 11 +++++++++--
+ src/src/filecontrol.h   |  6 ++++++
+ 4 files changed, 36 insertions(+), 5 deletions(-)
+
+diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
+index 276cb9b5..eac558cf 100644
+--- a/src/CMakeLists.txt
++++ b/src/CMakeLists.txt
+@@ -23,12 +23,25 @@ file(GLOB_RECURSE QMLSRC
+     ./*.qml
+     )
+ 
++option(DDE_OCR_ENABLE "enable deepin ocr plugin" ON)
++
++if (NOT DDE_OCR_ENABLE)
++    file(GLOB_RECURSE OCR_SRCS
++        ./src/ocr/*.h
++        ./src/ocr/*.cpp
++    )
++    list(REMOVE_ITEM SRCS ${OCR_SRCS})
++else()
++    add_definitions("-DDDE_OCR_ENABLE")
++endif()
++
+ # Find the Qt5Quick library
+ find_package(Qt5Quick CONFIG REQUIRED)
+ find_package(Qt5QuickCompiler REQUIRED)
+ find_package(Qt5DBus CONFIG REQUIRED)
+ find_package(Qt5Concurrent CONFIG REQUIRED)
+ find_package(Qt5Svg CONFIG REQUIRED)
++find_package(Qt5Gui CONFIG REQUIRED)
+ find_package(Qt5PrintSupport CONFIG REQUIRED)
+ find_package(Qt5LinguistTools CONFIG REQUIRED)
+ 
+@@ -40,8 +53,10 @@ pkg_check_modules(3rd_lib REQUIRED
+     )
+ 
+ # OCR
+-pkg_search_module(OCR_PLUGIN REQUIRED deepin-ocr-plugin-manager)
+-include_directories(${OCR_PLUGIN_INCLUDE_DIRS})
++if (DDE_OCR_ENABLE)
++  pkg_search_module(OCR_PLUGIN REQUIRED deepin-ocr-plugin-manager)
++  include_directories(${OCR_PLUGIN_INCLUDE_DIRS})
++endif()
+ 
+ # 保证 src 目录下头文件全局可见
+ include_directories(src)
+diff --git a/src/main.cpp b/src/main.cpp
+index a3fd3d79..37abaeec 100644
+--- a/src/main.cpp
++++ b/src/main.cpp
+@@ -6,7 +6,9 @@
+ #include "src/filecontrol.h"
+ #include "src/thumbnailload.h"
+ #include "src/cursortool.h"
++#ifdef DDE_OCR_ENABLE
+ #include "src/ocr/livetextanalyzer.h"
++#endif // DDE_OCR_ENABLE
+ #include "src/dbus/applicationadpator.h"
+ #include "config.h"
+ 
+@@ -66,6 +68,7 @@ int main(int argc, char *argv[])
+     // 光标位置查询工具
+     CursorTool *cursorTool = new CursorTool();
+     engine.rootContext()->setContextProperty("cursorTool", cursorTool);
++#ifdef DDE_OCR_ENABLE
+     // OCR分析工具
+     auto liveTextAnalyzer = new LiveTextAnalyzer;
+     engine.rootContext()->setContextProperty("liveTextAnalyzer", liveTextAnalyzer);
+@@ -74,7 +77,7 @@ int main(int argc, char *argv[])
+     engine.load(QUrl(QStringLiteral("qrc:/qml/main.qml")));
+     if (engine.rootObjects().isEmpty())
+         return -1;
+-
++#endif // DDE_OCR_ENABLE
+     // 设置DBus接口
+     ApplicationAdaptor adaptor(fileControl);
+     QDBusConnection::sessionBus().registerService("com.deepin.imageViewer");
+diff --git a/src/src/filecontrol.cpp b/src/src/filecontrol.cpp
+index 7e41eaf0..3e57961c 100644
+--- a/src/src/filecontrol.cpp
++++ b/src/src/filecontrol.cpp
+@@ -6,12 +6,16 @@
+ #include "unionimage/unionimage_global.h"
+ #include "unionimage/unionimage.h"
+ #include "printdialog/printhelper.h"
++#ifdef DDE_OCR_ENABLE
+ #include "ocr/ocrinterface.h"
+-
++#endif // DDE_OCR_ENABLE
+ #include <DSysInfo>
+ 
+ #include <QFileInfo>
+ #include <QDir>
++#include <QJsonArray>
++#include <QJsonDocument>
++#include <QMimeData>
+ #include <QMimeDatabase>
+ #include <QCollator>
+ #include <QUrl>
+@@ -82,8 +86,9 @@ QUrl UrlInfo(QString path)
+ 
+ FileControl::FileControl(QObject *parent) : QObject(parent)
+ {
++#ifdef DDE_OCR_ENABLE
+     m_ocrInterface = new OcrInterface("com.deepin.Ocr", "/com/deepin/Ocr", QDBusConnection::sessionBus(), this);
+-
++#endif // DDE_OCR_ENABLE
+     m_shortcutViewProcess = new QProcess(this);
+ 
+     m_config = LibConfigSetter::instance();
+@@ -430,6 +435,7 @@ bool FileControl::isFile(const QString &path)
+     return QFileInfo(localPath).isFile();
+ }
+ 
++#ifdef DDE_OCR_ENABLE
+ void FileControl::ocrImage(const QString &path, int index)
+ {
+     slotRotatePixCurrent();
+@@ -445,6 +451,7 @@ void FileControl::ocrImage(const QString &path, int index)
+         m_ocrInterface->openFile(tempFileName);
+     }
+ }
++#endif // DDE_OCR_ENABLE
+ 
+ QString FileControl::parseCommandlineGetPath(const QString &path)
+ {
+diff --git a/src/src/filecontrol.h b/src/src/filecontrol.h
+index 1c1b1858..51560b86 100644
+--- a/src/src/filecontrol.h
++++ b/src/src/filecontrol.h
+@@ -15,7 +15,9 @@
+ #include <QMap>
+ #include <QFileSystemWatcher>
+ 
++#ifdef DDE_OCR_ENABLE
+ class OcrInterface;
++#endif // DDE_OCR_ENABLE
+ class QProcess;
+ 
+ class FileControl : public QObject
+@@ -64,8 +66,10 @@ public:
+     //是否是文件
+     Q_INVOKABLE bool isFile(const QString &path);
+ 
++#ifdef DDE_OCR_ENABLE
+     //进行ocr识别
+     Q_INVOKABLE void ocrImage(const QString &path, int index);
++#endif // DDE_OCR_ENABLE
+ 
+ //    Q_INVOKABLE double fitImage(int imgWidth, int windowWidth);
+ 
+@@ -203,7 +207,9 @@ private:
+     QString createShortcutString();
+ 
+ private :
++#ifdef DDE_OCR_ENABLE
+     OcrInterface *m_ocrInterface;
++#endif // DDE_OCR_ENABLE
+     QString m_currentPath;                      // 当前操作的旋转图片路径
+     QString m_shortcutString;                   // 快捷键字符串，将采用懒加载模式，需要通过createShortcutString()函数使用
+     QProcess *m_shortcutViewProcess;            // 快捷键面板进程
+-- 
+2.38.1
+

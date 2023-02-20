@@ -15,31 +15,34 @@
 , libraw
 , libexif
 , qtbase
+, dtkdeclarative
+, freeimage
 }:
 
 stdenv.mkDerivation rec {
   pname = "deepin-image-viewer";
-  version = "5.9.4";
+  version = "6.0.0";
 
   src = fetchFromGitHub {
     owner = "linuxdeepin";
     repo = pname;
-    rev = version;
-    sha256 = "sha256-5A6K47NcMkvncZIF5CXeHYYZWEHQ4YDnPDQr2axCmaI=";
+    rev = "1511990072246b553074791705119a388425f3a2";
+    sha256 = "sha256-jEggVmDQ5tIepEcbE4RLwqkUjD8+XbWhJ9ZLRadsPaI=";
   };
 
   patches = [
-    ./0001-fix-fhs-path-for-nix.patch
+    #./0001-fix-fhs-path-for-nix.patch
+    ./0001-feat-add-build-flag-to-disable-deepin-ocr.patch
     (fetchpatch {
-      name = "chore: use GNUInstallDirs in CmakeLists";
-      url = "https://github.com/linuxdeepin/deepin-image-viewer/commit/4a046e6207fea306e592fddc33c1285cf719a63d.patch";
-      sha256 = "sha256-aIgYmq6WDfCE+ZcD0GshxM+QmBWZGjh9MzZcTMrhBJ0=";
+      name = "fix build with libraw 0.21";
+      url = "https://raw.githubusercontent.com/archlinux/svntogit-community/2ff11979704dd7156a7e7c3bae9b30f08894063d/trunk/libraw-0.21.patch";
+      sha256 = "sha256-I/w4uiANT8Z8ud/F9WCd3iRHOfplu3fpqnu8ZIs4C+w=";
     })
   ];
 
   postPatch = '' 
-    substituteInPlace src/com.deepin.ImageViewer.service \
-      --replace "/usr/bin/deepin-image-viewer" "$out/bin/deepin-image-viewer"
+    substituteInPlace src/com.deepin.imageViewer.service \
+      --replace "/usr/bin/ll-cli run org.deepin.image.viewer --exec deepin-image-viewer" "$out/bin/deepin-image-viewer"
   '';
 
   nativeBuildInputs = [
@@ -50,15 +53,16 @@ stdenv.mkDerivation rec {
   ];
 
   buildInputs = [
+    dtkdeclarative
     dtkwidget
-    gio-qt
-    udisks2-qt5
-    image-editor
     libraw
-    libexif
+    freeimage
   ];
 
-  cmakeFlags = [ "-DVERSION=${version}" ];
+  cmakeFlags = [ 
+    "-DVERSION=${version}" 
+    "-DDDE_OCR_ENABLE=OFF"
+  ];
 
   qtWrapperArgs = [
     "--prefix QT_PLUGIN_PATH : ${qt5integration}/${qtbase.qtPluginPrefix}"
