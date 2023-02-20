@@ -15,7 +15,11 @@
 , xorg
 , gtest
 }:
-
+let 
+  aaa =  lxqt.libqtxdg.overrideAttrs(drv: {
+      patches = [ ./fix-icon.patch ];
+  });
+in
 stdenv.mkDerivation rec {
   pname = "qt5integration";
   version = "5.6.4";
@@ -34,7 +38,7 @@ stdenv.mkDerivation rec {
     qtx11extras
     qt5platform-plugins
     mtdev
-    lxqt.libqtxdg
+    aaa
     xorg.xcbutilrenderutil
     gtest
   ];
