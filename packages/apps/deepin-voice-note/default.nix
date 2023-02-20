@@ -44,6 +44,7 @@ stdenv.mkDerivation rec {
     pkg-config
     qttools
     wrapQtAppsHook
+    gst_all_1.gstreamer
   ];
 
   buildInputs = [
@@ -54,7 +55,6 @@ stdenv.mkDerivation rec {
     libvlc
     gtest
   ] ++ (with gst_all_1; [
-    gstreamer
     gst-plugins-base
     gst-plugins-good
   ]);
@@ -66,7 +66,6 @@ stdenv.mkDerivation rec {
   qtWrapperArgs = [
     "--prefix QT_PLUGIN_PATH : ${qt5integration}/${qtbase.qtPluginPrefix}"
     "--prefix QT_QPA_PLATFORM_PLUGIN_PATH : ${qt5platform-plugins}/${qtbase.qtPluginPrefix}"
-    "--prefix GST_PLUGIN_SYSTEM_PATH_1_0 : ${gstPluginPath}"
   ];
 
   meta = with lib; {
