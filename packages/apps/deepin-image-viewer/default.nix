@@ -32,7 +32,11 @@ stdenv.mkDerivation rec {
 
   patches = [
     #./0001-fix-fhs-path-for-nix.patch
-    ./0001-feat-add-build-flag-to-disable-deepin-ocr.patch
+    (fetchpatch {
+      name = "feat-add-build-flag-to-disable-deepin-ocr";
+      url = "https://github.com/linuxdeepin/deepin-image-viewer/commit/0e47f14259863a26e616193153d39fc592386e29.patch";
+      sha256 = "sha256-VcGFHoIhRYD2XjnYoNGyleZxayG05t8iUqfb4o/5w6g=";
+    })
     (fetchpatch {
       name = "fix build with libraw 0.21";
       url = "https://raw.githubusercontent.com/archlinux/svntogit-community/2ff11979704dd7156a7e7c3bae9b30f08894063d/trunk/libraw-0.21.patch";
