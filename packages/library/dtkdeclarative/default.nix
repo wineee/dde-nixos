@@ -11,6 +11,9 @@
 , gtest
 , doxygen
 , qtbase
+, qt5integration
+, qt5platform-plugins
+, qtgraphicaleffects
 }:
 
 stdenv.mkDerivation rec {
@@ -27,6 +30,9 @@ stdenv.mkDerivation rec {
   postPatch = ''
     substituteInPlace chameleon/CMakeLists.txt \
       --replace "''${_qt5Core_install_prefix}/bin/qmlcachegen" "${qtdeclarative.dev}/bin/qmlcachegen"
+    
+    substituteInPlace qmlplugin/CMakeLists.txt \
+      --replace "qt5/qml" "qt-5.15.8/qml"
   '';
 
   nativeBuildInputs = [
@@ -41,12 +47,16 @@ stdenv.mkDerivation rec {
   ];
 
   buildInputs = [
-    qtdeclarative
-    qtquickcontrols2
+    qt5platform-plugins # for examples
     gtest
   ];
 
-  propagatedBuildInputs = [ dtkgui ];
+  propagatedBuildInputs = [ 
+    dtkgui
+    qtdeclarative
+    qtquickcontrols2
+    qtgraphicaleffects
+  ];
 
   cmakeFlags = [
     "-DVERSION=${version}"
@@ -63,6 +73,11 @@ stdenv.mkDerivation rec {
     export QT_PLUGIN_PATH=${qtbase.bin}/${qtbase.qtPluginPrefix}
     export QML2_IMPORT_PATH=${qtdeclarative.bin}/${qtbase.qtQmlPrefix}
   '';
+
+
+  qtWrapperArgs = [
+    "--prefix QT_PLUGIN_PATH : ${qt5integration}/${qtbase.qtPluginPrefix}"
+  ];
 
   meta = with lib; {
     description = "A widget development toolkit based on QtQuick/QtQml";
