@@ -39,9 +39,6 @@ stdenv.mkDerivation rec {
   postPatch = ''
     substituteInPlace chameleon/CMakeLists.txt \
       --replace "''${_qt5Core_install_prefix}/bin/qmlcachegen" "${qtdeclarative.dev}/bin/qmlcachegen"
-    
-    substituteInPlace qmlplugin/CMakeLists.txt \
-      --replace "qt5/qml" "qt-5.15.8/qml"
   '';
 
   nativeBuildInputs = [
