@@ -14,6 +14,7 @@
 , qt5integration
 , qt5platform-plugins
 , qtgraphicaleffects
+, fetchpatch
 }:
 
 stdenv.mkDerivation rec {
@@ -26,6 +27,14 @@ stdenv.mkDerivation rec {
     rev = "9c0c05e197ff8a0dd6464aaa4f24fe146399274c";
     sha256 = "sha256-Rh6G7h2JBSozk5k/I2ENbSPyZJRLYOdotBVbwnNUFZ0=";
   };
+
+  patches = [
+    (fetchpatch {
+      name = "fix qml path";
+      url = "https://github.com/linuxdeepin/dtkdeclarative/commit/95d6883314da5f0e6768821e27b24a91fb7d36d6.patch";
+      sha256 = "sha256-1YhXfVkedGjv8ZPca16dswSeGP3i9IboNkNcKNbCUsg=";
+    })
+  ];
 
   postPatch = ''
     substituteInPlace chameleon/CMakeLists.txt \
@@ -63,6 +72,7 @@ stdenv.mkDerivation rec {
     "-DBUILD_DOCS=ON"
     "-DBUILD_EXAMPLES=ON"
     "-DMKSPECS_INSTALL_DIR=${placeholder "out"}/mkspecs/modules"
+    "-DQML_INSTALL_DIR=${qtbase.qtQmlPrefix}"
     "-DCMAKE_INSTALL_LIBDIR=lib"
     "-DCMAKE_INSTALL_INCLUDEDIR=include"
   ];
