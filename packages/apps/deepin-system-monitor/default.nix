@@ -15,7 +15,8 @@
 , qttools
 , qtx11extras
 , wrapQtAppsHook
-, kwayland
+, wayland
+, dwayland
 , gsettings-qt
 , libpcap
 , libnl
@@ -45,13 +46,13 @@ let
 in
 stdenv.mkDerivation rec {
   pname = "deepin-system-monitor";
-  version = "5.9.32";
+  version = "6.0.5";
 
   src = fetchFromGitHub {
     owner = "linuxdeepin";
     repo = pname;
     rev = version;
-    sha256 = "sha256-jze5Pigk4edjojmpNNwaVVfcpk5Aed/S0y9YE0HdC0A";
+    sha256 = "sha256-LPx9gTWJ5cSPLg4aEkx0W2XgRrg7Xb465AvG3XQYq1E=";
   };
 
   postPatch = replaceAll "/usr/bin/renice" "renice"
@@ -64,6 +65,10 @@ stdenv.mkDerivation rec {
       --replace "find_library(LIB_PROCPS NAMES procps REQUIRED)" "" 
     substituteInPlace deepin-system-monitor-plugin-popup/CMakeLists.txt \
       --replace "find_library(LIB_PROPS NAMES procps REQUIRED)" ""
+    
+    substituteInPlace CMakeLists.txt \
+      --replace "ADD_SUBDIRECTORY(deepin-system-monitor-plugin-popup)" " " \
+      --replace "ADD_SUBDIRECTORY(deepin-system-monitor-plugin)" " " 
   '';
 
   nativeBuildInputs = [
@@ -79,7 +84,8 @@ stdenv.mkDerivation rec {
     dde-qt-dbus-factory
     qtx11extras
     dde-dock.dev
-    # kwayland
+    wayland
+    dwayland
 
     gsettings-qt
     libpcap
@@ -88,7 +94,7 @@ stdenv.mkDerivation rec {
 
   cmakeFlags = [
     "-DVERSION=${version}"
-    "-DUSE_DEEPIN_WAYLAND=OFF"
+    #"-DUSE_DEEPIN_WAYLAND=OFF"
   ];
 
   # https://github.com/linuxdeepin/deepin-system-monitor/commit/59d1e3de903a3756afa75b2d3f47c3b0857736e3
