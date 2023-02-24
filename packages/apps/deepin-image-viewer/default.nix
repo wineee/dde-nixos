@@ -3,7 +3,6 @@
 , fetchFromGitHub
 , fetchpatch
 , dtkwidget
-, qt5integration
 , qt5platform-plugins
 , gio-qt
 , udisks2-qt5
@@ -69,7 +68,6 @@ stdenv.mkDerivation rec {
   ];
 
   qtWrapperArgs = [
-    "--prefix QT_PLUGIN_PATH : ${qt5integration}/${qtbase.qtPluginPrefix}"
     "--prefix QT_QPA_PLATFORM_PLUGIN_PATH : ${qt5platform-plugins}/${qtbase.qtPluginPrefix}"
   ];
 
