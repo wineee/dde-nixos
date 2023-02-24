@@ -53,6 +53,16 @@ stdenv.mkDerivation rec {
       url = "https://github.com/linuxdeepin/deepin-kwin/commit/a874f798b5c3118f3f62d7dd9dfc0322d3cb88ef.patch";
       sha256 = "sha256-ANcQ5HU52A78gOkROfiGOuYSdz+0NOm9KYkkeGLw660=";
     })
+    (fetchpatch {
+      name = "disable_dde-dock_preview_notify2";
+      url = "https://github.com/linuxdeepin/deepin-kwin/commit/4d912f404136461a92e63f2f329949c900bd6611.patch";
+      sha256 = "sha256-ghfSEdIoodaKqdWRz99K0UH5KOSDjwj17BmRzGMrUUw=";
+    })
+    (fetchpatch {
+      name = "fix_build";
+      url = "https://github.com/linuxdeepin/deepin-kwin/commit/49f5a9641b37442ca1456daf60c807a8105cd017.patch";
+      sha256 = "sha256-uNerAicRycAdWThSuvKRF6YKwEvGTL5+jg0R3dblz/0=";
+    })
   ];
 
   nativeBuildInputs = [
@@ -103,7 +113,7 @@ stdenv.mkDerivation rec {
 
   cmakeFlags = [
     "-DKWIN_BUILD_RUNNERS=OFF"
-    "-DDEFINE_DDE_DOCK_PATH=/run/current-system/sw/bin"
+    "-DDEFINE_DDE_DOCK_PATH=\"\""
   ];
 
   meta = with lib; {
