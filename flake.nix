@@ -35,7 +35,6 @@
                 shellHook = ''
                   # export QT_LOGGING_RULES=*.debug=true
                   export QT_PLUGIN_PATH="$QT_PLUGIN_PATH:${deepinPkgs.qt5integration}/plugins"
-                  export QT_QPA_PLATFORM_PLUGIN_PATH="${deepinPkgs.qt5platform-plugins}/plugins"
                 '';
              }
           ) deepinPkgs;
@@ -153,7 +152,7 @@
 
                   environment.sessionVariables = {
                     NIX_GSETTINGS_OVERRIDES_DIR = "${nixos-gsettings-desktop-schemas}/share/gsettings-schemas/nixos-gsettings-overrides/glib-2.0/schemas";
-                    DDE_POLKIT_AGENT_PLUGINS_DIRS = [ "${packages.dpa-ext-gnomekeyring}/lib/polkit-1-dde/plugins" ];
+                    DDE_POLKIT_AGENT_PLUGINS_DIRS = [ "${pkgs.deepin.dpa-ext-gnomekeyring}/lib/polkit-1-dde/plugins" ];
                     #
                   };
 
@@ -184,7 +183,7 @@
                     Website=https://www.nixos.org
                     Logo=${pkgs.nixos-icons}/share/icons/hicolor/96x96/apps/nix-snowflake.png
                     LogoLight=${pkgs.nixos-icons}/share/icons/hicolor/32x32/apps/nix-snowflake.png
-                    LogoTransparent=${packages.deepin-desktop-base}/share/pixmaps/distribution_logo_transparent.svg
+                    LogoTransparent=${pkgs.deepin.deepin-desktop-base}/share/pixmaps/distribution_logo_transparent.svg
                   '';
                   environment.etc = {
                     "X11/Xsession.d".source = "${packages.startdde}/etc/X11/Xsession.d";
@@ -217,10 +216,10 @@
 
                   systemd.tmpfiles.rules = [
                     "d /var/lib/AccountsService 0775 root root - -"
-                    "C /var/lib/AccountsService/icons 0775 root root - ${packages.dde-account-faces}/var/lib/AccountsService/icons"
+                    "C /var/lib/AccountsService/icons 0775 root root - ${pkgs.deepin.dde-account-faces}/var/lib/AccountsService/icons"
                   ];
 
-                  environment.systemPackages = with pkgs; [
+                  environment.systemPackages = with pkgs; with deepin; [
                     socat
                     xdotool
                     glib # for gsettings program / gdbus
@@ -234,10 +233,21 @@
                     libsForQt5.kglobalaccel
                     onboard # dde-dock plugin
                     xsettingsd # lightdm-deepin-greeter
+                    qt5platform-plugins
+                    deepin-pw-check
+                    deepin-turbo
+                    dde-account-faces
+                    deepin-icon-theme
+                    deepin-sound-theme
+                    deepin-gtk-theme
+                    deepin-wallpapers
+
+                    dpa-ext-gnomekeyring
+                    dde-polkit-agent
+
                   ] ++ (with packages; (utils.removePackagesByName ([
                     dde-kwin
                     deepin-kwin
-                    qt5platform-plugins #TODO nixos/modules/config/qt5.nix
                     # qt5integration
 
                     startdde
@@ -250,18 +260,9 @@
                     dde-calendar 
                     dde-clipboard
                     dde-file-manager
-                    dpa-ext-gnomekeyring
-                    dde-polkit-agent
                     
-                    dde-account-faces
-                    deepin-icon-theme
-                    deepin-sound-theme
-                    deepin-gtk-theme
-                    deepin-wallpapers
                     deepin-desktop-schemas
-
-                    deepin-turbo
-                    deepin-pw-check
+                    
                     deepin-terminal
                     deepin-album
                     deepin-draw
@@ -294,7 +295,12 @@
                     dde-device-formatter
                   ]) config.environment.deepin.excludePackages));
 
-                  services.dbus.packages = with packages; (utils.removePackagesByName ([
+                  services.dbus.packages =  with pkgs; with deepin; [
+                    deepin-pw-check
+                    deepin-picker
+                    deepin-draw
+                    deepin-image-viewer
+                  ] ++ (with packages; (utils.removePackagesByName ([
                     dde-kwin
                     deepin-kwin
                     dde-launcher
@@ -304,10 +310,6 @@
                     dde-file-manager
                     dde-control-center
                     dde-calendar
-                    deepin-pw-check
-                    deepin-picker
-                    deepin-draw
-                    deepin-image-viewer
                     deepin-screen-recorder
                     deepin-system-monitor
                     deepin-camera
@@ -316,7 +318,7 @@
                   ] ++ lib.optionals cfg.full [
                     dde-grand-search
                     deepin-boot-maker
-                  ]) config.environment.deepin.excludePackages);
+                  ]) config.environment.deepin.excludePackages));
 
                   systemd.packages = with packages; [
                     deepin-kwin
@@ -420,9 +422,9 @@
                })
 
                (mkIf config.services.dde.dde-api.enable {
-                  environment.systemPackages = [ packages.dde-api ];
-                  services.dbus.packages = [ packages.dde-api ];
-                  systemd.packages = [ packages.dde-api ];
+                  environment.systemPackages = [ pkgs.deepin.dde-api ];
+                  services.dbus.packages = [ pkgs.deepin.dde-api ];
+                  systemd.packages = [ pkgs.deepin.dde-api ];
                   environment.pathsToLink = [ "/lib/deepin-api" ];
                   users.groups.deepin-sound-player = { };
                   users.users.deepin-sound-player = {
@@ -432,7 +434,7 @@
                     group = "deepin-sound-player";
                     isSystemUser = true;
                   };
-                  environment.etc."polkit-1/localauthority/10-vendor.d/com.deepin.api.device.pkla".source = "${packages.dde-api}/var/lib/polkit-1/localauthority/10-vendor.d/com.deepin.api.device.pkla";
+                  environment.etc."polkit-1/localauthority/10-vendor.d/com.deepin.api.device.pkla".source = "${pkgs.deepin.dde-api}/var/lib/polkit-1/localauthority/10-vendor.d/com.deepin.api.device.pkla";
                })
 
                (mkIf config.services.dde.app-services.enable {
