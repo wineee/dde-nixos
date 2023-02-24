@@ -34,7 +34,7 @@ let
     dde-file-manager
     dde-grand-search
     deepin-screen-recorder
-    deepin-system-monitor
+#    deepin-system-monitor
     deepin-desktop-schemas
     gsettings-desktop-schemas
   ] ++ extraGSettingsOverridePackages;
