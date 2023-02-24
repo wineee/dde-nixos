@@ -39,7 +39,7 @@ stdenv.mkDerivation rec {
       --replace "/usr/lib/deepin-daemon/deepin-boot-maker-service" "$out/lib/deepin-daemon/deepin-boot-maker-service"
 
     substituteInPlace src/vendor/src/libxsys/DiskUtil/Syslinux.cpp \
-      --replace "/usr/lib/syslinux" "${syslinux}/share/syslinux" \
+      --replace "/usr/lib/syslinux" "${syslinux}/lib/syslinux" \
       --replace "/usr/share/syslinux" "${syslinux}/share/syslinux"
   '';
 
