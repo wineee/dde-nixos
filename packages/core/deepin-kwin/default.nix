@@ -49,8 +49,7 @@ stdenv.mkDerivation rec {
 
   postPatch = ''
     substituteInPlace src/effects/screenshot/screenshotdbusinterface1.cpp \
-      --replace 'file.readAll().startsWith(DEFINE_DDE_DOCK_PATH"dde-dock")'
-                'file.readAll().contains("dde-dock")'
+      --replace 'file.readAll().startsWith(DEFINE_DDE_DOCK_PATH"dde-dock")' 'file.readAll().contains("dde-dock")'
   '';
 
   nativeBuildInputs = [
