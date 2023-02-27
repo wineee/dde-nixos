@@ -43,27 +43,15 @@ stdenv.mkDerivation rec {
   src = fetchFromGitHub {
     owner = "linuxdeepin";
     repo = pname;
-    rev = "6bb381c00deb7427ccb319b5bbc2aeb3290b9c51";
-    sha256 = "sha256-DEOSXd+BvCv286KyTsNYlz/1yu86phN4irJNucnj7vk=";
+    rev = "98c9085670938937e2a1ce964f6acddc5c1d6eb5";
+    sha256 = "sha256-/hgDuaDrpwAQsMIoaS8pGBJwWfJSrq6Yjic3a60ITtM=";
   };
 
-  patches = [
-    (fetchpatch {
-      name = "disable_dde-dock_preview_notify";
-      url = "https://github.com/linuxdeepin/deepin-kwin/commit/a874f798b5c3118f3f62d7dd9dfc0322d3cb88ef.patch";
-      sha256 = "sha256-ANcQ5HU52A78gOkROfiGOuYSdz+0NOm9KYkkeGLw660=";
-    })
-    (fetchpatch {
-      name = "disable_dde-dock_preview_notify2";
-      url = "https://github.com/linuxdeepin/deepin-kwin/commit/4d912f404136461a92e63f2f329949c900bd6611.patch";
-      sha256 = "sha256-ghfSEdIoodaKqdWRz99K0UH5KOSDjwj17BmRzGMrUUw=";
-    })
-    (fetchpatch {
-      name = "fix_build";
-      url = "https://github.com/linuxdeepin/deepin-kwin/commit/49f5a9641b37442ca1456daf60c807a8105cd017.patch";
-      sha256 = "sha256-uNerAicRycAdWThSuvKRF6YKwEvGTL5+jg0R3dblz/0=";
-    })
-  ];
+  postPatch = ''
+    substituteInPlace src/effects/screenshot/screenshotdbusinterface1.cpp \
+      --replace 'file.readAll().startsWith(DEFINE_DDE_DOCK_PATH"dde-dock")'
+                'file.readAll().contains("dde-dock")'
+  '';
 
   nativeBuildInputs = [
     cmake
@@ -113,7 +101,6 @@ stdenv.mkDerivation rec {
 
   cmakeFlags = [
     "-DKWIN_BUILD_RUNNERS=OFF"
-    "-DDEFINE_DDE_DOCK_PATH=\"\""
   ];
 
   meta = with lib; {
