@@ -55,7 +55,7 @@ let
     ];
     ### INSTALL
     "src/dde-file-manager/dde-file-manager.pro" = [
-      [ "/etc/xdg/autostart" "$out/etc/xdg/autostart" ]
+      [ "/etc/xdg/autostart" "${placeholder "out"}/etc/xdg/autostart" ]
     ];
     "src/dde-select-dialog-x11/dde-select-dialog-x11.pro" = [ ];
     "src/dde-dock-plugins/disk-mount/disk-mount.pro" = [
@@ -67,7 +67,7 @@ let
       # [ "CONFIG += ENABLE_ANYTHING" "" ] # disable deepin-anything
     ];
     "src/dde-file-manager-daemon/dde-file-manager-daemon.pro" = [
-      [ "/etc/dbus-1/system.d" "$out/etc/dbus-1/system.d" ]
+      [ "/etc/dbus-1/system.d" "${placeholder "out"}/etc/dbus-1/system.d" ]
     ];
     "src/dde-select-dialog-wayland/dde-select-dialog-wayland.pro" = [ ];
     "src/dde-desktop/development.pri" = [ ];
@@ -75,7 +75,7 @@ let
     "src/dde-desktop/dbus/filedialog/filedialog.pri" = [ ];
     "src/dde-desktop/dbus/filemanager1/filemanager1.pri" = [ ];
     "src/deepin-anything-server-plugins/dde-anythingmonitor/dde-anythingmonitor.pro" = [
-      [ "\\$\\$system(\\$\\$PKG_CONFIG --variable libdir deepin-anything-server-lib)/deepin-anything-server-lib/plugins/handlers" "$out/lib/deepin-anything-server-lib/plugins/handlers" ]
+      [ "$$system($$PKG_CONFIG --variable libdir deepin-anything-server-lib)/deepin-anything-server-lib/plugins/handlers" "${placeholder "out"}/lib/deepin-anything-server-lib/plugins/handlers" ]
     ];
 
     ### POLKIT
