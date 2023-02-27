@@ -46,18 +46,12 @@ let
       [ "/usr/share" "/run/current-system/sw/share" ]
       # /usr/share/themes /usr/share/icons
     ];
-    "apps/utils.go" = [
-      [ "/usr/share" "/run/current-system/sw/share" ]
-      # return []string{"/usr/share", "/usr/local/share"}
-    ];
     "appearance/ifc.go" = [ ];
     "launcher/manager.go" = [
-      [ "/usr/share" "/run/current-system/sw/share" ]
       # ddeDataDir = /usr/share/dde/data/
     ];
     "launcher/manager_init.go" = [
-      [ "/usr/share" "/run/current-system/sw/share" ]
-      # /usr/share/applications
+      # /usr/share + dde-daemon/gesture/conf.json
     ];
     "audio/audio_config.go" = [
       # /usr/share/dde-daemon/audio/echoCancelEnable.sh
@@ -67,14 +61,14 @@ let
       [ "/usr/lib/fprintd/fprintd" "${fprintd}/libexec/fprintd" ]
     ];
     "system/gesture/config.go" = [
-      [ "/usr/share" "/run/current-system/sw/share" ]
+      # /usr/share + dde-daemon/gesture/conf.json
     ];
     "system/power/manager_lmt.go" = [
       [ "/usr/sbin/laptop_mode" "laptop_mode" ]
     ];
     "bin/user-config/config_datas.go" = [
       [ "/usr/share" "/run/current-system/sw/share" ]
-      # /usr/share/doc/deepin-manuals /usr/share/deepin-sample-music
+      # /usr/share/{doc/deepin-manuals,deepin-sample-music}
     ];
     "bin/dde-system-daemon/virtual.go" = [
       # /usr/share/dde-daemon/supportVirsConf.ini
@@ -85,7 +79,7 @@ let
     ];
     "dock/identify_window.go" = [
       [ "/usr/share" "/run/current-system/sw/share" ]
-      # /usr/share/applications/
+      # path for uengine.desktop, not portable 
     ];
     "keybinding/shortcuts/system_shortcut.go" = [
       [ "dbus-send" "${dbus}/bin/dbus-send" ]
@@ -93,12 +87,11 @@ let
     ];
     "accounts/user.go" = [
       [ "/usr/bin/dde-control-center" "dde-control-center" ]
-      [ "/usr/share" "/run/current-system/sw/share" ]
       # /usr/share/xsessions
     ];
     "dock/desktop_file_path.go" = [
       [ "/usr/share" "/run/current-system/sw/share" ]
-      # /usr/share/applications/
+      # Not sure what it's used for here
     ];
     "accounts/user_chpwd_union_id.go" = [
       [ "/usr/lib/dde-control-center" "/run/current-system/sw/lib/dde-control-center" ]
@@ -107,7 +100,6 @@ let
       [ "/usr/bin/lightdm-deepin-greeter" "lightdm-deepin-greeter" ]
     ];
     "dock/dock_manager_init.go" = [
-      [ "/usr/share" "/run/current-system/sw/share" ]
       # ddeDataDir     = "/usr/share/dde/data"
     ];
     "accounts/manager.go" = [
@@ -138,6 +130,7 @@ buildGoPackage rec {
   patches = [
     ./0001-fix-wrapped-name-for-verifyExe.diff
     ./0002-dont-set-PATH.diff
+    ./0003-search-in-XDG-directories.diff
   ];
 
   postPatch = replaceAll "/usr/lib/deepin-api" "/run/current-system/sw/lib/deepin-api"
