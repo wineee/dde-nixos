@@ -136,7 +136,7 @@ buildGoPackage rec {
   };
 
   patches = [
-    ./0001-fix-wrapped-name-for-verifyExe.patch
+    ./0001-fix-wrapped-name-for-verifyExe.diff
     ./0002-dont-set-PATH.diff
   ];
 
