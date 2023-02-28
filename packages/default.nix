@@ -7,7 +7,7 @@ let
   functions = with pkgs; rec {
     getPatchFrom' = commonRp:
       let
-        rpstr = a: b: " --replace \"${a}\" \"${b}\"";
+        rpstr = s1: s2: " --replace " + lib.strings.escapeShellArgs [ s1 s2 ];
         rpstrL = l: if lib.length l == 2 then rpstr (lib.head l) (lib.last l) else (throw "input must be a list of 2 string: [original  ]");
         rpfile = filePath: replaceLists:
           "substituteInPlace ${filePath}" + lib.concatMapStrings rpstrL replaceLists;
@@ -17,10 +17,11 @@ let
         (x: lib.mapAttrsToList (name: value: rpfile name value) x)
         (lib.concatStringsSep "\n")
         (s: s + "\n")
+        #(throw)
       ];
 
     getPatchFrom = getPatchFrom' [ ];
-    getUsrPatchFrom = getPatchFrom' [ [ "/usr" "$out" ] ];
+    getUsrPatchFrom = getPatchFrom' [ [ "/usr" "${placeholder "out"}" ] ];
 
     replaceAll = x: y: ''
       echo Replacing "${x}" to "${y}":
