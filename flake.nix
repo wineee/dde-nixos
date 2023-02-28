@@ -241,6 +241,7 @@
                     deepin-sound-theme
                     deepin-gtk-theme
                     deepin-wallpapers
+                    deepin-camera
 
                     dpa-ext-gnomekeyring
                     dde-polkit-agent
@@ -270,7 +271,6 @@
                     deepin-desktop-schemas
                     
                     deepin-music
-                    deepin-camera
                     deepin-movie-reborn
                     deepin-system-monitor
                     deepin-shortcut-viewer
