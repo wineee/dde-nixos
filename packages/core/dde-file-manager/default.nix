@@ -63,7 +63,6 @@ let
     ];
     "src/gschema/gschema.pro" = [ ];
     "src/common/common.pri" = [
-      [ "LIB_INSTALL_DIR = \\$\\$[QT_INSTALL_LIBS]" "" ]
       # [ "CONFIG += ENABLE_ANYTHING" "" ] # disable deepin-anything
     ];
     "src/dde-file-manager-daemon/dde-file-manager-daemon.pro" = [
