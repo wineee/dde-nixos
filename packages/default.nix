@@ -69,7 +69,6 @@ let
     deepin-boot-maker = callPackage ./apps/deepin-boot-maker { };
     deepin-font-manager = callPackage ./apps/deepin-font-manager { };
     deepin-system-monitor = callPackage ./apps/deepin-system-monitor { };
-    deepin-camera = callPackage ./apps/deepin-camera { };
     deepin-screen-recorder = callPackage ./apps/deepin-screen-recorder { };
     deepin-clone = callPackage ./apps/deepin-clone { };
     deepin-shortcut-viewer = callPackage ./apps/deepin-shortcut-viewer { };

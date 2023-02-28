@@ -244,11 +244,17 @@
 
                     dpa-ext-gnomekeyring
                     dde-polkit-agent
+                    deepin-terminal
+                    deepin-album
+                    deepin-draw
+                    deepin-image-viewer
+                    deepin-calculator
+                    deepin-editor
+                    deepin-picker
 
                   ] ++ (with packages; (utils.removePackagesByName ([
                     dde-kwin
                     deepin-kwin
-                    # qt5integration
 
                     startdde
                     dde-session-ui
@@ -263,18 +269,12 @@
                     
                     deepin-desktop-schemas
                     
-                    deepin-terminal
-                    deepin-album
-                    deepin-draw
-                    deepin-image-viewer
-                    deepin-calculator
-                    deepin-editor
                     deepin-music
                     deepin-camera
                     deepin-movie-reborn
                     deepin-system-monitor
                     deepin-shortcut-viewer
-                    deepin-picker
+                   
                     deepin-font-manager
                     deepin-screen-recorder
                     deepin-compressor
@@ -292,7 +292,6 @@
                     dmarked
                     # deepin-devicemanager # FIXME
                     deepin-clone
-                    dde-device-formatter
                   ]) config.environment.deepin.excludePackages));
 
                   services.dbus.packages =  with pkgs; with deepin; [
