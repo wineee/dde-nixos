@@ -33,6 +33,7 @@ stdenv.mkDerivation rec {
       url = "https://github.com/linuxdeepin/deepin-gomoku/commit/86656382d9ab646a994a4336a6e4c0a8c8e27f68.patch";
       sha256 = "sha256-pOOuBC9kxz09XsssnAsi+xh6Z8ldkvNzFks1IhfXsIw=";
     })
+    ./fix-chess-white-svg-color.diff
   ];
 
   postPatch = getUsrPatchFrom {
@@ -48,17 +49,13 @@ stdenv.mkDerivation rec {
 
   buildInputs = [
     dtkwidget
+    qt5platform-plugins
     qtmultimedia
     gtest
   ];
 
   cmakeFlags = [
     "-DVERSION=${version}"
-  ];
-
-  qtWrapperArgs = [
-    "--prefix QT_PLUGIN_PATH : ${qt5integration}/${qtbase.qtPluginPrefix}"
-    "--prefix QT_QPA_PLATFORM_PLUGIN_PATH : ${qt5platform-plugins}/${qtbase.qtPluginPrefix}"
   ];
 
   meta = with lib; {

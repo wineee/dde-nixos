@@ -1,0 +1,42 @@
+diff --git a/gomoku/assets/resources/chess_white_now.svg b/gomoku/assets/resources/chess_white_now.svg
+index c15dbd2..177609f 100644
+--- a/gomoku/assets/resources/chess_white_now.svg
++++ b/gomoku/assets/resources/chess_white_now.svg
+@@ -26,8 +26,7 @@
+         <g id="椭圆形备份">
+             <use fill="black" fill-opacity="1" filter="url(#filter-3)" xlink:href="#path-2"></use>
+             <use fill="url(#radialGradient-1)" fill-rule="evenodd" xlink:href="#path-2"></use>
+-            <use fill="black" fill-opacity="1" filter="url(#filter-4)" xlink:href="#path-2"></use>
+             <circle stroke="#007E80" stroke-width="2" cx="22" cy="22" r="16"></circle>
+         </g>
+     </g>
+-</svg>
+\ No newline at end of file
++</svg>
+diff --git a/gomoku/assets/resources/playingscreen/chess_white.svg b/gomoku/assets/resources/playingscreen/chess_white.svg
+index 97c15dd..74180df 100644
+--- a/gomoku/assets/resources/playingscreen/chess_white.svg
++++ b/gomoku/assets/resources/playingscreen/chess_white.svg
+@@ -31,7 +31,6 @@
+         <g id="椭圆形备份" transform="translate(5.000000, 5.000000)">
+             <use fill="black" fill-opacity="1" filter="url(#filter-3)" xlink:href="#path-2"></use>
+             <use fill="url(#radialGradient-1)" fill-rule="evenodd" xlink:href="#path-2"></use>
+-            <use fill="black" fill-opacity="1" filter="url(#filter-4)" xlink:href="#path-2"></use>
+         </g>
+     </g>
+ </svg>
+\ No newline at end of file
+diff --git a/gomoku/assets/resources/white_chess.svg b/gomoku/assets/resources/white_chess.svg
+index 8603ed8..3988c62 100644
+--- a/gomoku/assets/resources/white_chess.svg
++++ b/gomoku/assets/resources/white_chess.svg
+@@ -31,7 +31,6 @@
+         <g id="椭圆形备份">
+             <use fill="black" fill-opacity="1" filter="url(#filter-3)" xlink:href="#path-2"></use>
+             <use fill="url(#radialGradient-1)" fill-rule="evenodd" xlink:href="#path-2"></use>
+-            <use fill="black" fill-opacity="1" filter="url(#filter-4)" xlink:href="#path-2"></use>
+         </g>
+     </g>
+-</svg>
+\ No newline at end of file
++</svg>
