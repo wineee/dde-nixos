@@ -278,4 +278,13 @@
       sha256 = "sha256-5EOxO8FRdaLW9v/DhwBmWiT2G34A2ofxSCaC7ovvpb0=";
     };
   }
+  {
+    goPackagePath = "github.com/adrg/xdg";
+    fetch = {
+      type = "git";
+      url = "https://github.com/adrg/xdg";
+      rev = "v0.4.0";
+      sha256 = "sha256-zGjkdUQmrVqD6rMO9oDY+TeJCpuqnHyvkPCaXDlac/U=";
+    };
+  }
 ]
