@@ -52,6 +52,7 @@ let
     qt5integration-styles = callPackage ./library/qt5integration-styles { };
     dtkdeclarative = callPackage ./library/dtkdeclarative { };
     util-dfm = callPackage ./library/util-dfm { };
+    deepin-pdfium = callPackage ./library/deepin-pdfium { };
 
     #### artwork
     deepin-icon-theme = callPackage ./artwork/deepin-icon-theme { };
