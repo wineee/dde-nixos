@@ -18,6 +18,7 @@
 , gtest
 , dbus
 , qtbase
+, kiconthemes
 }:
 let
   patchList = {
@@ -67,6 +68,8 @@ stdenv.mkDerivation rec {
   qtWrapperArgs = [
     "--prefix QT_PLUGIN_PATH : ${qt5integration}/${qtbase.qtPluginPrefix}"
     "--prefix QT_QPA_PLATFORM_PLUGIN_PATH : ${qt5platform-plugins}/${qtbase.qtPluginPrefix}"
+    "--prefix LD_LIBRARY_PATH : ${lib.makeLibraryPath [ kiconthemes ]}"
+    "--set D_PROXY_ICON_ENGINE KIconEngine"
   ];
 
   preFixup = ''
