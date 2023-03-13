@@ -1,7 +1,6 @@
 { stdenv
 , lib
 , fetchFromGitHub
-, getUsrPatchFrom
 , replaceAll
 , fetchpatch
 , runtimeShell
@@ -9,32 +8,23 @@
 , qt5integration
 , qt5platform-plugins
 , dde-qt-dbus-factory
-, udisks2-qt5
-, gio-qt
 , docparser
-, disomaster
 , dde-dock
-, deepin-anything
-, deepin-gettext-tools
 , deepin-movie-reborn
-, deepin-desktop-schemas
-, qmake
+, cmake
 , qttools
 , qtx11extras
 , qtmultimedia
 , kcodecs
 , pkg-config
-, jemalloc
 , ffmpegthumbnailer
 , libsecret
 , libmediainfo
 , mediainfo
 , libzen
-, lxqt
 , poppler
 , polkit-qt
 , polkit
-, pcre
 , wrapQtAppsHook
 , wrapGAppsHook
 , lucenepp
@@ -46,162 +36,108 @@
 , qtbase
 , mpv
 , ffmpeg
+, util-dfm
+, deepin-pdfium
+, libuuid
+, glibmm
 }:
-let
-  patchList = {
-    ### BUILD
-    "src/dde-file-manager-lib/dbusinterface/dbusinterface.pri" = [
-      [ "/usr/share/dbus-1/interfaces/com.deepin.anything.xml" "${deepin-anything}/share/dbus-1/interfaces/com.deepin.anything.xml" ]
-    ];
-    ### INSTALL
-    "src/dde-file-manager/dde-file-manager.pro" = [
-      [ "/etc/xdg/autostart" "$out/etc/xdg/autostart" ]
-    ];
-    "src/dde-select-dialog-x11/dde-select-dialog-x11.pro" = [ ];
-    "src/dde-dock-plugins/disk-mount/disk-mount.pro" = [
-      [ "/usr/include/dde-dock" "${dde-dock.dev}/include/dde-dock" ]
-    ];
-    "src/gschema/gschema.pro" = [ ];
-    "src/common/common.pri" = [
-      [ "LIB_INSTALL_DIR = \\$\\$[QT_INSTALL_LIBS]" "" ]
-      # [ "CONFIG += ENABLE_ANYTHING" "" ] # disable deepin-anything
-    ];
-    "src/dde-file-manager-daemon/dde-file-manager-daemon.pro" = [
-      [ "/etc/dbus-1/system.d" "$out/etc/dbus-1/system.d" ]
-    ];
-    "src/dde-select-dialog-wayland/dde-select-dialog-wayland.pro" = [ ];
-    "src/dde-desktop/development.pri" = [ ];
-    "src/dde-file-manager-lib/dde-file-manager-lib.pro" = [ ];
-    "src/dde-desktop/dbus/filedialog/filedialog.pri" = [ ];
-    "src/dde-desktop/dbus/filemanager1/filemanager1.pri" = [ ];
-    "src/deepin-anything-server-plugins/dde-anythingmonitor/dde-anythingmonitor.pro" = [
-      [ "\\$\\$system(\\$\\$PKG_CONFIG --variable libdir deepin-anything-server-lib)/deepin-anything-server-lib/plugins/handlers" "$out/lib/deepin-anything-server-lib/plugins/handlers" ]
-    ];
 
-    ### POLKIT
-    "src/dde-file-manager/pkexec/com.deepin.pkexec.dde-file-manager.policy" = [ ];
-    "src/dde-file-manager-lib/pkexec/com.deepin.pkexec.dde-file-manager.policy" = [ ];
-
-    ### SERVICES
-    "src/dde-file-manager-daemon/dbusservice/dde-filemanager-daemon.service" = [ ];
-    "src/dde-file-manager-daemon/dbusservice/com.deepin.filemanager.daemon.service" = [ ];
-    "src/dde-desktop/dbus/filemanager1/org.freedesktop.FileManager.service" = [ ];
-    "src/dde-select-dialog-x11/com.deepin.filemanager.filedialog_x11.service" = [ ];
-    "src/dde-select-dialog-wayland/com.deepin.filemanager.filedialog_wayland.service" = [ ];
-    "src/dde-desktop/dbus/filedialog/com.deepin.filemanager.filedialog.service" = [ ];
-    "src/dde-desktop/data/com.deepin.dde.desktop.service" = [ ];
-    "src/dbusservices/com.deepin.dde.desktop.service" = [ ];
-
-    ### CODE
-    "src/dde-file-manager-lib/shutil/mimesappsmanager.cpp" = [
-      [ "/usr/share/applications" "/run/current-system/sw/share/applications" ]
-    ];
-    "src/dde-file-manager-lib/shutil/fileutils.cpp" = [
-      [ "/usr/share" "/run/current-system/sw/share" ]
-    ];
-    "src/dde-file-manager-lib/vault/vaultglobaldefine.h" = [
-      [ "/usr/bin/deepin-compressor" "deepin-compressor" ]
-    ];
-    "src/dde-file-manager-lib/interfaces/dfilemenumanager.cpp" = [
-      # /usr/share/applications/dde-open.desktop 
-    ];
-
-    ## PLUGINS
-    "src/dde-file-manager-lib/plugins/dfmadditionalmenu.cpp" = [
-      # /usr/share/deepin/dde-file-manager/oem-menuextensions/
-    ];
-    "src/dde-file-manager-lib/interfaces/customization/dcustomactiondefine.h" = [
-      # /usr/share/applications/context-menus
-    ];
-    "src/dde-desktop/view/canvasgridview.cpp" = [
-      # /usr/share/deepin/dde-desktop-watermask.json
-    ];
-    "src/dde-file-manager-daemon/accesscontrol/accesscontrolmanager.cpp" = [
-      # "/usr/bin/dmcg" << "/usr/bin/dde-file-manager"
-      # "/etc/deepin/devAccessConfig.json" "/etc/deepin/vaultAccessConfig.json"
-    ];
-    "src/dde-file-manager-daemon/vault/vaultbruteforceprevention.cpp" = [ ];
-    # src/dde-file-manager-daemon/usershare/usersharemanager.cpp
-    # TODO:ln -sf /lib/systemd/system/smbd.service /etc/systemd/system/multi-user.target.wants/smbd.service
-  };
-in
 stdenv.mkDerivation rec {
   pname = "dde-file-manager";
-  version = "5.8.3";
+  version = "6.0.0";
 
   src = fetchFromGitHub {
-    owner = "linuxdeepin";
+    owner = "BLumia";
     repo = pname;
-    rev = version;
-    sha256 = "sha256-GJwEM2adZWiBSDM+oiIzglimPcTEeYZ/S5ZekjaoZxk=";
+    rev = "b3eb3655aaf6f53d70c08b2e86f4d372a4b298b3";
+    sha256 = "sha256-fUL9aYzjrsGFfqyeTEqYnw47wb8y3CZl35bwoHrUMgo=";
   };
 
   nativeBuildInputs = [
-    qmake
+    cmake
     qttools
     pkg-config
-    deepin-gettext-tools
     wrapQtAppsHook
     wrapGAppsHook
   ];
   dontWrapGApps = true;
 
-  postPatch = replaceAll "/bin/bash" "${runtimeShell}"
-    + replaceAll "/usr/bin/deepin-desktop-ts-convert" "deepin-desktop-ts-convert"
-    + replaceAll "/usr/lib/deepin-daemon" "/run/current-system/sw/lib/deepin-daemon"
-    + replaceAll "/usr/share/backgrounds" "/run/current-system/sw/share/backgrounds"
-    + replaceAll "/usr/lib/dde-file-manager" "/run/current-system/sw/lib/dde-file-manager"
-    + replaceAll "/usr/lib/gvfs/gvfsd" "gvfsd" # TODO
-    + replaceAll "/usr/share/dde-file-manager/database" "/var/db/dde-file-manager/database"
-    + getUsrPatchFrom patchList
+  postPatch = replaceAll "qt5/QtCore/qobjectdefs.h" "QtCore/qobjectdefs.h"
     + ''
     patchShebangs .
+
+    substituteInPlace src/plugins/filemanager/dfmplugin-vault/utils/vaultdefine.h \
+      --replace "/usr/bin/deepin-compressor" "deepin-compressor"
+    
+    substituteInPlace src/plugins/filemanager/dfmplugin-avfsbrowser/utils/avfsutils.cpp \
+      --replace "/usr/bin/mountavfs" "mountavfs" \
+      --replace "/usr/bin/umountavfs" "umountavfs"
+
+    substituteInPlace src/plugins/common/core/dfmplugin-menu/{extendmenuscene/extendmenu/dcustomactionparser.cpp,oemmenuscene/oemmenu.cpp} \
+      --replace "/usr" "$out"
+
+    substituteInPlace src/tools/upgrade/dialog/processdialog.cpp \
+      --replace "/usr/bin/dde-file-manager" "dde-file-manager" \
+      --replace "/usr/bin/dde-desktop" "dde-desktop"
+
+    substituteInPlace src/dfm-base/file/local/localfilehandler.cpp \
+      --replace "/usr/lib/deepin-daemon" "/run/current-system/sw/lib/deepin-daemon" \
+      --replace "/usr/bin/x-terminal-emulator" "x-terminal-emulator"
+
+    substituteInPlace src/plugins/desktop/ddplugin-background/backgroundservice.cpp \
+      --replace "/usr/share/backgrounds" "/run/current-system/sw/share/backgrounds"
+
+    substituteInPlace src/plugins/desktop/ddplugin-wallpapersetting/wallpapersettings.cpp \
+      --replace "/usr/share/backgrounds" "/run/current-system/sw/share/backgrounds"
+
+    find . -type f -regex ".*\\.\\(service\\|policy\\|desktop\\)" -exec sed -i -e "s|/usr/|$out/|g" {} \;
+
+    ######################
+    substituteInPlace src/dfm-base/CMakeLists.txt --replace "/usr" "$out"
   '';
+  # src/plugins/desktop/core/ddplugin-dbusregister/vaultmanagerdbus.cpp TODO
+  # src/plugins/desktop/ddplugin-grandsearchdaemon/CMakeLists.txt 
+  # src/plugins/daemon/daemonplugin-accesscontrol/utils.cpp
 
   buildInputs = [
     dtkwidget
+    qt5platform-plugins
+    deepin-pdfium
+    util-dfm
     dde-qt-dbus-factory
-    udisks2-qt5
-    disomaster
-    gio-qt
+    glibmm
     docparser
     dde-dock.dev
-    deepin-anything
     deepin-movie-reborn.dev
-    deepin-desktop-schemas
     qtx11extras
     qtmultimedia
     kcodecs
-    jemalloc
     ffmpegthumbnailer
-    libzen
     libsecret
     libmediainfo
     mediainfo
-    lxqt.libqtxdg
     poppler
     polkit-qt
     polkit
-    pcre
     lucenepp
     boost
     taglib
     cryptsetup
   ];
 
-  enableParallelBuilding = true;
-
-  qmakeFlags = [
-    "filemanager.pro"
-    "VERSION=${version}"
-    "PREFIX=${placeholder "out"}"
-    "LIB_INSTALL_DIR=${placeholder "out"}/lib"
-    "INCLUDE_INSTALL_DIR=${placeholder "out"}/include"
+  env.NIX_CFLAGS_COMPILE = toString [
+    "-I${libuuid.dev}/include/libmount"
+    "-I${libuuid.dev}/include"
   ];
+
+  cmakeFlags = [
+    "-DDEEPIN_OS_VERSION=20"
+  ];
+
+  enableParallelBuilding = true;
 
   qtWrapperArgs = [
     "--prefix QT_PLUGIN_PATH : ${qt5integration}/${qtbase.qtPluginPrefix}"
-    "--prefix QT_QPA_PLATFORM_PLUGIN_PATH : ${qt5platform-plugins}/${qtbase.qtPluginPrefix}"
     "--prefix LD_LIBRARY_PATH : ${lib.makeLibraryPath [ mpv ffmpeg ffmpegthumbnailer gst_all_1.gstreamer gst_all_1.gst-plugins-base ]}"
   ];
 
