@@ -17,13 +17,13 @@
 
 stdenv.mkDerivation rec {
   pname = "qt5platform-plugins";
-  version = "5.6.4";
+  version = "5.6.5";
 
   src = fetchFromGitHub {
     owner = "linuxdeepin";
     repo = pname;
     rev = version;
-    sha256 = "sha256-1EQomcJixq5I6AntpRP2UMqvvn7j38Z80y6nFDiXxDM=";
+    sha256 = "sha256-DHgnfJTUw1hY53DmDfzVFM6Ff8q6pbNDPmPeSsV7MwY=";
   };
 
   # patches = [
@@ -31,11 +31,11 @@ stdenv.mkDerivation rec {
   # ];
 
   ## https://github.com/linuxdeepin/qt5platform-plugins/pull/119 
-  postPatch = ''
-    rm -r xcb/libqt5xcbqpa-dev/
-    mkdir -p xcb/libqt5xcbqpa-dev/${qtbase.version}
-    cp -r ${qtbase.src}/src/plugins/platforms/xcb/*.h xcb/libqt5xcbqpa-dev/${qtbase.version}/
-  '';
+  # postPatch = ''
+  #   rm -r xcb/libqt5xcbqpa-dev/
+  #   mkdir -p xcb/libqt5xcbqpa-dev/${qtbase.version}
+  #   cp -r ${qtbase.src}/src/plugins/platforms/xcb/*.h xcb/libqt5xcbqpa-dev/${qtbase.version}/
+  # '';
 
   nativeBuildInputs = [ qmake pkg-config wrapQtAppsHook ];
 
@@ -54,11 +54,12 @@ stdenv.mkDerivation rec {
   qmakeFlags = [
     "VERSION=${version}"
     "INSTALL_PATH=${placeholder "out"}/${qtbase.qtPluginPrefix}/platforms"
+    "QT_XCB_PRIVATE_INCLUDE=${qtbase.src}/src/plugins/platforms/xcb"
   ] ++ lib.optional (!waylandSupport) [ 
     "CONFIG+=DISABLE_WAYLAND" 
   ];
 
-  NIX_CFLAGS_COMPILE = lib.optional waylandSupport [ 
+  NIX_CFLAGS_COMPILE = lib.optional waylandSupport [
     "-I${wayland.dev}/include"
   ];
 
