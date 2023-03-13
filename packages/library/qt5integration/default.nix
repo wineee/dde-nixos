@@ -11,15 +11,12 @@
 , qtx11extras
 , qt5platform-plugins
 , lxqt
+, kiconthemes
 , mtdev
 , xorg
 , gtest
 }:
-let
-  libqtxdg =  lxqt.libqtxdg.overrideAttrs(drv: {
-      patches = [ ./fix-icon.patch ];
-  });
-in
+
 stdenv.mkDerivation rec {
   pname = "qt5integration";
   version = "5.6.5";
@@ -31,6 +28,14 @@ stdenv.mkDerivation rec {
     sha256 = "sha256-Xj8SyV5IIHxjQsdnVJQhfbw6fvCeiMckexUo+6W0GM0=";
   };
 
+  patches = [
+    (fetchpatch {
+      name = "refactor: use KIconEngine instead";
+      url = "https://github.com/linuxdeepin/qt5integration/commit/fc88b79b52b1f90bdcb924269ddb5c6eccad2b99.patch";
+      sha256 = "sha256-/rZhNwba00qXkU+1Pqa3ptUlPtNNHp6DsHilc6m+ljk=";
+    })
+  ];
+
   nativeBuildInputs = [ qmake pkg-config wrapQtAppsHook ];
 
   buildInputs = [
@@ -38,7 +43,8 @@ stdenv.mkDerivation rec {
     qtx11extras
     qt5platform-plugins
     mtdev
-    libqtxdg
+    lxqt.libqtxdg
+    kiconthemes
     xorg.xcbutilrenderutil
     gtest
   ];
