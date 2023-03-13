@@ -48,8 +48,12 @@ stdenv.mkDerivation rec {
     qtbase
     libmediainfo
     libsecret
-    libisoburn
     libuuid
+    udisks
+  ];
+
+  propagatedBuildInputs = [
+    libisoburn
     udisks
   ];
 
@@ -65,9 +69,9 @@ stdenv.mkDerivation rec {
   '';
 
   meta = with lib; {
-    description = "Gio wrapper for Qt applications";
-    homepage = "https://github.com/linuxdeepin/gio-qt";
-    license = licenses.lgpl3Plus;
+    description = "A Toolkits of libdfm-io 、libdfm-mount and libdfm-burn";
+    homepage = "https://github.com/linuxdeepin/util-dfm";
+    license = licenses.gpl3Plus;
     platforms = platforms.linux;
   };
 }
