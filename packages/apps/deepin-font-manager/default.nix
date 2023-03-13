@@ -14,7 +14,7 @@
 , fontconfig
 , freetype
 , gtest
-, fileManagerPlugins ? true
+, fileManagerPlugins ? false
 , qtbase
 }:
 
