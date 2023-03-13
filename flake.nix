@@ -226,7 +226,7 @@
                     glib # for gsettings program / gdbus
                     gtk3.out # for gtk-launch program
                     xdg-user-dirs # Update user dirs as described in http://freedesktop.org/wiki/Software/xdg-user-dirs/
-                    util-linux # runuser
+                    util-linux # runuser by dde-daemon
                     polkit_gnome
                     librsvg # dde-api use rsvg-convert
                     kde-gtk-config # deepin-api/gtk-thumbnailer need
