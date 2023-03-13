@@ -2,7 +2,6 @@
 , lib
 , fetchFromGitHub
 , fetchpatch
-, getUsrPatchFrom
 , replaceAll
 , dtkwidget
 , substituteAll
@@ -35,38 +34,9 @@
 , glib
 , runtimeShell
 , tzdata
-, dde-account-faces
 , dbus
 }:
-let
-  patchList = {
-    "dde-control-center-autostart.desktop" = [ ];
-    "com.deepin.dde.ControlCenter.service" = [
-      # "/usr/share/applications/dde-control-center.desktop
-    ];
-    "dde-control-center-wapper" = [
-      # /usr/share/applications/dde-control-center.desktop
-      [ "qdbus" "${qttools.bin}/bin/qdbus" ]
-    ];
 
-    "src/reboot-reminder-dialog/main.cpp" = [
-      # /usr/share/dde-control-center/translations/dialogs_
-    ];
-    "src/frame/main.cpp" = [
-      # /usr/share/dde-control-center/translations/keyboard_language_
-    ];
-    "src/frame/window/mainwindow.cpp" = [
-      # /usr/share/icons/bloom/apps/64/preferences-system.svg
-      [ "/usr/share/icons" "/run/current-system/sw/share/icons" ]
-    ];
-    "include/widgets/utils.h" = [ ];
-    "src/reset-password-dialog/main.cpp" = [ ];
-    "src/frame/modules/keyboard/customedit.cpp" = [
-      [ "/usr/bin" "/run/current-system/sw/bin" ]
-    ];
-    "abrecovery/main.cpp" = [ ];
-  };
-in
 stdenv.mkDerivation rec {
   pname = "dde-control-center";
   version = "5.5.164";
@@ -84,10 +54,6 @@ stdenv.mkDerivation rec {
       url = "https://github.com/linuxdeepin/dde-control-center/commit/32394aa84f4b575e0a84a0813ba07b72cb1ba137.patch";
       sha256 = "sha256-r21oczFyhKarMuEkL8Ruzd8jqB/T+MfuUGrLNeQdZB8=";
     })
-    # (substituteAll {
-    #   src = ./0001-patch_account_face_path_for_nix.patch;
-    #   actConfigDir = "${dde-account-faces}/share/lib/AccountsService";
-    # })
     ./0002-fix-svg-render-for-themeitem.patch
     ./0003-dont-show-endUserLicenseAgreement-for-deepinos.patch
   ];
@@ -96,9 +62,25 @@ stdenv.mkDerivation rec {
     + replaceAll "/usr/lib/dde-control-center" "/run/current-system/sw/lib/dde-control-center"
     + replaceAll "/usr/share/zoneinfo" "${tzdata}/share/zoneinfo"
     + replaceAll "/usr/bin/dbus-send" "${dbus}/bin/dbus-send"
-    + replaceAll "/usr/bin/abrecovery" "abrecovery"
-    + getUsrPatchFrom patchList + ''
+    + replaceAll "/usr/bin/abrecovery" "abrecovery" + ''
     substituteInPlace CMakeLists.txt --replace 'add_subdirectory("tests")' ' '
+
+    substituteInPlace dde-control-center-autostart.desktop com.deepin.dde.ControlCenter.service \
+      --replace "/usr" "$out" 
+
+    substituteInPlace abrecovery/main.cpp include/widgets/utils.h src/{reboot-reminder-dialog/main.cpp,frame/main.cpp,reset-password-dialog/main.cpp} \
+      --replace "/usr/share/dde-control-center" "$out/share/dde-control-center"
+
+    # default path for QFileDialog::getOpenFileName
+    substituteInPlace src/frame/modules/keyboard/customedit.cpp \
+      --replace "/usr/bin" "/run/current-system/sw/bin"
+
+    substituteInPlace dde-control-center-wapper \
+      --replace "qdbus" "${qttools.bin}/bin/qdbus" \
+      --replace "/usr/share" "$out/share"
+
+    substituteInPlace src/frame/window/mainwindow.cpp \
+      --replace "/usr/share/icons/bloom/apps/64/preferences-system.svg" "preferences-system.svg"
   '';
 
   nativeBuildInputs = [
@@ -108,15 +90,14 @@ stdenv.mkDerivation rec {
     wrapQtAppsHook
     wrapGAppsHook
   ];
-
   dontWrapGApps = true;
 
   buildInputs = [
+    qtbase
     dtkwidget
-    qtbase.dev
+    qt5platform-plugins
     dde-qt-dbus-factory
     deepin-pw-check
-    deepin-desktop-schemas
     qtx11extras
     qtmultimedia
     gsettings-qt
@@ -127,7 +108,6 @@ stdenv.mkDerivation rec {
     polkit-qt
     pcre
     xorg.libXdmcp
-    util-linux
     libselinux
     libsepol
     libxcrypt
@@ -142,9 +122,9 @@ stdenv.mkDerivation rec {
     "-DDISABLE_RECOVERY=YES"
   ];
 
+  # qt5integration must be placed before qtsvg in QT_PLUGIN_PATH
   qtWrapperArgs = [
     "--prefix QT_PLUGIN_PATH : ${qt5integration}/${qtbase.qtPluginPrefix}"
-    "--prefix QT_QPA_PLATFORM_PLUGIN_PATH : ${qt5platform-plugins}/${qtbase.qtPluginPrefix}"
   ];
 
   preFixup = ''
