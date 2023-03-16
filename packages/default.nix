@@ -37,7 +37,6 @@ let
   packages = self: with self; functions // {
     #### TOOLS
     deepin-anything = callPackage ./tools/deepin-anything { };
-    dde-device-formatter = callPackage ./tools/dde-device-formatter { };
 
     ### CORE
     dde-kwin = callPackage ./core/dde-kwin { };
@@ -46,7 +45,6 @@ let
     dde-launcher = callPackage ./core/dde-launcher { };
     dde-control-center = callPackage ./core/dde-control-center { };
     dde-file-manager = callPackage ./core/dde-file-manager { };
-    dde-calendar = callPackage ./core/dde-calendar { };
     dde-clipboard = callPackage ./core/dde-clipboard { };
     dde-app-services = callPackage ./core/dde-app-services { };
     dde-network-core = callPackage ./core/dde-network-core { };
@@ -57,15 +55,12 @@ let
     nixos-gsettings-schemas = callPackage ./misc/nixos-gsettings-schemas { };
 
     #### Go Packages
-    deepin-desktop-schemas = callPackage ./go-package/deepin-desktop-schemas { };
     dde-daemon = callPackage ./go-package/dde-daemon { };
     startdde = callPackage ./go-package/startdde { };
 
     #### Dtk Application
     dde-grand-search = callPackage ./apps/dde-grand-search { };
     dde-introduction = callPackage ./apps/dde-introduction { };
-    deepin-music = callPackage ./apps/deepin-music { };
-    deepin-movie-reborn = callPackage ./apps/deepin-movie-reborn { };
     deepin-boot-maker = callPackage ./apps/deepin-boot-maker { };
     deepin-font-manager = callPackage ./apps/deepin-font-manager { };
     deepin-system-monitor = callPackage ./apps/deepin-system-monitor { };

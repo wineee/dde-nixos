@@ -323,7 +323,7 @@
                     deepin-kwin
                     dde-launcher
                     dde-file-manager
-                    dde-calendar
+                    pkgs.deepin.dde-calendar
                     dde-clipboard
                   ];
 
