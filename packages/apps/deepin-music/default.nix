@@ -5,10 +5,8 @@
 , dtkwidget
 , qt5integration
 , qt5platform-plugins
-, dde-qt-dbus-factory
 , udisks2-qt5
 , qtmpris
-, qtdbusextended
 , cmake
 , pkg-config
 , qtmultimedia
@@ -17,26 +15,25 @@
 , kcodecs
 , ffmpeg
 , libvlc
-, libcue
 , taglib
-, gsettings-qt
 , SDL2
-, gtest
 , qtbase
 , gst_all_1
+, dtkdeclarative
 }:
 let
   gstPluginPath = lib.makeSearchPathOutput "lib" "lib/gstreamer-1.0" (with gst_all_1; [ gstreamer gst-plugins-base gst-plugins-good ]);
 in
 stdenv.mkDerivation rec {
   pname = "deepin-music";
-  version = "6.2.21";
+  version = "7.0.0";
 
   src = fetchFromGitHub {
     owner = "linuxdeepin";
     repo = pname;
-    rev = version;
-    sha256 = "sha256-sN611COCWy1gF/BZZqZ154uYuRo9HsbJw2wXe9OJ+iQ=";
+    rev = "3924def3ac0e04dc0358cd989772b8fe30c1cf0e";
+    sha256 = "sha256-RGGnBcQOuM30ghGGSnbTKc7xS2AJpHGG5TOPN75W93A=
+";
   };
 
   nativeBuildInputs = [
@@ -47,20 +44,16 @@ stdenv.mkDerivation rec {
   ];
 
   buildInputs = [
+    dtkdeclarative
     dtkwidget
-    dde-qt-dbus-factory
     udisks2-qt5
     qtmpris
-    qtdbusextended
     qtmultimedia
     kcodecs
     ffmpeg
     libvlc
-    libcue
     taglib
-    gsettings-qt
     SDL2
-    gtest
   ] ++ (with gst_all_1; [
     gstreamer
     gst-plugins-base
@@ -77,16 +70,15 @@ stdenv.mkDerivation rec {
     "-DVERSION=${version}"
   ];
 
-  postPatch = ''
-    substituteInPlace src/music-player/CMakeLists.txt \
-      --replace "include_directories(/usr/include/vlc)" "include_directories(${libvlc}/include/vlc)" \
-      --replace "include_directories(/usr/include/vlc/plugins)" "include_directories(${libvlc}/include/vlc/plugins)" \
-      --replace "/usr/share" "$out/share"
-    substituteInPlace src/libmusic-plugin/CMakeLists.txt \
-      --replace "/usr/lib/deepin-aiassistant" "$out/lib/deepin-aiassistant"
-    substituteInPlace src/music-player/data/deepin-music.desktop \
-      --replace "/usr/bin/deepin-music" "$out/bin/deepin-music"
-  '';
+  patches = [
+    "${src}/patches/fix-library-path.patch"
+  ];
+
+  env.NIX_CFLAGS_COMPILE =  toString [
+    "-I${libvlc}/include/vlc/plugins"
+    "-I${libvlc}/include/vlc"
+  ];
+
   meta = with lib; {
     description = "Awesome music player with brilliant and tweakful UI Deepin-UI based";
     homepage = "https://github.com/linuxdeepin/deepin-music";
