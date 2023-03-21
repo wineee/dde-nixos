@@ -8,7 +8,6 @@
 , wrapQtAppsHook
 , qtdeclarative
 , qtquickcontrols2
-, gtest
 , doxygen
 , qtbase
 , qt5integration
@@ -19,22 +18,14 @@
 
 stdenv.mkDerivation rec {
   pname = "dtkdeclarative";
-  version = "5.6.3";
+  version = "5.6.8";
 
   src = fetchFromGitHub {
     owner = "linuxdeepin";
     repo = pname;
-    rev = "9c0c05e197ff8a0dd6464aaa4f24fe146399274c";
-    sha256 = "sha256-Rh6G7h2JBSozk5k/I2ENbSPyZJRLYOdotBVbwnNUFZ0=";
+    rev = version;
+    sha256 = "sha256-L7xZGPDsT5C/ssQrV7BTk3kvGMvqTeLaoXambrARd18=";
   };
-
-  patches = [
-    (fetchpatch {
-      name = "fix qml path";
-      url = "https://github.com/linuxdeepin/dtkdeclarative/commit/95d6883314da5f0e6768821e27b24a91fb7d36d6.patch";
-      sha256 = "sha256-1YhXfVkedGjv8ZPca16dswSeGP3i9IboNkNcKNbCUsg=";
-    })
-  ];
 
   postPatch = ''
     substituteInPlace chameleon/CMakeLists.txt \
@@ -54,7 +45,6 @@ stdenv.mkDerivation rec {
 
   buildInputs = [
     qt5platform-plugins # for examples
-    gtest
   ];
 
   propagatedBuildInputs = [ 
