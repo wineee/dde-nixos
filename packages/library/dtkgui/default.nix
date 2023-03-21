@@ -17,13 +17,13 @@
 
 stdenv.mkDerivation rec {
   pname = "dtkgui";
-  version = "5.6.5";
+  version = "5.6.8";
 
   src = fetchFromGitHub {
     owner = "linuxdeepin";
     repo = pname;
     rev = version;
-    sha256 = "sha256-DeusmlVaNLaRLYXqsUZu8HcP936LunmlEjyyjJAR0J8=";
+    sha256 = "sha256-6b4EQq1b7X9/lc644qnpY3QYZ01SE+EV07aDjY5ewvY=";
   };
 
   nativeBuildInputs = [
@@ -51,6 +51,9 @@ stdenv.mkDerivation rec {
     "-DMKSPECS_INSTALL_DIR=${placeholder "out"}/mkspecs/modules"
     "-DCMAKE_INSTALL_LIBDIR=lib"
     "-DCMAKE_INSTALL_INCLUDEDIR=include"
+    "-DDTK_DISABLE_LIBRSVG=ON" # librsvg
+    "-DDTK_DISABLE_LIBXDG=OFF" # libqtxdg
+    "-DDTK_DISABLE_EX_IMAGE_FORMAT=OFF" # freeimage
   ];
 
   meta = with lib; {
