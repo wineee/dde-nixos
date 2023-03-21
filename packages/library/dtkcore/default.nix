@@ -19,13 +19,13 @@ let
 in
 stdenv.mkDerivation rec {
   pname = "dtkcore";
-  version = "5.6.5";
+  version = "5.6.8";
 
   src = fetchFromGitHub {
     owner = "linuxdeepin";
     repo = pname;
     rev = version;
-    sha256 = "sha256-jOLQ8hMVz51YXSs4VXusHlB6jtPQay2lCJNlGgTX7d0=";
+    sha256 = "sha256-JkyYs8aHCP+WwEbjpSXxMYpkgljI33UZFne5sviiZWs=";
   };
 
   postPatch = ''
@@ -65,7 +65,6 @@ stdenv.mkDerivation rec {
     "-DD_DSG_APP_DATA_FALLBACK=/var/dsg/appdata"
     "-DBUILD_WITH_SYSTEMD=${onOffBool withSystemd}"
   ];
-
 
   preConfigure = ''
     # qt.qpa.plugin: Could not find the Qt platform plugin "minimal"
