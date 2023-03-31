@@ -235,7 +235,7 @@
                     onboard # dde-dock plugin
                     xsettingsd # lightdm-deepin-greeter
                   ] ++ (with packages; (utils.removePackagesByName ([
-                    dde-kwin
+
                     deepin-kwin
                     qt5platform-plugins #TODO nixos/modules/config/qt5.nix
                     # qt5integration
@@ -295,7 +295,6 @@
                   ]) config.environment.deepin.excludePackages));
 
                   services.dbus.packages = with packages; (utils.removePackagesByName ([
-                    dde-kwin
                     deepin-kwin
                     dde-launcher
                     dde-dock

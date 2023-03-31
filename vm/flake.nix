@@ -32,6 +32,8 @@
           ranger
           exa
           ffmpeg
+          xorg.xev
+          
         ] ++ (with dde-nixos.packages.${super.system}; [
           # deepin-draw
           # deepin-voice-note

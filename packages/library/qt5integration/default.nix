@@ -28,13 +28,13 @@ stdenv.mkDerivation rec {
     sha256 = "sha256-7b18ydyy/TIEGDkFAoium1LSx3Qs4I4pYpMfehOBZbY";
   };
 
-  #patches = [
-  #  (fetchpatch {
-  #    name = "refactor: use KIconEngine instead";
-  #    url = "https://github.com/linuxdeepin/qt5integration/commit/fc88b79b52b1f90bdcb924269ddb5c6eccad2b99.patch";
-  #    sha256 = "sha256-/rZhNwba00qXkU+1Pqa3ptUlPtNNHp6DsHilc6m+ljk=";
-  #  })
-  #];
+  patches = [
+   (fetchpatch {
+     name = "refactor: use KIconEngine instead";
+     url = "https://github.com/linuxdeepin/qt5integration/commit/822a6a40cddca1c89cc06169e42828b86c6f5a80.patch";
+     sha256 = "sha256-PRcae63FSAzV0EKG/YipjqwsW6lR+CgKyRbkAY4ZoM4=";
+   })
+  ];
 
   nativeBuildInputs = [ qmake pkg-config wrapQtAppsHook ];
 

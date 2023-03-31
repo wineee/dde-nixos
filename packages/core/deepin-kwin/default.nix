@@ -2,7 +2,6 @@
 , lib
 , fetchFromGitHub
 , fetchpatch
-, replaceAll
 , cmake
 , pkg-config
 , wayland
@@ -35,6 +34,7 @@
 , mesa
 , lcms2
 , xorg
+, dtkcore
 }:
 stdenv.mkDerivation rec {
   pname = "deepin-kwin";
@@ -43,30 +43,32 @@ stdenv.mkDerivation rec {
   src = fetchFromGitHub {
     owner = "linuxdeepin";
     repo = pname;
-    rev = "6bb381c00deb7427ccb319b5bbc2aeb3290b9c51";
-    sha256 = "sha256-DEOSXd+BvCv286KyTsNYlz/1yu86phN4irJNucnj7vk=";
+    rev = "2fc8385435984f90eebf059a973a5a298ec49d58";
+    sha256 = "sha256-oD0RM9/NdGQ7ErP8siJiYqN3lMEsIa2DDMpwJgk4PBE=";
   };
 
   patches = [
     (fetchpatch {
-      name = "disable_dde-dock_preview_notify";
-      url = "https://github.com/linuxdeepin/deepin-kwin/commit/a874f798b5c3118f3f62d7dd9dfc0322d3cb88ef.patch";
-      sha256 = "sha256-ANcQ5HU52A78gOkROfiGOuYSdz+0NOm9KYkkeGLw660=";
-    })
-    (fetchpatch {
-      name = "disable_dde-dock_preview_notify2";
-      url = "https://github.com/linuxdeepin/deepin-kwin/commit/4d912f404136461a92e63f2f329949c900bd6611.patch";
-      sha256 = "sha256-ghfSEdIoodaKqdWRz99K0UH5KOSDjwj17BmRzGMrUUw=";
-    })
-    (fetchpatch {
-      name = "fix_build";
-      url = "https://github.com/linuxdeepin/deepin-kwin/commit/49f5a9641b37442ca1456daf60c807a8105cd017.patch";
-      sha256 = "sha256-uNerAicRycAdWThSuvKRF6YKwEvGTL5+jg0R3dblz/0=";
+      name = "fix: deepin-wm-dbus missing install dir";
+      url = "https://github.com/linuxdeepin/deepin-kwin/commit/91ced854fc3cdd71d836fbbb52ad91b03ba69ed0.patch";
+      sha256 = "sha256-6AeyRY5ZbgJIBWoBoBMfOXJbY2vAeCkwjbkEKari5Ko=";
     })
   ];
 
+  postPatch = ''
+    substituteInPlace src/effects/screenshot/screenshotdbusinterface1.cpp \
+      --replace 'file.readAll().startsWith(DEFINE_DDE_DOCK_PATH"dde-dock")' 'file.readAll().contains("dde-dock")'
+
+    substituteInPlace deepin-wm-dbus/deepinwmfaker.cpp \
+      --replace "/usr/lib/deepin-daemon" "/run/current-system/sw/lib/deepin-daemon"
+
+    substituteInPlace deepin-wm-dbus/deepinwmfaker.cpp src/effects/multitaskview/multitaskview.cpp \
+      --replace "/usr/share/backgrounds" "/run/current-system/sw/share/backgrounds" \
+      --replace "/usr/share/wallpapers" "/run/current-system/sw/share/wallpapers"
+  '';
+
   nativeBuildInputs = [
-    cmake
+    cmake  
     pkg-config
     extra-cmake-modules
     wrapQtAppsHook
@@ -76,6 +78,8 @@ stdenv.mkDerivation rec {
     qtbase
     qttools
     qtx11extras
+    dtkcore
+
     wayland
     dwayland
     libepoxy
@@ -111,13 +115,12 @@ stdenv.mkDerivation rec {
     xorg.libXtst
   ];
 
-  cmakeFlags = [
-    "-DKWIN_BUILD_KCMS=OFF"
-    "-DKWIN_BUILD_TABBOX=ON"
-    "-DKWIN_BUILD_CMS=OFF"
-    "-DKWIN_BUILD_RUNNERS=OFF"
-    "-DDEFINE_DDE_DOCK_PATH=\"\""
-  ];
+  # cmakeFlags = [
+  #   "-DKWIN_BUILD_KCMS=OFF"
+  #   "-DKWIN_BUILD_TABBOX=ON"
+  #   "-DKWIN_BUILD_CMS=OFF"
+  #   "-DKWIN_BUILD_RUNNERS=OFF"
+  # ];
 
   meta = with lib; {
     description = "Easy to use, but flexible, composited Window Manager";
