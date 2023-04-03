@@ -1,7 +1,6 @@
 { stdenv
 , lib
 , fetchFromGitHub
-, getUsrPatchFrom
 , dtkwidget
 , qt5integration
 , qt5platform-plugins
@@ -16,19 +15,7 @@
 , gtest
 , qtbase
 }:
-let
-  patchList = {
-    "CMakeLists.txt" = [
-      [ "/etc/xdg" "$out/etc/xdg" ]
-      [ "/lib/systemd/user" "$out/lib/systemd/user" ]
-    ];
-    "misc/dde-clipboard.desktop" = [ ];
-    "misc/dde-clipboard-daemon.service" = [ ];
-    "misc/com.deepin.dde.Clipboard.service" = [
-      [ "/usr/bin/qdbus" "${qttools}/bin/qdbus" ]
-    ];
-  };
-in
+
 stdenv.mkDerivation rec {
   pname = "dde-clipboard";
   version = "5.4.25";
@@ -40,7 +27,15 @@ stdenv.mkDerivation rec {
     sha256 = "sha256-oFATOBXf4NvGxjVMlfxwfQkBffeKut8ao+X6T9twb/I=";
   };
 
-  postPatch = getUsrPatchFrom patchList + ''
+  postPatch = ''
+    substituteInPlace CMakeLists.txt \
+      --replace "/etc/xdg" "$out/etc/xdg" \
+      --replace "/lib/systemd/user" "$out/lib/systemd/user" \
+      --replace "/usr/share" "$out/share"
+    substituteInPlace misc/com.deepin.dde.Clipboard.service \
+      --replace "/usr/bin/qdbus" "${lib.getBin qttools}/bin/qdbus"
+    substituteInPlace misc/{dde-clipboard.desktop,dde-clipboard-daemon.service,com.deepin.dde.Clipboard.service} \
+      --replace "/usr" "$out"
     patchShebangs translate_generation.sh generate_gtest_report.sh
   '';
 
@@ -53,6 +48,7 @@ stdenv.mkDerivation rec {
 
   buildInputs = [
     dtkwidget
+    qt5platform-plugins
     dde-qt-dbus-factory
     gio-qt
     kwayland
@@ -64,9 +60,9 @@ stdenv.mkDerivation rec {
     "-DUSE_DEEPIN_WAYLAND=OFF"
   ];
 
+  # qt5integration must be placed before qtsvg in QT_PLUGIN_PATH
   qtWrapperArgs = [
     "--prefix QT_PLUGIN_PATH : ${qt5integration}/${qtbase.qtPluginPrefix}"
-    "--prefix QT_QPA_PLATFORM_PLUGIN_PATH : ${qt5platform-plugins}/${qtbase.qtPluginPrefix}"
   ];
 
   meta = with lib; {
@@ -74,5 +70,6 @@ stdenv.mkDerivation rec {
     homepage = "https://github.com/linuxdeepin/dde-clipboard";
     license = licenses.gpl3Plus;
     platforms = platforms.linux;
+    maintainers = teams.deepin.members;
   };
 }

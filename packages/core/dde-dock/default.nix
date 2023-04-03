@@ -1,14 +1,11 @@
 { stdenv
 , lib
 , fetchFromGitHub
-, getUsrPatchFrom
-, replaceAll
 , dtkwidget
 , dde-qt-dbus-factory
 , qt5integration
 , qt5platform-plugins
 , dde-control-center
-, dde-daemon
 , deepin-desktop-schemas
 , cmake
 , qttools
@@ -23,6 +20,7 @@
 , gtest
 , qtbase
 }:
+
 stdenv.mkDerivation rec {
   pname = "dde-dock";
   version = "5.5.81";
@@ -34,14 +32,14 @@ stdenv.mkDerivation rec {
     sha256 = "sha256-x8U5QPfIykaQLjwbErZiYbZC+JyPQQ+jd6MBjDQyUjs=";
   };
 
-  postPatch = replaceAll "/usr/lib/deepin-daemon" "/run/current-system/sw/lib/deepin-daemon"
-    + replaceAll "/usr/lib/dde-dock/plugins" "/run/current-system/sw/lib/dde-dock/plugins"
-    + replaceAll "/usr/bin/pkexec" "pkexec"
-    + replaceAll "/usr/sbin/overlayroot-disable" "overlayroot-disable"
-    + getUsrPatchFrom {
-      "plugins/dcc-dock-plugin/settings_module.cpp" = [ ];
-      "plugins/tray/system-trays/systemtrayscontroller.cpp" = [ ];
-    };
+  postPatch = ''
+    substituteInPlace plugins/tray/system-trays/systemtrayscontroller.cpp frame/controller/dockpluginscontroller.cpp \
+      --replace "/usr/lib/dde-dock/plugins" "/run/current-system/sw/lib/dde-dock/plugins"
+    substituteInPlace plugins/show-desktop/showdesktopplugin.cpp frame/window/components/desktop_widget.cpp \
+      --replace "/usr/lib/deepin-daemon" "/run/current-system/sw/lib/deepin-daemon"
+    substituteInPlace plugins/{dcc-dock-plugin/settings_module.cpp,tray/system-trays/systemtrayscontroller.cpp} \
+      --replace "/usr" "$out"
+    '';
 
   nativeBuildInputs = [
     cmake
@@ -54,10 +52,11 @@ stdenv.mkDerivation rec {
 
   buildInputs = [
     dtkwidget
+    qt5platform-plugins
     dde-qt-dbus-factory
     dde-control-center
-    qtx11extras
     deepin-desktop-schemas
+    qtx11extras
     gsettings-qt
     libdbusmenu
     xorg.libXcursor
@@ -70,9 +69,9 @@ stdenv.mkDerivation rec {
 
   cmakeFlags = [ "-DVERSION=${version}" ];
 
+  # qt5integration must be placed before qtsvg in QT_PLUGIN_PATH
   qtWrapperArgs = [
     "--prefix QT_PLUGIN_PATH : ${qt5integration}/${qtbase.qtPluginPrefix}"
-    "--prefix QT_QPA_PLATFORM_PLUGIN_PATH : ${qt5platform-plugins}/${qtbase.qtPluginPrefix}"
   ];
 
   preFixup = ''
@@ -85,5 +84,6 @@ stdenv.mkDerivation rec {
     homepage = "https://github.com/linuxdeepin/dde-dock";
     platforms = platforms.linux;
     license = licenses.lgpl3Plus;
+    maintainers = teams.deepin.members;
   };
 }

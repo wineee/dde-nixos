@@ -1,26 +1,23 @@
 { stdenv
 , lib
 , fetchFromGitHub
-, replaceAll
-, dtkwidget
-, dde-qt-dbus-factory
-, dde-dock
-, dde-control-center
-, dde-session-shell
-, qt5integration
-, qt5platform-plugins
-, gio-qt
 , cmake
 , qttools
 , pkg-config
+, wrapQtAppsHook
+, dtkwidget
+, dde-dock
+, dde-control-center
+, dde-session-shell
+, dde-qt-dbus-factory
 , gsettings-qt
+, gio-qt
 , networkmanager-qt
 , glib
 , pcre
 , util-linux
 , libselinux
 , libsepol
-, wrapQtAppsHook
 , dbus
 , gtest
 , qtbase
@@ -36,10 +33,12 @@ stdenv.mkDerivation rec {
     sha256 = "sha256-ysmdB9CT7mhN/0r8CRT4FQsK12HkhjbezGXwWiNScqg=";
   };
 
-  postPatch = replaceAll "/usr/share/applications" "/run/current-system/sw/share/applications"
-    + replaceAll "/usr/share/dss-network-plugin" "$out/share/dss-network-plugin"
-    + replaceAll "/usr/share/dock-network-plugin" "$out/share/dock-network-plugin"
-    + replaceAll "/usr/share/dcc-network-plugin" "$out/share/dcc-network-plugin";
+  postPatch = ''
+    substituteInPlace dock-network-plugin/networkplugin.cpp dcc-network-plugin/dccnetworkmodule.cpp dss-network-plugin/network_module.cpp \
+      --replace "/usr/share" "$out/share"
+    substituteInPlace dss-network-plugin/notification/bubbletool.cpp \
+      --replace "/usr/share" "/run/current-system/sw/share"
+  '';
 
   nativeBuildInputs = [
     cmake
@@ -56,8 +55,8 @@ stdenv.mkDerivation rec {
     dde-qt-dbus-factory
     gsettings-qt
     gio-qt
-    networkmanager-qt.dev
-    glib.dev
+    networkmanager-qt
+    glib
     pcre
     util-linux
     libselinux
@@ -69,15 +68,11 @@ stdenv.mkDerivation rec {
     "-DVERSION=${version}"
   ];
 
-  qtWrapperArgs = [
-    "--prefix QT_PLUGIN_PATH : ${qt5integration}/${qtbase.qtPluginPrefix}"
-    "--prefix QT_QPA_PLATFORM_PLUGIN_PATH : ${qt5platform-plugins}/${qtbase.qtPluginPrefix}"
-  ];
-
   meta = with lib; {
     description = "DDE network library framework";
     homepage = "https://github.com/linuxdeepin/dde-network-core";
     license = licenses.gpl3Plus;
     platforms = platforms.linux;
+    maintainers = teams.deepin.members;
   };
 }

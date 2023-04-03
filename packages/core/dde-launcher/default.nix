@@ -1,8 +1,6 @@
 { stdenv
 , lib
 , fetchFromGitHub
-, getUsrPatchFrom
-, replaceAll
 , dtkwidget
 , dde-qt-dbus-factory
 , qt5integration
@@ -16,22 +14,9 @@
 , gsettings-qt
 , glib
 , gtest
-, dbus
 , qtbase
-, kiconthemes
 }:
-let
-  patchList = {
-    "dde-launcher.desktop" = [ ];
-    "dde-launcher-wapper" = [
-      [ "dbus-send" "${dbus}/bin/dbus-send" ]
-      # "/usr/share/applications/dde-launcher.desktop"
-    ];
-    "src/dbusservices/com.deepin.dde.Launcher.service" = [
-      # "/usr/bin/dde-launcher-wapper"
-    ];
-  };
-in
+
 stdenv.mkDerivation rec {
   pname = "dde-launcher";
   version = "5.6.1";
@@ -43,8 +28,12 @@ stdenv.mkDerivation rec {
     sha256 = "sha256-Td8R91892tgJx7FLV2IZ/aPBzDb+o6EYKpk3D8On7Ag=";
   };
 
-  postPatch = replaceAll "/usr/share/backgrounds" "/run/current-system/sw/share/backgrounds"
-    + getUsrPatchFrom patchList;
+  postPatch = ''
+    substituteInPlace src/boxframe/{backgroundmanager.cpp,boxframe.cpp} \
+      --replace "/usr/share/backgrounds" "/run/current-system/sw/share/backgrounds"
+    substituteInPlace dde-launcher.desktop dde-launcher-wapper src/dbusservices/com.deepin.dde.Launcher.service \
+      --replace "/usr" "$out"
+  '';
 
   nativeBuildInputs = [
     cmake
@@ -57,6 +46,7 @@ stdenv.mkDerivation rec {
 
   buildInputs = [
     dtkwidget
+    qt5platform-plugins
     dde-qt-dbus-factory
     qtx11extras
     gsettings-qt
@@ -65,11 +55,9 @@ stdenv.mkDerivation rec {
 
   cmakeFlags = [ "-DVERSION=${version}" ];
 
+  # qt5integration must be placed before qtsvg in QT_PLUGIN_PATH
   qtWrapperArgs = [
     "--prefix QT_PLUGIN_PATH : ${qt5integration}/${qtbase.qtPluginPrefix}"
-    "--prefix QT_QPA_PLATFORM_PLUGIN_PATH : ${qt5platform-plugins}/${qtbase.qtPluginPrefix}"
-    "--prefix LD_LIBRARY_PATH : ${lib.makeLibraryPath [ kiconthemes ]}"
-    "--set D_PROXY_ICON_ENGINE KIconEngine"
   ];
 
   preFixup = ''
@@ -82,5 +70,6 @@ stdenv.mkDerivation rec {
     homepage = "https://github.com/linuxdeepin/dde-launcher";
     license = licenses.gpl3Plus;
     platforms = platforms.linux;
+    maintainers = teams.deepin.members;
   };
 }

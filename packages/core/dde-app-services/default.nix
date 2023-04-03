@@ -1,15 +1,14 @@
 { stdenv
 , lib
 , fetchFromGitHub
-, fetchpatch
-, replaceAll
 , dtkwidget
-, cmake
-, wrapQtAppsHook
 , qt5integration
 , qt5platform-plugins
+, cmake
+, wrapQtAppsHook
 , qtbase
 }:
+
 stdenv.mkDerivation rec {
   pname = "dde-app-services";
   version = "0.0.20";
@@ -21,7 +20,7 @@ stdenv.mkDerivation rec {
     sha256 = "sha256-M9XXNV3N4CifOXitT6+UxaGsLoVuoNGqC5SO/mF+bLw=";
   };
 
-  postPatch = replaceAll "/usr/share/dsg" "/run/current-system/sw/share/dsg" + ''
+  postPatch = ''
     substituteInPlace dconfig-center/dde-dconfig-daemon/services/org.desktopspec.ConfigManager.service \
       --replace "/usr/bin/dde-dconfig-daemon" "$out/bin/dde-dconfig-daemon"
     substituteInPlace dconfig-center/dde-dconfig/main.cpp \
@@ -36,16 +35,19 @@ stdenv.mkDerivation rec {
     wrapQtAppsHook
   ];
 
-  buildInputs = [ dtkwidget ];
+  buildInputs = [
+    dtkwidget
+    qt5platform-plugins
+  ];
 
   cmakeFlags = [
     "-DDVERSION=${version}"
     "-DDSG_DATA_DIR=/run/current-system/sw/share/dsg"
   ];
 
+  # qt5integration must be placed before qtsvg in QT_PLUGIN_PATH
   qtWrapperArgs = [
     "--prefix QT_PLUGIN_PATH : ${qt5integration}/${qtbase.qtPluginPrefix}"
-    "--prefix QT_QPA_PLATFORM_PLUGIN_PATH : ${qt5platform-plugins}/${qtbase.qtPluginPrefix}"
   ];
 
   meta = with lib; {
@@ -53,5 +55,6 @@ stdenv.mkDerivation rec {
     homepage = "https://github.com/linuxdeepin/dde-app-services";
     license = licenses.lgpl3Plus;
     platforms = platforms.linux;
+    maintainers = teams.deepin.members;
   };
 }
