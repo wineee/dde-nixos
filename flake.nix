@@ -279,9 +279,9 @@
                     deepin-screen-recorder
                     deepin-compressor
                     deepin-ocr
+                    deepin-boot-maker
                   ] ++ lib.optionals cfg.full [
                     dde-grand-search # FIXME
-                    deepin-boot-maker
                     deepin-reader
                     deepin-voice-note
                     deepin-downloader
@@ -314,9 +314,9 @@
                     deepin-camera
                     dde-clipboard
                     deepin-ocr
+                    deepin-boot-maker
                   ] ++ lib.optionals cfg.full [
                     dde-grand-search
-                    deepin-boot-maker
                   ]) config.environment.deepin.excludePackages));
 
                   systemd.packages = with packages; [
