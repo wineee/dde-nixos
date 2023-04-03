@@ -252,6 +252,7 @@
                     deepin-calculator
                     deepin-editor
                     deepin-picker
+                    dde-control-center
 
                   ] ++ (with packages; (utils.removePackagesByName ([
                     dde-kwin
@@ -260,7 +261,6 @@
                     startdde
                     dde-session-ui
                     dde-session-shell
-                    dde-control-center
                     dde-launcher
                     dde-dock
                     dde-network-core
@@ -299,6 +299,7 @@
                     deepin-picker
                     deepin-draw
                     deepin-image-viewer
+                    dde-control-center
                   ] ++ (with packages; (utils.removePackagesByName ([
                     dde-kwin
                     deepin-kwin
@@ -307,7 +308,6 @@
                     dde-session-ui
                     dde-session-shell
                     dde-file-manager
-                    dde-control-center
                     dde-calendar
                     deepin-screen-recorder
                     deepin-system-monitor

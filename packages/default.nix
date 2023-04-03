@@ -43,7 +43,6 @@ let
     deepin-kwin = callPackage ./core/deepin-kwin { };
     dde-dock = callPackage ./core/dde-dock { };
     dde-launcher = callPackage ./core/dde-launcher { };
-    dde-control-center = callPackage ./core/dde-control-center { };
     dde-file-manager = callPackage ./core/dde-file-manager { };
     dde-clipboard = callPackage ./core/dde-clipboard { };
     dde-app-services = callPackage ./core/dde-app-services { };
@@ -66,7 +65,6 @@ let
     deepin-system-monitor = callPackage ./apps/deepin-system-monitor { };
     deepin-screen-recorder = callPackage ./apps/deepin-screen-recorder { };
     deepin-clone = callPackage ./apps/deepin-clone { };
-    deepin-shortcut-viewer = callPackage ./apps/deepin-shortcut-viewer { };
     deepin-downloader = callPackage ./apps/deepin-downloader { };
     deepin-gomoku = callPackage ./apps/deepin-gomoku { };
     deepin-lianliankan = callPackage ./apps/deepin-lianliankan { };
