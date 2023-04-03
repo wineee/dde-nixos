@@ -1,14 +1,14 @@
-From 2b6e3a6c37af3c4cc8b9b75ac23a2aab411c233a Mon Sep 17 00:00:00 2001
-From: rewine <luhongxu@deepin.org>
+From 4563c61f6e2ac73634f8b75871da2d9e7ed07645 Mon Sep 17 00:00:00 2001
+From: rewine <lhongxu@outlook.com>
 Date: Mon, 16 Jan 2023 01:11:35 +0800
 Subject: [PATCH] fix path for nixos
 
 ---
- src/vendor/src/libxsys/FileSystem/FileSystem.cpp | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ src/vendor/src/libxsys/FileSystem/FileSystem.cpp | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
 diff --git a/src/vendor/src/libxsys/FileSystem/FileSystem.cpp b/src/vendor/src/libxsys/FileSystem/FileSystem.cpp
-index c3d4b28..dcb95cb 100644
+index c3d4b28..ef320f0 100644
 --- a/src/vendor/src/libxsys/FileSystem/FileSystem.cpp
 +++ b/src/vendor/src/libxsys/FileSystem/FileSystem.cpp
 @@ -25,7 +25,7 @@ QString TmpFilePath(const QString &filename, const QString &distFilename)
@@ -20,14 +20,16 @@ index c3d4b28..dcb95cb 100644
  #endif
  #ifndef Q_OS_LINUX
      QString tmpDir = QStandardPaths::standardLocations(QStandardPaths::AppDataLocation).first();
-@@ -190,6 +190,7 @@ QString SearchBin(const QString &binName)
-     paths.push_back("/bin/");
-     paths.push_back("/usr/bin/");
-     paths.push_back("/usr/local/bin/");
-+    paths.push_back("/run/current-system/sw/bin");
-     return PathSearch(binName, paths);
- }
+@@ -184,7 +184,8 @@ QString PathSearch(const QString &filename, const QStringList &pathlist)
  
+ QString SearchBin(const QString &binName)
+ {
+-    QStringList paths;
++    QStringList paths = QString::fromLatin1(qgetenv("PATH"))
++	                .split(QLatin1Char(':'), QString::SkipEmptyParts);
+     paths.push_back("/sbin/");
+     paths.push_back("/usr/sbin/");
+     paths.push_back("/bin/");
 -- 
-2.38.1
+2.39.2
 
