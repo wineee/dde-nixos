@@ -2,16 +2,17 @@
 , lib
 , fetchFromGitHub
 , dtkwidget
+, qt5integration
+, qt5platform-plugins
 , qmake
 , pkg-config
 , qtbase
 , qttools
 , qtx11extras
 , wrapQtAppsHook
-, qt5integration
-, qt5platform-plugins
 , mtools
 , p7zip
+, udisks
 , syslinux
 , gtest
 }:
@@ -50,6 +51,7 @@ stdenv.mkDerivation rec {
 
   buildInputs = [
     dtkwidget
+    qt5platform-plugins
     qtx11extras
     mtools
     p7zip
@@ -57,13 +59,13 @@ stdenv.mkDerivation rec {
     gtest
   ];
 
-  qmakeFlags = [
-    "PREFIX=${placeholder "out"}"
-  ];
+  #qmakeFlags = [
+  #  "PREFIX=${placeholder "out"}"
+  #];
 
   qtWrapperArgs = [
     "--prefix QT_PLUGIN_PATH : ${qt5integration}/${qtbase.qtPluginPrefix}"
-    "--prefix QT_QPA_PLATFORM_PLUGIN_PATH : ${qt5platform-plugins}/${qtbase.qtPluginPrefix}"
+    "--prefix PATH : ${lib.makeBinPath [ mtools p7zip udisks ]}"
   ];
 
   postFixup = ''
