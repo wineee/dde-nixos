@@ -1,27 +1,26 @@
 { stdenv
 , lib
-, replaceAll
-, pkg-config
 , fetchFromGitHub
-, fetchpatch
 , cmake
-, qtbase
-, qttools
-, qtx11extras
-, wrapQtAppsHook
-, deepin-gettext-tools
+, pkg-config
 , extra-cmake-modules
-, dtkwidget
+, deepin-gettext-tools
+, wrapQtAppsHook
+, makeWrapper
+, dtkcore
+, qtbase
+, qtx11extras
 , gsettings-qt
 , xorg
 , libepoxy
-, makeWrapper
 , deepin-kwin
 , kdecoration
 , kconfig
+, kwayland
 , kwindowsystem
 , kglobalaccel
 }:
+
 stdenv.mkDerivation rec {
   pname = "dde-kwin";
   version = "5.6.5";
@@ -29,46 +28,51 @@ stdenv.mkDerivation rec {
   src = fetchFromGitHub {
     owner = "linuxdeepin";
     repo = pname;
-    rev = "889664378f54b986a21b5297df08f6b6177fed35";
-    sha256 = "sha256-6ttr+yG5kvLDi9XAw38Lzb7ODEjgSAgUnHoDtt+eQr4=";
+    rev = "b5c00527b86f773595c786c8015d60f8be3a681b";
+    sha256 = "sha256-qXN9AwjLnqO5BpnrX5PaSCKZ6ff874r08ubCMM272tA=";
   };
 
-  patches = [
-    (fetchpatch {
-      name = "use_GNUInstallDirs_set_path";
-      url = "https://github.com/linuxdeepin/dde-kwin/commit/941df38899ea219cbc36ab69e47341620fd86229.patch";
-      sha256 = "sha256-kw4xu7q+lv6h4EoFi2nSq4QqdHMBKUPCNNnz72/31iI=";
-    })
-  ];
+  /*
+    This is the final version of dde-kwin, upstream has been archived.
+    We should remove this package when deepin-kwin release a new version.
+    We need revert Dtk::Core target in postPatch,
+    since the new dtkcore will break other deepin applications.
+  */
 
-  postPatch = replaceAll "/usr/lib/deepin-daemon" "/run/current-system/sw/lib/deepin-daemon"
-    + replaceAll "/usr/share/backgrounds" "/run/current-system/sw/share/backgrounds"
-    + replaceAll "/usr/share/wallpapers" "/run/current-system/sw/share/wallpapers"
-    + ''
+  postPatch = ''
+    substituteInPlace CMakeLists.txt \
+      --replace "/usr/include/KWaylandServer" "${kwayland.dev}/include/KWaylandServer"
+    substituteInPlace deepin-wm-dbus/CMakeLists.txt \
+      --replace "Dtk::Core" "dtkcore"
+    substituteInPlace deepin-wm-dbus/deepinwmfaker.cpp \
+      --replace "/usr/lib/deepin-daemon" "/run/current-system/sw/lib/deepin-daemon" \
+      --replace "/usr/share/backgrounds" "/run/current-system/sw/share/backgrounds" \
+      --replace "/usr/share/wallpapers" "/run/current-system/sw/share/wallpapers"
     patchShebangs .
   '';
 
   nativeBuildInputs = [
     cmake
-    qttools
-    deepin-gettext-tools
-    extra-cmake-modules
     pkg-config
+    extra-cmake-modules
+    deepin-gettext-tools
     wrapQtAppsHook
     makeWrapper
   ];
 
   buildInputs = [
-    deepin-kwin
-    kdecoration
-    kconfig
-    kwindowsystem
-    kglobalaccel
-    dtkwidget
+    dtkcore
+    qtbase
     qtx11extras
     gsettings-qt
     xorg.libXdmcp
     libepoxy
+    deepin-kwin
+    kdecoration
+    kconfig
+    kwayland
+    kwindowsystem
+    kglobalaccel
   ];
 
   cmakeFlags = [
@@ -76,7 +80,7 @@ stdenv.mkDerivation rec {
     "-DQT_INSTALL_PLUGINS=${placeholder "out"}/${qtbase.qtPluginPrefix}"
   ];
 
-  # kwin_no_scale is a sh script
+  # kwin_no_scale is a shell script
   postFixup = ''
     wrapProgram $out/bin/kwin_no_scale \
       --set QT_QPA_PLATFORM_PLUGIN_PATH "${placeholder "out"}/${qtbase.qtPluginPrefix}"
@@ -87,5 +91,6 @@ stdenv.mkDerivation rec {
     homepage = "https://github.com/linuxdeepin/dde-kwin";
     license = licenses.gpl3Plus;
     platforms = platforms.linux;
+    maintainers = teams.deepin.members;
   };
 }
