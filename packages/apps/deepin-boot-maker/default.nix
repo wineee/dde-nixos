@@ -13,6 +13,8 @@
 , mtools
 , p7zip
 , udisks
+, util-linux
+, coreutils
 , syslinux
 , gtest
 }:
@@ -65,7 +67,7 @@ stdenv.mkDerivation rec {
 
   qtWrapperArgs = [
     "--prefix QT_PLUGIN_PATH : ${qt5integration}/${qtbase.qtPluginPrefix}"
-    "--prefix PATH : ${lib.makeBinPath [ mtools p7zip udisks ]}"
+    "--prefix PATH : ${lib.makeBinPath [ mtools p7zip udisks util-linux ]}"
   ];
 
   postFixup = ''
