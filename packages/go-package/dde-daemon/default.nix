@@ -1,8 +1,6 @@
 { stdenv
 , lib
 , fetchFromGitHub
-, replaceAll
-, getUsrPatchFrom
 , buildGoPackage
 , pkg-config
 , deepin-gettext-tools
@@ -13,6 +11,7 @@
 , go-gir-generator
 , go-lib
 , dde-api
+, ddcutil
 , alsa-lib
 , glib
 , gtk3
@@ -21,99 +20,19 @@
 , libnl
 , librsvg
 , linux-pam
+, libxcrypt
 , networkmanager
 , pulseaudio
-, glibc
 , gdk-pixbuf-xlib
 , tzdata
 , xkeyboard_config
 , runtimeShell
-, fprintd
 , xorg
 , xdotool
-, dbus
 , getconf
-, util-linux
-, ddcutil
-, libxcrypt
+, dbus
 }:
-let
-  patchList = {
-    "gesture/config.go" = [
-      # "/usr/share/dde-daemon/gesture.json"
-    ];
-    "appearance/fsnotify.go" = [
-      [ "/usr/share" "/run/current-system/sw/share" ]
-      # /usr/share/themes /usr/share/icons
-    ];
-    "appearance/ifc.go" = [ ];
-    "launcher/manager.go" = [
-      # ddeDataDir = /usr/share/dde/data/
-    ];
-    "launcher/manager_init.go" = [
-      # /usr/share + dde-daemon/gesture/conf.json
-    ];
-    "audio/audio_config.go" = [
-      # /usr/share/dde-daemon/audio/echoCancelEnable.sh
-    ];
-    "bin/dde-authority/fprint_transaction.go" = [
-      # fprintd 0.8 in deepin but 1.9 in nixos
-      [ "/usr/lib/fprintd/fprintd" "${fprintd}/libexec/fprintd" ]
-    ];
-    "system/gesture/config.go" = [
-      # /usr/share + dde-daemon/gesture/conf.json
-    ];
-    "system/power/manager_lmt.go" = [
-      [ "/usr/sbin/laptop_mode" "laptop_mode" ]
-    ];
-    "bin/user-config/config_datas.go" = [
-      [ "/usr/share" "/run/current-system/sw/share" ]
-      # /usr/share/{doc/deepin-manuals,deepin-sample-music}
-    ];
-    "bin/dde-system-daemon/virtual.go" = [
-      # /usr/share/dde-daemon/supportVirsConf.ini
-    ];
-    "system/display/displaycfg.go" = [
-      [ "/usr/bin/lightdm-deepin-greeter" "lightdm-deepin-greeter" ]
-      [ "runuser" "${util-linux.bin}/bin/runuser" ]
-    ];
-    "dock/identify_window.go" = [
-      [ "/usr/share" "/run/current-system/sw/share" ]
-      # path for uengine.desktop, not portable 
-    ];
-    "keybinding/shortcuts/system_shortcut.go" = [
-      [ "dbus-send" "${dbus}/bin/dbus-send" ]
-      [ "gsettings" "${glib.bin}/bin/gsettings" ]
-    ];
-    "accounts/user.go" = [
-      [ "/usr/bin/dde-control-center" "dde-control-center" ]
-      # /usr/share/xsessions
-    ];
-    "dock/desktop_file_path.go" = [
-      [ "/usr/share" "/run/current-system/sw/share" ]
-      # Not sure what it's used for here
-    ];
-    "accounts/user_chpwd_union_id.go" = [
-      [ "/usr/lib/dde-control-center" "/run/current-system/sw/lib/dde-control-center" ]
-      [ "/usr/bin/dde-control-center" "dde-control-center" ]
-      [ "/usr/bin/dde-lock" "dde-lock" ]
-      [ "/usr/bin/lightdm-deepin-greeter" "lightdm-deepin-greeter" ]
-    ];
-    "dock/dock_manager_init.go" = [
-      # ddeDataDir     = "/usr/share/dde/data"
-    ];
-    "accounts/manager.go" = [
-      # /usr/share/dde-daemon/accounts/dbus-udcp.json
-    ];
-    "image_effect/utils.go" = [
-      [ "runuser" "${util-linux.bin}/bin/runuser" ]
-    ];
-    "misc/usr/share/deepin/scheduler/config.json" = [
-      [ "/usr/bin" "/run/current-system/sw/bin" ]
-      # path to deepin-anything/dde-file-manager
-    ];
-  };
-in
+
 buildGoPackage rec {
   pname = "dde-daemon";
   version = "5.14.122";
@@ -128,29 +47,36 @@ buildGoPackage rec {
   };
 
   patches = [
-    ./0001-fix-wrapped-name-for-verifyExe.diff
-    ./0002-dont-set-PATH.diff
-    ./0003-search-in-XDG-directories.diff
+    ./0001-fix-wrapped-name-for-verifyExe.patch
+    ./0002-dont-set-PATH.patch
+    ./0003-search-in-XDG-directories.patch
+    ./0004-aviod-use-hardcode-path.patch
   ];
 
-  postPatch = replaceAll "/usr/lib/deepin-api" "/run/current-system/sw/lib/deepin-api"
-    + replaceAll "/usr/lib/deepin-daemon" "/run/current-system/sw/lib/deepin-daemon"
-    + replaceAll "/usr/share/wallpapers" "/run/current-system/sw/share/wallpapers"
-    + replaceAll "/usr/share/backgrounds" "/run/current-system/sw/share/backgrounds"
-    + replaceAll "/bin/bash" "${runtimeShell}"
-    + replaceAll "/bin/sh" "${runtimeShell}"
-    + replaceAll "/usr/bin/setxkbmap" "${xorg.setxkbmap}/bin/setxkbmap"
-    + replaceAll "/usr/bin/xdotool" "${xdotool}/bin/xdotool"
-    + replaceAll "/usr/bin/getconf" "${getconf}/bin/getconf"
-    + replaceAll "/usr/bin/dbus-send" "${dbus}/bin/dbus-send"
-    + replaceAll "/usr/share/zoneinfo" "${tzdata}/share/zoneinfo"
-    + replaceAll "/usr/share/X11/xkb/rules/base.xml" "${xkeyboard_config}/share/X11/xkb/rules/base.xml"
-    + replaceAll "/usr/bin/kwin_no_scale" "kwin_no_scale"
-    + replaceAll "/usr/bin/deepin-system-monitor" "deepin-system-monitor"
-    + replaceAll "/usr/bin/dde-launcher" "dde-launcher"
-    + replaceAll "/usr/bin/deepin-calculator" "deepin-calculator"
-    + replaceAll "/usr/bin/systemd-detect-virt" "systemd-detect-virt"
-    + getUsrPatchFrom patchList + ''
+  postPatch = ''
+    substituteInPlace session/eventlog/{app_event.go,login_event.go} accounts/users/users_test.go \
+      --replace "/bin/bash" "${runtimeShell}"
+
+    substituteInPlace inputdevices/layout_list.go \
+      --replace "/usr/share/X11/xkb" "${xkeyboard_config}/share/X11/xkb"
+
+    substituteInPlace appearance/background/{background.go,custom_wallpapers.go} accounts/user.go bin/dde-system-daemon/wallpaper.go \
+     --replace "/usr/share/wallpapers" "/run/current-system/sw/share/wallpapers"
+
+    substituteInPlace appearance/manager.go timedate/zoneinfo/zone.go \
+     --replace "/usr/share/zoneinfo" "${tzdata}/share/zoneinfo"
+
+    substituteInPlace accounts/image_blur.go grub2/modify_manger.go \
+      --replace "/usr/lib/deepin-api" "/run/current-system/sw/lib/deepin-api"
+
+    substituteInPlace accounts/user_chpwd_union_id.go \
+      --replace "/usr/lib/dde-control-center" "/run/current-system/sw/lib/dde-control-center"
+
+    for file in $(grep "/usr/lib/deepin-daemon" * -nR |awk -F: '{print $1}')
+    do
+      sed -i 's|/usr/lib/deepin-daemon|/run/current-system/sw/lib/deepin-daemon|g' $file
+    done
+
     patchShebangs .
   '';
 
@@ -169,6 +95,7 @@ buildGoPackage rec {
     go-gir-generator
     go-lib
     dde-api
+    ddcutil
     linux-pam
     libxcrypt
     alsa-lib
@@ -183,8 +110,6 @@ buildGoPackage rec {
     pulseaudio
     tzdata
     xkeyboard_config
-    util-linux
-    ddcutil
   ];
 
   buildPhase = ''
