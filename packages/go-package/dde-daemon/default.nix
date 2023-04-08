@@ -1,6 +1,7 @@
 { stdenv
 , lib
 , fetchFromGitHub
+, substituteAll
 , buildGoPackage
 , pkg-config
 , deepin-gettext-tools
@@ -50,7 +51,10 @@ buildGoPackage rec {
     ./0001-fix-wrapped-name-for-verifyExe.patch
     ./0002-dont-set-PATH.patch
     ./0003-search-in-XDG-directories.patch
-    ./0004-aviod-use-hardcode-path.patch
+    (substituteAll {
+      src = ./0004-aviod-use-hardcode-path.patch;
+      inherit dbus;
+    })
   ];
 
   postPatch = ''
