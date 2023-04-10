@@ -75,6 +75,9 @@ stdenv.mkDerivation rec {
     util-linux.dev
     ffmpegthumbnailer
     image-editor
+
+    qt5integration
+    qt5platform-plugins
   ];
 
   cmakeFlags = [
@@ -82,8 +85,6 @@ stdenv.mkDerivation rec {
   ];
 
   qtWrapperArgs = [
-    "--prefix QT_PLUGIN_PATH : ${qt5integration}/${qtbase.qtPluginPrefix}"
-    "--prefix QT_QPA_PLATFORM_PLUGIN_PATH : ${qt5platform-plugins}/${qtbase.qtPluginPrefix}"
     "--prefix LD_LIBRARY_PATH : ${lib.makeLibraryPath [ image-editor ]}"
   ];
 

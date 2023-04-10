@@ -54,6 +54,8 @@ stdenv.mkDerivation rec {
     libvlc
     taglib
     SDL2
+    qt5integration
+    qt5platform-plugins
   ] ++ (with gst_all_1; [
     gstreamer
     gst-plugins-base
@@ -61,8 +63,6 @@ stdenv.mkDerivation rec {
   ]);
 
   qtWrapperArgs = [
-    "--prefix QT_PLUGIN_PATH : ${qt5integration}/${qtbase.qtPluginPrefix}"
-    "--prefix QT_QPA_PLATFORM_PLUGIN_PATH : ${qt5platform-plugins}/${qtbase.qtPluginPrefix}"
     "--prefix GST_PLUGIN_SYSTEM_PATH_1_0 : ${gstPluginPath}"
   ];
 

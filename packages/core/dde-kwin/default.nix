@@ -69,7 +69,6 @@ stdenv.mkDerivation rec {
 
   cmakeFlags = [
     "-DPROJECT_VERSION=${version}"
-    "-DQT_INSTALL_PLUGINS=${placeholder "out"}/${qtbase.qtPluginPrefix}"
   ];
 
   # kwin_no_scale is a sh script

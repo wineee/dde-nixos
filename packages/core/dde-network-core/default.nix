@@ -50,6 +50,8 @@ stdenv.mkDerivation rec {
 
   buildInputs = [
     dtkwidget
+    qt5integration
+    qt5platform-plugins
     dde-dock
     dde-control-center
     dde-session-shell
@@ -67,11 +69,6 @@ stdenv.mkDerivation rec {
 
   cmakeFlags = [
     "-DVERSION=${version}"
-  ];
-
-  qtWrapperArgs = [
-    "--prefix QT_PLUGIN_PATH : ${qt5integration}/${qtbase.qtPluginPrefix}"
-    "--prefix QT_QPA_PLATFORM_PLUGIN_PATH : ${qt5platform-plugins}/${qtbase.qtPluginPrefix}"
   ];
 
   meta = with lib; {

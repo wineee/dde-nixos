@@ -69,17 +69,16 @@ stdenv.mkDerivation rec {
     qtx11extras
     gsettings-qt
     gtest
+    qt5platform-plugins
   ];
 
   cmakeFlags = [ "-DVERSION=${version}" ];
 
   qtWrapperArgs = [
     "--prefix QT_PLUGIN_PATH : ${qt5integration}/${qtbase.qtPluginPrefix}"
-    "--prefix QT_QPA_PLATFORM_PLUGIN_PATH : ${qt5platform-plugins}/${qtbase.qtPluginPrefix}"
   ];
 
   preFixup = ''
-    glib-compile-schemas ${glib.makeSchemaPath "$out" "${pname}-${version}"}
     qtWrapperArgs+=("''${gappsWrapperArgs[@]}")
   '';
 

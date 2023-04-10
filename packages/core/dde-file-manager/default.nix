@@ -39,7 +39,11 @@
 , util-dfm
 , deepin-pdfium
 , libuuid
+, libselinux
 , glibmm
+, pcre
+, udisks2
+, libisoburn
 }:
 
 stdenv.mkDerivation rec {
@@ -62,8 +66,35 @@ stdenv.mkDerivation rec {
   ];
   dontWrapGApps = true;
 
-  postPatch = replaceAll "qt5/QtCore/qobjectdefs.h" "QtCore/qobjectdefs.h"
-    + ''
+  patches = [
+    (fetchpatch {
+      name = "chore: [cmake] use CMAKE_INSTALL_SYSCONFDIR";
+      url = "https://github.com/linuxdeepin/dde-file-manager/commit/bca4bb7de20074cef4139cd6f8415408103b9788.patch";
+      sha256 = "sha256-GEMuMa1UMSGf0dlHZRQyR1hC08U0GlAlmUKLIxzzoc4=";
+    })
+    (fetchpatch {
+      name = "feat: GRANDSEARCHDAEMON_LIB_DIR use CMAKE_INSTALL_FULL_LIBDIR";
+      url = "https://github.com/linuxdeepin/dde-file-manager/commit/0fd0a13b4f882c597a02f4661c02c840830fc173.patch";
+      sha256 = "sha256-athDoFhQ9v9cXOf4YKmZld1RScX43+6/q1zBa/1yAgQ=";
+    })
+    (fetchpatch {
+      name = "fix: include path should follow Qt5Widgets_PRIVATE_INCLUDE_DIRS";
+      url = "https://github.com/linuxdeepin/dde-file-manager/commit/20bb841a5e3ffb04d6316ea573422701ca9058f9.patch";
+      sha256 = "sha256-VPyiKKxFgNsY70ZdYE5oNF8BFosq/92YrZuZ882Fj4E=";
+    })
+    (fetchpatch {
+      name = "chore: don't hardcode APPSHAREDIR";
+      url = "https://github.com/linuxdeepin/dde-file-manager/commit/0e0430e158049423ed5f99f124c8c6ae3bec1497.patch";
+      sha256 = "sha256-oZQcuPP9JTZ7aybPnmY/6RyqmJhvpxer4mhv+XpqeQY=";
+    })
+    (fetchpatch {
+      name = "fix: use pkgconfig to check mount";
+      url = "https://github.com/linuxdeepin/dde-file-manager/commit/c569f09b84159583dd2fc71436858143b94c58f3.patch";
+      sha256 = "sha256-k808IsaV/RJg7bYNmUnhcFZMnMRQ8sGRagMlx5i4h4Q=";
+    })
+  ];
+
+  postPatch = ''
     patchShebangs .
 
     substituteInPlace src/plugins/filemanager/dfmplugin-vault/utils/vaultdefine.h \
@@ -81,34 +112,28 @@ stdenv.mkDerivation rec {
       --replace "/usr/bin/dde-desktop" "dde-desktop"
 
     substituteInPlace src/dfm-base/file/local/localfilehandler.cpp \
-      --replace "/usr/lib/deepin-daemon" "/run/current-system/sw/lib/deepin-daemon" \
-      --replace "/usr/bin/x-terminal-emulator" "x-terminal-emulator"
+      --replace "/usr/lib/deepin-daemon" "/run/current-system/sw/lib/deepin-daemon"
 
     substituteInPlace src/plugins/desktop/ddplugin-background/backgroundservice.cpp \
-      --replace "/usr/share/backgrounds" "/run/current-system/sw/share/backgrounds"
-
-    substituteInPlace src/plugins/desktop/ddplugin-wallpapersetting/wallpapersettings.cpp \
+      src/plugins/desktop/ddplugin-wallpapersetting/wallpapersettings.cpp \
       --replace "/usr/share/backgrounds" "/run/current-system/sw/share/backgrounds"
 
     find . -type f -regex ".*\\.\\(service\\|policy\\|desktop\\)" -exec sed -i -e "s|/usr/|$out/|g" {} \;
-
-    ######################
-    substituteInPlace src/dfm-base/CMakeLists.txt --replace "/usr" "$out"
   '';
   # src/plugins/desktop/core/ddplugin-dbusregister/vaultmanagerdbus.cpp TODO
-  # src/plugins/desktop/ddplugin-grandsearchdaemon/CMakeLists.txt 
   # src/plugins/daemon/daemonplugin-accesscontrol/utils.cpp
 
   buildInputs = [
     dtkwidget
     qt5platform-plugins
+    qt5integration
     deepin-pdfium
     util-dfm
     dde-qt-dbus-factory
     glibmm
     docparser
     dde-dock.dev
-    deepin-movie-reborn.dev
+    deepin-movie-reborn
     qtx11extras
     qtmultimedia
     kcodecs
@@ -123,21 +148,21 @@ stdenv.mkDerivation rec {
     boost
     taglib
     cryptsetup
-  ];
-
-  env.NIX_CFLAGS_COMPILE = toString [
-    "-I${libuuid.dev}/include/libmount"
-    "-I${libuuid.dev}/include"
+    libuuid
+    libselinux
+    pcre
+    udisks2
+    libisoburn
   ];
 
   cmakeFlags = [
+    "-DVERSION=${version}"
     "-DDEEPIN_OS_VERSION=20"
   ];
 
   enableParallelBuilding = true;
 
   qtWrapperArgs = [
-    "--prefix QT_PLUGIN_PATH : ${qt5integration}/${qtbase.qtPluginPrefix}"
     "--prefix LD_LIBRARY_PATH : ${lib.makeLibraryPath [ mpv ffmpeg ffmpegthumbnailer gst_all_1.gstreamer gst_all_1.gst-plugins-base ]}"
   ];
 

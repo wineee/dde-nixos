@@ -44,14 +44,13 @@ stdenv.mkDerivation rec {
     wrapQtAppsHook
   ];
 
-  buildInputs = [ dtkwidget ];
+  buildInputs = [
+    dtkwidget
+    qt5integration
+    qt5platform-plugins
+  ];
 
   cmakeFlags = [ "-DVERSION=${version}" ];
-
-  qtWrapperArgs = [
-    "--prefix QT_PLUGIN_PATH : ${qt5integration}/${qtbase.qtPluginPrefix}"
-    "--prefix QT_QPA_PLATFORM_PLUGIN_PATH : ${qt5platform-plugins}/${qtbase.qtPluginPrefix}"
-  ];
 
   meta = with lib; {
     description = "Lightweight drawing tool for users to freely draw and simply edit images";

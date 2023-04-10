@@ -51,20 +51,16 @@ stdenv.mkDerivation rec {
 
   buildInputs = [
     dtkwidget
-    qt5platform-plugins
     dde-qt-dbus-factory
     qtx11extras
     at-spi2-core
     libsecret
     chrpath
     gtest
-  ];
-
-  qtWrapperArgs = [
-    "--prefix QT_PLUGIN_PATH : ${qt5integration}/${qtbase.qtPluginPrefix}"
+    qt5integration
+    qt5platform-plugins
   ];
   
-
   meta = with lib; {
     description = "An advanced terminal emulator with workspace,multiple windows,remote management,quake mode and other features";
     homepage = "https://github.com/linuxdeepin/deepin-terminal";

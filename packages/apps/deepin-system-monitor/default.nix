@@ -90,6 +90,8 @@ stdenv.mkDerivation rec {
     gsettings-qt
     libpcap
     libnl
+    qt5integration
+    qt5platform-plugins
   ];
 
   cmakeFlags = [
@@ -101,11 +103,6 @@ stdenv.mkDerivation rec {
   NIX_CFLAGS_COMPILE = [
     "-I${dtkcore}/include/dtk5/DCore"
     "-I${dtkgui}/include/dtk5/DGui"
-  ];
-
-  qtWrapperArgs = [
-    "--prefix QT_PLUGIN_PATH : ${qt5integration}/${qtbase.qtPluginPrefix}"
-    "--prefix QT_QPA_PLATFORM_PLUGIN_PATH : ${qt5platform-plugins}/${qtbase.qtPluginPrefix}"
   ];
 
   meta = with lib; {

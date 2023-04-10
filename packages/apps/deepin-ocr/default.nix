@@ -52,11 +52,10 @@ stdenv.mkDerivation rec {
     wrapQtAppsHook
   ];
 
-  buildInputs = [ dtkwidget ];
-
-  qtWrapperArgs = [
-    "--prefix QT_PLUGIN_PATH : ${qt5integration}/${qtbase.qtPluginPrefix}"
-    "--prefix QT_QPA_PLATFORM_PLUGIN_PATH : ${qt5platform-plugins}/${qtbase.qtPluginPrefix}"
+  buildInputs = [
+    dtkwidget 
+    qt5integration
+    qt5platform-plugins
   ];
 
   meta = with lib; {

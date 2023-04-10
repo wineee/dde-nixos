@@ -52,6 +52,8 @@ stdenv.mkDerivation rec {
     dde-qt-dbus-factory
     deepin-movie-reborn
     gtest
+    qt5integration
+    qt5platform-plugins
   ];
 
   cmakeFlags = [
@@ -59,8 +61,6 @@ stdenv.mkDerivation rec {
   ];
 
   qtWrapperArgs = [
-    "--prefix QT_PLUGIN_PATH : ${qt5integration}/${qtbase.qtPluginPrefix}"
-    "--prefix QT_QPA_PLATFORM_PLUGIN_PATH : ${qt5platform-plugins}/${qtbase.qtPluginPrefix}"
     "--prefix GST_PLUGIN_SYSTEM_PATH_1_0 : ${gstPluginPath}"
     "--prefix LD_LIBRARY_PATH : ${lib.makeLibraryPath [ mpv ffmpeg ffmpegthumbnailer gst_all_1.gstreamer gst_all_1.gst-plugins-base ] }"
   ];

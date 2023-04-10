@@ -53,11 +53,8 @@ stdenv.mkDerivation rec {
     opencv
     ffmpeg
     ffmpegthumbnailer
-  ];
-
-  qtWrapperArgs = [
-    "--prefix QT_PLUGIN_PATH : ${qt5integration}/${qtbase.qtPluginPrefix}"
-    "--prefix QT_QPA_PLATFORM_PLUGIN_PATH : ${qt5platform-plugins}/${qtbase.qtPluginPrefix}"
+    qt5integration
+    qt5platform-plugins
   ];
 
   cmakeFlags = [ "-DVERSION=${version}" ];

@@ -60,15 +60,12 @@ stdenv.mkDerivation rec {
     dtkwidget
     libraw
     freeimage
+    qt5platform-plugins
   ];
 
   cmakeFlags = [ 
     "-DVERSION=${version}" 
     "-DDDE_OCR_ENABLE=OFF"
-  ];
-
-  qtWrapperArgs = [
-    "--prefix QT_QPA_PLATFORM_PLUGIN_PATH : ${qt5platform-plugins}/${qtbase.qtPluginPrefix}"
   ];
 
   meta = with lib; {

@@ -92,15 +92,14 @@ stdenv.mkDerivation rec {
     libselinux
     libsepol
     gtest
+    qt5platform-plugins
   ];
 
   qtWrapperArgs = [
     "--prefix QT_PLUGIN_PATH : ${qt5integration}/${qtbase.qtPluginPrefix}"
-    "--prefix QT_QPA_PLATFORM_PLUGIN_PATH : ${qt5platform-plugins}/${qtbase.qtPluginPrefix}"
   ];
 
   preFixup = ''
-    glib-compile-schemas ${glib.makeSchemaPath "$out" "${pname}-${version}"}
     qtWrapperArgs+=("''${gappsWrapperArgs[@]}")
   '';
 

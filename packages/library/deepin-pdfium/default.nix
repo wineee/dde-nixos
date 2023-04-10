@@ -10,13 +10,13 @@
 
 stdenv.mkDerivation rec {
   pname = "deepin-pdfium";
-  version = "2023-03-03";
+  version = "1.0.1";
 
   src = fetchFromGitHub {
     owner = "linuxdeepin";
     repo = pname;
-    rev = "8ac2a9d802a7ce7c79d2f17c0e912fecb4303c12";
-    sha256 = "sha256-xM56ufTgRxbwdWF8xeN7szWLjARIi7mcS9KntY8oQGE=";
+    rev = version;
+    sha256 = "sha256-gUIQ+fZ7VaYaIj1hbzER10ceoJZbvhJlnDTFIShMrKw=";
   };
 
   nativeBuildInputs = [
@@ -33,9 +33,10 @@ stdenv.mkDerivation rec {
   ];
 
   meta = with lib; {
-    description = "development library for pdf on Deepin";
+    description = "development library for pdf on deepin";
     homepage = "https://github.com/linuxdeepin/deepin-pdfium";
     license = licenses.lgpl3Plus;
     platforms = platforms.linux;
+    maintainers = teams.deepin.members;
   };
 }

@@ -58,15 +58,12 @@ stdenv.mkDerivation rec {
     kwayland
     glibmm
     gtest
+    qt5integration
+    qt5platform-plugins
   ];
 
   cmakeFlags = [
     "-DUSE_DEEPIN_WAYLAND=OFF"
-  ];
-
-  qtWrapperArgs = [
-    "--prefix QT_PLUGIN_PATH : ${qt5integration}/${qtbase.qtPluginPrefix}"
-    "--prefix QT_QPA_PLATFORM_PLUGIN_PATH : ${qt5platform-plugins}/${qtbase.qtPluginPrefix}"
   ];
 
   meta = with lib; {

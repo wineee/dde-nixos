@@ -1,7 +1,7 @@
 { stdenv
 , lib
 , fetchFromGitHub
-, replaceAll
+, substituteAll
 , buildGoPackage
 , pkg-config
 , deepin-gettext-tools
@@ -48,57 +48,41 @@ buildGoPackage rec {
   };
 
   patches = [
-    ./0001-fix-wrapped-name-for-verifyExe.diff
-    ./0002-dont-set-PATH.diff
-    ./0003-search-in-XDG-directories.diff
-    ./0004-aviod-use-hardcode-path.diff
+    ./0001-fix-wrapped-name-for-verifyExe.patch
+    ./0002-dont-set-PATH.patch
+    ./0003-search-in-XDG-directories.patch
+    (substituteAll {
+      src = ./0004-aviod-use-hardcode-path.patch;
+      inherit dbus;
+    })
   ];
 
   postPatch = ''
+    substituteInPlace session/eventlog/{app_event.go,login_event.go} accounts/users/users_test.go \
+      --replace "/bin/bash" "${runtimeShell}"
+
+    substituteInPlace inputdevices/layout_list.go \
+      --replace "/usr/share/X11/xkb" "${xkeyboard_config}/share/X11/xkb"
+
+    substituteInPlace appearance/background/{background.go,custom_wallpapers.go} accounts/user.go bin/dde-system-daemon/wallpaper.go \
+     --replace "/usr/share/wallpapers" "/run/current-system/sw/share/wallpapers"
+
+    substituteInPlace appearance/manager.go timedate/zoneinfo/zone.go \
+     --replace "/usr/share/zoneinfo" "${tzdata}/share/zoneinfo"
+
+    substituteInPlace accounts/image_blur.go grub2/modify_manger.go \
+      --replace "/usr/lib/deepin-api" "/run/current-system/sw/lib/deepin-api"
+
     substituteInPlace accounts/user_chpwd_union_id.go \
       --replace "/usr/lib/dde-control-center" "/run/current-system/sw/lib/dde-control-center"
 
-    # fix path to deepin-anything/dde-file-manager
-    substituteInPlace misc/usr/share/deepin/scheduler/config.json \
-      --replace "/usr/bin" "/run/current-system/sw/bin"
+    for file in $(grep "/usr/lib/deepin-daemon" * -nR |awk -F: '{print $1}')
+    do
+      sed -i 's|/usr/lib/deepin-daemon|/run/current-system/sw/lib/deepin-daemon|g' $file
+    done
 
-    # Warning: Not sure what it's used for here
-    substituteInPlace dock/desktop_file_path.go \
-      --replace "/usr/share" "/run/current-system/sw/share"
-
-    # path to deepin-manuals/deepin-sample-music, should be a non-essential feature
-    substituteInPlace bin/user-config/config_datas.go \
-      --replace "/usr/share" "/run/current-system/sw/share"
-    
     patchShebangs .
-
-    # clean up testdata
-    find . -name testdata -exec rm -r {} \; || true
-  '' + replaceAll "/usr/lib/deepin-api" "/run/current-system/sw/lib/deepin-api"
-    + replaceAll "/usr/lib/deepin-daemon" "/run/current-system/sw/lib/deepin-daemon"
-    + replaceAll "/usr/share/wallpapers" "/run/current-system/sw/share/wallpapers"
-    + replaceAll "/usr/share/backgrounds" "/run/current-system/sw/share/backgrounds"
-    + replaceAll "/bin/bash" "${runtimeShell}"
-    + replaceAll "/bin/sh" "${runtimeShell}"
-    + replaceAll "/usr/bin/setxkbmap" "${xorg.setxkbmap}/bin/setxkbmap"
-    + replaceAll "/usr/bin/xdotool" "${xdotool}/bin/xdotool"
-    + replaceAll "/usr/bin/getconf" "${getconf}/bin/getconf"
-    + replaceAll "/usr/bin/dbus-send" "${dbus}/bin/dbus-send"
-    + replaceAll "/usr/share/zoneinfo" "${tzdata}/share/zoneinfo"
-    + replaceAll "/usr/share/X11/xkb/rules/base.xml" "${xkeyboard_config}/share/X11/xkb/rules/base.xml"
-    + replaceAll "/usr/bin/kwin_no_scale" "kwin_no_scale"
-    + replaceAll "/usr/bin/deepin-system-monitor" "deepin-system-monitor"
-    + replaceAll "/usr/bin/dde-launcher" "dde-launcher"
-    + replaceAll "/usr/bin/deepin-calculator" "deepin-calculator"
-    + replaceAll "/usr/bin/systemd-detect-virt" "systemd-detect-virt"
-    + ''
-      echo Replacing "/usr" to "$out":
-      for file in $(grep -rl "/usr" --exclude=Makefile); do
-        echo -- $file
-        substituteInPlace $file \
-          --replace "/usr" "$out"
-      done
-    '';
+  '';
 
   goDeps = ./deps.nix;
 
