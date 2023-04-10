@@ -118,7 +118,6 @@ let
     deepin-shortcut-viewer = callPackage ./apps/deepin-shortcut-viewer { };
     deepin-voice-note = callPackage ./apps/deepin-voice-note { };
     deepin-reader = callPackage ./apps/deepin-reader { };
-    deepin-gomoku = callPackage ./apps/deepin-gomoku { };
     deepin-lianliankan = callPackage ./apps/deepin-lianliankan { };
     deepin-ocr = callPackage ./apps/deepin-ocr { };
     deepin-screen-recorder-next = callPackage ./apps/deepin-screen-recorder-next { };
