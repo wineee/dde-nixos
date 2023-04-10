@@ -119,7 +119,6 @@ let
     deepin-voice-note = callPackage ./apps/deepin-voice-note { };
     deepin-reader = callPackage ./apps/deepin-reader { };
     deepin-ocr = callPackage ./apps/deepin-ocr { };
-    deepin-screen-recorder-next = callPackage ./apps/deepin-screen-recorder-next { };
 
     #### OS-SPECIFIC
     ## pkgs/top-level/linux-kernels.nix

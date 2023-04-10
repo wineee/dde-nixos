@@ -35,17 +35,12 @@
 let
   gstPluginPath = lib.makeSearchPathOutput "lib" "lib/gstreamer-1.0" (with gst_all_1; [ gstreamer gst-plugins-base gst-plugins-good gst-plugins-bad ]);
   patchList = {
-    "screen_shot_recorder.pro " = [ ];
-    "src/src.pro" = [ ];
-    "src/pin_screenshots/pin_screenshots.pro" = [ ];
-    "src/dde-dock-plugins/shotstart/shotstart.pro" = [ ];
-    "src/dde-dock-plugins/recordtime/recordtime.pro" = [ ];
+    "screen_shot_recorder.pro" = [
 
+      [ "src/dde-dock-plugins" "" ] 
+    ];
     ###MISC
     "deepin-screen-recorder.desktop" = [ ];
-    "assets/screenRecorder.json" = [
-      # /usr/share/deepin-screen-recorder/tablet_resources/fast-icon_recording_normal.svg
-    ];
     "com.deepin.Screenshot.service" = [ ];
     "src/dbusservice/com.deepin.Screenshot.service" = [
       [ "/usr/bin/deepin-turbo-invoker" "deepin-turbo-invoker" ]
@@ -62,20 +57,25 @@ let
 in
 stdenv.mkDerivation rec {
   pname = "deepin-screen-recorder";
-  version = "5.11.15";
+  version = "6.0.0";
 
   src = fetchFromGitHub {
     owner = "linuxdeepin";
     repo = pname;
-    rev = version;
-    sha256 = "sha256-X9eqi6zDtWOc0J8zIwR1y6EWhTG09vEVViLVwRPuAGo=";
+    rev = "e859e1ee7c30ed46176d7a6614a611d3a1bfc635";
+    sha256 = "sha256-vm8P5NvHnGVcmcr7qnu7F8q9S/LhCg5nJihBnZA/KoI=";
   };
 
   patches = [
     (fetchpatch {
       name = "fix: don't hardcode /usr/bin path";
-      url = "https://github.com/linuxdeepin/deepin-screen-recorder/commit/ba5b80521b729946a907dc6c285bb8ca4b6dd8b3.patch";
-      sha256 = "sha256-MTRozOJo1HUBpi6HZRaXPl/XKyr/dSyRC0xRucaCapY";
+      url = "https://github.com/linuxdeepin/deepin-screen-recorder/commit/c6fb342eda2c48c1d66f6f791d6b23f7c31c9842.patch";
+      sha256 = "sha256-nUAqteSB44PfgJ4NMUl7gALgAC4JZar/5zlsvjQBV94=";
+    })
+    (fetchpatch {
+      name = "feat: use PREFIX to set install path in qmake";
+      url = "https://github.com/linuxdeepin/deepin-screen-recorder/commit/5e6d01f4961cb8a0d32d9f75d9354f11b6454819.patch";
+      sha256 = "sha256-TGwxm/OSez0YSG2LZFVQ3rUtfCQBUXhcrlVyn4joVro=";
     })
   ];
 
@@ -128,7 +128,6 @@ stdenv.mkDerivation rec {
   preFixup = ''
     patchelf --add-needed ${udev}/lib/libudev.so $out/bin/deepin-screen-recorder
     patchelf --add-needed ${libv4l}/lib/libv4l2.so $out/bin/deepin-screen-recorder
-    glib-compile-schemas ${glib.makeSchemaPath "$out" "${pname}-${version}"}
   '';
 
   meta = with lib; {
