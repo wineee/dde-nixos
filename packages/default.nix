@@ -108,7 +108,6 @@ let
     deepin-movie-reborn = callPackage ./apps/deepin-movie-reborn { };
     deepin-album = callPackage ./apps/deepin-album { };
     deepin-image-viewer = callPackage ./apps/deepin-image-viewer { };
-    deepin-boot-maker = callPackage ./apps/deepin-boot-maker { };
     deepin-calculator = callPackage ./apps/deepin-calculator { };
     deepin-font-manager = callPackage ./apps/deepin-font-manager { };
     deepin-system-monitor = callPackage ./apps/deepin-system-monitor { };
