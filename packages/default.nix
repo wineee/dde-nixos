@@ -114,7 +114,6 @@ let
     deepin-picker = callPackage ./apps/deepin-picker { };
     deepin-draw = callPackage ./apps/deepin-draw { };
     deepin-camera = callPackage ./apps/deepin-camera { };
-    deepin-devicemanager = callPackage ./apps/deepin-devicemanager { };
     deepin-screen-recorder = callPackage ./apps/deepin-screen-recorder { };
     deepin-shortcut-viewer = callPackage ./apps/deepin-shortcut-viewer { };
     deepin-voice-note = callPackage ./apps/deepin-voice-note { };
