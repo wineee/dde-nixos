@@ -69,27 +69,27 @@ stdenv.mkDerivation rec {
   patches = [
     (fetchpatch {
       name = "chore: [cmake] use CMAKE_INSTALL_SYSCONFDIR";
-      url = "https://github.com/linuxdeepin/dde-file-manager/commit/bca4bb7de20074cef4139cd6f8415408103b9788.patch";
+      url = "https://github.com/linuxdeepin/dde-file-manager/commit/b3b6b1e5ace0fdd86d0a94687a4e60e7bdfb1086.patch";
       sha256 = "sha256-GEMuMa1UMSGf0dlHZRQyR1hC08U0GlAlmUKLIxzzoc4=";
     })
     (fetchpatch {
       name = "feat: GRANDSEARCHDAEMON_LIB_DIR use CMAKE_INSTALL_FULL_LIBDIR";
-      url = "https://github.com/linuxdeepin/dde-file-manager/commit/0fd0a13b4f882c597a02f4661c02c840830fc173.patch";
+      url = "https://github.com/linuxdeepin/dde-file-manager/commit/58e3826fc4ad46145b57c2b6f8ca2c74efd8d4d3.patch";
       sha256 = "sha256-athDoFhQ9v9cXOf4YKmZld1RScX43+6/q1zBa/1yAgQ=";
     })
     (fetchpatch {
       name = "fix: include path should follow Qt5Widgets_PRIVATE_INCLUDE_DIRS";
-      url = "https://github.com/linuxdeepin/dde-file-manager/commit/20bb841a5e3ffb04d6316ea573422701ca9058f9.patch";
+      url = "https://github.com/linuxdeepin/dde-file-manager/commit/19fdfffc6ddba2844176ee8384e4147bebee9be4.patch";
       sha256 = "sha256-VPyiKKxFgNsY70ZdYE5oNF8BFosq/92YrZuZ882Fj4E=";
     })
     (fetchpatch {
       name = "chore: don't hardcode APPSHAREDIR";
-      url = "https://github.com/linuxdeepin/dde-file-manager/commit/0e0430e158049423ed5f99f124c8c6ae3bec1497.patch";
+      url = "https://github.com/linuxdeepin/dde-file-manager/commit/74f5cbda8114e24259b6fd998ade794e7880c725.patch";
       sha256 = "sha256-oZQcuPP9JTZ7aybPnmY/6RyqmJhvpxer4mhv+XpqeQY=";
     })
     (fetchpatch {
       name = "fix: use pkgconfig to check mount";
-      url = "https://github.com/linuxdeepin/dde-file-manager/commit/c569f09b84159583dd2fc71436858143b94c58f3.patch";
+      url = "https://github.com/linuxdeepin/dde-file-manager/commit/4d5be539ba2c567bee1ec4aad90ecda0b87878d5.patch";
       sha256 = "sha256-k808IsaV/RJg7bYNmUnhcFZMnMRQ8sGRagMlx5i4h4Q=";
     })
   ];
@@ -120,8 +120,6 @@ stdenv.mkDerivation rec {
 
     find . -type f -regex ".*\\.\\(service\\|policy\\|desktop\\)" -exec sed -i -e "s|/usr/|$out/|g" {} \;
   '';
-  # src/plugins/desktop/core/ddplugin-dbusregister/vaultmanagerdbus.cpp TODO
-  # src/plugins/daemon/daemonplugin-accesscontrol/utils.cpp
 
   buildInputs = [
     dtkwidget
@@ -132,7 +130,7 @@ stdenv.mkDerivation rec {
     dde-qt-dbus-factory
     glibmm
     docparser
-    dde-dock.dev
+    dde-dock
     deepin-movie-reborn
     qtx11extras
     qtmultimedia
@@ -167,7 +165,6 @@ stdenv.mkDerivation rec {
   ];
 
   preFixup = ''
-    glib-compile-schemas ${glib.makeSchemaPath "$out" "${pname}-${version}"}
     qtWrapperArgs+=("''${gappsWrapperArgs[@]}")
   '';
 
@@ -176,5 +173,6 @@ stdenv.mkDerivation rec {
     homepage = "https://github.com/linuxdeepin/dde-file-manager";
     license = licenses.gpl3Plus;
     platforms = platforms.linux;
+    maintainers = teams.deepin.members;
   };
 }
