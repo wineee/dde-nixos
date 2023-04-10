@@ -116,7 +116,6 @@ let
     deepin-camera = callPackage ./apps/deepin-camera { };
     deepin-devicemanager = callPackage ./apps/deepin-devicemanager { };
     deepin-screen-recorder = callPackage ./apps/deepin-screen-recorder { };
-    deepin-clone = callPackage ./apps/deepin-clone { };
     deepin-shortcut-viewer = callPackage ./apps/deepin-shortcut-viewer { };
     deepin-voice-note = callPackage ./apps/deepin-voice-note { };
     deepin-reader = callPackage ./apps/deepin-reader { };
