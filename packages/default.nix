@@ -100,7 +100,6 @@ let
 
     #### Dtk Application
     dde-grand-search = callPackage ./apps/dde-grand-search { };
-    dde-introduction = callPackage ./apps/dde-introduction { };
     deepin-compressor = callPackage ./apps/deepin-compressor { };
     deepin-terminal = callPackage ./apps/deepin-terminal { };
     deepin-editor = callPackage ./apps/deepin-editor { };
