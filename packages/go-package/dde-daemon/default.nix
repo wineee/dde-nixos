@@ -58,7 +58,7 @@ buildGoPackage rec {
   ];
 
   postPatch = ''
-    substituteInPlace session/eventlog/{app_event.go,login_event.go} accounts/users/users_test.go \
+    substituteInPlace session/eventlog/{app_event.go,login_event.go} \
       --replace "/bin/bash" "${runtimeShell}"
 
     substituteInPlace inputdevices/layout_list.go \
@@ -80,6 +80,9 @@ buildGoPackage rec {
     do
       sed -i 's|/usr/lib/deepin-daemon|/run/current-system/sw/lib/deepin-daemon|g' $file
     done
+
+    substituteInPlace appearance/ifc.go \
+      --replace "/usr" "$out"
 
     patchShebangs .
   '';
