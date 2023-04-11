@@ -17,25 +17,18 @@
 
 stdenv.mkDerivation rec {
   pname = "qt5platform-plugins";
-  version = "5.6.5";
+  version = "5.6.9";
 
   src = fetchFromGitHub {
     owner = "linuxdeepin";
     repo = pname;
     rev = version;
-    sha256 = "sha256-DHgnfJTUw1hY53DmDfzVFM6Ff8q6pbNDPmPeSsV7MwY=";
+    sha256 = "sha256-EG5M4rcMK62DX4ywm2IH0lGHC510BnMqcefMlF9pyr8=";
   };
 
   # patches = [
   #   ./0001-chore-find-wayland-scanner-by-pkg-config.patch
   # ];
-
-  ## https://github.com/linuxdeepin/qt5platform-plugins/pull/119 
-  # postPatch = ''
-  #   rm -r xcb/libqt5xcbqpa-dev/
-  #   mkdir -p xcb/libqt5xcbqpa-dev/${qtbase.version}
-  #   cp -r ${qtbase.src}/src/plugins/platforms/xcb/*.h xcb/libqt5xcbqpa-dev/${qtbase.version}/
-  # '';
 
   nativeBuildInputs = [ qmake pkg-config wrapQtAppsHook ];
 
@@ -70,5 +63,6 @@ stdenv.mkDerivation rec {
     homepage = "https://github.com/linuxdeepin/qt5platform-plugins";
     license = licenses.gpl3Plus;
     platforms = platforms.linux;
+    maintainers = teams.deepin.members;
   };
 }

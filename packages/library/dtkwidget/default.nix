@@ -8,6 +8,7 @@
 , pkg-config
 , cmake
 , qttools
+, qtbase
 , qtmultimedia
 , qtsvg
 , qtx11extras
@@ -20,13 +21,13 @@
 
 stdenv.mkDerivation rec {
   pname = "dtkwidget";
-  version = "5.6.8";
+  version = "5.6.9.2";
 
   src = fetchFromGitHub {
     owner = "linuxdeepin";
     repo = pname;
     rev = version;
-    sha256 = "sha256-JnScLSq4nzDREgtlKwyUbvdXXRf3RqJ7bAE8DQI+VZI=";
+    sha256 = "sha256-KEnVQdlYby7hOI2E8LPkVVAlynxCKYgtieB5qiD2X3M=";
   };
 
   postPatch = ''
@@ -43,6 +44,7 @@ stdenv.mkDerivation rec {
   ];
 
   buildInputs = [
+    qtbase
     qtmultimedia
     qtsvg
     qtx11extras
@@ -62,10 +64,17 @@ stdenv.mkDerivation rec {
     "-DCMAKE_INSTALL_INCLUDEDIR=include"
   ];
 
+  preConfigure = ''
+    # qt.qpa.plugin: Could not find the Qt platform plugin "minimal"
+    # A workaround is to set QT_PLUGIN_PATH explicitly
+    export QT_PLUGIN_PATH=${qtbase.bin}/${qtbase.qtPluginPrefix}
+  '';
+
   meta = with lib; {
     description = "Deepin graphical user interface library";
     homepage = "https://github.com/linuxdeepin/dtkwidget";
     license = licenses.lgpl3Plus;
     platforms = platforms.linux;
+    maintainers = teams.deepin.members;
   };
 }

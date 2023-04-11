@@ -44,6 +44,7 @@ stdenv.mkDerivation rec {
   ];
 
   buildInputs = [
+    qt5integration
     qt5platform-plugins # for examples
   ];
 
@@ -71,15 +72,11 @@ stdenv.mkDerivation rec {
     export QML2_IMPORT_PATH=${qtdeclarative.bin}/${qtbase.qtQmlPrefix}
   '';
 
-
-  qtWrapperArgs = [
-    "--prefix QT_PLUGIN_PATH : ${qt5integration}/${qtbase.qtPluginPrefix}"
-  ];
-
   meta = with lib; {
     description = "A widget development toolkit based on QtQuick/QtQml";
     homepage = "https://github.com/linuxdeepin/dtkdeclarative";
     license = licenses.lgpl3Plus;
     platforms = platforms.linux;
+    maintainers = teams.deepin.members;
   };
 }

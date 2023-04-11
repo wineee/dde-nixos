@@ -49,7 +49,6 @@ let
     docparser = callPackage ./library/docparser { };
     dwayland = callPackage ./library/dwayland { };
     deepin-wayland-protocols = callPackage ./library/deepin-wayland-protocols { };
-    qt5integration-styles = callPackage ./library/qt5integration-styles { };
     dtkdeclarative = callPackage ./library/dtkdeclarative { };
     util-dfm = callPackage ./library/util-dfm { };
     deepin-pdfium = callPackage ./library/deepin-pdfium { };

@@ -19,22 +19,22 @@
 
 stdenv.mkDerivation rec {
   pname = "qt5integration";
-  version = "5.6.6";
+  version = "5.6.9";
 
   src = fetchFromGitHub {
     owner = "linuxdeepin";
     repo = pname;
     rev = version;
-    sha256 = "sha256-7b18ydyy/TIEGDkFAoium1LSx3Qs4I4pYpMfehOBZbY";
+    sha256 = "sha256-Bbaj1AnI4XdXkcWD50PSjLyaVowuznmR9uHh/Q1GPUU=";
   };
 
-  patches = [
-   (fetchpatch {
-     name = "refactor: use KIconEngine instead";
-     url = "https://github.com/linuxdeepin/qt5integration/commit/822a6a40cddca1c89cc06169e42828b86c6f5a80.patch";
-     sha256 = "sha256-PRcae63FSAzV0EKG/YipjqwsW6lR+CgKyRbkAY4ZoM4=";
-   })
-  ];
+  # patches = [
+  #  (fetchpatch {
+  #    name = "refactor: use KIconEngine instead";
+  #    url = "https://github.com/linuxdeepin/qt5integration/commit/822a6a40cddca1c89cc06169e42828b86c6f5a80.patch";
+  #    sha256 = "sha256-PRcae63FSAzV0EKG/YipjqwsW6lR+CgKyRbkAY4ZoM4=";
+  #  })
+  # ];
 
   nativeBuildInputs = [ qmake pkg-config wrapQtAppsHook ];
 
@@ -59,5 +59,6 @@ stdenv.mkDerivation rec {
     homepage = "https://github.com/linuxdeepin/qt5integration";
     license = licenses.lgpl3Plus;
     platforms = platforms.linux;
+    maintainers = teams.deepin.members;
   };
 }
