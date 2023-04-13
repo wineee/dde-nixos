@@ -1,0 +1,35 @@
+diff --git a/packages/apps/deepin-image-viewer/default.nix b/packages/apps/deepin-image-viewer/default.nix
+index 0910e24..d5b747d 100644
+--- a/packages/apps/deepin-image-viewer/default.nix
++++ b/packages/apps/deepin-image-viewer/default.nix
+@@ -34,8 +34,8 @@ stdenv.mkDerivation rec {
+     #./0001-fix-fhs-path-for-nix.patch
+     (fetchpatch {
+       name = "feat-add-build-flag-to-disable-deepin-ocr";
+-      url = "https://github.com/linuxdeepin/deepin-image-viewer/commit/0e47f14259863a26e616193153d39fc592386e29.patch";
+-      sha256 = "sha256-VcGFHoIhRYD2XjnYoNGyleZxayG05t8iUqfb4o/5w6g=";
++      url = "https://github.com/linuxdeepin/deepin-image-viewer/commit/650f6e7cd7ec55c910beb506bb51002f1cce1be5.patch";
++      sha256 = "sha256-k+fhFpCne5NEFxmSB8fqWTzsiPGO/fa5Ueyl8ZrEO+M=";
+     })
+     (fetchpatch {
+       name = "fix build with libraw 0.21";
+@@ -59,6 +59,7 @@ stdenv.mkDerivation rec {
+   buildInputs = [
+     dtkdeclarative
+     dtkwidget
++    qt5platform-plugins
+     libraw
+     freeimage
+   ];
+@@ -68,11 +69,6 @@ stdenv.mkDerivation rec {
+     "-DDDE_OCR_ENABLE=OFF"
+   ];
+ 
+-  qtWrapperArgs = [
+-    "--prefix QT_PLUGIN_PATH : ${qt5integration}/${qtbase.qtPluginPrefix}"
+-    "--prefix QT_QPA_PLATFORM_PLUGIN_PATH : ${qt5platform-plugins}/${qtbase.qtPluginPrefix}"
+-  ];
+-
+   meta = with lib; {
+     description = "An image viewing tool with fashion interface and smooth performance";
+     homepage = "https://github.com/linuxdeepin/deepin-image-viewer";
