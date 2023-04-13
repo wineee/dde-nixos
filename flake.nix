@@ -220,6 +220,7 @@
                   ];
 
                   environment.systemPackages = with pkgs; with deepin; [
+                    pciutils # startdde
                     socat
                     xdotool
                     glib # for gsettings program / gdbus
