@@ -1,5 +1,21 @@
 {
   "nodes": {
+    "dde-nixos": {
+      "inputs": {
+        "flake-utils": "flake-utils",
+        "nixpkgs": "nixpkgs"
+      },
+      "locked": {
+        "lastModified": 0,
+        "narHash": "sha256-noFZdOOttu0KqhqzvKhhmpkoMJavQ629xffI0PvGD10=",
+        "path": "/nix/store/63fcchx2m0y0hm8dngg06j94afk3q14l-source",
+        "type": "path"
+      },
+      "original": {
+        "path": "/nix/store/63fcchx2m0y0hm8dngg06j94afk3q14l-source",
+        "type": "path"
+      }
+    },
     "flake-utils": {
       "inputs": {
         "systems": "systems"
@@ -36,8 +52,7 @@
     },
     "root": {
       "inputs": {
-        "flake-utils": "flake-utils",
-        "nixpkgs": "nixpkgs"
+        "dde-nixos": "dde-nixos"
       }
     },
     "systems": {

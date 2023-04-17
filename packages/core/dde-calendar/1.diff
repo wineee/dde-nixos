@@ -1,0 +1,14 @@
+diff --git a/calendar-service/src/synchronization/syncfilemanage.cpp b/calendar-service/src/synchronization/syncfilemanage.cpp
+index 2a7d8b0b..00498200 100644
+--- a/calendar-service/src/synchronization/syncfilemanage.cpp
++++ b/calendar-service/src/synchronization/syncfilemanage.cpp
+@@ -128,7 +128,8 @@ DAccount::Ptr SyncFileManage::getuserInfo()
+ {
+     QVariantMap userInfoMap;
+     //如果为社区版本则返回空
+-    if (Dtk::Core::DSysInfo::uosEditionType() == Dtk::Core::DSysInfo::UosCommunity) {
++    if (Dtk::Core::DSysInfo::uosEditionType() == Dtk::Core::DSysInfo::UosCommunity
++     || Dtk::Core::DSysInfo::uosEditionType() == Dtk::Core::DSysInfo::UosEditionUnknown) {
+         return nullptr;
+     }
+ 

@@ -190,11 +190,11 @@
                     #"lightdm/lightdm.conf".source = "${packages.startdde}/etc/lightdm/lightdm.conf";
                     # "lightdm/deepin".source = "${packages.dde-session-shell}/etc/lightdm/deepin";
                     # /etc/lightdm/lightdm-deepin-greeter.conf
-                    "dde-session-shell/dde-session-shell.conf".source = "${packages.dde-session-shell}/share/dde-session-shell/dde-session-shell.conf";
+                    "dde-session-shell/dde-session-shell.conf".source = "${pkgs.deepin.dde-session-shell}/share/dde-session-shell/dde-session-shell.conf";
                     #"deepin/dde-session-ui.conf".source = "${packages.dde-session-ui}/share/deepin/dde-session-ui.conf";
-                    "deepin/greeters.d".source = "${packages.dde-session-shell}/etc/deepin/greeters.d";
-                    "dde-dock/indicator".source = "${packages.dde-dock}/etc/dde-dock/indicator";
-                    "polkit-1/localauthority/10-vendor.d/10-network-manager.pkla".source = "${packages.dde-network-core}/var/lib/polkit-1/localauthority/10-vendor.d/10-network-manager.pkla";
+                    "deepin/greeters.d".source = "${pkgs.deepin.dde-session-shell}/etc/deepin/greeters.d";
+                    "dde-dock/indicator".source = "${pkgs.deepin.dde-dock}/etc/dde-dock/indicator";
+                    "polkit-1/localauthority/10-vendor.d/10-network-manager.pkla".source = "${pkgs.deepin.dde-network-core}/var/lib/polkit-1/localauthority/10-vendor.d/10-network-manager.pkla";
                     "deepin/dde.conf".text = ''
                       [Password]
                       STRONG_PASSWORD = true
@@ -254,18 +254,21 @@
                     deepin-picker
                     dde-control-center
 
-                  ] ++ (with packages; (utils.removePackagesByName ([
-                    dde-kwin
-                    deepin-kwin
-
-                    startdde
                     dde-session-ui
                     dde-session-shell
                     dde-launcher
                     dde-dock
                     dde-network-core
-                    dde-calendar 
                     dde-clipboard
+
+                  ] ++ (with packages; (utils.removePackagesByName ([
+                    dde-kwin
+                    deepin-kwin
+                    packages.dde-calendar 
+
+
+                    startdde
+                   
                     dde-file-manager
                     
                     deepin-desktop-schemas
@@ -300,15 +303,16 @@
                     deepin-draw
                     deepin-image-viewer
                     dde-control-center
-                  ] ++ (with packages; (utils.removePackagesByName ([
-                    dde-kwin
-                    deepin-kwin
                     dde-launcher
                     dde-dock
                     dde-session-ui
                     dde-session-shell
+                  ] ++ (with packages; (utils.removePackagesByName ([
+                    dde-kwin
+                    deepin-kwin
+                   
                     dde-file-manager
-                    dde-calendar
+                    packages.dde-calendar
                     deepin-screen-recorder
                     deepin-system-monitor
                     deepin-camera
@@ -321,10 +325,10 @@
 
                   systemd.packages = with packages; [
                     deepin-kwin
-                    dde-launcher
+                    pkgs.deepin.dde-launcher
                     dde-file-manager
-                    pkgs.deepin.dde-calendar
-                    dde-clipboard
+                    packages.dde-calendar #
+                    pkgs.deepin.dde-clipboard
                   ];
 
                   services.dde.dde-daemon.enable = mkForce true;
@@ -437,8 +441,8 @@
                })
 
                (mkIf config.services.dde.app-services.enable {
-                  environment.systemPackages = [ packages.dde-app-services ];
-                  services.dbus.packages = [ packages.dde-app-services ];
+                  environment.systemPackages = [ pkgs.deepin.dde-app-services ];
+                  services.dbus.packages = [ pkgs.deepin.dde-app-services ];
                   environment.pathsToLink = [ "/share/dsg" ];
                })
 

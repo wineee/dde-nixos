@@ -37,18 +37,20 @@ let
   packages = self: with self; functions // {
     #### TOOLS
     deepin-anything = callPackage ./tools/deepin-anything { };
+    dde-calendar = callPackage ./core/dde-calendar { };
+
 
     ### CORE
     dde-kwin = callPackage ./core/dde-kwin { };
     deepin-kwin = callPackage ./core/deepin-kwin { };
-    dde-dock = callPackage ./core/dde-dock { };
-    dde-launcher = callPackage ./core/dde-launcher { };
+    #dde-dock = callPackage ./core/dde-dock { };
+    #dde-launcher = callPackage ./core/dde-launcher { };
     dde-file-manager = callPackage ./core/dde-file-manager { };
-    dde-clipboard = callPackage ./core/dde-clipboard { };
-    dde-app-services = callPackage ./core/dde-app-services { };
-    dde-network-core = callPackage ./core/dde-network-core { };
-    dde-session-shell = callPackage ./core/dde-session-shell { };
-    dde-session-ui = callPackage ./core/dde-session-ui { };
+    #dde-clipboard = callPackage ./core/dde-clipboard { };
+    #dde-app-services = callPackage ./core/dde-app-services { };
+    #dde-network-core = callPackage ./core/dde-network-core { };
+    #dde-session-shell = callPackage ./core/dde-session-shell { };
+    #dde-session-ui = callPackage ./core/dde-session-ui { };
 
     #### MISC
     nixos-gsettings-schemas = callPackage ./misc/nixos-gsettings-schemas { };
