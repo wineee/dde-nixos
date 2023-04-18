@@ -19,13 +19,13 @@
 
 stdenv.mkDerivation rec {
   pname = "qt5integration";
-  version = "5.6.9";
+  version = "5.6.6";
 
   src = fetchFromGitHub {
     owner = "linuxdeepin";
     repo = pname;
     rev = version;
-    sha256 = "sha256-Bbaj1AnI4XdXkcWD50PSjLyaVowuznmR9uHh/Q1GPUU=";
+    sha256 = "sha256-7b18ydyy/TIEGDkFAoium1LSx3Qs4I4pYpMfehOBZbY=";
   };
 
   # patches = [

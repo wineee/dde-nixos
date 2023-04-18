@@ -12,22 +12,24 @@
 , qtmultimedia
 , qtsvg
 , qtx11extras
+, doxygen
 , wrapQtAppsHook
 , cups
 , gsettings-qt
 , libstartup_notification
 , xorg
+, buildDocs ? true
 }:
 
 stdenv.mkDerivation rec {
   pname = "dtkwidget";
-  version = "5.6.9.2";
+  version = "5.6.10";
 
   src = fetchFromGitHub {
     owner = "linuxdeepin";
     repo = pname;
     rev = version;
-    sha256 = "sha256-KEnVQdlYby7hOI2E8LPkVVAlynxCKYgtieB5qiD2X3M=";
+    sha256 = "sha256-PhVK/lUFrDW1bn9lUhLuKWLAVj7E7+/YC5USShrg3ds=";
   };
 
   postPatch = ''
@@ -41,6 +43,9 @@ stdenv.mkDerivation rec {
     qttools
     pkg-config
     wrapQtAppsHook
+  ] ++ lib.optional buildDocs [
+    doxygen
+    #qttools.dev
   ];
 
   buildInputs = [
@@ -58,8 +63,9 @@ stdenv.mkDerivation rec {
 
   cmakeFlags = [
     "-DDVERSION=${version}"
-    "-DBUILD_DOCS=OFF"
+    "-DBUILD_DOCS=ON"
     "-DMKSPECS_INSTALL_DIR=${placeholder "out"}/mkspecs/modules"
+    "-DQCH_INSTALL_DESTINATION=${qtbase.qtDocPrefix}"
     "-DCMAKE_INSTALL_LIBDIR=lib"
     "-DCMAKE_INSTALL_INCLUDEDIR=include"
   ];

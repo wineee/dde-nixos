@@ -5,6 +5,7 @@
 , pkg-config
 , cmake
 , qttools
+, doxygen
 , wrapQtAppsHook
 , librsvg
 , lxqt
@@ -13,17 +14,18 @@
 , qtimageformats
 , freeimage
 , libraw
+, buildDocs ? true
 }:
 
 stdenv.mkDerivation rec {
   pname = "dtkgui";
-  version = "5.6.9";
+  version = "5.6.10";
 
   src = fetchFromGitHub {
     owner = "linuxdeepin";
     repo = pname;
     rev = version;
-    sha256 = "sha256-xX7LLMbJ8PdytOc2xKEbIocioEZAkUMXwABKW2t9dTA=";
+    sha256 = "sha256-4NHt/hLtt99LhWvBX9e5ueB5G86SXx553G6fyHZBXcE=";
   };
 
   nativeBuildInputs = [
@@ -31,6 +33,9 @@ stdenv.mkDerivation rec {
     qttools
     pkg-config
     wrapQtAppsHook
+  ] ++ lib.optional buildDocs [
+    doxygen
+    #qttools.dev
   ];
 
   buildInputs = [
@@ -48,13 +53,14 @@ stdenv.mkDerivation rec {
 
   cmakeFlags = [
     "-DDVERSION=${version}"
-    "-DBUILD_DOCS=OFF"
+    "-DBUILD_DOCS=ON"
     "-DMKSPECS_INSTALL_DIR=${placeholder "out"}/mkspecs/modules"
+    "-DQCH_INSTALL_DESTINATION=${qtbase.qtDocPrefix}"
     "-DCMAKE_INSTALL_LIBDIR=lib"
     "-DCMAKE_INSTALL_INCLUDEDIR=include"
-    "-DDTK_DISABLE_LIBRSVG=OFF" # librsvg
-    "-DDTK_DISABLE_LIBXDG=OFF" # libqtxdg
-    "-DDTK_DISABLE_EX_IMAGE_FORMAT=OFF" # freeimage
+    #"-DDTK_DISABLE_LIBRSVG=OFF" # librsvg
+    #"-DDTK_DISABLE_LIBXDG=OFF" # libqtxdg
+    #"-DDTK_DISABLE_EX_IMAGE_FORMAT=OFF" # freeimage
   ];
 
   preConfigure = ''

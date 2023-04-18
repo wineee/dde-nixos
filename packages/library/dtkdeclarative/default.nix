@@ -60,6 +60,7 @@ stdenv.mkDerivation rec {
     "-DBUILD_DOCS=ON"
     "-DBUILD_EXAMPLES=ON"
     "-DMKSPECS_INSTALL_DIR=${placeholder "out"}/mkspecs/modules"
+    "-DQCH_INSTALL_DESTINATION=${qtbase.qtDocPrefix}"
     "-DQML_INSTALL_DIR=${qtbase.qtQmlPrefix}"
     "-DCMAKE_INSTALL_LIBDIR=lib"
     "-DCMAKE_INSTALL_INCLUDEDIR=include"
