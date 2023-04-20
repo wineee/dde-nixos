@@ -71,7 +71,8 @@ let
     deepin-kwin = callPackage ./core/deepin-kwin { };
     dde-dock = callPackage ./core/dde-dock { };
     dde-launcher = callPackage ./core/dde-launcher { };
-    dde-control-center = callPackage ./core/dde-control-center { };
+    dde-control-center = callPackage ./core/dde-control-center {
+    };
     dde-file-manager = callPackage ./core/dde-file-manager { };
     dde-calendar = callPackage ./core/dde-calendar { };
     dde-clipboard = callPackage ./core/dde-clipboard { };
@@ -81,6 +82,7 @@ let
     dde-session-ui = callPackage ./core/dde-session-ui { };
     dde-polkit-agent = callPackage ./core/dde-polkit-agent { };
     dpa-ext-gnomekeyring = callPackage ./core/dpa-ext-gnomekeyring { };
+    dde-appearance = callPackage ./core/dde-appearance { };
 
     #### MISC
     deepin-desktop-base = callPackage ./misc/deepin-desktop-base { };
