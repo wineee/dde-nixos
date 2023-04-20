@@ -13,7 +13,6 @@
 , dde-control-center
 , deepin-movie-reborn
 , dde-file-manager
-, dde-grand-search
 , deepin-screen-recorder
 , deepin-system-monitor
 , deepin-desktop-schemas
@@ -32,7 +31,6 @@ let
     dde-control-center
     deepin-movie-reborn
     dde-file-manager
-    dde-grand-search
     deepin-screen-recorder
     deepin-system-monitor
     deepin-desktop-schemas

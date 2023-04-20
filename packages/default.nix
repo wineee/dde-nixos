@@ -36,8 +36,8 @@ let
 
   packages = self: with self; functions // {
     #### TOOLS
-    deepin-anything = callPackage ./tools/deepin-anything { };
-    dde-calendar = callPackage ./core/dde-calendar { };
+    #deepin-anything = callPackage ./tools/deepin-anything { };
+    #dde-calendar = callPackage ./core/dde-calendar { };
 
 
     ### CORE
@@ -45,7 +45,7 @@ let
     deepin-kwin = callPackage ./core/deepin-kwin { };
     #dde-dock = callPackage ./core/dde-dock { };
     #dde-launcher = callPackage ./core/dde-launcher { };
-    dde-file-manager = callPackage ./core/dde-file-manager { };
+    #dde-file-manager = callPackage ./core/dde-file-manager { };
     #dde-clipboard = callPackage ./core/dde-clipboard { };
     #dde-app-services = callPackage ./core/dde-app-services { };
     #dde-network-core = callPackage ./core/dde-network-core { };
@@ -56,31 +56,30 @@ let
     nixos-gsettings-schemas = callPackage ./misc/nixos-gsettings-schemas { };
 
     #### Go Packages
-    dde-daemon = callPackage ./go-package/dde-daemon { };
-    startdde = callPackage ./go-package/startdde { };
+    #dde-daemon = callPackage ./go-package/dde-daemon { };
+    #startdde = callPackage ./go-package/startdde { };
 
     #### Dtk Application
-    dde-grand-search = callPackage ./apps/dde-grand-search { };
-    dde-introduction = callPackage ./apps/dde-introduction { };
-    deepin-boot-maker = callPackage ./apps/deepin-boot-maker { };
-    deepin-font-manager = callPackage ./apps/deepin-font-manager { };
+    #dde-grand-search = callPackage ./apps/dde-grand-search { };
+    #dde-introduction = callPackage ./apps/dde-introduction { };
+    #deepin-boot-maker = callPackage ./apps/deepin-boot-maker { };
+    #deepin-font-manager = callPackage ./apps/deepin-font-manager { };
     deepin-system-monitor = callPackage ./apps/deepin-system-monitor { };
     deepin-screen-recorder = callPackage ./apps/deepin-screen-recorder { };
-    deepin-clone = callPackage ./apps/deepin-clone { };
-    deepin-downloader = callPackage ./apps/deepin-downloader { };
-    deepin-gomoku = callPackage ./apps/deepin-gomoku { };
-    deepin-lianliankan = callPackage ./apps/deepin-lianliankan { };
-    deepin-ocr = callPackage ./apps/deepin-ocr { };
+    #deepin-downloader = callPackage ./apps/deepin-downloader { };
+    #deepin-gomoku = callPackage ./apps/deepin-gomoku { };
+    #deepin-lianliankan = callPackage ./apps/deepin-lianliankan { };
+    #deepin-ocr = callPackage ./apps/deepin-ocr { };
 
     #### OS-SPECIFIC
     ## pkgs/top-level/linux-kernels.nix
-    deepin-anything-module = _kernel: callPackage ./os-specific/deepin-anything-module {
-      kernel = _kernel;
-    };
+    # deepin-anything-module = _kernel: callPackage ./os-specific/deepin-anything-module {
+    #   kernel = _kernel;
+    # };
 
     #### THIRD-PARTY
-    dde-top-panel = callPackage ./third-party/dde-top-panel { };
-    dmarked = callPackage ./third-party/dmarked { };
+    # dde-top-panel = callPackage ./third-party/dde-top-panel { };
+    # dmarked = callPackage ./third-party/dmarked { };
   };
 in
 makeScope newScope packages

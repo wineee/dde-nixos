@@ -83,7 +83,6 @@
 
                 services.dde = {
                   dde-daemon.enable = mkEnableOption "Daemon for handling Deepin Desktop Environment session settings";
-                  deepin-anything.enable = mkEnableOption "Lightning-fast filename search function for Linux users, and provides offline search functions";
                   dde-api.enable = mkEnableOption "Dbus interfaces that is used for screen zone detecting, thumbnail generating, sound playing, etc";
                   app-services.enable = mkEnableOption "Service collection of DDE applications, including dconfig-center";
                 };
@@ -92,20 +91,13 @@
 
               config = mkMerge [
                 (mkIf cfg.enable {
-                  services.xserver.displayManager.sessionPackages = [ packages.startdde ];
+                  services.xserver.displayManager.sessionPackages = [ pkgs.deepin.startdde ];
                   services.xserver.displayManager.defaultSession = "deepin";
 
                   services.xserver.displayManager.sessionCommands = ''
                       ${lib.getBin pkgs.dbus}/bin/dbus-update-activation-environment --systemd --all
                   '';
                   
-                  #services.xserver.displayManager.lightdm.greeters.gtk.enable = false;
-                  #services.xserver.displayManager.lightdm.greeter = mkDefault {
-                  #  package = packages.dde-session-shell.xgreeters;
-                  #  name = "lightdm-deepin-greeter";
-                  #};
-
-                  #services.xserver.displayManager.lightdm.theme = mkDefault "deepin";
                   
                   hardware.bluetooth.enable = mkDefault true;
                   hardware.pulseaudio.enable = mkDefault true;
@@ -134,10 +126,6 @@
                   
                   programs.dconf.enable = true;
 
-                  programs.bash.vteIntegration = mkDefault true;
-                  programs.zsh.vteIntegration = mkDefault true;
-                  #TODO: programs.gnupg.agent.pinentryFlavor = "qt";
-
                   fonts.fonts = with pkgs; [ noto-fonts ];
 
                   xdg.mime.enable = true;
@@ -153,7 +141,6 @@
                   environment.sessionVariables = {
                     NIX_GSETTINGS_OVERRIDES_DIR = "${nixos-gsettings-desktop-schemas}/share/gsettings-schemas/nixos-gsettings-overrides/glib-2.0/schemas";
                     DDE_POLKIT_AGENT_PLUGINS_DIRS = [ "${pkgs.deepin.dpa-ext-gnomekeyring}/lib/polkit-1-dde/plugins" ];
-                    #
                   };
 
                   environment.variables = {
@@ -161,8 +148,8 @@
                     #   "{packages.qt5platform-plugins}/${pkgs.libsForQt5.qtbase.qtPluginPrefix}"
                     #   "{packages.qt5integration}/${pkgs.libsForQt5.qtbase.qtPluginPrefix}" 
                     # ];
-                    QT_QPA_PLATFORMTHEME = "dxcb"; # nixos/modules/config/qt5.nix
-                    QT_STYLE_OVERRIDE = "chameleon";
+                    #QT_QPA_PLATFORMTHEME = "dxcb"; # nixos/modules/config/qt5.nix
+                    #QT_STYLE_OVERRIDE = "chameleon";
                     # D_PROXY_ICON_ENGINE = "KIconEngine";
                   };
 
@@ -186,29 +173,25 @@
                     LogoTransparent=${pkgs.deepin.deepin-desktop-base}/share/pixmaps/distribution_logo_transparent.svg
                   '';
                   environment.etc = {
-                    "X11/Xsession.d".source = "${packages.startdde}/etc/X11/Xsession.d";
-                    #"lightdm/lightdm.conf".source = "${packages.startdde}/etc/lightdm/lightdm.conf";
-                    # "lightdm/deepin".source = "${packages.dde-session-shell}/etc/lightdm/deepin";
-                    # /etc/lightdm/lightdm-deepin-greeter.conf
-                    "dde-session-shell/dde-session-shell.conf".source = "${pkgs.deepin.dde-session-shell}/share/dde-session-shell/dde-session-shell.conf";
-                    #"deepin/dde-session-ui.conf".source = "${packages.dde-session-ui}/share/deepin/dde-session-ui.conf";
-                    "deepin/greeters.d".source = "${pkgs.deepin.dde-session-shell}/etc/deepin/greeters.d";
-                    "dde-dock/indicator".source = "${pkgs.deepin.dde-dock}/etc/dde-dock/indicator";
+                    #"X11/Xsession.d".source = "${packages.startdde}/etc/X11/Xsession.d";
+                    #"dde-session-shell/dde-session-shell.conf".source = "${pkgs.deepin.dde-session-shell}/share/dde-session-shell/dde-session-shell.conf";
+                    #"deepin/greeters.d".source = "${pkgs.deepin.dde-session-shell}/etc/deepin/greeters.d";
+                    #"dde-dock/indicator".source = "${pkgs.deepin.dde-dock}/etc/dde-dock/indicator";
                     "polkit-1/localauthority/10-vendor.d/10-network-manager.pkla".source = "${pkgs.deepin.dde-network-core}/var/lib/polkit-1/localauthority/10-vendor.d/10-network-manager.pkla";
-                    "deepin/dde.conf".text = ''
-                      [Password]
-                      STRONG_PASSWORD = true
-                      PASSWORD_MIN_LENGTH = 1
-                      PASSWORD_MAX_LENGTH = 510
-                      VALIDATE_POLICY = 1234567890;abcdefghijklmnopqrstuvwxyz;ABCDEFGHIJKLMNOPQRSTUVWXYZ;~`!@#$%^&*()-_+=|\{}[]:"'<>,.?/
-                      VALIDATE_REQUIRED = 1
-                      PALINDROME_NUM = 0
-                      WORD_CHECK = 0
-                      MONOTONE_CHARACTER_NUM = 0
-                      CONSECUTIVE_SAME_CHARACTER_NUM = 0
-                      DICT_PATH = 
-                      FIRST_LETTER_UPPERCASE = false
-                    '';
+                    # "deepin/dde.conf".text = ''
+                    #   [Password]
+                    #   STRONG_PASSWORD = true
+                    #   PASSWORD_MIN_LENGTH = 1
+                    #   PASSWORD_MAX_LENGTH = 510
+                    #   VALIDATE_POLICY = 1234567890;abcdefghijklmnopqrstuvwxyz;ABCDEFGHIJKLMNOPQRSTUVWXYZ;~`!@#$%^&*()-_+=|\{}[]:"'<>,.?/
+                    #   VALIDATE_REQUIRED = 1
+                    #   PALINDROME_NUM = 0
+                    #   WORD_CHECK = 0
+                    #   MONOTONE_CHARACTER_NUM = 0
+                    #   CONSECUTIVE_SAME_CHARACTER_NUM = 0
+                    #   DICT_PATH = 
+                    #   FIRST_LETTER_UPPERCASE = false
+                    # '';
                     "deepin-installer.conf".text = ''
                       system_info_vendor_name="Copyright (c) 2003-2023 NixOS contributors"
                     '';
@@ -261,41 +244,23 @@
                     dde-dock
                     dde-network-core
                     dde-clipboard
-
-                  ] ++ (with packages; (utils.removePackagesByName ([
-                    dde-kwin
-                    deepin-kwin
-                    packages.dde-calendar 
-
+                    dde-calendar
 
                     startdde
-                   
                     dde-file-manager
-                    
                     deepin-desktop-schemas
                     
                     deepin-music
                     deepin-movie-reborn
-                    deepin-system-monitor
+                    #deepin-system-monitor
                     deepin-shortcut-viewer
-                   
-                    deepin-font-manager
-                    deepin-screen-recorder
+
                     deepin-compressor
-                    deepin-ocr
-                    deepin-boot-maker
-                  ] ++ lib.optionals cfg.full [
-                    dde-grand-search # FIXME
-                    deepin-reader
-                    deepin-voice-note
-                    deepin-downloader
-                    deepin-lianliankan
-                    deepin-gomoku
-                    dde-introduction
-                    dde-top-panel
-                    dmarked
-                    # deepin-devicemanager # FIXME
-                    deepin-clone
+
+                  ] ++ (with packages; (utils.removePackagesByName ([
+                    dde-kwin
+                    deepin-kwin
+                    deepin-screen-recorder
                   ]) config.environment.deepin.excludePackages));
 
                   services.dbus.packages =  with pkgs; with deepin; [
@@ -313,57 +278,54 @@
                     deepin-kwin
                    
                     dde-file-manager
-                    packages.dde-calendar
-                    deepin-screen-recorder
+                    dde-calendar
+                    #deepin-screen-recorder
                     deepin-system-monitor
                     deepin-camera
                     dde-clipboard
-                    deepin-ocr
-                    deepin-boot-maker
                   ] ++ lib.optionals cfg.full [
                     dde-grand-search
                   ]) config.environment.deepin.excludePackages));
 
-                  systemd.packages = with packages; [
-                    deepin-kwin
-                    pkgs.deepin.dde-launcher
+                  systemd.packages = with pkgs.deepin; [
+                    packages.deepin-kwin
+                    dde-launcher
                     dde-file-manager
-                    packages.dde-calendar #
-                    pkgs.deepin.dde-clipboard
+                    dde-calendar
+                    dde-clipboard
                   ];
 
                   services.dde.dde-daemon.enable = mkForce true;
                   services.dde.dde-api.enable = mkForce true;
                   services.dde.app-services.enable = mkForce true;
 
-                  services.dde.deepin-anything.enable = true;
                 })
 
                 (mkIf config.services.dde.dde-daemon.enable {
-                  environment.systemPackages = [ packages.dde-daemon ];
-                  services.dbus.packages = [ packages.dde-daemon ];
-                  services.udev.packages = [ packages.dde-daemon ];
-                  systemd.packages = [ packages.dde-daemon ];
+                  environment.systemPackages = [ pkgs.deepin.dde-daemon ];
+                  services.dbus.packages = [ pkgs.deepin.dde-daemon ];
+                  services.udev.packages = [ pkgs.deepin.dde-daemon ];
+                  systemd.packages = [ pkgs.deepin.dde-daemon ];
                   environment.pathsToLink = [ "/lib/deepin-daemon" ];
                   environment.etc= {
-                    "lightdm/deepin/xsettingsd.conf".source = "${packages.dde-daemon}/etc/lightdm/deepin/xsettingsd.conf";
+                    #"lightdm/deepin/xsettingsd.conf".source = "${pkgs.deepin.dde-daemon}/etc/lightdm/deepin/xsettingsd.conf";
                     #"pam.d/deepin-auth-keyboard"
-                    "acpi/actions/deepin_lid.sh".source = "${packages.dde-daemon}/etc/acpi/actions/deepin_lid.sh";
-                    "polkit-1/localauthority/10-vendor.d/com.deepin.daemon.Accounts.pkla".source = "${packages.dde-daemon}/var/lib/polkit-1/localauthority/10-vendor.d/com.deepin.daemon.Accounts.pkla";
-                    "polkit-1/localauthority/10-vendor.d/com.deepin.daemon.Fprintd.pkla".source = "${packages.dde-daemon}/var/lib/polkit-1/localauthority/10-vendor.d/com.deepin.daemon.Fprintd.pkla";
-                    "polkit-1/localauthority/10-vendor.d/com.deepin.daemon.Grub2.pkla".source = "${packages.dde-daemon}/var/lib/polkit-1/localauthority/10-vendor.d/com.deepin.daemon.Grub2.pkla";
+                    #"acpi/actions/deepin_lid.sh".source = "${packages.dde-daemon}/etc/acpi/actions/deepin_lid.sh";
+                    #"polkit-1/localauthority/10-vendor.d/com.deepin.daemon.Accounts.pkla".source = "${packages.dde-daemon}/var/lib/polkit-1/localauthority/10-vendor.d/com.deepin.daemon.Accounts.pkla";
+                    #"polkit-1/localauthority/10-vendor.d/com.deepin.daemon.Fprintd.pkla".source = "${packages.dde-daemon}/var/lib/polkit-1/localauthority/10-vendor.d/com.deepin.daemon.Fprintd.pkla";
+                    #"polkit-1/localauthority/10-vendor.d/com.deepin.daemon.Grub2.pkla".source = "${packages.dde-daemon}/var/lib/polkit-1/localauthority/10-vendor.d/com.deepin.daemon.Grub2.pkla";
                   };
-                  security.pam.services.deepin-auth-keyboard.text = ''
-                    # original at {dde-daemon}/etc/pam.d/deepin-auth-keyboard
-                    auth    [success=5 default=ignore]      pam_unix.so nullok_secure
-                    -auth   [success=4 default=ignore]      pam_lsass.so
-                    -auth   [authinfo_unavail=ignore success=3 default=ignore]      pam_ldap.so minimum_uid=1000 use_first_pass
-                    -auth   [success=2 default=ignore] pam_ccreds.so minimum_uid=1000 action=validate use_first_pass
-                    -auth   [default=ignore] pam_ccreds.so minimum_uid=1000 action=update
-                    auth    requisite       pam_deny.so
-                    auth    required        pam_permit.so
-                    -auth   optional        pam_ccreds.so minimum_uid=1000 action=store
-                  '';
+                  # security.pam.services.deepin-auth-keyboard.text = ''
+                  #   # original at {dde-daemon}/etc/pam.d/deepin-auth-keyboard
+                  #   auth    [success=5 default=ignore]      pam_unix.so nullok_secure
+                  #   -auth   [success=4 default=ignore]      pam_lsass.so
+                  #   -auth   [authinfo_unavail=ignore success=3 default=ignore]      pam_ldap.so minimum_uid=1000 use_first_pass
+                  #   -auth   [success=2 default=ignore] pam_ccreds.so minimum_uid=1000 action=validate use_first_pass
+                  #   -auth   [default=ignore] pam_ccreds.so minimum_uid=1000 action=update
+                  #   auth    requisite       pam_deny.so
+                  #   auth    required        pam_permit.so
+                  #   -auth   optional        pam_ccreds.so minimum_uid=1000 action=store
+                  # '';
                   security.pam.services.dde-lock.text = ''
                     # original at {dde-session-shell}/etc/pam.d/dde-lock
                     auth      substack      login
@@ -373,57 +335,6 @@
                   '';
                })
 
-               (mkIf config.services.dde.deepin-anything.enable {
-                  environment.systemPackages = [ packages.deepin-anything ];
-                  services.dbus.packages = [ packages.deepin-anything ];
-                  # systemd.packages = [ packages.deepin-anything ];
-                  environment.pathsToLink = [ "/lib/deepin-anything-server-lib" ];
-                  environment.sessionVariables.DAS_PLUGIN_PATH = [ "/run/current-system/sw/lib/deepin-anything-server-lib/plugins/handlers" ];
-                  users.groups.deepin-anything-server = { };
-                  users.users.deepin-anything-server = {
-                    description = "Deepin Anything Server";
-                    group = "deepin-anything-server";
-                    isSystemUser = true;
-                  };
-                  boot.extraModulePackages = [ (deepinScope.deepin-anything-module config.boot.kernelPackages.kernel) ];
-                  boot.kernelModules = [ "vfs_monitor" ];
-                  systemd.services.deepin-anything-tool = {
-                    unitConfig = {
-                      Description = "Deepin anything tool service";
-                      After = [ "dbus.service" "udisks2.service" ];
-                      Before = [ "deepin-anything-monitor.service" ];
-                    };
-                    serviceConfig = {
-                      Type = "dbus";
-                      User = "root";
-                      Group = "root";
-                      BusName = "com.deepin.anything";
-                      ExecStart = "${packages.deepin-anything}/bin/deepin-anything-tool-ionice --dbus";
-                      Restart = "on-failure";
-                      RestartSec = 10;
-                    };
-                    wantedBy = [ "multi-user.target" ];
-                    path =  [ pkgs.util-linux packages.deepin-anything ]; # ionice
-                  };
-                  systemd.services.deepin-anything-monitor = {
-                    unitConfig = {
-                      Description = "Deepin anything service";
-                      After = [ "deepin-anything-tool.service" ];
-                    };
-                    serviceConfig = {
-                      User = "root";
-                      Group = "deepin-anything-server";
-                      ExecStart = "${packages.deepin-anything}/bin/deepin-anything-monitor";
-                      ExecStartPre = "${pkgs.kmod}/bin/modprobe vfs_monitor";
-                      ExecStopPost = "${pkgs.kmod}/bin/rmmod vfs_monitor";
-                      Environment = [ "DAS_DEBUG_PLUGINS=1" ];
-                      Restart = "always";
-                      RestartSec = 10;
-                    };
-                    wantedBy = [ "multi-user.target" ];
-                    path = [ pkgs.kmod packages.deepin-anything ]; # modprobe/rmmod
-                  };
-               })
 
                (mkIf config.services.dde.dde-api.enable {
                   environment.systemPackages = [ pkgs.deepin.dde-api ];
@@ -438,7 +349,7 @@
                     group = "deepin-sound-player";
                     isSystemUser = true;
                   };
-                  environment.etc."polkit-1/localauthority/10-vendor.d/com.deepin.api.device.pkla".source = "${pkgs.deepin.dde-api}/var/lib/polkit-1/localauthority/10-vendor.d/com.deepin.api.device.pkla";
+                  #environment.etc."polkit-1/localauthority/10-vendor.d/com.deepin.api.device.pkla".source = "${pkgs.deepin.dde-api}/var/lib/polkit-1/localauthority/10-vendor.d/com.deepin.api.device.pkla";
                })
 
                (mkIf config.services.dde.app-services.enable {
