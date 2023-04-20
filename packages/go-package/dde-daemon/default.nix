@@ -32,6 +32,9 @@
 , xdotool
 , getconf
 , dbus
+, replaceAll
+, getUsrPatchFrom
+, util-linux
 }:
 
 buildGoPackage rec {
@@ -81,8 +84,8 @@ buildGoPackage rec {
       sed -i 's|/usr/lib/deepin-daemon|/run/current-system/sw/lib/deepin-daemon|g' $file
     done
 
-    substituteInPlace appearance/ifc.go \
-      --replace "/usr" "$out"
+    substituteInPlace dock/desktop_file_path.go \
+      --replace "/usr/share" "/run/current-system/sw/share"
 
     patchShebangs .
   '';
