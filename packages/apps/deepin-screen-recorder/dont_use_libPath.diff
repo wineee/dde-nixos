@@ -18,7 +18,7 @@ index c8f6721..edf39fe 100755
  
  static bool CheckFFmpegEnv()
  {
-+    return true;
++    return false;
      bool flag = false;
      QDir dir;
      QString path  = QLibraryInfo::location(QLibraryInfo::LibrariesPath);
@@ -34,6 +34,18 @@ index 7bfc78e..dcbbc2f 100755
      QDir  dir;
      QString path  = QLibraryInfo::location(QLibraryInfo::LibrariesPath);
      dir.setPath(path);
+diff --git a/src/utils.cpp b/src/utils.cpp
+index beab867..6a1a9a2 100755
+--- a/src/utils.cpp
++++ b/src/utils.cpp
+@@ -193,6 +193,7 @@ void Utils::cancelInputEvent1(const int wid, const short x, const short y, const
+ // 判断系统是否是大于1040, 大于1040才显示录制时长功能。
+ bool Utils::isSysHighVersion1040()
+ {
++    return true;
+     if (DSysInfo::isDeepin()) {
+         bool correct = false;
+         QString sysVersion = DSysInfo::minorVersion();
 diff --git a/src/waylandrecord/avlibinterface.cpp b/src/waylandrecord/avlibinterface.cpp
 index d7942d6..c5cfdf4 100644
 --- a/src/waylandrecord/avlibinterface.cpp

@@ -1,0 +1,13 @@
+diff --git a/src/record_process.cpp b/src/record_process.cpp
+index 18a21b9..95ad36b 100755
+--- a/src/record_process.cpp
++++ b/src/record_process.cpp
+@@ -372,7 +372,7 @@ void RecordProcess::initProcess()
+     env.insert("GDK_SCALE", "1");
+     m_recorderProcess->setProcessEnvironment(env);
+ 
+-    connect(m_recorderProcess, SIGNAL(finished(int)), m_recorderProcess, SLOT(deleteLater()));
++    // connect(m_recorderProcess, SIGNAL(finished(int)), m_recorderProcess, SLOT(deleteLater()));
+ 
+     // Build temp save path.
+     QDateTime date = QDateTime::currentDateTime();
