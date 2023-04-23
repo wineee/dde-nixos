@@ -16,28 +16,9 @@
           pkgs = nixpkgs.legacyPackages.${system};
           deepinScope = import ./packages { inherit pkgs; };
           deepinPkgs = flake-utils.lib.flattenTree deepinScope;
-          getDbgVersion = name: value:
-              (pkgs.lib.attrsets.nameValuePair
-                (name + "-dbg")
-                (if value.stdenv == pkgs.stdenvNoCC then value else value.override {
-                  stdenv = pkgs.stdenvAdapters.keepDebugInfo pkgs.stdenv;
-                }));
-          deepinPkgsDbg = with pkgs.lib.attrsets; mapAttrs' getDbgVersion deepinPkgs;
         in
         rec {
-          packages = deepinPkgs // deepinPkgsDbg;
-          devShells = builtins.mapAttrs (
-            name: value: 
-              pkgs.mkShell {
-                nativeBuildInputs = deepinPkgs.${name}.nativeBuildInputs;
-                buildInputs = deepinPkgs.${name}.buildInputs
-                        ++ deepinPkgs.${name}.propagatedBuildInputs;
-                shellHook = ''
-                  # export QT_LOGGING_RULES=*.debug=true
-                  export QT_PLUGIN_PATH="$QT_PLUGIN_PATH:${deepinPkgs.qt5integration}/plugins"
-                '';
-             }
-          ) deepinPkgs;
+          packages = deepinPkgs;
 
           nixosModules = { config, lib, pkgs, utils, ... }:
             with lib;
@@ -57,11 +38,6 @@
                     type = types.bool;
                     default = false;
                     description = "Enable Deepin desktop manager";
-                  };
-                  full = mkOption {
-                    type = types.bool;
-                    default = false;
-                    description = "Install all deepin software";
                   };
                   extraGSettingsOverrides = mkOption {
                     default = "";
@@ -98,7 +74,6 @@
                       ${lib.getBin pkgs.dbus}/bin/dbus-update-activation-environment --systemd --all
                   '';
                   
-                  
                   hardware.bluetooth.enable = mkDefault true;
                   hardware.pulseaudio.enable = mkDefault true;
 
@@ -112,10 +87,7 @@
 
                   services.bamf.enable = true;
                   
-                  services.xserver.updateDbusEnvironment = true;
                   services.xserver.libinput.enable = mkDefault true;      
-                  # Enable GTK applications to load SVG icons
-                  services.xserver.gdk-pixbuf.modulePackages = [ pkgs.librsvg ];
 
                   services.udisks2.enable = true;
                   services.upower.enable = mkDefault config.powerManagement.enable;
@@ -144,10 +116,6 @@
                   };
 
                   environment.variables = {
-                    # QT_PLUGIN_PATH = [
-                    #   "{packages.qt5platform-plugins}/${pkgs.libsForQt5.qtbase.qtPluginPrefix}"
-                    #   "{packages.qt5integration}/${pkgs.libsForQt5.qtbase.qtPluginPrefix}" 
-                    # ];
                     #QT_QPA_PLATFORMTHEME = "dxcb"; # nixos/modules/config/qt5.nix
                     #QT_STYLE_OVERRIDE = "chameleon";
                     # D_PROXY_ICON_ENGINE = "KIconEngine";
@@ -160,7 +128,6 @@
                     "/lib/dde-file-manager"
                     "/share/backgrounds"
                     "/share/wallpapers"
-                    "/share/sounds/deepin"
                   ];
 
                   environment.etc."distribution.info".text = ''
@@ -177,7 +144,7 @@
                     #"dde-session-shell/dde-session-shell.conf".source = "${pkgs.deepin.dde-session-shell}/share/dde-session-shell/dde-session-shell.conf";
                     #"deepin/greeters.d".source = "${pkgs.deepin.dde-session-shell}/etc/deepin/greeters.d";
                     #"dde-dock/indicator".source = "${pkgs.deepin.dde-dock}/etc/dde-dock/indicator";
-                    "polkit-1/localauthority/10-vendor.d/10-network-manager.pkla".source = "${pkgs.deepin.dde-network-core}/var/lib/polkit-1/localauthority/10-vendor.d/10-network-manager.pkla";
+                    #"polkit-1/localauthority/10-vendor.d/10-network-manager.pkla".source = "${pkgs.deepin.dde-network-core}/var/lib/polkit-1/localauthority/10-vendor.d/10-network-manager.pkla";
                     # "deepin/dde.conf".text = ''
                     #   [Password]
                     #   STRONG_PASSWORD = true
@@ -204,17 +171,17 @@
 
                   environment.systemPackages = with pkgs; with deepin; [
                     pciutils # startdde
-                    socat
+                    # socat
                     xdotool
                     glib # for gsettings program / gdbus
-                    gtk3.out # for gtk-launch program
+                    gtk3 # for gtk-launch program
                     xdg-user-dirs # Update user dirs as described in http://freedesktop.org/wiki/Software/xdg-user-dirs/
                     util-linux # runuser
                     polkit_gnome
                     librsvg # dde-api use rsvg-convert
                     kde-gtk-config # deepin-api/gtk-thumbnailer need
                     lshw
-                    libsForQt5.kglobalaccel
+                    #libsForQt5.kglobalaccel
                     onboard # dde-dock plugin
                     xsettingsd # lightdm-deepin-greeter
                     qt5platform-plugins
@@ -252,7 +219,6 @@
                     
                     deepin-music
                     deepin-movie-reborn
-                    #deepin-system-monitor
                     deepin-shortcut-viewer
 
                     deepin-compressor
@@ -260,12 +226,12 @@
                   ] ++ (with packages; (utils.removePackagesByName ([
                     dde-kwin
                     deepin-kwin
+                    deepin-system-monitor
                     deepin-screen-recorder
                   ]) config.environment.deepin.excludePackages));
 
                   services.dbus.packages =  with pkgs; with deepin; [
                     deepin-pw-check
-                    deepin-picker
                     deepin-draw
                     deepin-image-viewer
                     dde-control-center
@@ -280,11 +246,9 @@
                     dde-file-manager
                     dde-calendar
                     #deepin-screen-recorder
-                    deepin-system-monitor
+                    #deepin-system-monitor
                     deepin-camera
                     dde-clipboard
-                  ] ++ lib.optionals cfg.full [
-                    dde-grand-search
                   ]) config.environment.deepin.excludePackages));
 
                   systemd.packages = with pkgs.deepin; [
@@ -307,24 +271,15 @@
                   services.udev.packages = [ pkgs.deepin.dde-daemon ];
                   systemd.packages = [ pkgs.deepin.dde-daemon ];
                   environment.pathsToLink = [ "/lib/deepin-daemon" ];
-                  environment.etc= {
+                  #environment.etc= {
                     #"lightdm/deepin/xsettingsd.conf".source = "${pkgs.deepin.dde-daemon}/etc/lightdm/deepin/xsettingsd.conf";
                     #"pam.d/deepin-auth-keyboard"
                     #"acpi/actions/deepin_lid.sh".source = "${packages.dde-daemon}/etc/acpi/actions/deepin_lid.sh";
                     #"polkit-1/localauthority/10-vendor.d/com.deepin.daemon.Accounts.pkla".source = "${packages.dde-daemon}/var/lib/polkit-1/localauthority/10-vendor.d/com.deepin.daemon.Accounts.pkla";
                     #"polkit-1/localauthority/10-vendor.d/com.deepin.daemon.Fprintd.pkla".source = "${packages.dde-daemon}/var/lib/polkit-1/localauthority/10-vendor.d/com.deepin.daemon.Fprintd.pkla";
                     #"polkit-1/localauthority/10-vendor.d/com.deepin.daemon.Grub2.pkla".source = "${packages.dde-daemon}/var/lib/polkit-1/localauthority/10-vendor.d/com.deepin.daemon.Grub2.pkla";
-                  };
+                  #};
                   # security.pam.services.deepin-auth-keyboard.text = ''
-                  #   # original at {dde-daemon}/etc/pam.d/deepin-auth-keyboard
-                  #   auth    [success=5 default=ignore]      pam_unix.so nullok_secure
-                  #   -auth   [success=4 default=ignore]      pam_lsass.so
-                  #   -auth   [authinfo_unavail=ignore success=3 default=ignore]      pam_ldap.so minimum_uid=1000 use_first_pass
-                  #   -auth   [success=2 default=ignore] pam_ccreds.so minimum_uid=1000 action=validate use_first_pass
-                  #   -auth   [default=ignore] pam_ccreds.so minimum_uid=1000 action=update
-                  #   auth    requisite       pam_deny.so
-                  #   auth    required        pam_permit.so
-                  #   -auth   optional        pam_ccreds.so minimum_uid=1000 action=store
                   # '';
                   security.pam.services.dde-lock.text = ''
                     # original at {dde-session-shell}/etc/pam.d/dde-lock
