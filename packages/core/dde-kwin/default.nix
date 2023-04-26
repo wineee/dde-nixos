@@ -35,15 +35,11 @@ stdenv.mkDerivation rec {
   /*
     This is the final version of dde-kwin, upstream has been archived.
     We should remove this package when deepin-kwin release a new version.
-    We need revert Dtk::Core target in postPatch,
-    since the new dtkcore will break other deepin applications.
   */
 
   postPatch = ''
     substituteInPlace CMakeLists.txt \
       --replace "/usr/include/KWaylandServer" "${kwayland.dev}/include/KWaylandServer"
-    substituteInPlace deepin-wm-dbus/CMakeLists.txt \
-      --replace "Dtk::Core" "dtkcore"
     substituteInPlace deepin-wm-dbus/deepinwmfaker.cpp \
       --replace "/usr/lib/deepin-daemon" "/run/current-system/sw/lib/deepin-daemon" \
       --replace "/usr/share/backgrounds" "/run/current-system/sw/share/backgrounds" \

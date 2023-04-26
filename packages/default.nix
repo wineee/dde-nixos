@@ -64,8 +64,8 @@ let
     #dde-introduction = callPackage ./apps/dde-introduction { };
     #deepin-boot-maker = callPackage ./apps/deepin-boot-maker { };
     #deepin-font-manager = callPackage ./apps/deepin-font-manager { };
-    deepin-system-monitor = callPackage ./apps/deepin-system-monitor { };
-    deepin-screen-recorder = callPackage ./apps/deepin-screen-recorder { };
+    #deepin-system-monitor = callPackage ./apps/deepin-system-monitor { };
+    #deepin-screen-recorder = callPackage ./apps/deepin-screen-recorder { };
     #deepin-downloader = callPackage ./apps/deepin-downloader { };
     #deepin-gomoku = callPackage ./apps/deepin-gomoku { };
     #deepin-lianliankan = callPackage ./apps/deepin-lianliankan { };

@@ -1,0 +1,27 @@
+{
+  "nodes": {
+    "nixpkgs": {
+      "locked": {
+        "lastModified": 1682412531,
+        "narHash": "sha256-Si6ihKXgSVIyhCICXPUb0IC1kzF8p8upOVGYm+CfNF4=",
+        "owner": "wineee",
+        "repo": "nixpkgs",
+        "rev": "22fbb6a952ba26510a58fcf73adb1b395802aab0",
+        "type": "github"
+      },
+      "original": {
+        "owner": "wineee",
+        "ref": "dde",
+        "repo": "nixpkgs",
+        "type": "github"
+      }
+    },
+    "root": {
+      "inputs": {
+        "nixpkgs": "nixpkgs"
+      }
+    }
+  },
+  "root": "root",
+  "version": 7
+}
