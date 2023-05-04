@@ -1,45 +1,50 @@
 { stdenv
 , lib
 , fetchFromGitHub
-, replaceAll
-, dtkwidget
-, dde-qt-dbus-factory
-, dde-dock
-, dde-control-center
-, dde-session-shell
-, qt5integration
-, qt5platform-plugins
-, gio-qt
+, fetchpatch
 , cmake
 , qttools
 , pkg-config
+, wrapQtAppsHook
+, dtkwidget
+, dde-dock
+, dde-control-center
+, dde-session-shell
+, dde-qt-dbus-factory
 , gsettings-qt
+, gio-qt
 , networkmanager-qt
 , glib
 , pcre
 , util-linux
 , libselinux
 , libsepol
-, wrapQtAppsHook
 , dbus
 , gtest
 , qtbase
 }:
 stdenv.mkDerivation rec {
   pname = "dde-network-core";
-  version = "1.1.8";
+  version = "2.0.7";
 
   src = fetchFromGitHub {
     owner = "linuxdeepin";
     repo = pname;
     rev = version;
-    sha256 = "sha256-ysmdB9CT7mhN/0r8CRT4FQsK12HkhjbezGXwWiNScqg=";
+    sha256 = "sha256-HTF9NhzgFqQxEDugq/GQiYh50VtGwyyADliTpLN2e7E=";
   };
 
-  postPatch = replaceAll "/usr/share/applications" "/run/current-system/sw/share/applications"
-    + replaceAll "/usr/share/dss-network-plugin" "$out/share/dss-network-plugin"
-    + replaceAll "/usr/share/dock-network-plugin" "$out/share/dock-network-plugin"
-    + replaceAll "/usr/share/dcc-network-plugin" "$out/share/dcc-network-plugin";
+  patches = [
+    (fetchpatch {
+      url = "https://github.com/linuxdeepin/dde-network-core/commit/466a80426c7f1443e30d4828da988216902a0bce.patch";
+      sha256 = "sha256-4b5SL/kYTSYIVvy6BBSqn9TrPvOr2PjXC622L6ZFkAs=";
+    })
+  ];
+
+  postPatch = ''
+    substituteInPlace dss-network-plugin/notification/bubbletool.cpp \
+      --replace "/usr/share" "/run/current-system/sw/share"
+  '';
 
   nativeBuildInputs = [
     cmake
@@ -50,16 +55,14 @@ stdenv.mkDerivation rec {
 
   buildInputs = [
     dtkwidget
-    qt5integration
-    qt5platform-plugins
     dde-dock
     dde-control-center
     dde-session-shell
     dde-qt-dbus-factory
     gsettings-qt
     gio-qt
-    networkmanager-qt.dev
-    glib.dev
+    networkmanager-qt
+    glib
     pcre
     util-linux
     libselinux
@@ -76,5 +79,6 @@ stdenv.mkDerivation rec {
     homepage = "https://github.com/linuxdeepin/dde-network-core";
     license = licenses.gpl3Plus;
     platforms = platforms.linux;
+    maintainers = teams.deepin.members;
   };
 }
