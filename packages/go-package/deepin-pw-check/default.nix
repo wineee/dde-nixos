@@ -18,35 +18,35 @@
 
 buildGoModule rec {
   pname = "deepin-pw-check";
-  version = "6.0.0";
+  version = "6.0.1";
 
   src = fetchFromGitHub {
     owner = "linuxdeepin";
     repo = pname;
-    rev = "e3c8d8ab32f3652356ce6fecfd07fbf611d6d869";
-    sha256 = "sha256-d5jaGr8Mstey+Oe1S6cA6Q0cn2gHr7CJihMPYJc/bw4=";
+    rev = "e97cd33ec258cbcf04d4d7866581b6f50b288c02";
+    sha256 = "sha256-HMKM1pgJRj/qavN6g7+hpvqG1bhcNPIlVyBu8qnFzT0=";
   };
 
-  vendorSha256 = "sha256-wRAY9mwZO/kkWPp1GTY7OyanVVwqsvpyzQJWXFrlV7U=";
+  vendorSha256 = "sha256-L0vUEkUN70Hrx5roIvTfaZBHbbq7mf3WpQJeFAMU5HY=";
 
   nativeBuildInputs = [
     pkg-config
-    #gettext
-    #deepin-gettext-tools
+    gettext
+    deepin-gettext-tools
   ];
 
   buildInputs = [
     glib
     libxcrypt
     gtk3
-    #iniparser
-    #cracklib
+    iniparser
+    cracklib
     linux-pam
   ];
 
   postPatch = ''
     sed -i 's|iniparser/||' */*.c
-    substituteInPlace misc/pkgconfig/libdeepin_pw_check.pc \
+    substituteInPlace misc/{pkgconfig/libdeepin_pw_check.pc,system-services/org.deepin.dde.PasswdConf1.service} \
       --replace "/usr" "$out"
   '';
 
@@ -65,9 +65,10 @@ buildGoModule rec {
   '';
 
   meta = with lib; {
-    description = "a tool to verify the validity of the password";
+    description = "Tool to verify the validity of the password";
     homepage = "https://github.com/linuxdeepin/deepin-pw-check";
     license = licenses.gpl3Plus;
     platforms = platforms.linux;
+    maintainers = teams.deepin.members;
   };
 }
