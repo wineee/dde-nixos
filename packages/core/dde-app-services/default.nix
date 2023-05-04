@@ -1,27 +1,26 @@
 { stdenv
 , lib
 , fetchFromGitHub
-, fetchpatch
-, replaceAll
 , dtkwidget
-, cmake
-, wrapQtAppsHook
 , qt5integration
 , qt5platform-plugins
+, cmake
+, wrapQtAppsHook
 , qtbase
 }:
+
 stdenv.mkDerivation rec {
   pname = "dde-app-services";
-  version = "0.0.20.p2";
+  version = "1.0.20";
 
   src = fetchFromGitHub {
     owner = "linuxdeepin";
     repo = pname;
-    rev = "20f96230b97337ab061f2357813a195eb0f67b9c";
-    sha256 = "sha256-bgpaAGgvYWaWCl6rLDI3BCnPQlJCYpdEk9mp/8731p8=";
+    rev = version;
+    sha256 = "sha256-RZltWeoZJ5TrP+dhGyJ44lC3aNZ7KKxogoDzAGu8Br8=";
   };
 
-  postPatch = replaceAll "/usr/share/dsg" "/run/current-system/sw/share/dsg" + ''
+  postPatch = ''
     substituteInPlace dconfig-center/dde-dconfig-daemon/services/org.desktopspec.ConfigManager.service \
       --replace "/usr/bin/dde-dconfig-daemon" "$out/bin/dde-dconfig-daemon"
     substituteInPlace dconfig-center/dde-dconfig/main.cpp \
@@ -36,15 +35,14 @@ stdenv.mkDerivation rec {
     wrapQtAppsHook
   ];
 
-  buildInputs = [ 
+  buildInputs = [
     dtkwidget
     qt5integration
     qt5platform-plugins
-];
-
-  enableParallelBuilding = false;
+  ];
 
   cmakeFlags = [
+    "-DDVERSION=${version}"
     "-DDSG_DATA_DIR=/run/current-system/sw/share/dsg"
   ];
 
@@ -53,5 +51,6 @@ stdenv.mkDerivation rec {
     homepage = "https://github.com/linuxdeepin/dde-app-services";
     license = licenses.lgpl3Plus;
     platforms = platforms.linux;
+    maintainers = teams.deepin.members;
   };
 }
