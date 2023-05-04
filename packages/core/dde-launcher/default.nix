@@ -1,58 +1,36 @@
 { stdenv
 , lib
 , fetchFromGitHub
-, fetchpatch
-, getUsrPatchFrom
-, replaceAll
-, dtkwidget
-, dde-qt-dbus-factory
-, qt5integration
-, qt5platform-plugins
 , cmake
 , qttools
-, qtx11extras
 , pkg-config
 , wrapQtAppsHook
 , wrapGAppsHook
-, gsettings-qt
-, glib
-, gtest
-, dbus
+, dtkwidget
+, qt5integration
+, qt5platform-plugins
 , qtbase
+, qtx11extras
+, gsettings-qt
 }:
-let
-  patchList = {
-    "dde-launcher.desktop" = [ ];
-    "dde-launcher-wapper" = [
-      [ "dbus-send" "${dbus}/bin/dbus-send" ]
-      # "/usr/share/applications/dde-launcher.desktop"
-    ];
-    "src/dbusservices/com.deepin.dde.Launcher.service" = [
-      # "/usr/bin/dde-launcher-wapper"
-    ];
-  };
-in
+
 stdenv.mkDerivation rec {
   pname = "dde-launcher";
-  version = "5.6.1";
+  version = "6.0.10";
 
   src = fetchFromGitHub {
     owner = "linuxdeepin";
     repo = pname;
     rev = version;
-    sha256 = "sha256-Td8R91892tgJx7FLV2IZ/aPBzDb+o6EYKpk3D8On7Ag=";
+    sha256 = "sha256-XVwozXNAEakyFDUa9vMqxeQVcQ/y2qUJdjawdZfuUAY=";
   };
 
-  patches = [
-    (fetchpatch {
-      name = "fix: ambiguous reference to DRegionMonitor ";
-      url = "https://github.com/linuxdeepin/dde-launcher/commit/40d0e004cb8035e96d46b87c7f9b2ff56e80366d.patch";
-      sha256 = "sha256-zs512/LQe3x/awZp89N3fj4yDOY7mPTeBwh66Pjtcqc=";
-    })
-  ];
-
-  postPatch = replaceAll "/usr/share/backgrounds" "/run/current-system/sw/share/backgrounds"
-    + getUsrPatchFrom patchList;
+  postPatch = ''
+    substituteInPlace src/boxframe/{backgroundmanager.cpp,boxframe.cpp} \
+      --replace "/usr/share/backgrounds" "/run/current-system/sw/share/backgrounds"
+    substituteInPlace dde-launcher.desktop dde-launcher-wapper src/dbusservices/org.deepin.dde.Launcher1.service \
+      --replace "/usr" "$out"
+  '';
 
   nativeBuildInputs = [
     cmake
@@ -65,15 +43,15 @@ stdenv.mkDerivation rec {
 
   buildInputs = [
     dtkwidget
-    dde-qt-dbus-factory
+    qt5platform-plugins
+    qtbase
     qtx11extras
     gsettings-qt
-    gtest
-    qt5platform-plugins
   ];
 
   cmakeFlags = [ "-DVERSION=${version}" ];
 
+  # qt5integration must be placed before qtsvg in QT_PLUGIN_PATH
   qtWrapperArgs = [
     "--prefix QT_PLUGIN_PATH : ${qt5integration}/${qtbase.qtPluginPrefix}"
   ];
@@ -87,5 +65,6 @@ stdenv.mkDerivation rec {
     homepage = "https://github.com/linuxdeepin/dde-launcher";
     license = licenses.gpl3Plus;
     platforms = platforms.linux;
+    maintainers = teams.deepin.members;
   };
 }
