@@ -1,24 +1,18 @@
 { stdenv
 , lib
 , fetchFromGitHub
-, replaceAll
-, runtimeShell
 }:
 
 stdenv.mkDerivation rec {
   pname = "go-lib";
-  version = "5.8.27";
+  version = "6.0.4";
 
   src = fetchFromGitHub {
     owner = "linuxdeepin";
     repo = pname;
     rev = version;
-    sha256 = "sha256-ZV5zWu7UvNKVcVo79/iKMhF4H09rGyDCvEL61H05lZc=";
+    sha256 = "sha256-twzFtZdtJqMZsBBbHclFHzEDeXHP3MpOtmL1zvVg5vk=";
   };
-
-  patches = [ ./0001-fix-IsDir-for-symlink.patch ];
-
-  postPatch = replaceAll "/bin/sh" "${runtimeShell}";
 
   installPhase = ''
     runHook preInstall
@@ -33,5 +27,6 @@ stdenv.mkDerivation rec {
     homepage = "https://github.com/linuxdeepin/go-lib";
     license = licenses.gpl2Only;
     platforms = platforms.linux;
+    maintainers = teams.deepin.members;
   };
 }
