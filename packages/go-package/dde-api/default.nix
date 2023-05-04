@@ -33,18 +33,43 @@
 
 buildGoModule rec {
   pname = "dde-api";
-  version = "6.0.0";
+  version = "6.0.7";
 
   src = fetchFromGitHub {
-    owner = "Decodetalkers";
+    owner = "linuxdeepin";
     repo = pname;
-    rev = "2f094c1b6e7828cde169b721eb379e85f397adb5";
-    sha256 = "sha256-pZ411y4o/aFP77lOdfOskOsEtgNcTiEIWdFT0JvGLR8=";
+    rev = "e46a1f75f1902339daf07ab5c50ad1dee05d9c2b";
+    sha256 = "sha256-wnfyo8nXr+c3DRS8oOzQMDIqtuDp+0kw+BFDFasMYvQ=";
   };
 
-  vendorHash = "sha256-Zkro4j4eqbLv3YQGJW2FfVM7Ot91zBhne+Fm0A38Exw=";
+  vendorHash = "sha256-ggcBI8KwvgAQZhAfwCIJaqt7wUAd2lPYYdiJIGetsXo=";
 
   patches = [ ./0001-fix-PATH-for-NixOS.patch ];
+
+  postPatch = ''
+    substituteInPlace lang_info/lang_info.go \
+      --replace "/usr/share/i18n/language_info.json" "${deepin-desktop-base}/share/i18n/language_info.json"
+
+    substituteInPlace misc/systemd/system/deepin-shutdown-sound.service \
+      --replace "/usr/bin/true" "${coreutils}/bin/true"
+
+    substituteInPlace sound-theme-player/main.go \
+      --replace "/usr/sbin/alsactl" "alsactl"
+
+    substituteInPlace misc/scripts/deepin-boot-sound.sh \
+     --replace "/usr/bin/dbus-send" "${dbus}/bin/dbus-send"
+
+    substituteInPlace lunar-calendar/huangli.go adjust-grub-theme/main.go \
+      --replace "/usr/share/dde-api" "$out/share/dde-api"
+
+    substituteInPlace themes/{theme.go,settings.go} \
+      --replace "/usr/share" "/run/current-system/sw/share"
+
+    for file in $(grep "/usr/lib/deepin-api" * -nR |awk -F: '{print $1}')
+    do
+      sed -i 's|/usr/lib/deepin-api|/run/current-system/sw/lib/deepin-api|g' $file
+    done
+  '';
 
   goDeps = ./deps.nix;
 
@@ -78,5 +103,6 @@ buildGoModule rec {
     homepage = "https://github.com/linuxdeepin/dde-api";
     license = licenses.gpl3Plus;
     platforms = platforms.linux;
+    maintainers = teams.deepin.members;
   };
 }
