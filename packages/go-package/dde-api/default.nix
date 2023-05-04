@@ -71,8 +71,6 @@ buildGoModule rec {
     done
   '';
 
-  goDeps = ./deps.nix;
-
   nativeBuildInputs = [
     pkg-config
     deepin-gettext-tools
@@ -92,7 +90,19 @@ buildGoModule rec {
     gdk-pixbuf-xlib
   ];
 
+  buildPhase = ''
+    runHook preBuild
+    make
+    runHook postBuild
+  '';
+
   doCheck = false;
+
+  installPhase = ''
+    runHook preInstall
+    make install DESTDIR="$out" PREFIX="/"
+    runHook postInstall
+  '';
 
   preFixup = ''
     qtWrapperArgs+=("''${gappsWrapperArgs[@]}")
