@@ -120,7 +120,7 @@ stdenv.mkDerivation rec {
 
   cmakeFlags = [
     "-DVERSION=${version}"
-    "-DDEEPIN_OS_VERSION=20"
+    "-DDEEPIN_OS_VERSION=23"
   ];
 
   enableParallelBuilding = true;
