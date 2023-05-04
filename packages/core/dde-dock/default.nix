@@ -1,50 +1,54 @@
 { stdenv
 , lib
+, fetchpatch
 , fetchFromGitHub
-, getUsrPatchFrom
-, replaceAll
-, dtkwidget
-, dde-qt-dbus-factory
-, qt5integration
-, qt5platform-plugins
-, dde-control-center
-, dde-daemon
-, deepin-desktop-schemas
 , cmake
+, extra-cmake-modules
 , qttools
-, qtx11extras
 , pkg-config
 , wrapQtAppsHook
 , wrapGAppsHook
+, qtbase
+, dtkwidget
+, qt5integration
+, qt5platform-plugins
+, dwayland
+, qtx11extras
 , gsettings-qt
 , libdbusmenu
 , xorg
-, glib
-, gtest
-, qtbase
 }:
+
 stdenv.mkDerivation rec {
   pname = "dde-dock";
-  version = "5.5.81";
+  version = "6.0.13";
 
   src = fetchFromGitHub {
     owner = "linuxdeepin";
     repo = pname;
     rev = version;
-    sha256 = "sha256-x8U5QPfIykaQLjwbErZiYbZC+JyPQQ+jd6MBjDQyUjs=";
+    sha256 = "sha256-bF+QB+Oc/5ueaicuzXF99NUNpizUx8OBOU5ZFI4S0Jw=";
   };
 
-  postPatch = replaceAll "/usr/lib/deepin-daemon" "/run/current-system/sw/lib/deepin-daemon"
-    + replaceAll "/usr/lib/dde-dock/plugins" "/run/current-system/sw/lib/dde-dock/plugins"
-    + replaceAll "/usr/bin/pkexec" "pkexec"
-    + replaceAll "/usr/sbin/overlayroot-disable" "overlayroot-disable"
-    + getUsrPatchFrom {
-      "plugins/dcc-dock-plugin/settings_module.cpp" = [ ];
-      "plugins/tray/system-trays/systemtrayscontroller.cpp" = [ ];
-    };
+  patches = [
+    (fetchpatch {
+      url = "https://github.com/linuxdeepin/dde-dock/commit/3b6f84687c7f0aa6b09a5597d730b3456736d271.patch";
+      sha256 = "sha256-5ZtmRyyWw6LZ7+w9h3QdZiBxrY1cmnRwiDdVzzTe3bw=";
+    })
+  ];
+
+  postPatch = ''
+    substituteInPlace plugins/pluginmanager/pluginmanager.cpp \
+      --replace "/usr/lib/dde-dock/plugins" "/run/current-system/sw/lib/dde-dock/plugins"
+
+    substituteInPlace frame/{window/components/desktop_widget.cpp,controller/quicksettingcontroller.cpp} \
+      plugins/show-desktop/showdesktopplugin.cpp \
+      --replace "/usr/lib/deepin-daemon" "/run/current-system/sw/lib/deepin-daemon"
+   '';
 
   nativeBuildInputs = [
     cmake
+    extra-cmake-modules
     qttools
     pkg-config
     wrapQtAppsHook
@@ -53,24 +57,26 @@ stdenv.mkDerivation rec {
   dontWrapGApps = true;
 
   buildInputs = [
+    qtbase
     dtkwidget
     qt5platform-plugins
-    dde-qt-dbus-factory
-    dde-control-center
+    # dde-qt-dbus-factory
+    # dde-control-center
+    # deepin-desktop-schemas
+    dwayland
     qtx11extras
-    deepin-desktop-schemas
     gsettings-qt
     libdbusmenu
     xorg.libXcursor
     xorg.libXtst
     xorg.libXdmcp
-    gtest
   ];
 
   outputs = [ "out" "dev" ];
 
   cmakeFlags = [ "-DVERSION=${version}" ];
 
+  # qt5integration must be placed before qtsvg in QT_PLUGIN_PATH
   qtWrapperArgs = [
     "--prefix QT_PLUGIN_PATH : ${qt5integration}/${qtbase.qtPluginPrefix}"
   ];
@@ -84,5 +90,6 @@ stdenv.mkDerivation rec {
     homepage = "https://github.com/linuxdeepin/dde-dock";
     platforms = platforms.linux;
     license = licenses.lgpl3Plus;
+    maintainers = teams.deepin.members;
   };
 }
