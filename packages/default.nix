@@ -67,7 +67,6 @@ let
     dde-device-formatter = callPackage ./tools/dde-device-formatter { };
 
     ### CORE
-    dde-kwin = callPackage ./core/dde-kwin { };
     deepin-kwin = callPackage ./core/deepin-kwin { };
     dde-dock = callPackage ./core/dde-dock { };
     dde-launcher = callPackage ./core/dde-launcher { };

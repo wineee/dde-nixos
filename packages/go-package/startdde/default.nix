@@ -22,7 +22,6 @@
 , runtimeShell
 , dde-daemon
 , dde-polkit-agent
-, dde-kwin
 , gnome
 , pciutils
 }:

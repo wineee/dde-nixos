@@ -23,7 +23,6 @@ builds:
     - 'packages.*.dpa-ext-gnomekeyring'
     - 'packages.*.dde-polkit-agent'
     - 'packages.x86_64-linux.deepin-kwin'
-    - 'packages.x86_64-linux.dde-kwin'
     - 'packages.x86_64-linux.deepin-turbo'
     # Tier 2
     - 'packages.x86_64-linux.deepin-pw-check'
