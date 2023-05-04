@@ -32,65 +32,28 @@
 , xdotool
 , getconf
 , dbus
-, replaceAll
-, getUsrPatchFrom
-, util-linux
+, buildGoModule
 }:
 
-buildGoPackage rec {
+buildGoModule rec {
   pname = "dde-daemon";
-  version = "5.14.122";
-
-  goPackagePath = "github.com/linuxdeepin/dde-daemon";
+  version = "6.0.0";
 
   src = fetchFromGitHub {
-    owner = "linuxdeepin";
+    owner = "Decodetalkers";
     repo = pname;
-    rev = version;
-    sha256 = "sha256-KoYMv4z4IGBH0O422PuFHrIgDBEkU08Vepax+00nrGE=";
+    rev = "7baf6716982f8137126a95c11524fed7e1207753";
+    sha256 = "sha256-i2/V58JtGyx209A0Ns3q+oYKke9H7KKTPlRf+/ZR1TM=";
   };
 
+  vendorHash = "sha256-B4Q6Uf5bhOWFbzrl5eZJsPUWww/v1TzrRe+2gkCXqc0=";
+
   patches = [
-    ./0001-fix-wrapped-name-for-verifyExe.patch
-    ./0002-dont-set-PATH.patch
-    ./0003-search-in-XDG-directories.patch
-    (substituteAll {
-      src = ./0004-aviod-use-hardcode-path.patch;
-      inherit dbus;
-    })
+    #./0001-fix-wrapped-name-for-verifyExe.diff
+    #./0002-dont-set-PATH.diff
+    #./0003-search-in-XDG-directories.diff
+    #./0004-aviod-use-hardcode-path.diff
   ];
-
-  postPatch = ''
-    substituteInPlace session/eventlog/{app_event.go,login_event.go} \
-      --replace "/bin/bash" "${runtimeShell}"
-
-    substituteInPlace inputdevices/layout_list.go \
-      --replace "/usr/share/X11/xkb" "${xkeyboard_config}/share/X11/xkb"
-
-    substituteInPlace appearance/background/{background.go,custom_wallpapers.go} accounts/user.go bin/dde-system-daemon/wallpaper.go \
-     --replace "/usr/share/wallpapers" "/run/current-system/sw/share/wallpapers"
-
-    substituteInPlace appearance/manager.go timedate/zoneinfo/zone.go \
-     --replace "/usr/share/zoneinfo" "${tzdata}/share/zoneinfo"
-
-    substituteInPlace accounts/image_blur.go grub2/modify_manger.go \
-      --replace "/usr/lib/deepin-api" "/run/current-system/sw/lib/deepin-api"
-
-    substituteInPlace accounts/user_chpwd_union_id.go \
-      --replace "/usr/lib/dde-control-center" "/run/current-system/sw/lib/dde-control-center"
-
-    for file in $(grep "/usr/lib/deepin-daemon" * -nR |awk -F: '{print $1}')
-    do
-      sed -i 's|/usr/lib/deepin-daemon|/run/current-system/sw/lib/deepin-daemon|g' $file
-    done
-
-    substituteInPlace dock/desktop_file_path.go \
-      --replace "/usr/share" "/run/current-system/sw/share"
-
-    patchShebangs .
-  '';
-
-  goDeps = ./deps.nix;
 
   nativeBuildInputs = [
     pkg-config
@@ -101,10 +64,6 @@ buildGoPackage rec {
   ];
 
   buildInputs = [
-    go-dbus-factory
-    go-gir-generator
-    go-lib
-    dde-api
     ddcutil
     linux-pam
     libxcrypt
@@ -122,29 +81,13 @@ buildGoPackage rec {
     xkeyboard_config
   ];
 
-  buildPhase = ''
-    runHook preBuild
-    addToSearchPath GOPATH "${go-dbus-factory}/share/gocode"
-    addToSearchPath GOPATH "${go-gir-generator}/share/gocode"
-    addToSearchPath GOPATH "${go-lib}/share/gocode"
-    addToSearchPath GOPATH "${dde-api}/share/gocode"
-    make -C go/src/${goPackagePath}
-    runHook postBuild
-  '';
-
-  installPhase = ''
-    runHook preInstall
-    make install DESTDIR="$out" PREFIX="/" -C go/src/${goPackagePath}
-    runHook postInstall
-  '';
+  doCheck = false;
 
   postFixup = ''
     for f in "$out"/lib/deepin-daemon/*; do
       echo "Wrapping $f"
       wrapGApp "$f"
     done
-    mv $out/run/current-system/sw/lib/deepin-daemon/service-trigger $out/lib/deepin-daemon/
-    rm -r $out/run
   '';
 
   meta = with lib; {

@@ -28,39 +28,23 @@
 , dbus
 , coreutils
 , deepin-desktop-base
+, buildGoModule
 }:
-let
-  share_to_sw = [ "/usr/share" "/run/current-system/sw/share" ];
-  patchList = {
-    "lunar-calendar/huangli.go" = [ ];
-    "adjust-grub-theme/main.go" = [ ];
-    "i18n_dependent/i18n_dependent.go" = [ share_to_sw ];
-    "themes/theme.go" = [ share_to_sw ];
-    "themes/settings.go" = [ share_to_sw ];
-    "lang_info/lang_info.go" = [ share_to_sw ];
-  };
-in
-buildGoPackage rec {
-  pname = "dde-api";
-  version = "5.5.32";
 
-  goPackagePath = "github.com/linuxdeepin/dde-api";
+buildGoModule rec {
+  pname = "dde-api";
+  version = "6.0.0";
 
   src = fetchFromGitHub {
-    owner = "linuxdeepin";
+    owner = "Decodetalkers";
     repo = pname;
-    rev = version;
-    sha256 = "sha256-F+vEOSpysqVtjs8de5mCmeANuCbYUQ860ZHl5rwNYac=";
+    rev = "2f094c1b6e7828cde169b721eb379e85f397adb5";
+    sha256 = "sha256-pZ411y4o/aFP77lOdfOskOsEtgNcTiEIWdFT0JvGLR8=";
   };
 
-  patches = [ ./0001-fix-PATH-for-NixOS.patch ];
+  vendorHash = "sha256-Zkro4j4eqbLv3YQGJW2FfVM7Ot91zBhne+Fm0A38Exw=";
 
-  postPatch = replaceAll "/usr/lib/deepin-api" "/run/current-system/sw/lib/deepin-api"
-    + replaceAll "/usr/bin/dbus-send" "${dbus}/bin/dbus-send"
-    + replaceAll "/usr/bin/true" "${coreutils}/bin/true"
-    + replaceAll "/usr/sbin/alsactl" "alsactl"
-    + replaceAll "/usr/share/i18n/language_info.json" "${deepin-desktop-base}/share/i18n/language_info.json"
-    + getUsrPatchFrom patchList;
+  patches = [ ./0001-fix-PATH-for-NixOS.patch ];
 
   goDeps = ./deps.nix;
 
@@ -73,10 +57,6 @@ buildGoPackage rec {
   dontWrapGApps = true;
 
   buildInputs = [
-    go-dbus-factory
-    go-gir-generator
-    go-lib
-
     alsa-lib
     gtk3
     libcanberra
@@ -87,27 +67,10 @@ buildGoPackage rec {
     gdk-pixbuf-xlib
   ];
 
-  buildPhase = ''
-    runHook preBuild
-    GOPATH="$GOPATH:${go-dbus-factory}/share/gocode"
-    GOPATH="$GOPATH:${go-gir-generator}/share/gocode"
-    GOPATH="$GOPATH:${go-lib}/share/gocode"
-    make -C go/src/${goPackagePath}
-    runHook postBuild
-  '';
-
-  installPhase = ''
-    make install DESTDIR="$out" PREFIX="/" -C go/src/${goPackagePath}
-  '';
+  doCheck = false;
 
   preFixup = ''
     qtWrapperArgs+=("''${gappsWrapperArgs[@]}")
-  '';
-
-  postFixup = ''
-    for binary in $out/lib/deepin-api/*; do
-      wrapProgram $binary "''${qtWrapperArgs[@]}"
-    done
   '';
 
   meta = with lib; {

@@ -1,9 +1,9 @@
 { stdenv
 , lib
+, buildGoModule
 , fetchFromGitHub
 , getUsrPatchFrom
 , replaceAll
-, buildGoPackage
 , pkg-config
 , go-dbus-factory
 , go-gir-generator
@@ -26,60 +26,24 @@
 , gnome
 , pciutils
 }:
-let
-  patchList = {
-    "session.go" = [
-      [ "/usr/share/applications/dde-lock.desktop" "/run/current-system/sw/share/applications/dde-lock.desktop" ]
-    ];
-    "misc/lightdm.conf" = [
-      # "/usr/sbin/deepin-fix-xauthority-perm" 
-    ];
-    "misc/Xsession.d/00deepin-dde-env" = [
-      [ "/usr/share" "/run/current-system/sw/share" ]
-    ];
-    "launch_group.go" = [
-      # "/usr/share/startdde/auto_launch.json" 
-    ];
-    "memchecker/config.go" = [
-      # /usr/share/startdde/memchecker.json 
-    ];
-  };
-in
-buildGoPackage rec {
-  pname = "startdde";
-  version = "5.10.1";
 
-  goPackagePath = "github.com/linuxdeepin/startdde";
+buildGoModule rec {
+  pname = "startdde";
+  version = "6.0.0";
 
   src = fetchFromGitHub {
-    owner = "linuxdeepin";
+    owner = "wineee";
     repo = pname;
-    rev = version;
-    sha256 = "sha256-dbTcYS7dEvT0eP45jKE8WiG9Pm4LU6jvR8hjMQv/yxU=";
+    rev = "0c727b96ce7c6c1554d8de5f1749964395339077";
+    sha256 = "sha256-8Wbk2JOihNX4NhsxX7dXIZuN45PAM4G7M9Xd9IBNUJo=";
   };
 
-  postPatch = replaceAll "/bin/bash" "${runtimeShell}"
-    + replaceAll "/bin/sh" "${runtimeShell}"
-    + replaceAll "/usr/bin/kwin_no_scale" "${dde-kwin}/bin/kwin_no_scale"
-    + replaceAll "/usr/lib/deepin-daemon" "/run/current-system/sw/lib/deepin-daemon"
-    + replaceAll "/usr/lib/polkit-1-dde/dde-polkit-agent" "${dde-polkit-agent}/lib/polkit-1-dde/dde-polkit-agent"
-    + replaceAll "/usr/bin/gnome-keyring-daemon" "${gnome.gnome-keyring}/bin/gnome-keyring-daemon"
-    + replaceAll "/usr/bin/startdde" "$out/bin/startdde"
-    + replaceAll "/usr/bin/dde-shutdown" "dde-shutdown"
-    + replaceAll "/usr/bin/dde-file-manager" "dde-file-manager"
-    + replaceAll "/usr/bin/dde-lock" "dde-lock"
-    + replaceAll "/usr/bin/dde-dock" "dde-dock"
-    + replaceAll "/usr/bin/dde-desktop" "dde-desktop"
-    + replaceAll "/usr/bin/dde-hints-dialog" "dde-hints-dialog"
-    + replaceAll "/usr/bin/dde_wloutput" "dde_wloutput"
-    + replaceAll "\"lspci\"" "\"${pciutils}/bin/lspci\""
-    + getUsrPatchFrom patchList + ''
-    substituteInPlace "startmanager.go"\
-      --replace "/usr/share/startdde/app_startup.conf" "$out/share/startdde/app_startup.conf"
-    substituteInPlace misc/xsessions/deepin.desktop.in --subst-var-by PREFIX $out
-  '';
+  vendorSha256 = "sha256-M7T8zMV8uhPYxAfmdk7NuaF9YqhrGhFaZEq/FBI+VZg=";
 
-  goDeps = ./deps.nix;
+  postPatch = replaceAll "/bin/bash" "${runtimeShell}"
+    + replaceAll "/usr/bin/dde_wloutput" "dde-wloutput"
+    + replaceAll "/usr/lib/deepin-daemon" "/run/current-system/sw/lib/deepin-daemon";
+
 
   nativeBuildInputs = [
     gettext
@@ -90,10 +54,7 @@ buildGoPackage rec {
   ];
 
   buildInputs = [
-    go-dbus-factory
     go-gir-generator
-    go-lib
-    dde-api
     libgnome-keyring
     gtk3
     alsa-lib
@@ -104,16 +65,12 @@ buildGoPackage rec {
 
   buildPhase = ''
     runHook preBuild
-    GOPATH="$GOPATH:${go-dbus-factory}/share/gocode"
-    GOPATH="$GOPATH:${go-gir-generator}/share/gocode"
-    GOPATH="$GOPATH:${go-lib}/share/gocode"
-    GOPATH="$GOPATH:${dde-api}/share/gocode"
-    make -C go/src/${goPackagePath}
+    make
     runHook postBuild
   '';
 
   installPhase = ''
-    make install DESTDIR="$out" PREFIX="/" -C go/src/${goPackagePath}
+    make install DESTDIR="$out" PREFIX="/"
   '';
 
   preFixup = ''
