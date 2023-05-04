@@ -7,16 +7,16 @@
 }:
 buildGoModule rec {
   pname = "deepin-desktop-schemas";
-  version = "6.0.0";
+  version = "6.0.1";
 
   src = fetchFromGitHub {
-    owner = "wineee";
+    owner = "linuxdeepin";
     repo = pname;
-    rev = "1e5a8b203f0e010b531cd8fbc050db133f7bb88d";
-    sha256 = "sha256-Ez7kSrFefAsWSfnF6neCNMhKc7/wBLbc1vn8+Y4LLYY=";
+    rev = "1a5e90644345d2f92382efb454d98e2d50d8e9ee";
+    sha256 = "sha256-IfK6S13xgHHDiXRSaUol/35Y4UuoYa2ant64yIRhLFw=";
   };
 
-  vendorSha256 = "sha256-IoJDa1YNGL18I5xQZBDds0muIu8yGXOV8SFQYiQSYdk=";
+  vendorSha256 = "sha256-q6ugetchJLv2JjZ9+nevUI0ptizh2V+6SByoY/eFJJQ=";
 
   postPatch = ''
     # Relocate files path for backgrounds and wallpapers
@@ -36,7 +36,7 @@ buildGoModule rec {
   nativeCheckInputs = [ glib ];
   checkPhase = ''
     runHook preCheck
-    glib-compile-schemas --dry-run result
+    make test
     runHook postCheck
   '';
 
@@ -51,5 +51,6 @@ buildGoModule rec {
     homepage = "https://github.com/linuxdeepin/deepin-desktop-schemas";
     license = licenses.gpl3Plus;
     platforms = platforms.linux;
+    maintainers = teams.deepin.members;
   };
 }
