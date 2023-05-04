@@ -100,6 +100,7 @@ stdenv.mkDerivation rec {
     xorg.libXcursor
     xorg.xcbutilcursor
     xorg.libXtst
+    xorg.libXScrnSaver
   ];
 
   cmakeFlags = [
