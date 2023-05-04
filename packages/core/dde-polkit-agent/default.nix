@@ -13,21 +13,17 @@
 , polkit-qt
 , qtbase
 }:
+
 stdenv.mkDerivation rec {
   pname = "dde-polkit-agent";
-  version = "5.5.22";
+  version = "6.0.3";
 
   src = fetchFromGitHub {
     owner = "linuxdeepin";
     repo = pname;
     rev = version;
-    sha256 = "sha256-4wAqMymLPxKXbfAx2PtkEGfwenphPxBZn+qCdcyqNc0=";
+    sha256 = "sha256-/gQKeHJc59uZ9CycxSWEDy1XXdSV4SmXaVd46wfw3XM=";
   };
-
-  postPatch = ''
-    substituteInPlace AuthDialog.cpp \
-      --replace "/usr/share/dde-session-shell/dde-session-shell.conf" "/etc/dde-session-shell/dde-session-shell.conf"
-  '';
 
   nativeBuildInputs = [
     cmake
