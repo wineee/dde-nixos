@@ -28,7 +28,6 @@
 , knewstuff
 , kdecoration
 , kscreenlocker
-, valgrind
 , breeze-qt5
 , libinput
 , mesa
@@ -38,13 +37,13 @@
 }:
 stdenv.mkDerivation rec {
   pname = "deepin-kwin";
-  version = "5.25.0";
+  version = "5.25.3";
 
   src = fetchFromGitHub {
     owner = "linuxdeepin";
     repo = pname;
     rev = version;
-    sha256 = "sha256-QBpDlejkw4yg7uUwvUTNup8A5YbnVMR7vbMANrQIQsw=";
+    sha256 = "sha256-nTWaA7xnw2Q4PwALyr7P4wDyK3WhGVt4NImDjldq3cI=";
   };
 
   postPatch = ''
@@ -91,7 +90,6 @@ stdenv.mkDerivation rec {
     kdecoration
     kscreenlocker
 
-    valgrind
     breeze-qt5
     libinput
     mesa
@@ -116,5 +114,6 @@ stdenv.mkDerivation rec {
     homepage = "https://github.com/linuxdeepin/deepin-kwin";
     license = licenses.lgpl21Plus;
     platforms = platforms.linux;
+    maintainers = teams.deepin.members;
   };
 }
