@@ -27,10 +27,13 @@ stdenv.mkDerivation rec {
     sha256 = "sha256-L7xZGPDsT5C/ssQrV7BTk3kvGMvqTeLaoXambrARd18=";
   };
 
-  postPatch = ''
-    substituteInPlace chameleon/CMakeLists.txt \
-      --replace "''${_qt5Core_install_prefix}/bin/qmlcachegen" "${qtdeclarative.dev}/bin/qmlcachegen"
-  '';
+  patches = [
+    (fetchpatch {
+      name = "Use find_program to find qhelpgenerator and qmlcachegen";
+      url = "https://github.com/linuxdeepin/dtkdeclarative/commit/672bfd1cbafae84e9c378b60e79d04ca8220043e.patch";
+      sha256 = "sha256-SSjPNL9pNS9/w2PDlgtgVMWkKvlFd/+tc8gWwkSzp/8=";
+    })
+  ];
 
   nativeBuildInputs = [
     cmake
