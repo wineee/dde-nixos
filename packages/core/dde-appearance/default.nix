@@ -18,13 +18,13 @@
 }:
 stdenv.mkDerivation rec {
   pname = "dde-appearance";
-  version = "1.0.7";
+  version = "1.0.8";
 
   src = fetchFromGitHub {
     owner = "linuxdeepin";
     repo = pname;
     rev = version;
-    sha256 = "sha256-AWHWhW0lLb82aQaMyV9WsWLXgxKnaQNR/MdL1q+Vh+c=";
+    sha256 = "sha256-/E1SE0PAz3soC9507jbmaIFf+URsOy13UBQ0Aa4BYXc=";
   };
 
   postPatch = ''
@@ -55,7 +55,7 @@ stdenv.mkDerivation rec {
 
   meta = with lib; {
     description = "A program used to set the theme and appearance of deepin desktop";
-    homepage = "";
+    homepage = "https://github.com/linuxdeepin/dde-appearance";
     license = licenses.lgpl3Plus;
     platforms = platforms.linux;
   };
