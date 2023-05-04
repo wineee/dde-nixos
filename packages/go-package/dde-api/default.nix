@@ -108,6 +108,12 @@ buildGoModule rec {
     qtWrapperArgs+=("''${gappsWrapperArgs[@]}")
   '';
 
+  postFixup = ''
+    for binary in $out/lib/deepin-api/*; do
+      wrapProgram $binary "''${qtWrapperArgs[@]}"
+    done
+  '';
+
   meta = with lib; {
     description = "Dbus interfaces used for screen zone detecting, thumbnail generating, sound playing, etc";
     homepage = "https://github.com/linuxdeepin/dde-api";
