@@ -60,7 +60,7 @@ buildGoModule rec {
 
     for file in $(grep "/usr/lib/deepin-api" * -nR |awk -F: '{print $1}')
     do
-      sed -i 's|/usr/lib/deepin-api|/run/current-system/sw/lib/deepin-api|g' $file
+      sed -i 's|/usr/lib/deepin-api|/run/current-system/sw/libexec/deepin-api|g' $file
     done
   '';
 
@@ -85,7 +85,7 @@ buildGoModule rec {
 
   buildPhase = ''
     runHook preBuild
-    make
+    make GOBUILD_OPTIONS="$GOFLAGS"
     runHook postBuild
   '';
 
@@ -97,14 +97,12 @@ buildGoModule rec {
     runHook postInstall
   '';
 
-  preFixup = ''
-    qtWrapperArgs+=("''${gappsWrapperArgs[@]}")
+  postInstall = ''
+    mv $out/lib/deepin-api $out/libexec/deepin-api
   '';
 
-  postFixup = ''
-    for binary in $out/lib/deepin-api/*; do
-      wrapProgram $binary "''${qtWrapperArgs[@]}"
-    done
+  preFixup = ''
+    qtWrapperArgs+=("''${gappsWrapperArgs[@]}")
   '';
 
   meta = with lib; {

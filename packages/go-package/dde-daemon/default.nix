@@ -1,6 +1,7 @@
 { stdenv
 , lib
 , fetchFromGitHub
+, fetchpatch
 , substituteAll
 , buildGoModule
 , pkg-config
@@ -37,17 +38,42 @@ buildGoModule rec {
   src = fetchFromGitHub {
     owner = "linuxdeepin";
     repo = pname;
-    rev = "662e0f184d982ce2e3c4b76135a9fd4297102154";
-    hash = "sha256-UJeo+idpCrwirvTi5+OPCWy4R45j7wzx/fw3WNrcBTM=";
+    rev = "52eccc195b39e81a08bcca664f4c122087f7a598";
+    hash = "sha256-008n5c4vwuPXBEmnbqh80Bs+IbSJWrhHVJ3iXPt9Pcc=";
   };
 
   vendorHash = "sha256-51V+cR0TckXorK1DyMrQHcPF4eQ1hUJYyJkmpHsud3Y=";
 
   patches = [
     ./0002-dont-set-PATH.patch
-    #./0003-search-in-XDG-directories.diff
-    #./0004-aviod-use-hardcode-path.diff
   ];
+
+  postPatch = ''
+    substituteInPlace session/eventlog/{app_event.go,login_event.go} \
+      --replace "/bin/bash" "${runtimeShell}"
+
+    substituteInPlace inputdevices/layout_list.go \
+      --replace "/usr/share/X11/xkb" "${xkeyboard_config}/share/X11/xkb"
+
+    substituteInPlace bin/dde-system-daemon/wallpaper.go accounts1/user.go \
+     --replace "/usr/share/wallpapers" "/run/current-system/sw/share/wallpapers"
+
+    substituteInPlace timedate1/zoneinfo/zone.go \
+     --replace "/usr/share/zoneinfo" "${tzdata}/share/zoneinfo"
+
+    substituteInPlace accounts1/image_blur.go grub2/modify_manger.go \
+      --replace "/usr/lib/deepin-api" "/run/current-system/sw/libexec/deepin-api"
+
+    substituteInPlace accounts1/user_chpwd_union_id.go \
+      --replace "/usr/lib/dde-control-center" "/run/current-system/sw/lib/dde-control-center"
+
+    for file in $(grep "/usr/lib/deepin-daemon" * -nR |awk -F: '{print $1}')
+    do
+      sed -i 's|/usr/lib/deepin-daemon|/run/current-system/sw/lib/deepin-daemon|g' $file
+    done
+
+    patchShebangs .
+  '';
 
   nativeBuildInputs = [
     pkg-config
