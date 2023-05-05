@@ -8,7 +8,6 @@
 , gettext
 , python3
 , wrapGAppsHook
-, go-lib
 , dde-api
 , ddcutil
 , alsa-lib

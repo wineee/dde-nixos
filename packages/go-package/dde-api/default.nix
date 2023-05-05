@@ -13,7 +13,6 @@
 , deepin-gettext-tools
 , fontconfig
 , go
-, go-lib
 , gtk3
 , libcanberra
 , libgudev

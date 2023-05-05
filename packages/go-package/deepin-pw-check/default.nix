@@ -4,7 +4,6 @@
 , buildGoModule
 , pkg-config
 , deepin-gettext-tools
-, go-lib
 , gtk3
 , glib
 , libxcrypt

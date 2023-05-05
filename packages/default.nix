@@ -90,7 +90,6 @@ let
     nixos-gsettings-schemas = callPackage ./misc/nixos-gsettings-schemas { };
 
     #### Go Packages
-    go-lib = callPackage ./go-package/go-lib { };
     dde-api = callPackage ./go-package/dde-api { };
     deepin-desktop-schemas = callPackage ./go-package/deepin-desktop-schemas { };
     dde-daemon = callPackage ./go-package/dde-daemon { };
