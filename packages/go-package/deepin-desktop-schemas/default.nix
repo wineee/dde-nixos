@@ -1,10 +1,9 @@
-{ stdenv
-, lib
+{ lib
 , buildGoModule
 , fetchFromGitHub
-, go
 , glib
 }:
+
 buildGoModule rec {
   pname = "deepin-desktop-schemas";
   version = "6.0.1";

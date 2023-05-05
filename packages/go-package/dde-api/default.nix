@@ -1,9 +1,7 @@
 { stdenv
 , lib
 , fetchFromGitHub
-, replaceAll
-, buildGoPackage
-, getUsrPatchFrom
+, buildGoModule
 , wrapQtAppsHook
 , wrapGAppsHook
 , pkg-config
@@ -12,7 +10,6 @@
 , blur-effect
 , deepin-gettext-tools
 , fontconfig
-, go
 , gtk3
 , libcanberra
 , libgudev
@@ -25,7 +22,6 @@
 , dbus
 , coreutils
 , deepin-desktop-base
-, buildGoModule
 }:
 
 buildGoModule rec {

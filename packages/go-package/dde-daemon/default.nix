@@ -2,13 +2,12 @@
 , lib
 , fetchFromGitHub
 , substituteAll
-, buildGoPackage
+, buildGoModule
 , pkg-config
 , deepin-gettext-tools
 , gettext
 , python3
 , wrapGAppsHook
-, dde-api
 , ddcutil
 , alsa-lib
 , glib
@@ -29,7 +28,6 @@
 , xdotool
 , getconf
 , dbus
-, buildGoModule
 }:
 
 buildGoModule rec {

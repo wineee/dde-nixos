@@ -2,11 +2,8 @@
 , lib
 , buildGoModule
 , fetchFromGitHub
-, getUsrPatchFrom
-, replaceAll
 , pkg-config
 , gettext
-, dde-api
 , libgnome-keyring
 , gtk3
 , alsa-lib
@@ -17,7 +14,6 @@
 , glib
 , wrapGAppsHook
 , runtimeShell
-, dde-daemon
 , dde-polkit-agent
 , gnome
 , pciutils
