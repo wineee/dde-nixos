@@ -9,7 +9,6 @@
 , python3
 , wrapGAppsHook
 , go-dbus-factory
-, go-gir-generator
 , go-lib
 , dde-api
 , ddcutil

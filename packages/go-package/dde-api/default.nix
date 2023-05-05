@@ -14,7 +14,6 @@
 , fontconfig
 , go
 , go-dbus-factory
-, go-gir-generator
 , go-lib
 , gtk3
 , libcanberra

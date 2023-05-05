@@ -91,7 +91,6 @@ let
 
     #### Go Packages
     go-dbus-factory = callPackage ./go-package/go-dbus-factory { };
-    go-gir-generator = callPackage ./go-package/go-gir-generator { };
     go-lib = callPackage ./go-package/go-lib { };
     dde-api = callPackage ./go-package/dde-api { };
     deepin-desktop-schemas = callPackage ./go-package/deepin-desktop-schemas { };
