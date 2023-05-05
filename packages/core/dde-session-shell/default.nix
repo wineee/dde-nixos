@@ -48,7 +48,7 @@ stdenv.mkDerivation rec {
 
   postPatch = ''
     substituteInPlace scripts/lightdm-deepin-greeter files/wayland/lightdm-deepin-greeter-wayland \
-      --replace "/usr/lib/deepin-daemon" "/run/current-system/sw/lib/deepin-daemon"
+      --replace "/usr/lib/deepin-daemon" "/run/current-system/sw/libexec/deepin-daemon"
 
     substituteInPlace src/session-widgets/auth_module.h \
       --replace "/usr/lib/dde-control-center" "/run/current-system/sw/lib/dde-control-center"

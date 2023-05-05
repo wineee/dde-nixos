@@ -79,7 +79,7 @@ stdenv.mkDerivation rec {
       --replace "/usr/bin/dde-desktop" "dde-desktop"
 
     substituteInPlace src/dfm-base/file/local/localfilehandler.cpp \
-      --replace "/usr/lib/deepin-daemon" "/run/current-system/sw/lib/deepin-daemon"
+      --replace "/usr/lib/deepin-daemon" "/run/current-system/sw/libexec/deepin-daemon"
 
     substituteInPlace src/plugins/desktop/ddplugin-background/backgroundservice.cpp \
       src/plugins/desktop/ddplugin-wallpapersetting/wallpapersettings.cpp \

@@ -69,7 +69,7 @@ buildGoModule rec {
 
     for file in $(grep "/usr/lib/deepin-daemon" * -nR |awk -F: '{print $1}')
     do
-      sed -i 's|/usr/lib/deepin-daemon|/run/current-system/sw/lib/deepin-daemon|g' $file
+      sed -i 's|/usr/lib/deepin-daemon|/run/current-system/sw/libexec/deepin-daemon|g' $file
     done
 
     patchShebangs .
