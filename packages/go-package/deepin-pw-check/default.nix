@@ -4,7 +4,6 @@
 , buildGoModule
 , pkg-config
 , deepin-gettext-tools
-, go-dbus-factory
 , go-lib
 , gtk3
 , glib

@@ -8,7 +8,6 @@
 , gettext
 , python3
 , wrapGAppsHook
-, go-dbus-factory
 , go-lib
 , dde-api
 , ddcutil
