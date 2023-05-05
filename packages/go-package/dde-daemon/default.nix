@@ -37,20 +37,19 @@
 
 buildGoModule rec {
   pname = "dde-daemon";
-  version = "6.0.0";
+  version = "6.0.1";
 
   src = fetchFromGitHub {
-    owner = "Decodetalkers";
+    owner = "linuxdeepin";
     repo = pname;
-    rev = "7baf6716982f8137126a95c11524fed7e1207753";
-    sha256 = "sha256-i2/V58JtGyx209A0Ns3q+oYKke9H7KKTPlRf+/ZR1TM=";
+    rev = "662e0f184d982ce2e3c4b76135a9fd4297102154";
+    hash = "sha256-UJeo+idpCrwirvTi5+OPCWy4R45j7wzx/fw3WNrcBTM=";
   };
 
-  vendorHash = "sha256-B4Q6Uf5bhOWFbzrl5eZJsPUWww/v1TzrRe+2gkCXqc0=";
+  vendorHash = "sha256-51V+cR0TckXorK1DyMrQHcPF4eQ1hUJYyJkmpHsud3Y=";
 
   patches = [
-    #./0001-fix-wrapped-name-for-verifyExe.diff
-    #./0002-dont-set-PATH.diff
+    ./0002-dont-set-PATH.patch
     #./0003-search-in-XDG-directories.diff
     #./0004-aviod-use-hardcode-path.diff
   ];
@@ -81,14 +80,23 @@ buildGoModule rec {
     xkeyboard_config
   ];
 
-  doCheck = false;
-
-  postFixup = ''
-    for f in "$out"/lib/deepin-daemon/*; do
-      echo "Wrapping $f"
-      wrapGApp "$f"
-    done
+  buildPhase = ''
+    runHook preBuild
+    make GOBUILD_OPTIONS="$GOFLAGS"
+    runHook postBuild
   '';
+
+  installPhase = ''
+    runHook preInstall
+    make install DESTDIR="$out" PREFIX="/"
+    runHook postInstall
+  '';
+
+  postInstall = ''
+    mv $out/lib/deepin-daemon $out/libexec/deepin-daemon
+  '';
+
+  doCheck = false;
 
   meta = with lib; {
     description = "Daemon for handling the deepin session settings";
