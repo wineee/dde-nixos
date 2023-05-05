@@ -40,6 +40,10 @@ stdenv.mkDerivation rec {
       url = "https://github.com/linuxdeepin/dde-session-shell/commit/fbabdfa9d78dc2937a5c5e42ce3729869cc12891.patch";
       sha256 = "sha256-UoVmQ0fUZw7xwZwIowFCoMVO/2td2VTNwhGBVQGibgM=";
     })
+    (fetchpatch {
+      url = "https://github.com/linuxdeepin/dde-session-shell/commit/40b839ea42c3fc357d6873afe766850d7c416b0c.patch";
+      sha256 = "sha256-XG1XbUtaLH2hX1GtX4V/tOHUFrIN2V6Z/GJe6npFCAY=";
+    })
   ];
 
   postPatch = ''

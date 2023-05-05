@@ -36,8 +36,8 @@ stdenv.mkDerivation rec {
 
   patches = [
     (fetchpatch {
-      url = "https://github.com/linuxdeepin/dde-network-core/commit/466a80426c7f1443e30d4828da988216902a0bce.patch";
-      sha256 = "sha256-4b5SL/kYTSYIVvy6BBSqn9TrPvOr2PjXC622L6ZFkAs=";
+      url = "https://github.com/linuxdeepin/dde-network-core/commit/b42d781512d4de0e006ce3beccf16a36b8035f22.patch";
+      sha256 = "sha256-aNnVuxFYlO7t5oONwGeL68dWc6emFZ90OtJO9K/TjzE=";
     })
   ];
 
