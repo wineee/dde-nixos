@@ -5,9 +5,6 @@
 , getUsrPatchFrom
 , replaceAll
 , pkg-config
-, go-dbus-factory
-, go-gir-generator
-, go-lib
 , gettext
 , dde-api
 , libgnome-keyring
@@ -24,25 +21,40 @@
 , dde-polkit-agent
 , gnome
 , pciutils
+, fetchpatch
 }:
 
 buildGoModule rec {
   pname = "startdde";
-  version = "6.0.0";
+  version = "6.0.1";
 
   src = fetchFromGitHub {
-    owner = "wineee";
+    owner = "linuxdeepin";
     repo = pname;
-    rev = "0c727b96ce7c6c1554d8de5f1749964395339077";
-    sha256 = "sha256-8Wbk2JOihNX4NhsxX7dXIZuN45PAM4G7M9Xd9IBNUJo=";
+    rev = "5e3fb76061821312b5901822a45347d28a4a436a";
+    hash = "sha256-JhqN2r6r2kwzGR7Y9lkcq65GXPG0UBSPl+jQAWUukh4=";
   };
 
-  vendorSha256 = "sha256-M7T8zMV8uhPYxAfmdk7NuaF9YqhrGhFaZEq/FBI+VZg=";
+  patches = [
+    (fetchpatch {
+      url = "https://github.com/linuxdeepin/startdde/commit/0e999151695d49bc550d9801ad65739e71cc82dd.patch";
+      sha256 = "sha256-cMdJjIo/VQB6dK0knQaVxktIRLHl0Fuy4G/rRcu8smM=";
+    })
+  ];
 
-  postPatch = replaceAll "/bin/bash" "${runtimeShell}"
-    + replaceAll "/usr/bin/dde_wloutput" "dde-wloutput"
-    + replaceAll "/usr/lib/deepin-daemon" "/run/current-system/sw/lib/deepin-daemon";
+  vendorHash = "sha256-QfZcLvymjZVK6CUnsvGPVtT/a0dLuhqnJQQe777/EIE=";
 
+  postPatch = ''
+    substituteInPlace display/manager.go session.go \
+      --replace "/bin/bash" "${runtimeShell}"
+    substituteInPlace display/manager.go main.go utils.go session.go \
+      --replace "/usr/lib/deepin-daemon" "/run/current-system/sw/lib/deepin-daemon"
+    substituteInPlace misc/auto_launch/{default.json,chinese.json} \
+      --replace "/usr/lib/polkit-1-dde/dde-polkit-agent" "${dde-polkit-agent}/lib/polkit-1-dde/dde-polkit-agent"
+    substituteInPlace startmanager.go launch_group.go memchecker/config.go \
+      --replace "/usr/share/startdde" "$out/share/startdde"
+    substituteInPlace misc/lightdm.conf --replace "/usr" "$out"
+  '';
 
   nativeBuildInputs = [
     gettext
@@ -53,7 +65,6 @@ buildGoModule rec {
   ];
 
   buildInputs = [
-    go-gir-generator
     libgnome-keyring
     gtk3
     alsa-lib
@@ -64,23 +75,18 @@ buildGoModule rec {
 
   buildPhase = ''
     runHook preBuild
-    make
+    make GO_BUILD_FLAGS="$GOFLAGS"
     runHook postBuild
   '';
 
   installPhase = ''
+    runHook preInstall
     make install DESTDIR="$out" PREFIX="/"
+    runHook postInstall
   '';
-
-  preFixup = ''
-    glib-compile-schemas ${glib.makeSchemaPath "$out" "${pname}-${version}"}
-  '';
-
-  passthru.providedSessions = [ "deepin" ];
 
   meta = with lib; {
-    description = "starter of deepin desktop environment";
-    longDescription = "Startdde is used for launching DDE components and invoking user's custom applications which compliant with xdg autostart specification";
+    description = "Starter of deepin desktop environment";
     homepage = "https://github.com/linuxdeepin/startdde";
     license = licenses.gpl3Plus;
     platforms = platforms.linux;
