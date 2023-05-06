@@ -1,7 +1,6 @@
 { stdenv
 , lib
 , fetchFromGitHub
-, fetchpatch
 , cmake
 , pkg-config
 , qttools
@@ -16,9 +15,6 @@
 , qtx11extras
 , qtmultimedia
 , polkit-qt
-, xorg
-, libselinux
-, libsepol
 , libxcrypt
 , librsvg
 , runtimeShell
@@ -28,24 +24,18 @@
 
 stdenv.mkDerivation rec {
   pname = "dde-control-center";
-  version = "6.0.14";
+  version = "6.0.19";
 
   src = fetchFromGitHub {
     owner = "linuxdeepin";
     repo = pname;
     rev = version;
-    sha256 = "sha256-T5L0LrKaKHgeQN/I+GZXS//Fj1EcebO+JpP8l0mjmn4=";
+    sha256 = "sha256-aQ8ZWWNGx9k8P6ZeAikMMzbIHbAo9Bm8tCtYSDMulrQ=";
   };
 
-  patches = [
-    #./1.patch 
-  ];
-
   postPatch = ''
-
      substituteInPlace src/plugin-datetime/window/widgets/timezone.cpp \
       --replace "/usr/share/zoneinfo" "${tzdata}/share/zoneinfo"
-
 
     substituteInPlace src/plugin-accounts/operation/accountsworker.cpp \
       --replace "/bin/bash" "${runtimeShell}"
@@ -72,8 +62,6 @@ stdenv.mkDerivation rec {
     qtx11extras
     qtmultimedia
     polkit-qt
-    #libselinux
-    #libsepol
     libxcrypt
     librsvg
   ];
@@ -84,6 +72,8 @@ stdenv.mkDerivation rec {
     "-DDISABLE_UPDATE=YES"
     "-DDISABLE_LANGUAGE=YES"
     "-DBUILD_DOCS=OFF"
+    "-DMODULE_READ_DIR=/run/current-system/sw/lib/dde-control-center/modules"
+    "-DLOCALSTATE_READ_DIR=/var"
   ];
 
   preConfigure = ''
