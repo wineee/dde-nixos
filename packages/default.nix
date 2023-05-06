@@ -83,6 +83,7 @@ let
     dpa-ext-gnomekeyring = callPackage ./core/dpa-ext-gnomekeyring { };
     dde-appearance = callPackage ./core/dde-appearance { };
     dde-session = callPackage ./core/dde-session { };
+    dde-widgets = callPackage ./core/dde-widgets { };
 
     #### MISC
     deepin-desktop-base = callPackage ./misc/deepin-desktop-base { };
