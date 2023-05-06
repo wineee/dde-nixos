@@ -17,28 +17,31 @@
           deepinScope = import ./packages { inherit pkgs; };
           deepinPkgs = flake-utils.lib.flattenTree deepinScope;
           getDbgVersion = name: value:
-              (pkgs.lib.attrsets.nameValuePair
-                (name + "-dbg")
-                (if value.stdenv == pkgs.stdenvNoCC then value else value.override {
-                  stdenv = pkgs.stdenvAdapters.keepDebugInfo pkgs.stdenv;
-                }));
+            (pkgs.lib.attrsets.nameValuePair
+              (name + "-dbg")
+              (if value.stdenv == pkgs.stdenvNoCC then value else
+              value.override {
+                stdenv = pkgs.stdenvAdapters.keepDebugInfo pkgs.stdenv;
+              }));
           deepinPkgsDbg = with pkgs.lib.attrsets; mapAttrs' getDbgVersion deepinPkgs;
         in
         rec {
           packages = deepinPkgs // deepinPkgsDbg;
-          devShells = builtins.mapAttrs (
-            name: value: 
-              pkgs.mkShell {
-                nativeBuildInputs = deepinPkgs.${name}.nativeBuildInputs;
-                buildInputs = deepinPkgs.${name}.buildInputs
-                        ++ deepinPkgs.${name}.propagatedBuildInputs;
-                shellHook = ''
-                  # export QT_LOGGING_RULES=*.debug=true
-                  export QT_PLUGIN_PATH="$QT_PLUGIN_PATH:${deepinPkgs.qt5integration}/plugins"
-                  export QT_QPA_PLATFORM_PLUGIN_PATH="${deepinPkgs.qt5platform-plugins}/plugins"
-                '';
-             }
-          ) deepinPkgs;
+          devShells = builtins.mapAttrs
+            (
+              name: value:
+                pkgs.mkShell {
+                  nativeBuildInputs = deepinPkgs.${name}.nativeBuildInputs;
+                  buildInputs = deepinPkgs.${name}.buildInputs
+                    ++ deepinPkgs.${name}.propagatedBuildInputs;
+                  shellHook = ''
+                    # export QT_LOGGING_RULES=*.debug=true
+                    export QT_PLUGIN_PATH="$QT_PLUGIN_PATH:${deepinPkgs.qt5integration}/plugins"
+                    export QT_QPA_PLATFORM_PLUGIN_PATH="${deepinPkgs.qt5platform-plugins}/plugins"
+                  '';
+                }
+            )
+            deepinPkgs;
 
           nixosModules = { config, lib, pkgs, utils, ... }:
             with lib;
@@ -70,14 +73,14 @@
                     description = "Additional gsettings overrides.";
                   };
                   extraGSettingsOverridePackages = mkOption {
-                    default = [];
+                    default = [ ];
                     type = types.listOf types.path;
                     description = "List of packages for which gsettings are overridden.";
                   };
                 };
 
                 environment.deepin.excludePackages = mkOption {
-                  default = [];
+                  default = [ ];
                   type = types.listOf types.package;
                   description = lib.mdDoc "Which Deepin packages should exclude from systemPackages";
                 };
@@ -88,54 +91,44 @@
                   dde-api.enable = mkEnableOption "Dbus interfaces that is used for screen zone detecting, thumbnail generating, sound playing, etc";
                   app-services.enable = mkEnableOption "Service collection of DDE applications, including dconfig-center";
                 };
-                
+
               };
 
               config = mkMerge [
                 (mkIf cfg.enable {
                   services.xserver.displayManager.sessionPackages = [ packages.dde-session ];
-                  services.xserver.displayManager.defaultSession = "deepin";
+                  services.xserver.displayManager.defaultSession = mkDefault "deepin";
 
+                  # Update the DBus activation environment after launching the desktop manager.
                   services.xserver.displayManager.sessionCommands = ''
-                      ${lib.getBin pkgs.dbus}/bin/dbus-update-activation-environment --systemd --all
+                    ${lib.getBin pkgs.dbus}/bin/dbus-update-activation-environment --systemd --all
                   '';
-                  
+
                   hardware.bluetooth.enable = mkDefault true;
                   hardware.pulseaudio.enable = mkDefault true;
-
                   security.polkit.enable = true;
+
                   services.colord.enable = mkDefault true;
-                  
-                  services.accounts-daemon.enable = true;
-                  services.gvfs.enable = true;
+                  services.accounts-daemon.enable = mkDefault true;
+                  services.gvfs.enable = mkDefault true;
                   services.gnome.glib-networking.enable = true;
-                  services.gnome.gnome-keyring.enable = true;
-
+                  services.gnome.gnome-keyring.enable = mkDefault true;
                   services.bamf.enable = true;
-                  
-                  services.xserver.updateDbusEnvironment = true;
-                  services.xserver.libinput.enable = mkDefault true;      
-                  # Enable GTK applications to load SVG icons
-                  services.xserver.gdk-pixbuf.modulePackages = [ pkgs.librsvg ];
 
+                  services.xserver.libinput.enable = mkDefault true;
                   services.udisks2.enable = true;
                   services.upower.enable = mkDefault config.powerManagement.enable;
-                  
                   networking.networkmanager.enable = mkDefault true;
-                  
                   programs.dconf.enable = true;
 
-                  programs.bash.vteIntegration = mkDefault true;
-                  programs.zsh.vteIntegration = mkDefault true;
                   #TODO: programs.gnupg.agent.pinentryFlavor = "qt";
 
                   fonts.fonts = with pkgs; [ noto-fonts ];
-
                   xdg.mime.enable = true;
                   xdg.menus.enable = true;
                   xdg.icons.enable = true;
                   xdg.portal.enable = mkDefault true;
-                  xdg.portal.extraPortals = mkDefault [ 
+                  xdg.portal.extraPortals = mkDefault [
                     (pkgs.xdg-desktop-portal-gtk.override {
                       buildPortalsInGnome = false;
                     })
@@ -195,109 +188,88 @@
                     "C /var/lib/AccountsService/icons 0775 root root - ${packages.dde-account-faces}/var/lib/AccountsService/icons"
                   ];
 
-                  environment.systemPackages = with pkgs; [
-                    socat
-                    xdotool
-                    glib # for gsettings program / gdbus
-                    gtk3.out # for gtk-launch program
-                    xdg-user-dirs # Update user dirs as described in http://freedesktop.org/wiki/Software/xdg-user-dirs/
-                    util-linux # runuser by dde-daemon
-                    polkit_gnome
-                    librsvg # dde-api use rsvg-convert
-                    kde-gtk-config # deepin-api/gtk-thumbnailer need
-                    lshw
-                    libsForQt5.kglobalaccel
-                    onboard # dde-dock plugin
-                    xsettingsd # lightdm-deepin-greeter
-                  ] ++ (with packages; (utils.removePackagesByName ([
+                  environment.systemPackages = with pkgs; with deepin;
+                    let
+                      requiredPackages = [
+                        pciutils # for dtkcore/startdde
+                        xdotool # for dde-daemon
+                        glib # for gsettings program / gdbus
+                        gtk3 # for gtk-launch program
+                        xdg-user-dirs # Update user dirs
+                        util-linux # runuser
+                        polkit_gnome
+                        librsvg # dde-api use rsvg-convert
+                        lshw # for dtkcore
+                        libsForQt5.kde-gtk-config # deepin-api/gtk-thumbnailer need
+                        libsForQt5.kglobalaccel
+                        xsettingsd # lightdm-deepin-greeter
+                        qt5platform-plugins
+                        deepin-pw-check
+                        deepin-turbo
 
-                    deepin-kwin
-                    qt5platform-plugins #TODO nixos/modules/config/qt5.nix
-                    # qt5integration
+                        dde-account-faces
+                        deepin-icon-theme
+                        deepin-sound-theme
+                        deepin-gtk-theme
+                        deepin-wallpapers
 
-                    startdde
-                    dde-session-ui
-                    dde-session-shell
-                    dde-control-center
-                    dde-launcher
+                        startdde
+                        dde-dock
+                        dde-launcher
+                        dde-session-ui
+                        dde-session-shell
+                        dde-file-manager
+                        dde-control-center
+                        dde-network-core
+                        dde-clipboard
+                        dde-calendar
+                        dde-polkit-agent
+                        dpa-ext-gnomekeyring
+                        deepin-desktop-schemas
+                        deepin-terminal
+                        dde-kwin
+                        deepin-kwin
+                      ];
+                      optionalPackages = [
+                        onboard # dde-dock plugin
+                        deepin-camera
+                        deepin-calculator
+                        deepin-compressor
+                        deepin-editor
+                        deepin-picker
+                        deepin-draw
+                        deepin-album
+                        deepin-image-viewer
+                        deepin-music
+                        deepin-movie-reborn
+                        deepin-system-monitor
+                        deepin-screen-recorder
+                        deepin-shortcut-viewer
+                      ];
+                    in
+                    requiredPackages
+                    ++ utils.removePackagesByName optionalPackages config.environment.deepin.excludePackages;
+
+                  services.dbus.packages = with pkgs.deepin; [
                     dde-dock
-                    dde-network-core
-                    dde-calendar 
-                    dde-clipboard
-                    dde-file-manager
-                    dpa-ext-gnomekeyring
-                    dde-polkit-agent
-                    
-                    dde-account-faces
-                    deepin-icon-theme
-                    deepin-sound-theme
-                    deepin-gtk-theme
-                    deepin-wallpapers
-                    deepin-desktop-schemas
-
-                    deepin-turbo
-                    deepin-pw-check
-                    deepin-terminal
-                    deepin-album
-                    deepin-draw
-                    deepin-image-viewer
-                    deepin-calculator
-                    deepin-editor
-                    deepin-music
-                    deepin-camera
-                    deepin-movie-reborn
-                    deepin-system-monitor
-                    deepin-shortcut-viewer
-                    deepin-picker
-                    deepin-font-manager
-                    deepin-screen-recorder
-                    deepin-compressor
-                    deepin-ocr
-                  ] ++ lib.optionals cfg.full [
-                    dde-grand-search # FIXME
-                    deepin-boot-maker
-                    deepin-reader
-                    deepin-voice-note
-                    deepin-downloader
-                    deepin-lianliankan
-                    deepin-gomoku
-                    dde-introduction
-                    dde-top-panel
-                    dmarked
-                    # deepin-devicemanager # FIXME
-                    deepin-clone
-                    dde-device-formatter
-                  ]) config.environment.deepin.excludePackages));
-
-                  services.dbus.packages = with packages; (utils.removePackagesByName ([
-                    deepin-kwin
                     dde-launcher
-                    dde-dock
                     dde-session-ui
                     dde-session-shell
                     dde-file-manager
                     dde-control-center
                     dde-calendar
-                    deepin-pw-check
-                    deepin-picker
-                    deepin-draw
-                    deepin-image-viewer
-                    deepin-screen-recorder
-                    deepin-system-monitor
-                    deepin-camera
                     dde-clipboard
-                    deepin-ocr
-                  ] ++ lib.optionals cfg.full [
-                    dde-grand-search
-                    deepin-boot-maker
-                  ]) config.environment.deepin.excludePackages);
-
-                  systemd.packages = with packages; [
+                    dde-kwin
                     deepin-kwin
+                    deepin-pw-check
+                  ];
+
+                  systemd.packages = with pkgs.deepin; [
                     dde-launcher
                     dde-file-manager
                     dde-calendar
                     dde-clipboard
+                    deepin-kwin
                   ];
 
                   services.dde.dde-daemon.enable = mkForce true;
@@ -320,9 +292,9 @@
                     password  substack      login
                     session   include       login
                   '';
-               })
+                })
 
-               (mkIf config.services.dde.deepin-anything.enable {
+                (mkIf config.services.dde.deepin-anything.enable {
                   environment.systemPackages = [ packages.deepin-anything ];
                   services.dbus.packages = [ packages.deepin-anything ];
                   # systemd.packages = [ packages.deepin-anything ];
@@ -352,7 +324,7 @@
                       RestartSec = 10;
                     };
                     wantedBy = [ "multi-user.target" ];
-                    path =  [ pkgs.util-linux packages.deepin-anything ]; # ionice
+                    path = [ pkgs.util-linux packages.deepin-anything ]; # ionice
                   };
                   systemd.services.deepin-anything-monitor = {
                     unitConfig = {
@@ -372,9 +344,9 @@
                     wantedBy = [ "multi-user.target" ];
                     path = [ pkgs.kmod packages.deepin-anything ]; # modprobe/rmmod
                   };
-               })
+                })
 
-               (mkIf config.services.dde.dde-api.enable {
+                (mkIf config.services.dde.dde-api.enable {
                   environment.systemPackages = [ packages.dde-api ];
                   services.dbus.packages = [ packages.dde-api ];
                   systemd.packages = [ packages.dde-api ];
@@ -387,13 +359,13 @@
                     group = "deepin-sound-player";
                     isSystemUser = true;
                   };
-               })
+                })
 
-               (mkIf config.services.dde.app-services.enable {
+                (mkIf config.services.dde.app-services.enable {
                   environment.systemPackages = [ packages.dde-app-services ];
                   services.dbus.packages = [ packages.dde-app-services ];
                   environment.pathsToLink = [ "/share/dsg" ];
-               })
+                })
 
               ];
             };
