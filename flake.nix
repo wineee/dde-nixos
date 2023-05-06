@@ -188,7 +188,7 @@
                     "C /var/lib/AccountsService/icons 0775 root root - ${packages.dde-account-faces}/var/lib/AccountsService/icons"
                   ];
 
-                  environment.systemPackages = with pkgs; with deepin;
+                  environment.systemPackages = with pkgs; with packages;
                     let
                       requiredPackages = [
                         pciutils # for dtkcore/startdde
@@ -227,8 +227,8 @@
                         dpa-ext-gnomekeyring
                         deepin-desktop-schemas
                         deepin-terminal
-                        dde-kwin
                         deepin-kwin
+                        dde-widgets
                       ];
                       optionalPackages = [
                         onboard # dde-dock plugin
@@ -250,7 +250,7 @@
                     requiredPackages
                     ++ utils.removePackagesByName optionalPackages config.environment.deepin.excludePackages;
 
-                  services.dbus.packages = with pkgs.deepin; [
+                  services.dbus.packages = with pkgs; with packages; [
                     dde-dock
                     dde-launcher
                     dde-session-ui
@@ -259,17 +259,20 @@
                     dde-control-center
                     dde-calendar
                     dde-clipboard
-                    dde-kwin
                     deepin-kwin
                     deepin-pw-check
+                    dde-widgets
+                    dde-session
                   ];
 
-                  systemd.packages = with pkgs.deepin; [
+                  systemd.packages = with pkgs; with packages; [
                     dde-launcher
                     dde-file-manager
                     dde-calendar
                     dde-clipboard
                     deepin-kwin
+                    dde-widgets
+                    dde-session
                   ];
 
                   services.dde.dde-daemon.enable = mkForce true;
