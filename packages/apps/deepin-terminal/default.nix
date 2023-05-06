@@ -7,6 +7,8 @@
 , qt5platform-plugins
 , dde-qt-dbus-factory
 , cmake
+, qtbase
+, qtsvg
 , qttools
 , qtx11extras
 , pkg-config
@@ -15,29 +17,18 @@
 , libsecret
 , chrpath
 , lxqt
-, zssh
-, gtest
-, qtbase
 }:
 
 stdenv.mkDerivation rec {
   pname = "deepin-terminal";
-  version = "5.4.34";
+  version = "6.0.5";
 
   src = fetchFromGitHub {
     owner = "linuxdeepin";
     repo = pname;
     rev = version;
-    sha256 = "sha256-CpI7dyQwrYOYzqVZ6aa+/OAUC3xRyY4ZwzH1mqURTfY=";
+    sha256 = "sha256-pRTdvR3hyiJVpi38Ex58X74ns+rSWuytsOXemvdW1Rk=";
   };
-
-  patches = [
-    (fetchpatch {
-      name = "chore: use GNUInstallDirs in CmakeLists";
-      url = "https://github.com/linuxdeepin/deepin-terminal/commit/b18a2ca8411f09f5573aa2a8403a484b693ec975.patch";
-      sha256 = "sha256-Qy8Jg+7BfZr8tQEsCAzhMEwf6rU96gkgup5f9bMMELY=";
-    })
-  ];
 
   cmakeFlags = [ "-DVERSION=${version}" ];
 
@@ -50,21 +41,25 @@ stdenv.mkDerivation rec {
   ];
 
   buildInputs = [
+    qt5integration
+    qt5platform-plugins
+    qtbase
+    qtsvg
     dtkwidget
     dde-qt-dbus-factory
     qtx11extras
     at-spi2-core
     libsecret
     chrpath
-    gtest
-    qt5integration
-    qt5platform-plugins
   ];
-  
+
+  strictDeps = true;
+
   meta = with lib; {
-    description = "An advanced terminal emulator with workspace,multiple windows,remote management,quake mode and other features";
+    description = "Terminal emulator with workspace, multiple windows, remote management, quake mode and other features";
     homepage = "https://github.com/linuxdeepin/deepin-terminal";
     license = licenses.gpl3Plus;
     platforms = platforms.linux;
+    maintainers = teams.deepin.members;
   };
 }

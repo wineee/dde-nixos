@@ -1,18 +1,17 @@
 { stdenv
 , lib
 , fetchFromGitHub
-, fetchpatch
 , dtkwidget
 , qt5integration
 , qt5platform-plugins
+, qtbase
+, qtsvg
 , dde-qt-dbus-factory
 , cmake
 , qttools
 , pkg-config
-, qtx11extras
 , wrapQtAppsHook
 , gtest
-, qtbase
 }:
 
 stdenv.mkDerivation rec {
@@ -35,11 +34,15 @@ stdenv.mkDerivation rec {
 
   buildInputs = [
     dtkwidget
-    dde-qt-dbus-factory
-    gtest
     qt5integration
     qt5platform-plugins
+    qtbase
+    qtsvg
+    dde-qt-dbus-factory
+    gtest
   ];
+
+  strictDeps = true;
 
   cmakeFlags = [ "-DVERSION=${version}" ];
 
@@ -48,5 +51,6 @@ stdenv.mkDerivation rec {
     homepage = "https://github.com/linuxdeepin/deepin-calculator";
     license = licenses.gpl3Plus;
     platforms = platforms.linux;
+    maintainers = teams.deepin.members;
   };
 }

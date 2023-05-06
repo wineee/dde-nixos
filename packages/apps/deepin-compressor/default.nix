@@ -1,12 +1,12 @@
 { stdenv
 , lib
 , fetchFromGitHub
-, getUsrPatchFrom
 , dtkwidget
 , qt5integration
 , qt5platform-plugins
 , udisks2-qt5
 , cmake
+, qtbase
 , qttools
 , pkg-config
 , kcodecs
@@ -15,19 +15,25 @@
 , minizip
 , libzip
 , libarchive
-, qtbase
 }:
 
 stdenv.mkDerivation rec {
   pname = "deepin-compressor";
-  version = "5.12.9";
+  version = "5.12.14";
 
   src = fetchFromGitHub {
     owner = "linuxdeepin";
     repo = pname;
     rev = version;
-    sha256 = "sha256-HJDtUvXUT94G4WqrK92UMmijnuC4ApkKHU3yE3rOKHQ=";
+    sha256 = "sha256-0F1LdoeGtIKOVepifwdNMohbEb9fakpQLiNHg5H9Nlw=";
   };
+
+  postPatch = ''
+    substituteInPlace src/source/common/pluginmanager.cpp \
+      --replace "/usr/lib/" "$out/lib/"
+    substituteInPlace src/desktop/deepin-compressor.desktop \
+      --replace "/usr" "$out"
+  '';
 
   nativeBuildInputs = [
     cmake
@@ -38,14 +44,14 @@ stdenv.mkDerivation rec {
 
   buildInputs = [
     dtkwidget
+    qt5integration
+    qt5platform-plugins
     udisks2-qt5
     kcodecs
     karchive
     minizip
     libzip
     libarchive
-    qt5integration
-    qt5platform-plugins
   ];
 
   cmakeFlags = [
@@ -53,19 +59,13 @@ stdenv.mkDerivation rec {
     "-DUSE_TEST=OFF"
   ];
 
-  fixPluginLoadPatch = ''
-    substituteInPlace src/source/common/pluginmanager.cpp \
-      --replace "/usr/lib/" "$out/lib/"
-  '';
-
-  postPatch = fixPluginLoadPatch + getUsrPatchFrom {
-    "src/desktop/${pname}.desktop" = [ ];
-  };
+  strictDeps = true;
 
   meta = with lib; {
     description = "A fast and lightweight application for creating and extracting archives";
     homepage = "https://github.com/linuxdeepin/deepin-compressor";
     license = licenses.gpl3Plus;
     platforms = platforms.linux;
+    maintainers = teams.deepin.members;
   };
 }
