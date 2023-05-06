@@ -114,7 +114,7 @@ buildGoModule rec {
   '';
 
   postInstall = ''
-    mv $out/lib/deepin-daemon $out/libexec/deepin-daemon
+    mv $out/lib/deepin-daemon $out/libexec
   '';
 
   doCheck = false;

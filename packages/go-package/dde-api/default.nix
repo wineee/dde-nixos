@@ -98,8 +98,8 @@ buildGoModule rec {
   '';
 
   postInstall = ''
-    mkdir -p $out/libexec/deepin-api
-    mv $out/lib/deepin-api $out/libexec/deepin-api
+    mkdir $out/libexec
+    mv $out/lib/deepin-api $out/libexec
   '';
 
   preFixup = ''

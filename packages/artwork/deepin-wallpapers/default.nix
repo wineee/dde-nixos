@@ -6,13 +6,13 @@
 
 stdenv.mkDerivation rec {
   pname = "deepin-wallpapers";
-  version = "1.7.10";
+  version = "1.8.3";
 
   src = fetchFromGitHub {
     owner = "linuxdeepin";
     repo = pname;
     rev = version;
-    sha256 = "sha256-D7DXyPh74VlYn5vKUzDh/P/xoskxs8N/BEg5ZemXRwk=";
+    sha256 = "sha256-YlbWsuNLVVZQT28HRSLmftR4xuh9Sg23uc1QxFEeF24=";
   };
 
   nativeBuildInputs = [ dde-api ];
