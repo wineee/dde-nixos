@@ -49,6 +49,9 @@ buildGoModule rec {
   ];
 
   postPatch = ''
+    substituteInPlace misc/udev-rules/80-deepin-fprintd.rules \
+      --replace "/usr/bin/dbus-send" "${dbus}/bin/dbus-send"
+
     substituteInPlace session/eventlog/{app_event.go,login_event.go} \
       --replace "/bin/bash" "${runtimeShell}"
 

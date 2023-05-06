@@ -56,7 +56,7 @@ stdenv.mkDerivation rec {
     systemd
   ];
 
-  passthru.providedSessions = [ "deepin" ];
+  passthru.providedSessions = [ "dde-x11" "dde-wayland" ];
 
   meta = with lib; {
     description = "New deepin session, based on systemd and existing projects";

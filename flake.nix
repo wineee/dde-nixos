@@ -97,7 +97,7 @@
               config = mkMerge [
                 (mkIf cfg.enable {
                   services.xserver.displayManager.sessionPackages = [ packages.dde-session ];
-                  services.xserver.displayManager.defaultSession = mkDefault "deepin";
+                  services.xserver.displayManager.defaultSession = mkDefault "dde-x11";
 
                   # Update the DBus activation environment after launching the desktop manager.
                   services.xserver.displayManager.sessionCommands = ''
