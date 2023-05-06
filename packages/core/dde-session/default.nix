@@ -10,6 +10,7 @@
 , libsecret
 , xorg
 , systemd
+, dde-polkit-agent
 }:
 
 stdenv.mkDerivation rec {
@@ -25,13 +26,18 @@ stdenv.mkDerivation rec {
 
   postPatch = ''
     # Avoid using absolute path to distinguish applications
-    substituteInPlace src/dde-session/impl/sessionmanager.cpp systemd/dde-session-daemon.target.wants/dde-osd.service \
+    substituteInPlace src/dde-session/impl/sessionmanager.cpp \
       --replace 'file.readAll().startsWith("/usr/bin/dde-lock")' 'file.readAll().contains("dde-dock")' \
-      --replace "/usr/lib/deepin-daemon" "/run/current-system/sw/libexec/deepin-daemon" 
+
+    substituteInPlace systemd/dde-session-daemon.target.wants/dde-polkit-agent.service \
+      --replace "/usr/lib/polkit-1-dde" "${dde-polkit-agent}/lib/polkit-1-dde"
+
+    for file in $(grep -rl "/usr/lib/deepin-daemon"); do
+      substituteInPlace $file --replace "/usr/lib/deepin-daemon" "/run/current-system/sw/libexec/deepin-daemon"
+    done
 
     for file in $(grep -rl "/usr/bin"); do
-      substituteInPlace $file \
-        --replace "/usr/bin" ""
+      substituteInPlace $file --replace "/usr/bin" ""
     done
   '';
 
