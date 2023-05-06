@@ -29,7 +29,7 @@ stdenv.mkDerivation rec {
       --replace "/usr/share" "/run/current-system/sw/share"
 
     for file in $(grep -rl "/usr/bin"); do
-      substituteInPlace $file --replace "/usr/bin" ""
+      substituteInPlace $file --replace "/usr/bin/" ""
     done
   '';
 

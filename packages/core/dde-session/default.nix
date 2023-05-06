@@ -37,7 +37,7 @@ stdenv.mkDerivation rec {
     done
 
     for file in $(grep -rl "/usr/bin"); do
-      substituteInPlace $file --replace "/usr/bin" ""
+      substituteInPlace $file --replace "/usr/bin/" ""
     done
   '';
 
