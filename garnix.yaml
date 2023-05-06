@@ -24,6 +24,10 @@ builds:
     - 'packages.*.dde-polkit-agent'
     - 'packages.x86_64-linux.deepin-kwin'
     - 'packages.x86_64-linux.deepin-turbo'
+    - "packages.*.dde-appearance"
+    - "packages.*.dde-session"
+    - "packages.*.dde-widgets"
+    - "packages.*.dde-application-manager"
     # Tier 2
     - 'packages.x86_64-linux.deepin-pw-check'
     - 'packages.x86_64-linux.deepin-terminal'
@@ -42,13 +46,7 @@ builds:
     - 'packages.x86_64-linux.deepin-screen-recorder'
     - 'packages.x86_64-linux.deepin-compressor'
     - 'packages.x86_64-linux.dde-grand-search'
-    - 'packages.x86_64-linux.deepin-boot-maker'
     - 'packages.x86_64-linux.deepin-reader'
     - 'packages.x86_64-linux.deepin-voice-note'
-    - 'packages.x86_64-linux.deepin-downloader'
     # Tier 3
-    - 'packages.x86_64-linux.dde-introduction'
-    - 'packages.x86_64-linux.deepin-lianliankan'
-    - 'packages.x86_64-linux.deepin-gomoku'
-    - 'packages.x86_64-linux.dde-device-formatter'
     - 'packages.x86_64-linux.dde-top-panel'

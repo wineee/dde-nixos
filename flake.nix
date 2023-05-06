@@ -229,6 +229,7 @@
                         deepin-terminal
                         deepin-kwin
                         dde-widgets
+                        dde-appearance
                         dde-application-manager
                       ];
                       optionalPackages = [
@@ -272,6 +273,7 @@
                     dde-calendar
                     dde-clipboard
                     deepin-kwin
+                    dde-appearance
                     dde-widgets
                     dde-session
                     dde-application-manager
