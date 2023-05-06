@@ -14,14 +14,26 @@
 
 stdenv.mkDerivation rec {
   pname = "dde-session";
-  version = "1.1.0";
+  version = "1.1.1";
 
   src = fetchFromGitHub {
     owner = "linuxdeepin";
     repo = pname;
     rev = version;
-    sha256 = "sha256-hi81aqvHJVj5InXTteNpGNeCzjOD6Arkyo58v6Z2RXA=";
+    sha256 = "sha256-4v9/Qq1cJITPwVgFYoW+1nTjN+pt4VGYcfvkgErvPwY=";
   };
+
+  postPatch = ''
+    # Avoid using absolute path to distinguish applications
+    substituteInPlace src/dde-session/impl/sessionmanager.cpp systemd/dde-session-daemon.target.wants/dde-osd.service \
+      --replace 'file.readAll().startsWith("/usr/bin/dde-lock")' 'file.readAll().contains("dde-dock")' \
+      --replace "/usr/lib/deepin-daemon" "/run/current-system/sw/libexec/deepin-daemon" 
+
+    for file in $(grep -rl "/usr/bin"); do
+      substituteInPlace $file \
+        --replace "/usr/bin" ""
+    done
+  '';
 
   nativeBuildInputs = [
     cmake
