@@ -208,7 +208,8 @@
                         deepin-turbo
 
                         dde-account-faces
-                        deepin-icon-theme
+                        #deepin-icon-theme
+                        deepin-desktop-theme
                         deepin-sound-theme
                         deepin-gtk-theme
                         deepin-wallpapers
@@ -228,6 +229,7 @@
                         deepin-desktop-schemas
                         deepin-terminal
                         deepin-kwin
+                        dde-session
                         dde-widgets
                         dde-appearance
                         dde-application-manager

@@ -4,20 +4,21 @@
 , cmake
 , gtk3
 , xcursorgen
-, breeze-icons
 , papirus-icon-theme
+, breeze-icons
+, hicolor-icon-theme
 , deepin-icon-theme
 }:
 
 stdenv.mkDerivation rec {
   pname = "deepin-desktop-theme";
-  version = "1.0.41";
+  version = "1.6.p6";
 
   src = fetchFromGitHub {
     owner = "linuxdeepin";
     repo = pname;
-    rev = "383e45e3272fe6a9a004caf47d4e1b45e08a15eb";
-    sha256 = "sha256-93R+82tWT+LGz2YNGfI8IOzcfxZDXgYZEFG85ohl5iY=";
+    rev = "f63dfe84fa8aff61b58ef6a8dae7f99a39ff74a4";
+    sha256 = "sha256-r4rEvNq0MAKUhIW9HrtB2gsQNTjI3v3oCciAP+z62gQ=";
   };
 
   makeFlags = [ "PREFIX=${placeholder "out"}" ];
@@ -30,13 +31,13 @@ stdenv.mkDerivation rec {
 
   propagatedBuildInputs = [
     breeze-icons
-    papirus-icon-theme
-    deepin-icon-theme
+    hicolor-icon-theme
   ];
 
   dontDropIconThemeCache = true;
 
   postFixup = ''
+    rm -r $out/share/icons/flow
     for theme in $out/share/icons/*; do
       gtk-update-icon-cache $theme
     done

@@ -16,6 +16,7 @@
 , kglobalaccel
 , xorg
 , tzdata
+, iconv
 }:
 stdenv.mkDerivation rec {
   pname = "dde-appearance";
@@ -42,6 +43,9 @@ stdenv.mkDerivation rec {
       --replace "/usr/share/zoneinfo" "${tzdata}/share/zoneinfo"
     substituteInPlace src/service/modules/api/themethumb.cpp \
       --replace "/usr/lib/deepin-api" "/run/current-system/sw/libexec/deepin-api"
+
+    substituteInPlace src/service/modules/api/locale.cpp \
+      --replace "/usr/share/locale/locale.alias" "${iconv}/share/locale/locale.alias"
   '';
 
   nativeBuildInputs = [
