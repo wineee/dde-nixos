@@ -85,6 +85,7 @@ let
     dde-session = callPackage ./core/dde-session { };
     dde-widgets = callPackage ./core/dde-widgets { };
     dde-application-manager = callPackage ./core/dde-application-manager { };
+    dde-permission-manager = callPackage ./core/dde-permission-manager { };
 
     #### MISC
     deepin-desktop-base = callPackage ./misc/deepin-desktop-base { };

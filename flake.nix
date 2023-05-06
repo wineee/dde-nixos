@@ -229,6 +229,7 @@
                         deepin-terminal
                         deepin-kwin
                         dde-widgets
+                        dde-application-manager
                       ];
                       optionalPackages = [
                         onboard # dde-dock plugin
@@ -273,6 +274,7 @@
                     deepin-kwin
                     dde-widgets
                     dde-session
+                    dde-application-manager
                   ];
 
                   services.dde-unstable.dde-daemon.enable = mkForce true;
