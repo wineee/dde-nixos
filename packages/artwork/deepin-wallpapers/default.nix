@@ -6,21 +6,19 @@
 
 stdenv.mkDerivation rec {
   pname = "deepin-wallpapers";
-  version = "1.8.3";
+  version = "unstable-2023-04-07";
 
   src = fetchFromGitHub {
     owner = "linuxdeepin";
     repo = pname;
-    rev = version;
-    sha256 = "sha256-YlbWsuNLVVZQT28HRSLmftR4xuh9Sg23uc1QxFEeF24=";
+    rev = "fbd128d87d110c219535fddbf9db6da7d37ef451";
+    sha256 = "sha256-qprdzUMXTlAPcWU5pLG00JwxWn5lvORTt63qWSm/IX0=";
   };
 
   nativeBuildInputs = [ dde-api ];
 
   postPatch = ''
-    patchShebangs blur_image.sh
-
-    substituteInPlace blur_image.sh \
+    substituteInPlace Makefile \
       --replace /usr/lib/deepin-api/image-blur ${dde-api}/libexec/deepin-api/image-blur
   '';
 
