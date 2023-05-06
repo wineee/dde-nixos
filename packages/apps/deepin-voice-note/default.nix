@@ -27,6 +27,11 @@ stdenv.mkDerivation rec {
     sha256 = "sha256-h3I5NGr9EwMPCw99wjIJDXe774DeFzi49+cfRvExwDg=";
   };
 
+  patches = [ 
+    "${src}/patches/use-cmake-variable-if-define.patch"
+    "${src}/patches/fix-create-vnote-db-failed.patch"
+ ];
+
   postPatch = ''
     substituteInPlace src/common/audiowatcher.cpp \
       --replace "/usr/share" "$out/share"
