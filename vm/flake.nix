@@ -57,7 +57,7 @@
             }];
           };
           #desktopManager.plasma5.enable = true;
-          desktopManager.deepin = {
+          desktopManager.deepin-unstable = {
             enable = true;
             full = false;
           };

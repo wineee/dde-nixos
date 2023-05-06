@@ -47,7 +47,7 @@
             with lib;
             let
               xcfg = config.services.xserver;
-              cfg = xcfg.desktopManager.deepin;
+              cfg = xcfg.desktopManager.deepin-unstable;
 
               nixos-gsettings-desktop-schemas = packages.nixos-gsettings-schemas.override {
                 extraGSettingsOverridePackages = cfg.extraGSettingsOverridePackages;
@@ -56,7 +56,7 @@
             in
             {
               options = {
-                services.xserver.desktopManager.deepin = {
+                services.xserver.desktopManager.deepin-unstable = {
                   enable = mkOption {
                     type = types.bool;
                     default = false;
@@ -79,13 +79,13 @@
                   };
                 };
 
-                environment.deepin.excludePackages = mkOption {
+                environment.deepin-unstable.excludePackages = mkOption {
                   default = [ ];
                   type = types.listOf types.package;
                   description = lib.mdDoc "Which Deepin packages should exclude from systemPackages";
                 };
 
-                services.dde = {
+                services.dde-unstable = {
                   dde-daemon.enable = mkEnableOption "Daemon for handling Deepin Desktop Environment session settings";
                   deepin-anything.enable = mkEnableOption "Lightning-fast filename search function for Linux users, and provides offline search functions";
                   dde-api.enable = mkEnableOption "Dbus interfaces that is used for screen zone detecting, thumbnail generating, sound playing, etc";
@@ -248,7 +248,7 @@
                       ];
                     in
                     requiredPackages
-                    ++ utils.removePackagesByName optionalPackages config.environment.deepin.excludePackages;
+                    ++ utils.removePackagesByName optionalPackages config.environment.deepin-unstable.excludePackages;
 
                   services.dbus.packages = with pkgs; with packages; [
                     dde-dock
@@ -275,14 +275,14 @@
                     dde-session
                   ];
 
-                  services.dde.dde-daemon.enable = mkForce true;
-                  services.dde.dde-api.enable = mkForce true;
-                  services.dde.app-services.enable = mkForce true;
+                  services.dde-unstable.dde-daemon.enable = mkForce true;
+                  services.dde-unstable.dde-api.enable = mkForce true;
+                  services.dde-unstable.app-services.enable = mkForce true;
 
-                  services.dde.deepin-anything.enable = true;
+                  services.dde-unstable.deepin-anything.enable = true;
                 })
 
-                (mkIf config.services.dde.dde-daemon.enable {
+                (mkIf config.services.dde-unstable.dde-daemon.enable {
                   environment.systemPackages = [ packages.dde-daemon ];
                   services.dbus.packages = [ packages.dde-daemon ];
                   services.udev.packages = [ packages.dde-daemon ];
@@ -297,7 +297,7 @@
                   '';
                 })
 
-                (mkIf config.services.dde.deepin-anything.enable {
+                (mkIf config.services.dde-unstable.deepin-anything.enable {
                   environment.systemPackages = [ packages.deepin-anything ];
                   services.dbus.packages = [ packages.deepin-anything ];
                   # systemd.packages = [ packages.deepin-anything ];
@@ -349,7 +349,7 @@
                   };
                 })
 
-                (mkIf config.services.dde.dde-api.enable {
+                (mkIf config.services.dde-unstable.dde-api.enable {
                   environment.systemPackages = [ packages.dde-api ];
                   services.dbus.packages = [ packages.dde-api ];
                   systemd.packages = [ packages.dde-api ];
@@ -364,7 +364,7 @@
                   };
                 })
 
-                (mkIf config.services.dde.app-services.enable {
+                (mkIf config.services.dde-unstable.app-services.enable {
                   environment.systemPackages = [ packages.dde-app-services ];
                   services.dbus.packages = [ packages.dde-app-services ];
                   environment.pathsToLink = [ "/share/dsg" ];

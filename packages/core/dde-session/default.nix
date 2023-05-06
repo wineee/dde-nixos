@@ -56,6 +56,8 @@ stdenv.mkDerivation rec {
     systemd
   ];
 
+  passthru.providedSessions = [ "deepin" ];
+
   meta = with lib; {
     description = "New deepin session, based on systemd and existing projects";
     homepage = "https://github.com/linuxdeepin/dde-session";

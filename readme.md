@@ -32,7 +32,7 @@ In order to use DDE, you must enable [flakes](https://nixos.wiki/wiki/Flakes) to
         modules = [
           dde-nixos.nixosModules.${system}
           {
-            services.xserver.desktopManager.deepin.enable = true;
+            services.xserver.desktopManager.deepin-unstable.enable = true;
           }
         ];
       };
