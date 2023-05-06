@@ -15,21 +15,33 @@
 , kwindowsystem
 , kglobalaccel
 , xorg
+, tzdata
 }:
 stdenv.mkDerivation rec {
   pname = "dde-appearance";
-  version = "1.0.8";
+  version = "1.0.9";
 
   src = fetchFromGitHub {
     owner = "linuxdeepin";
     repo = pname;
     rev = version;
-    sha256 = "sha256-/E1SE0PAz3soC9507jbmaIFf+URsOy13UBQ0Aa4BYXc=";
+    sha256 = "sha256-5XuogRF8VdjZRB67/O41Ncd1//Tj9Cl4hM+bwYXXb8E=";
   };
 
   postPatch = ''
-    substituteInPlace misc/systemd/dde-appearance.service \
+    substituteInPlace misc/systemd/dde-appearance.service src/service/modules/subthemes/customtheme.cpp \
       --replace "/usr" "$out"
+
+    substituteInPlace src/service/modules/api/compatibleengine.cpp \
+      src/service/modules/background/backgrounds.cpp \
+      src/service/dbus/deepinwmfaker.cpp \
+      misc/dconfig/org.deepin.dde.appearance.json \
+      --replace "/usr" "/run/current-system/sw"
+
+    substituteInPlace src/service/modules/common/commondefine.h \
+      --replace "/usr/share/zoneinfo" "${tzdata}/share/zoneinfo"
+    substituteInPlace src/service/modules/api/themethumb.cpp \
+      --replace "/usr/lib/deepin-api" "/run/current-system/sw/libexec/deepin-api"
   '';
 
   nativeBuildInputs = [

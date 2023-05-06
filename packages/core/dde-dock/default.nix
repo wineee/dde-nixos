@@ -26,16 +26,9 @@ stdenv.mkDerivation rec {
   src = fetchFromGitHub {
     owner = "linuxdeepin";
     repo = pname;
-    rev = version;
-    sha256 = "sha256-bF+QB+Oc/5ueaicuzXF99NUNpizUx8OBOU5ZFI4S0Jw=";
+    rev = "24ff57eb70a06285aadd4c588674be4c96a2521f";
+    sha256 = "sha256-3EWMCbHb+uShyJ6eiQ44tPCoFkGBtg+BNxx57WS58iw=";
   };
-
-  patches = [
-    (fetchpatch {
-      url = "https://github.com/linuxdeepin/dde-dock/commit/3b6f84687c7f0aa6b09a5597d730b3456736d271.patch";
-      sha256 = "sha256-5ZtmRyyWw6LZ7+w9h3QdZiBxrY1cmnRwiDdVzzTe3bw=";
-    })
-  ];
 
   postPatch = ''
     substituteInPlace plugins/pluginmanager/pluginmanager.cpp \
