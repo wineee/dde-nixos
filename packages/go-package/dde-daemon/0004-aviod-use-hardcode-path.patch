@@ -1,3 +1,9 @@
+commit 61f4fdb7219fbb0448a3f8cd16daf1db1f883af1
+Author: rewine <luhongxu@deepin.org>
+Date:   Mon May 8 13:36:16 2023 +0800
+
+    aviod-use-hardcode-path
+
 diff --git a/accounts1/user.go b/accounts1/user.go
 index 8101d9c6..16c7f15f 100644
 --- a/accounts1/user.go
@@ -12,13 +18,14 @@ index 8101d9c6..16c7f15f 100644
  	}
  
 diff --git a/accounts1/user_chpwd_union_id.go b/accounts1/user_chpwd_union_id.go
-index 61a691d9..a26bb445 100644
+index 61a691d9..47d2163e 100644
 --- a/accounts1/user_chpwd_union_id.go
 +++ b/accounts1/user_chpwd_union_id.go
-@@ -90,13 +90,13 @@ func newCaller(service *dbusutil.Service, sender dbus.Sender) (ret *caller, err
+@@ -89,14 +89,13 @@ func newCaller(service *dbusutil.Service, sender dbus.Sender) (ret *caller, err
+ 
  	// 只允许来自控制中心, 锁屏和 greetter 的调用
  	var app string
- 	switch exe {
+-	switch exe {
 -	case "/usr/bin/dde-control-center":
 +	if (strings.Contains(exe, "dde-control-center")) {
  		app = "control-center"

@@ -42,10 +42,11 @@ buildGoModule rec {
     hash = "sha256-pcVugGTNY7PAwiLEdwF1j8k8zTlG2/2rs0WQMZz38d0=";
   };
 
-  vendorHash = "sha256-51V+cR0TckXorK1DyMrQHcPF4eQ1hUJYyJkmpHsud3Y=";
+  vendorHash = "sha256-4/HGviJGTJoW2cVDsOvOfeHGaiXKBTzat7/5Q0FoTR8=";
 
   patches = [
     ./0001-dont-set-PATH.diff
+    ./0003-search-in-XDG-directories.patch
     (substituteAll {
       src = ./0004-aviod-use-hardcode-path.patch;
       inherit dbus;
@@ -53,9 +54,6 @@ buildGoModule rec {
   ];
 
   postPatch = ''
-    substituteInPlace misc/udev-rules/80-deepin-fprintd.rules \
-      --replace "/usr/bin/dbus-send" "${dbus}/bin/dbus-send"
-
     substituteInPlace session/eventlog/{app_event.go,login_event.go} \
       --replace "/bin/bash" "${runtimeShell}"
 
