@@ -15,13 +15,13 @@
 
 stdenv.mkDerivation rec {
   pname = "dde-session";
-  version = "1.1.1";
+  version = "1.1.2";
 
   src = fetchFromGitHub {
     owner = "linuxdeepin";
     repo = pname;
     rev = version;
-    sha256 = "sha256-4v9/Qq1cJITPwVgFYoW+1nTjN+pt4VGYcfvkgErvPwY=";
+    sha256 = "sha256-a8gOvpSTKxGrwqRwPA6WTUeHLuBaItYpSQolFsSbS9Y=";
   };
 
   postPatch = ''
