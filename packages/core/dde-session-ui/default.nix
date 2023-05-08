@@ -32,7 +32,7 @@ stdenv.mkDerivation rec {
       --replace "/usr/share/wallpapers" "/run/current-system/sw/share/wallpapers"
 
     substituteInPlace dde-warning-dialog/src/org.deepin.dde.WarningDialog1.service dde-welcome/src/org.deepin.dde.Welcome1.service \
-      --replace "/usr/lib/deepin-daemon" "/run/current-system/sw/libexec/deepin-daemon"
+      --replace "/usr/lib/deepin-daemon" "/run/current-system/sw/lib/deepin-daemon"
 
     substituteInPlace dde-osd/src/notification/bubbletool.cpp \
       --replace "/usr/share" "/run/current-system/sw/share"

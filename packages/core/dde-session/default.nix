@@ -33,7 +33,7 @@ stdenv.mkDerivation rec {
       --replace "/usr/lib/polkit-1-dde" "${dde-polkit-agent}/lib/polkit-1-dde"
 
     for file in $(grep -rl "/usr/lib/deepin-daemon"); do
-      substituteInPlace $file --replace "/usr/lib/deepin-daemon" "/run/current-system/sw/libexec/deepin-daemon"
+      substituteInPlace $file --replace "/usr/lib/deepin-daemon" "/run/current-system/sw/lib/deepin-daemon"
     done
 
     for file in $(grep -rl "/usr/bin"); do

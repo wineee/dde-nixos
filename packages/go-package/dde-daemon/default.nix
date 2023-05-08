@@ -65,14 +65,14 @@ buildGoModule rec {
      --replace "/usr/share/zoneinfo" "${tzdata}/share/zoneinfo"
 
     substituteInPlace accounts1/image_blur.go grub2/modify_manger.go \
-      --replace "/usr/lib/deepin-api" "/run/current-system/sw/libexec/deepin-api"
+      --replace "/usr/lib/deepin-api" "/run/current-system/sw/lib/deepin-api"
 
     substituteInPlace accounts1/user_chpwd_union_id.go \
       --replace "/usr/lib/dde-control-center" "/run/current-system/sw/lib/dde-control-center"
 
     for file in $(grep "/usr/lib/deepin-daemon" * -nR |awk -F: '{print $1}')
     do
-      sed -i 's|/usr/lib/deepin-daemon|/run/current-system/sw/libexec/deepin-daemon|g' $file
+      sed -i 's|/usr/lib/deepin-daemon|/run/current-system/sw/lib/deepin-daemon|g' $file
     done
 
     patchShebangs .
@@ -116,11 +116,16 @@ buildGoModule rec {
     runHook postInstall
   '';
 
-  postInstall = ''
-    mv $out/lib/deepin-daemon $out/libexec
-  '';
-
   doCheck = false;
+
+  postFixup = ''
+    for binary in $out/lib/deepin-daemon/*; do
+      if [ "$binary" == "$out/lib/deepin-daemon/service-trigger" ] ; then
+        continue;
+      fi
+      wrapGApp $binary
+    done
+  '';
 
   meta = with lib; {
     description = "Daemon for handling the deepin session settings";

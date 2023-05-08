@@ -36,7 +36,7 @@ stdenv.mkDerivation rec {
 
     substituteInPlace frame/{window/components/desktop_widget.cpp,controller/quicksettingcontroller.cpp} \
       plugins/show-desktop/showdesktopplugin.cpp \
-      --replace "/usr/lib/deepin-daemon" "/run/current-system/sw/libexec/deepin-daemon"
+      --replace "/usr/lib/deepin-daemon" "/run/current-system/sw/lib/deepin-daemon"
    '';
 
   nativeBuildInputs = [

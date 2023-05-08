@@ -44,7 +44,7 @@ buildGoModule rec {
     substituteInPlace display/manager.go session.go \
       --replace "/bin/bash" "${runtimeShell}"
     substituteInPlace display/manager.go main.go utils.go session.go \
-      --replace "/usr/lib/deepin-daemon" "/run/current-system/sw/libexec/deepin-daemon"
+      --replace "/usr/lib/deepin-daemon" "/run/current-system/sw/lib/deepin-daemon"
     substituteInPlace misc/auto_launch/{default.json,chinese.json} \
       --replace "/usr/lib/polkit-1-dde/dde-polkit-agent" "${dde-polkit-agent}/lib/polkit-1-dde/dde-polkit-agent"
     substituteInPlace startmanager.go launch_group.go memchecker/config.go \
