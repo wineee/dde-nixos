@@ -45,7 +45,11 @@ buildGoModule rec {
   vendorHash = "sha256-51V+cR0TckXorK1DyMrQHcPF4eQ1hUJYyJkmpHsud3Y=";
 
   patches = [
-    ./0002-dont-set-PATH.patch
+    ./0001-dont-set-PATH.diff
+    (substituteAll {
+      src = ./0004-aviod-use-hardcode-path.patch;
+      inherit dbus;
+    })
   ];
 
   postPatch = ''
