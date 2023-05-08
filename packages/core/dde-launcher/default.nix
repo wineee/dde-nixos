@@ -30,6 +30,8 @@ stdenv.mkDerivation rec {
       --replace "/usr/share/backgrounds" "/run/current-system/sw/share/backgrounds"
     substituteInPlace dde-launcher.desktop dde-launcher-wapper src/dbusservices/org.deepin.dde.Launcher1.service \
       --replace "/usr" "$out"
+    substituteInPlace src/global_util/pluginloader.cpp \
+      --replace "/usr/lib/dde-launcher" "/run/current-system/sw/lib/dde-launcher"
   '';
 
   nativeBuildInputs = [

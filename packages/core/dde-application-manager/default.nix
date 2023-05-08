@@ -10,6 +10,7 @@
 , gsettings-qt
 , libcap
 , xorg
+, iconv
 }:
 
 stdenv.mkDerivation rec {
@@ -19,14 +20,17 @@ stdenv.mkDerivation rec {
   src = fetchFromGitHub {
     owner = "linuxdeepin";
     repo = pname;
-    rev = version;
-    sha256 = "sha256-79c/DwSpDfE21DOdQJsueo04OX82QNMU8wmhMFCiLlY=";
+    rev = "233cc0db3db8da74a528cf180f97c52391d1aafd";
+    sha256 = "sha256-JtcEHE6tL8Kk+Hif3Myo4hFdrq1ltflzK+VLR1oZE4k=";
   };
 
   ## TODO
   postPatch = ''
-    substituteInPlace src/modules/mimeapp/mime_app.cpp src/lib/basedir.cpp src/modules/mimeapp/mime_app.cpp \
+    substituteInPlace src/modules/mimeapp/mime_app.cpp src/modules/launcher/common.h src/service/main.cpp \
+      src/modules/dock/common.h \
       --replace "/usr/share" "/run/current-system/sw/share"
+
+    substituteInPlace src/lib/dlocale.cpp --replace "/usr/share/locale/locale.alias" "${iconv}/share/locale/locale.alias"
 
     for file in $(grep -rl "/usr/bin"); do
       substituteInPlace $file --replace "/usr/bin/" ""

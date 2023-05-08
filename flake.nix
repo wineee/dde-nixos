@@ -208,7 +208,7 @@
                         deepin-turbo
 
                         dde-account-faces
-                        #deepin-icon-theme
+                        deepin-icon-theme
                         deepin-desktop-theme
                         deepin-sound-theme
                         deepin-gtk-theme
@@ -267,6 +267,7 @@
                     deepin-pw-check
                     dde-widgets
                     dde-session
+                    dde-application-manager
                   ];
 
                   systemd.packages = with pkgs; with packages; [
