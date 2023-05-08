@@ -31,6 +31,7 @@ stdenv.mkDerivation rec {
 
   propagatedBuildInputs = [
     breeze-icons
+    papirus-icon-theme
     hicolor-icon-theme
   ];
 
