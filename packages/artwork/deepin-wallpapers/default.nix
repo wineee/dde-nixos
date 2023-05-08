@@ -19,7 +19,7 @@ stdenv.mkDerivation rec {
 
   postPatch = ''
     substituteInPlace Makefile \
-      --replace /usr/lib/deepin-api/image-blur ${dde-api}/libexec/deepin-api/image-blur
+      --replace /usr/lib/deepin-api/image-blur ${dde-api}/lib/deepin-api/image-blur
   '';
 
   installPhase = ''
@@ -39,5 +39,6 @@ stdenv.mkDerivation rec {
     homepage = "https://github.com/linuxdeepin/deepin-wallpapers";
     license = with licenses; [ gpl3Plus cc-by-sa-30 ];
     platforms = platforms.linux;
+    maintainers = teams.deepin.members;
   };
 }
