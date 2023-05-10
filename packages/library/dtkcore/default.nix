@@ -17,13 +17,13 @@
 
 stdenv.mkDerivation rec {
   pname = "dtkcore";
-  version = "5.6.10";
+  version = "5.6.11";
 
   src = fetchFromGitHub {
     owner = "linuxdeepin";
     repo = pname;
     rev = version;
-    sha256 = "sha256-ge8DiJMSaZo7GeQEgnDbi5SLsLxtOQ/P5/9aBgaG7Ds=";
+    sha256 = "sha256-m3ppXcBYrBRgcxyNOoJkvLUPAg5dneRGX4es4b6R9Gk=";
   };
 
   postPatch = ''
@@ -37,7 +37,7 @@ stdenv.mkDerivation rec {
     wrapQtAppsHook
   ] ++ lib.optional buildDocs [
     doxygen
-    qttools.dev
+    qttools
   ];
 
   dontWrapQtApps = true;
@@ -75,5 +75,6 @@ stdenv.mkDerivation rec {
     homepage = "https://github.com/linuxdeepin/dtkcore";
     license = licenses.lgpl3Plus;
     platforms = platforms.linux;
+    maintainers = teams.deepin.members;
   };
 }
