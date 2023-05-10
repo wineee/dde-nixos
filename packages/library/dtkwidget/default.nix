@@ -23,13 +23,13 @@
 
 stdenv.mkDerivation rec {
   pname = "dtkwidget";
-  version = "5.6.10";
+  version = "5.6.11";
 
   src = fetchFromGitHub {
     owner = "linuxdeepin";
     repo = pname;
     rev = version;
-    sha256 = "sha256-PhVK/lUFrDW1bn9lUhLuKWLAVj7E7+/YC5USShrg3ds=";
+    sha256 = "sha256-Epd8B1BGORtHk3rR8T5WwFuldNZQ0f/1QDbmMg670eU=";
   };
 
   postPatch = ''
