@@ -19,13 +19,13 @@
 
 stdenv.mkDerivation rec {
   pname = "qt5integration";
-  version = "5.6.6";
+  version = "5.6.11";
 
   src = fetchFromGitHub {
     owner = "linuxdeepin";
     repo = pname;
     rev = version;
-    sha256 = "sha256-7b18ydyy/TIEGDkFAoium1LSx3Qs4I4pYpMfehOBZbY=";
+    sha256 = "sha256-6q75QGerve5l1NXppbMQ/4qjZiWq23+LxDrIZeAIF6E=";
   };
 
   # patches = [
@@ -36,7 +36,11 @@ stdenv.mkDerivation rec {
   #  })
   # ];
 
-  nativeBuildInputs = [ qmake pkg-config wrapQtAppsHook ];
+  nativeBuildInputs = [
+    qmake
+    pkg-config
+    wrapQtAppsHook
+  ];
 
   buildInputs = [
     dtkwidget
