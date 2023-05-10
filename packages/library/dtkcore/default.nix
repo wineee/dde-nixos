@@ -37,7 +37,7 @@ stdenv.mkDerivation rec {
     wrapQtAppsHook
   ] ++ lib.optional buildDocs [
     doxygen
-    qttools
+    qttools.dev
   ];
 
   dontWrapQtApps = true;
