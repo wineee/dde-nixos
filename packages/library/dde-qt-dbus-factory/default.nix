@@ -10,7 +10,7 @@
 
 stdenv.mkDerivation rec {
   pname = "dde-qt-dbus-factory";
-  version = "5.5.22";
+  version = "6.0.0";
 
   src = fetchFromGitHub {
     owner = "linuxdeepin";
