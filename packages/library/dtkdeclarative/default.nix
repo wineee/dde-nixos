@@ -18,13 +18,13 @@
 
 stdenv.mkDerivation rec {
   pname = "dtkdeclarative";
-  version = "5.6.8";
+  version = "5.6.10";
 
   src = fetchFromGitHub {
     owner = "linuxdeepin";
     repo = pname;
     rev = version;
-    sha256 = "sha256-L7xZGPDsT5C/ssQrV7BTk3kvGMvqTeLaoXambrARd18=";
+    sha256 = "sha256-OiXqFfd1AhcQxdAnhP0fM5AnLiTEJsrH/ia09pXdVXQ=";
   };
 
   patches = [
@@ -40,15 +40,9 @@ stdenv.mkDerivation rec {
     qttools
     pkg-config
     wrapQtAppsHook
-    qtdeclarative.dev
-
+    qtdeclarative
     doxygen
-    qttools.dev
-  ];
-
-  buildInputs = [
-    qt5integration
-    qt5platform-plugins # for examples
+    qttools
   ];
 
   propagatedBuildInputs = [ 
