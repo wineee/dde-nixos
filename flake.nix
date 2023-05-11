@@ -137,6 +137,7 @@
                   environment.sessionVariables = {
                     NIX_GSETTINGS_OVERRIDES_DIR = "${nixos-gsettings-desktop-schemas}/share/gsettings-schemas/nixos-gsettings-overrides/glib-2.0/schemas";
                     DDE_POLKIT_AGENT_PLUGINS_DIRS = [ "${packages.dpa-ext-gnomekeyring}/lib/polkit-1-dde/plugins" ];
+                    DDE_WIDGETS_PLUGIN_DIRS = "";
                   };
 
                   environment.variables = {
@@ -233,6 +234,7 @@
                         dde-widgets
                         dde-appearance
                         dde-application-manager
+                        dde-permission-manager
                       ];
                       optionalPackages = [
                         onboard # dde-dock plugin
@@ -268,6 +270,7 @@
                     dde-widgets
                     dde-session
                     dde-application-manager
+                    dde-permission-manager
                   ];
 
                   systemd.packages = with pkgs; with packages; [
@@ -280,6 +283,7 @@
                     dde-widgets
                     dde-session
                     dde-application-manager
+                    dde-permission-manager
                   ];
 
                   services.dde-unstable.dde-daemon.enable = mkForce true;

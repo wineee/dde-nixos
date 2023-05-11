@@ -55,6 +55,10 @@ stdenv.mkDerivation rec {
     gtest
   ];
 
+  qtWrapperArgs = [
+    "--suffix DDE_WIDGETS_PLUGIN_DIRS : ${placeholder "out"}/lib/dde-widgets/plugins"
+  ];
+
   meta = with lib; {
     description = "Desktop widgets service/implementation for DDE";
     homepage = "https://github.com/linuxdeepin/dde-widgets";
