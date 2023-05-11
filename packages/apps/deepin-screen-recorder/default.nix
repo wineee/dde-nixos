@@ -17,7 +17,7 @@
 , xorg
 , libusb1
 , libv4l
-, ffmpeg
+, ffmpeg_4
 , ffmpegthumbnailer
 , portaudio
 , kwayland
@@ -66,7 +66,7 @@ stdenv.mkDerivation rec {
     xorg.libXcursor
     libusb1
     libv4l
-    ffmpeg
+    ffmpeg_4
     ffmpegthumbnailer
     portaudio
     kwayland
@@ -80,7 +80,7 @@ stdenv.mkDerivation rec {
   # qt5integration must be placed before qtsvg in QT_PLUGIN_PATH
   qtWrapperArgs = [
     "--prefix QT_PLUGIN_PATH : ${qt5integration}/${qtbase.qtPluginPrefix}"
-    "--prefix LD_LIBRARY_PATH : ${lib.makeLibraryPath [ udev gst_all_1.gstreamer libv4l ]}"
+    "--prefix LD_LIBRARY_PATH : ${lib.makeLibraryPath [ udev gst_all_1.gstreamer libv4l ffmpeg_4 ffmpegthumbnailer ]}"
   ];
 
   preFixup = ''
