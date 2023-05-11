@@ -28,6 +28,8 @@ builds:
     - "packages.*.dde-session"
     - "packages.*.dde-widgets"
     - "packages.*.dde-application-manager"
+    - "packages.*.dde-api"
+    - "packages.*.dde-daemon"
     # Tier 2
     - 'packages.x86_64-linux.deepin-pw-check'
     - 'packages.x86_64-linux.deepin-terminal'
