@@ -30,6 +30,7 @@ builds:
     - "packages.*.dde-application-manager"
     - "packages.*.dde-api"
     - "packages.*.dde-daemon"
+    - "packages.*.deepin-desktop-schemas"
     # Tier 2
     - 'packages.x86_64-linux.deepin-pw-check'
     - 'packages.x86_64-linux.deepin-terminal'
