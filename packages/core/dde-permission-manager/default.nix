@@ -6,29 +6,23 @@
 , wrapQtAppsHook
 , qtbase
 , dtkwidget
-, dde-polkit-agent
-, gsettings-qt
-, libcap
-, xorg
 , polkit-qt
 }:
 
 stdenv.mkDerivation rec {
   pname = "dde-permission-manager";
-  version = "1.0.5";
+  version = "1.0.5.999";
 
   src = fetchFromGitHub {
     owner = "linuxdeepin";
     repo = pname;
-    rev = "7211761facc55ff70eab6f8b9e4120770a457ba1";
-    sha256 = "sha256-seo3ppEod2KhoDcuOUTYMbZ6FNHQmGXvB1p3IJnFBr4=";
+    rev = "b31de4a2ee2e7e6cb88e1146d36f3dd814fdb513";
+    sha256 = "sha256-SMJ3xNNpMVEcs2mQO6inD+YXY9X5aun/1bKO2nmzfEo=";
   };
 
-  ## TODO
   postPatch = ''
-    for file in $(grep -rl "/usr/bin"); do
-      substituteInPlace $file --replace "/usr/bin/" ""
-    done
+    substituteInPlace src/{permissionpolicy.cpp,settings.cpp} \
+      --replace "/usr" "$out"
   '';
 
   nativeBuildInputs = [
@@ -40,7 +34,6 @@ stdenv.mkDerivation rec {
   buildInputs = [
     qtbase
     dtkwidget
-    gsettings-qt
     polkit-qt
   ];
 
