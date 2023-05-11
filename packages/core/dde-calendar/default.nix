@@ -59,9 +59,9 @@ stdenv.mkDerivation rec {
     "--prefix QT_PLUGIN_PATH : ${qt5integration}/${qtbase.qtPluginPrefix}"
   ];
 
-  postFixup = ''
-    wrapQtApp $out/lib/deepin-daemon/dde-calendar-service
-  '';
+  # postFixup = ''
+  #   wrapQtApp $out/lib/deepin-daemon/dde-calendar-service
+  # '';
 
   strictDeps = true;
 
