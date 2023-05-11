@@ -5,7 +5,7 @@
   nixConfig.extra-trusted-public-keys = "cache.garnix.io:CTFPyKSLcx5RMJKfLo5EEPUObbA78b0YQ2DTCJXqr9g=";
 
   inputs = {
-    nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
+    nixpkgs.url = "github:NixOS/nixpkgs/master";
     flake-utils.url = "github:numtide/flake-utils";
   };
 
@@ -91,7 +91,6 @@
 
                   services.udisks2.enable = true;
                   services.upower.enable = mkDefault config.powerManagement.enable;
-                  
                   networking.networkmanager.enable = mkDefault true;
                   
                   programs.dconf.enable = true;
@@ -191,13 +190,15 @@
                     deepin-movie-reborn
                     deepin-shortcut-viewer
                     deepin-compressor
-
-                  ] ++ (with packages; (utils.removePackagesByName ([
-                    dde-kwin
-                    deepin-kwin
                     deepin-system-monitor
                     deepin-screen-recorder
+                    libsForQt5.kwin
+                    (writeShellScriptBin "kwin_no_scale" "${libsForQt5.kwin}/bin/kwin_x11")
+                  ] ++ (with packages; (utils.removePackagesByName ([
+                    #dde-kwin
+                    #deepin-kwin
                   ]) config.environment.deepin.excludePackages));
+
 
                   services.dbus.packages =  with pkgs; with deepin; [
                     deepin-pw-check
@@ -220,7 +221,9 @@
                   ]) config.environment.deepin.excludePackages));
 
                   systemd.packages = with pkgs.deepin; [
-                    packages.deepin-kwin
+                    #packages.deepin-kwin
+                    pkgs.libsForQt5.kwin
+
                     dde-launcher
                     dde-file-manager
                     dde-calendar

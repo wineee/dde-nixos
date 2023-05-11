@@ -4,54 +4,11 @@ let
 
   newScope = pkgs.deepin.newScope;
 
-  functions = with pkgs; rec {
-    getPatchFrom' = commonRp:
-      let
-        rpstr = s1: s2: " --replace " + lib.strings.escapeShellArgs [ s1 s2 ];
-        rpstrL = l: if lib.length l == 2 then rpstr (lib.head l) (lib.last l) else (throw "input must be a list of 2 string: [original  ]");
-        rpfile = filePath: replaceLists:
-          "substituteInPlace ${filePath}" + lib.concatMapStrings rpstrL replaceLists;
-      in
-      x: lib.pipe x [
-        (x: lib.mapAttrs (name: value: value ++ commonRp) x)
-        (x: lib.mapAttrsToList (name: value: rpfile name value) x)
-        (lib.concatStringsSep "\n")
-        (s: s + "\n")
-        #(throw)
-      ];
-
-    getPatchFrom = getPatchFrom' [ ];
-    getUsrPatchFrom = getPatchFrom' [ [ "/usr" "${placeholder "out"}" ] ];
-
-    replaceAll = x: y: ''
-      echo Replacing "${x}" to "${y}":
-      for file in $(grep -rl "${x}")
-      do
-        echo -- $file
-        substituteInPlace $file \
-          --replace "${x}" "${y}"
-      done
-    '';
-  };
-
-  packages = self: with self; functions // {
-    #### TOOLS
-    #deepin-anything = callPackage ./tools/deepin-anything { };
-    #dde-calendar = callPackage ./core/dde-calendar { };
-
+  packages = self: with self; {
 
     ### CORE
     dde-kwin = callPackage ./core/dde-kwin { };
     deepin-kwin = callPackage ./core/deepin-kwin { };
-    #dde-dock = callPackage ./core/dde-dock { };
-    #dde-launcher = callPackage ./core/dde-launcher { };
-    #dde-file-manager = callPackage ./core/dde-file-manager { };
-    #dde-clipboard = callPackage ./core/dde-clipboard { };
-    #dde-app-services = callPackage ./core/dde-app-services { };
-    #dde-network-core = callPackage ./core/dde-network-core { };
-    #dde-session-shell = callPackage ./core/dde-session-shell { };
-    #dde-session-ui = callPackage ./core/dde-session-ui { };
-
     #### MISC
     nixos-gsettings-schemas = callPackage ./misc/nixos-gsettings-schemas { };
 
