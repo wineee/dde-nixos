@@ -29,6 +29,9 @@
 , xdotool
 , getconf
 , dbus
+, util-linux
+, dde-session-ui
+, glib
 }:
 
 buildGoModule rec {
@@ -46,6 +49,10 @@ buildGoModule rec {
 
   patches = [
     ./0001-dont-set-PATH.diff
+    (substituteAll {
+      src = ./0002-fix-custom-wallpapers-path.diff;
+      inherit coreutils;
+    })
     ./0003-search-in-XDG-directories.patch
     (substituteAll {
       src = ./0004-aviod-use-hardcode-path.patch;
@@ -119,6 +126,12 @@ buildGoModule rec {
   '';
 
   doCheck = false;
+
+  preFixup = ''
+    gappsWrapperArgs+=(
+      --prefix PATH : "${lib.makeBinPath [ util-linux dde-session-ui glib ]}"
+    )
+  '';
 
   postFixup = ''
     for binary in $out/lib/deepin-daemon/*; do

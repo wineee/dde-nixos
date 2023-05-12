@@ -9,19 +9,20 @@
 , dde-polkit-agent
 , gsettings-qt
 , libcap
+, jemalloc
 , xorg
 , iconv
 }:
 
 stdenv.mkDerivation rec {
   pname = "dde-application-manager";
-  version = "1.0.12";
+  version = "1.0.14";
 
   src = fetchFromGitHub {
     owner = "linuxdeepin";
     repo = pname;
-    rev = "233cc0db3db8da74a528cf180f97c52391d1aafd";
-    sha256 = "sha256-JtcEHE6tL8Kk+Hif3Myo4hFdrq1ltflzK+VLR1oZE4k=";
+    rev = "c0b424cedcbce6fa9dbc189a0de1224ef7bc9b21";
+    sha256 = "sha256-V6ttKikgLSCkjMa+TK+VVP/byElz0aFLy5z/4uSf9AE=";
   };
 
   ## TODO
@@ -33,7 +34,7 @@ stdenv.mkDerivation rec {
     substituteInPlace src/lib/dlocale.cpp --replace "/usr/share/locale/locale.alias" "${iconv}/share/locale/locale.alias"
 
     for file in $(grep -rl "/usr/bin"); do
-      substituteInPlace $file --replace "/usr/bin/" ""
+      substituteInPlace $file --replace "/usr/bin/" "/run/current-system/sw/bin/"
     done
   '';
 
@@ -48,6 +49,7 @@ stdenv.mkDerivation rec {
     dtkwidget
     gsettings-qt
     libcap
+    jemalloc
     xorg.libXdmcp
     xorg.libXres
   ];
