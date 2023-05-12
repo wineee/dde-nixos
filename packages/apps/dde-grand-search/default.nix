@@ -9,17 +9,13 @@
 , qt5integration
 , qt5platform-plugins
 , image-editor
+, deepin-pdfium
 , cmake
 , qttools
 , pkg-config
 , gsettings-qt
 , taglib
 , ffmpeg
-, poppler
-, pcre
-, util-linux
-, libselinux
-, libsepol
 , ffmpegthumbnailer
 , wrapQtAppsHook
 , dbus
@@ -43,13 +39,13 @@ let
 in
 stdenv.mkDerivation rec {
   pname = "dde-grand-search";
-  version = "5.4.2";
+  version = "6.0.0.999";
 
   src = fetchFromGitHub {
     owner = "linuxdeepin";
     repo = pname;
-    rev = version;
-    sha256 = "sha256-OMLZgPE2OH1jItbfGiUAi9SkzcUVLNLbSwgKafAGC10=";
+    rev = "a32e46ee55ca69f54e2cd1c96a5519009c44aa7c";
+    sha256 = "sha256-lt2kLmIt67LFdhubmA67+8UwuA4Jee/zhVNdVDBCXsI=";
   };
 
   postPatch = getUsrPatchFrom patchList;
@@ -65,23 +61,18 @@ stdenv.mkDerivation rec {
     dtkwidget
     dde-dock
     dde-qt-dbus-factory
-    gsettings-qt
     taglib
-    ffmpeg.dev
-    poppler
-    pcre
-    libselinux
-    libsepol.dev
-    util-linux.dev
+    ffmpeg
     ffmpegthumbnailer
     image-editor
-
+    deepin-pdfium
     qt5integration
     qt5platform-plugins
   ];
 
   cmakeFlags = [
     "-DVERSION=${version}"
+    "-DDEEPIN_OS_VERSION=23"
   ];
 
   qtWrapperArgs = [
@@ -93,5 +84,6 @@ stdenv.mkDerivation rec {
     homepage = "https://github.com/linuxdeepin/dde-grand-search";
     license = licenses.gpl3Plus;
     platforms = platforms.linux;
+    maintainers = teams.deepin.members;
   };
 }
