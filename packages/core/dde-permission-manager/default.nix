@@ -22,6 +22,7 @@ stdenv.mkDerivation rec {
 
   postPatch = ''
     substituteInPlace src/{permissionpolicy.cpp,settings.cpp} \
+      files/systemd/dde-permission-manager.service \
       --replace "/usr" "$out"
   '';
 
