@@ -21,21 +21,20 @@
 
 stdenv.mkDerivation rec {
   pname = "dde-dock";
-  version = "6.0.13";
+  version = "6.0.16";
 
   src = fetchFromGitHub {
     owner = "linuxdeepin";
     repo = pname;
-    rev = "24ff57eb70a06285aadd4c588674be4c96a2521f";
-    sha256 = "sha256-3EWMCbHb+uShyJ6eiQ44tPCoFkGBtg+BNxx57WS58iw=";
+    rev = version;
+    sha256 = "sha256-8DbqmyTK3YTv/MSTscmUED6PApzreuuEvSF7c3O/2B0=";
   };
 
   postPatch = ''
-    substituteInPlace plugins/pluginmanager/pluginmanager.cpp \
-      --replace "/usr/lib/dde-dock/plugins" "/run/current-system/sw/lib/dde-dock/plugins"
+    substituteInPlace plugins/pluginmanager/pluginmanager.cpp frame/controller/quicksettingcontroller.cpp  \
+      --replace "/usr/lib/dde-dock" "/run/current-system/sw/lib/dde-dock"
 
-    substituteInPlace frame/{window/components/desktop_widget.cpp,controller/quicksettingcontroller.cpp} \
-      plugins/show-desktop/showdesktopplugin.cpp \
+    substituteInPlace plugins/show-desktop/showdesktopplugin.cpp frame/window/components/desktop_widget.cpp \
       --replace "/usr/lib/deepin-daemon" "/run/current-system/sw/lib/deepin-daemon"
    '';
 
@@ -53,9 +52,6 @@ stdenv.mkDerivation rec {
     qtbase
     dtkwidget
     qt5platform-plugins
-    # dde-qt-dbus-factory
-    # dde-control-center
-    # deepin-desktop-schemas
     dwayland
     qtx11extras
     gsettings-qt
