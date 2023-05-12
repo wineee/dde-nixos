@@ -1,0 +1,100 @@
+From 285d818798d3ffc1b17d1f47d60da474a2d5ff80 Mon Sep 17 00:00:00 2001
+From: rewine <lhongxu@outlook.com>
+Date: Fri, 12 May 2023 15:03:16 +0800
+Subject: [PATCH] fix: clear up undefineed symbol
+
+Log: these function undefineed
+---
+ src/plugin-accounts/operation/accountsdbusproxy.h   | 3 ---
+ src/plugin-accounts/operation/userdbusproxy.h       | 1 -
+ src/plugin-datetime/window/timesettingmodule.h      | 1 -
+ src/plugin-display/window/multiscreenwidget.h       | 1 -
+ src/plugin-power/window/useelectricmodule.h         | 7 -------
+ src/plugin-touchscreen/operation/monitordbusproxy.h | 3 ---
+ 6 files changed, 16 deletions(-)
+
+diff --git a/src/plugin-accounts/operation/accountsdbusproxy.h b/src/plugin-accounts/operation/accountsdbusproxy.h
+index 901ca35..299d901 100644
+--- a/src/plugin-accounts/operation/accountsdbusproxy.h
++++ b/src/plugin-accounts/operation/accountsdbusproxy.h
+@@ -47,9 +47,6 @@ public slots:
+     QDBusPendingReply<bool, QString, int> IsUsernameValid(const QString &in0);
+     QDBusPendingReply<QString> RandUserIcon();
+ 
+-private slots:
+-    void onLangSelectorStartServiceProcessFinished(QDBusPendingCallWatcher *w);
+-
+ private:
+     void init();
+ 
+diff --git a/src/plugin-accounts/operation/userdbusproxy.h b/src/plugin-accounts/operation/userdbusproxy.h
+index a7a6025..129fcb4 100644
+--- a/src/plugin-accounts/operation/userdbusproxy.h
++++ b/src/plugin-accounts/operation/userdbusproxy.h
+@@ -187,7 +187,6 @@ public slots:
+ 
+ private slots:
+     void onPropertiesChanged(const QDBusMessage &message);
+-    void onLangSelectorStartServiceProcessFinished(QDBusPendingCallWatcher *w);
+ private:
+     void init();
+ 
+diff --git a/src/plugin-datetime/window/timesettingmodule.h b/src/plugin-datetime/window/timesettingmodule.h
+index 4a36d6b..f1f5322 100644
+--- a/src/plugin-datetime/window/timesettingmodule.h
++++ b/src/plugin-datetime/window/timesettingmodule.h
+@@ -38,7 +38,6 @@ Q_SIGNALS:
+ 
+ public Q_SLOTS:
+     void setControlVisible(bool state);
+-    void onProcessComboBox(const QString &value);
+     void onCancelButtonClicked();
+     void onConfirmButtonClicked();
+     void isUserOperate();
+diff --git a/src/plugin-display/window/multiscreenwidget.h b/src/plugin-display/window/multiscreenwidget.h
+index 989be6e..b1bb85e 100644
+--- a/src/plugin-display/window/multiscreenwidget.h
++++ b/src/plugin-display/window/multiscreenwidget.h
+@@ -86,7 +86,6 @@ private Q_SLOTS:
+     void onResetSecondaryScreenDlg();
+     void onResetFullIndication(const QRect &geometry);
+     void onResetSecondaryScreenDlgTimerOut();
+-    void onGSettingsChanged(const QString & gsettingsName, const QString &setting);
+ 
+ protected:
+     void keyPressEvent(QKeyEvent *event) override;
+diff --git a/src/plugin-power/window/useelectricmodule.h b/src/plugin-power/window/useelectricmodule.h
+index ef30739..6a0edaf 100644
+--- a/src/plugin-power/window/useelectricmodule.h
++++ b/src/plugin-power/window/useelectricmodule.h
+@@ -27,13 +27,6 @@ Q_SIGNALS:
+     void requestSetLinePowerPressPowerBtnAction(const int reply) const; //按下电源
+     void requestSetLinePowerLidClosedAction(const int reply) const;     //合上盖子
+ 
+-public Q_SLOTS:
+-    void setScreenBlackDelayOnPower(const int delay);
+-    void setSleepDelayOnPower(const int delay);
+-    void setLockScreenAfter(const int delay);
+-    void setCloseLid(int lidIndex);
+-    void setPowerBtn(int powIndex);
+-
+ private:
+     void initUI();
+     void updateComboxActionList();
+diff --git a/src/plugin-touchscreen/operation/monitordbusproxy.h b/src/plugin-touchscreen/operation/monitordbusproxy.h
+index beb390a..0e44bf0 100644
+--- a/src/plugin-touchscreen/operation/monitordbusproxy.h
++++ b/src/plugin-touchscreen/operation/monitordbusproxy.h
+@@ -26,9 +26,6 @@ public:
+ private:
+     void init();
+ 
+-public Q_SLOTS: // METHODS
+-    void onPropertiesChanged(const QDBusMessage &message);
+-
+ Q_SIGNALS: // SIGNALS
+     void NameChanged(const QString & value) const;
+ 
+-- 
+2.40.1
+

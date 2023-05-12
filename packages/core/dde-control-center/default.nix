@@ -20,6 +20,7 @@
 , runtimeShell
 , tzdata
 , dbus
+, fetchpatch
 }:
 
 stdenv.mkDerivation rec {
@@ -32,6 +33,14 @@ stdenv.mkDerivation rec {
     rev = version;
     sha256 = "sha256-K4U9LlaYjP4aSZAUoJUwsX/tBGJ7EpAo5LUaiRp1U74=";
   };
+
+  patches = [
+   (fetchpatch {
+      url = "https://github.com/linuxdeepin/dde-control-center/commit/c8851b0c75f46a4beb72090e17e2c6788fcdfdf4.patch";
+      sha256 = "sha256-IrebFrONkAbSek5bBmdadnnj+WgaNmmcPTTksVZ9OqY=";
+    })
+    ./0001-fix-clear-up-undefineed-symbol.patch
+  ];
 
   postPatch = ''
      substituteInPlace src/plugin-datetime/window/widgets/timezone.cpp \
