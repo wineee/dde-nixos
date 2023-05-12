@@ -31,7 +31,7 @@
 , dbus
 , util-linux
 , dde-session-ui
-, glib
+, coreutils
 }:
 
 buildGoModule rec {
