@@ -19,13 +19,13 @@
 
 stdenv.mkDerivation rec {
   pname = "deepin-compressor";
-  version = "5.12.14";
+  version = "6.0.0.999";
 
   src = fetchFromGitHub {
     owner = "linuxdeepin";
     repo = pname;
-    rev = version;
-    sha256 = "sha256-0F1LdoeGtIKOVepifwdNMohbEb9fakpQLiNHg5H9Nlw=";
+    rev = "a0f988452490cc2770a4f376686f63a7c508ac23";
+    sha256 = "sha256-I1TSx0SUK90UnXxmgLudh5Rf4wEjgFKfhfJ0irgZpA8=";
   };
 
   postPatch = ''
@@ -58,6 +58,10 @@ stdenv.mkDerivation rec {
     "-DVERSION=${version}"
     "-DUSE_TEST=OFF"
   ];
+
+  preBuild = ''
+    export PREFIX=${placeholder "out"}
+  '';
 
   strictDeps = true;
 
