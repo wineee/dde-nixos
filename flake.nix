@@ -235,6 +235,7 @@
                         dde-appearance
                         dde-application-manager
                         dde-permission-manager
+                        deepin-service-manager
                       ];
                       optionalPackages = [
                         onboard # dde-dock plugin
@@ -271,6 +272,7 @@
                     dde-session
                     dde-application-manager
                     dde-permission-manager
+                    deepin-service-manager
                   ];
 
                   systemd.packages = with pkgs; with packages; [
@@ -284,6 +286,7 @@
                     dde-session
                     dde-application-manager
                     dde-permission-manager
+                    deepin-service-manager
                   ];
 
                   services.dde-unstable.dde-daemon.enable = mkForce true;
