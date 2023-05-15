@@ -277,6 +277,7 @@
                     deepin-pw-check
                     dde-widgets
                     dde-session
+                    dde-appearance
                     dde-application-manager
                     dde-permission-manager
                     deepin-service-manager

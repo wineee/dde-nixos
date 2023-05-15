@@ -21,6 +21,7 @@
 , xkeyboard_config
 , dbus
 , dde-session-shell
+, fetchpatch
 }:
 
 stdenv.mkDerivation rec {
@@ -33,6 +34,13 @@ stdenv.mkDerivation rec {
     rev = version;
     sha256 = "sha256-fE2jtmy0gtBa+LgBSiPfGxCYWBdswOvqxIU8odJZwm0=";
   };
+
+  patches = [
+   (fetchpatch {
+      url = "https://github.com/linuxdeepin/dde-session-shell/commit/98cb5f81f40a18c0c3bcaf3cd14d46dfeb4f452b.patch";
+      sha256 = "sha256-aC8ZB3AXwTH7kx0YM8bI/lk9wP6mfitDB1DR7Xzz1tQ=";
+    })
+  ];
 
   postPatch = ''
     substituteInPlace scripts/lightdm-deepin-greeter files/wayland/lightdm-deepin-greeter-wayland \
