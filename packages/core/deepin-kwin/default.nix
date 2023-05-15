@@ -37,22 +37,22 @@
 }:
 stdenv.mkDerivation rec {
   pname = "deepin-kwin";
-  version = "5.25.3";
+  version = "5.25.4";
 
   src = fetchFromGitHub {
     owner = "linuxdeepin";
     repo = pname;
     rev = version;
-    sha256 = "sha256-nTWaA7xnw2Q4PwALyr7P4wDyK3WhGVt4NImDjldq3cI=";
+    sha256 = "sha256-1R7pTs3ln+J7CIMiktPB/qRV53Q/oyDh7BmgKALB9Tg=";
   };
+
+  patches = [
+    ./0001-hardcode-fallback-background.diff
+  ];
 
   postPatch = ''
     substituteInPlace src/effects/screenshot/screenshotdbusinterface1.cpp \
       --replace 'file.readAll().startsWith(DEFINE_DDE_DOCK_PATH"dde-dock")' 'file.readAll().contains("dde-dock")'
-
-    substituteInPlace src/effects/multitaskview/multitaskview.cpp \
-      --replace "/usr/share/backgrounds" "/run/current-system/sw/share/backgrounds" \
-      --replace "/usr/share/wallpapers" "/run/current-system/sw/share/wallpapers"
   '';
 
   nativeBuildInputs = [
