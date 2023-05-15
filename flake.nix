@@ -386,8 +386,17 @@
                 })
 
                 (mkIf config.services.dde-unstable.app-services.enable {
+                  users.groups.dde-dconfig-daemon = { };
+                  users.users.dde-dconfig-daemon = {
+                    description = "Dconfig daemon user";
+                    home = "/var/lib/dde-dconfig-daemon";
+                    createHome = true;
+                    group = "dde-dconfig-daemon";
+                    isSystemUser = true;
+                  };
                   environment.systemPackages = [ packages.dde-app-services ];
                   services.dbus.packages = [ packages.dde-app-services ];
+                  systemd.packages = [ packages.dde-app-services ];
                   environment.pathsToLink = [ "/share/dsg" ];
                 })
 
