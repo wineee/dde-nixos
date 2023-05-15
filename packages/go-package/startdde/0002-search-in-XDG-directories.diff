@@ -104,6 +104,3 @@ index 5bd0889..62c4fc2 100644
  type StartManager struct {
  	xConn               *x.Conn
  	service             *dbusutil.Service
--- 
-2.40.1
-

@@ -43,10 +43,18 @@ index 14b8bff..2b2c412 100644
          "Args": [
            "-d"
 diff --git a/session.go b/session.go
-index 60f84eb..203d1fe 100644
+index 60f84eb..dd60762 100644
 --- a/session.go
 +++ b/session.go
-@@ -81,7 +81,7 @@ type SessionManager struct {
+@@ -14,6 +14,7 @@ import (
+ 	"sync"
+ 	"syscall"
+ 	"time"
++	"strings"
+ 
+ 	"github.com/godbus/dbus/v5"
+ 	"github.com/linuxdeepin/dde-api/soundutils"
+@@ -81,7 +82,7 @@ type SessionManager struct {
  }
  
  const (
@@ -55,7 +63,7 @@ index 60f84eb..203d1fe 100644
  	lockFrontDest    = "org.deepin.dde.LockFront1"
  	lockFrontIfc     = lockFrontDest
  	lockFrontObjPath = "/org/deepin/dde/LockFront1"
-@@ -454,7 +454,7 @@ func (m *SessionManager) SetLocked(sender dbus.Sender, value bool) *dbus.Error {
+@@ -454,7 +455,7 @@ func (m *SessionManager) SetLocked(sender dbus.Sender, value bool) *dbus.Error {
  		return dbusutil.ToError(err)
  	}
  
@@ -64,7 +72,7 @@ index 60f84eb..203d1fe 100644
  		m.setLocked(value)
  		return nil
  	}
-@@ -474,7 +474,7 @@ func (m *SessionManager) SetLocked(sender dbus.Sender, value bool) *dbus.Error {
+@@ -474,7 +475,7 @@ func (m *SessionManager) SetLocked(sender dbus.Sender, value bool) *dbus.Error {
  		return dbusutil.ToError(fmt.Errorf("desktop file %q is invalid", desktopFile))
  	}
  	exe = info.GetExecutable()
