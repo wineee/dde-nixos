@@ -14,41 +14,40 @@
 , glib
 , wrapGAppsHook
 , runtimeShell
-, dde-polkit-agent
 , gnome
 , pciutils
-, fetchpatch
+, dbus
 }:
 
 buildGoModule rec {
   pname = "startdde";
-  version = "6.0.1";
+  version = "6.0.8";
 
   src = fetchFromGitHub {
     owner = "linuxdeepin";
     repo = pname;
-    rev = "5e3fb76061821312b5901822a45347d28a4a436a";
-    hash = "sha256-JhqN2r6r2kwzGR7Y9lkcq65GXPG0UBSPl+jQAWUukh4=";
+    rev = version;
+    hash = "sha256-HvRt5lcCN+0HmVm0bXxx0/+bIM54v8LWH5V24uSPFwM=";
   };
 
   patches = [
-    (fetchpatch {
-      url = "https://github.com/linuxdeepin/startdde/commit/0e999151695d49bc550d9801ad65739e71cc82dd.patch";
-      sha256 = "sha256-cMdJjIo/VQB6dK0knQaVxktIRLHl0Fuy4G/rRcu8smM=";
-    })
+    ./0001-avoid-use-hardcode-path.diff
+    ./0002-search-in-XDG-directories.diff
+    ./0003-add-adrg-xdg-for-gomod.diff
   ];
 
-  vendorHash = "sha256-QfZcLvymjZVK6CUnsvGPVtT/a0dLuhqnJQQe777/EIE=";
+  vendorHash = "";
 
   postPatch = ''
     substituteInPlace display/manager.go session.go \
       --replace "/bin/bash" "${runtimeShell}"
-    substituteInPlace display/manager.go main.go utils.go session.go \
+
+    substituteInPlace misc/systemd_task/dde-display-task-refresh-brightness.service \
+       --replace "/usr/bin/dbus-send" "${dbus}/bin/dbus-send"
+
+    substituteInPlace display/manager.go utils.go session.go \
       --replace "/usr/lib/deepin-daemon" "/run/current-system/sw/lib/deepin-daemon"
-    substituteInPlace misc/auto_launch/{default.json,chinese.json} \
-      --replace "/usr/lib/polkit-1-dde/dde-polkit-agent" "${dde-polkit-agent}/lib/polkit-1-dde/dde-polkit-agent"
-    substituteInPlace startmanager.go launch_group.go memchecker/config.go \
-      --replace "/usr/share/startdde" "$out/share/startdde"
+
     substituteInPlace misc/lightdm.conf --replace "/usr" "$out"
   '';
 

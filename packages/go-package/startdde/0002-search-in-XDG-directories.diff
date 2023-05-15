@@ -1,0 +1,109 @@
+diff --git a/launch_group.go b/launch_group.go
+index 045a67c..ec5bb40 100644
+--- a/launch_group.go
++++ b/launch_group.go
+@@ -9,6 +9,7 @@ import (
+ 	"io/ioutil"
+ 	"path/filepath"
+ 
++	"github.com/adrg/xdg"
+ 	"github.com/linuxdeepin/go-lib/xdg/basedir"
+ )
+ 
+@@ -26,10 +27,13 @@ type launchGroup struct {
+ type launchGroups []*launchGroup
+ 
+ const (
+-	sysLaunchGroupFile  = "/usr/share/startdde/auto_launch.json"
+ 	userLaunchGroupFile = "startdde/auto_launch.json"
+ )
+ 
++var (
++	sysLaunchGroupFile, _  = xdg.SearchDataFile("startdde/auto_launch.json")
++)
++
+ func (infos launchGroups) Len() int {
+ 	return len(infos)
+ }
+diff --git a/memchecker/config.go b/memchecker/config.go
+index 5d8b220..292b29b 100644
+--- a/memchecker/config.go
++++ b/memchecker/config.go
+@@ -9,15 +9,19 @@ import (
+ 	"io/ioutil"
+ 	"path/filepath"
+ 	"github.com/linuxdeepin/go-lib/xdg/basedir"
++	"github.com/adrg/xdg"
+ )
+ 
+ const (
+-	sysConfigFile = "/usr/share/startdde/memchecker.json"
+ 
+ 	defaultMinMemAvail = 300  // 300M
+ 	defaultMaxSwapUsed = 1200 // 1200M
+ )
+ 
++var (
++	sysConfigFile, _ = xdg.SearchDataFile("startdde/memchecker.json")
++)
++
+ type configInfo struct {
+ 	MinMemAvail uint64 `json:"min-mem-available"`
+ 	MaxSwapUsed uint64 `json:"max-swap-used"`
+diff --git a/session.go b/session.go
+index 203d1fe..0353ff5 100644
+--- a/session.go
++++ b/session.go
+@@ -15,6 +15,7 @@ import (
+ 	"syscall"
+ 	"time"
+ 
++	"github.com/adrg/xdg"
+ 	"github.com/godbus/dbus/v5"
+ 	"github.com/linuxdeepin/dde-api/soundutils"
+ 	sysbt "github.com/linuxdeepin/go-dbus-factory/system/org.deepin.dde.bluetooth1"
+@@ -46,7 +47,10 @@ const (
+ 	xsKeyQtFontName     = "Qt/FontName"
+ 	xsKeyQtMonoFontName = "Qt/MonoFontName"
+ 
+-	ddeLockDesktopFile = "/usr/share/applications/dde-lock.desktop"
++)
++
++var (
++	ddeLockDesktopFile, _ = xdg.SearchDataFile("applications/dde-lock.desktop");
+ )
+ 
+ type SessionManager struct {
+diff --git a/startmanager.go b/startmanager.go
+index 5bd0889..62c4fc2 100644
+--- a/startmanager.go
++++ b/startmanager.go
+@@ -18,6 +18,7 @@ import (
+ 	"sync"
+ 	"time"
+ 
++        "github.com/adrg/xdg"
+ 	"github.com/fsnotify/fsnotify"
+ 	dbus "github.com/godbus/dbus/v5"
+ 	daemonApps "github.com/linuxdeepin/go-dbus-factory/system/org.deepin.dde.apps1"
+@@ -57,12 +58,16 @@ const (
+ 	uiAppSchedHooksDir = "/usr/lib/UIAppSched.hooks"
+ 	launchedHookDir    = uiAppSchedHooksDir + "/launched"
+ 
+-	cpuFreqAdjustFile   = "/usr/share/startdde/app_startup.conf"
+ 	performanceGovernor = "performance"
+ 
+ 	restartRateLimitSeconds = 60
+ )
+ 
++var (
++
++	cpuFreqAdjustFile, _   = xdg.SearchDataFile("startdde/app_startup.conf")
++)
++
+ type StartManager struct {
+ 	xConn               *x.Conn
+ 	service             *dbusutil.Service
+-- 
+2.40.1
+
