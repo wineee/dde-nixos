@@ -182,6 +182,13 @@
                     "deepin-installer.conf".text = ''
                       system_info_vendor_name="Copyright (c) 2003-2023 NixOS contributors"
                     '';
+                    "os-version".text = ''
+                      [Version]
+                      SystemName=NixOS
+                      ProductType=Desktop
+                      EditionName=Community
+                      MajorVersion=23
+                    '';
                   };
 
                   systemd.tmpfiles.rules = [

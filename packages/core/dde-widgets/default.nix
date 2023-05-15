@@ -8,7 +8,7 @@
 , qtbase
 , qtx11extras
 , dtkwidget
-, dde-polkit-agent
+, tzdata
 , fetchpatch
 , gtest
 }:
@@ -36,8 +36,11 @@ stdenv.mkDerivation rec {
   ];
 
   postPatch = ''
+    substituteInPlace worldclock/utils/timezone.cpp \
+     --replace "/usr/share/zoneinfo" "${tzdata}/share/zoneinfo"
+
     for file in $(grep -rl "/usr/bin"); do
-      substituteInPlace $file --replace "/usr/bin/" ""
+      substituteInPlace $file --replace "/usr/bin" "/run/current-system/sw/bin"
     done
   '';
 
