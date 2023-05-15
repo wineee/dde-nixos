@@ -36,7 +36,7 @@ buildGoModule rec {
     ./0003-add-adrg-xdg-for-gomod.diff
   ];
 
-  vendorHash = "";
+  vendorHash = "sha256-5BEOazAygYL1N+CaGAbUwdpHZ1EiHr6yNW27/bXNdZg=";
 
   postPatch = ''
     substituteInPlace display/manager.go session.go \

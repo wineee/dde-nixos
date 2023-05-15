@@ -32,6 +32,8 @@
 , util-linux
 , dde-session-ui
 , coreutils
+, lshw
+, systemd
 }:
 
 buildGoModule rec {
@@ -129,7 +131,7 @@ buildGoModule rec {
 
   preFixup = ''
     gappsWrapperArgs+=(
-      --prefix PATH : "${lib.makeBinPath [ util-linux dde-session-ui glib ]}"
+      --prefix PATH : "${lib.makeBinPath [ util-linux dde-session-ui glib lshw systemd ]}"
     )
   '';
 
