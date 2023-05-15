@@ -29,6 +29,8 @@ stdenv.mkDerivation rec {
   postPatch = ''
     substituteInPlace src/modules/mimeapp/mime_app.cpp src/modules/launcher/common.h src/service/main.cpp \
       src/modules/dock/common.h \
+      misc/dconf/com.deepin.dde.dock.json \
+      misc/dconf/com.deepin.dde.appearance.json \
       --replace "/usr/share" "/run/current-system/sw/share"
 
     substituteInPlace src/lib/dlocale.cpp --replace "/usr/share/locale/locale.alias" "${iconv}/share/locale/locale.alias"
