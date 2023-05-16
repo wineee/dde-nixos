@@ -40,12 +40,13 @@ stdenv.mkDerivation rec {
       sha256 = "sha256-IrebFrONkAbSek5bBmdadnnj+WgaNmmcPTTksVZ9OqY=";
     })
     ./0001-fix-clear-up-undefineed-symbol.patch
+    (fetchpatch {
+      url = "https://github.com/linuxdeepin/dde-control-center/commit/6bf6e01645abf190f73acd2a025978e980b9e75b.patch";
+      sha256 = "sha256-C3RSdCFooFdEWKCp7HxjEwIRnsZRvkVpxmS7yzbSVFM=";
+    })
   ];
 
   postPatch = ''
-     substituteInPlace src/plugin-datetime/window/widgets/timezone.cpp \
-      --replace "/usr/share/zoneinfo" "${tzdata}/share/zoneinfo"
-
     substituteInPlace src/plugin-accounts/operation/accountsworker.cpp \
       --replace "/bin/bash" "${runtimeShell}"
 
