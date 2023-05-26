@@ -1,7 +1,6 @@
 { stdenv
 , lib
 , fetchFromGitHub
-, fetchpatch
 , cmake
 , pkg-config
 , wayland
@@ -33,17 +32,17 @@
 , mesa
 , lcms2
 , xorg
-, dtkcore
 }:
+
 stdenv.mkDerivation rec {
   pname = "deepin-kwin";
-  version = "5.25.4";
+  version = "5.25.5";
 
   src = fetchFromGitHub {
     owner = "linuxdeepin";
     repo = pname;
     rev = version;
-    sha256 = "sha256-1R7pTs3ln+J7CIMiktPB/qRV53Q/oyDh7BmgKALB9Tg=";
+    sha256 = "sha256-+1Su73ofyG26aGARrcXq0IPMlfbHaVa+ThWhW7cHfO8=";
   };
 
   patches = [
@@ -66,7 +65,6 @@ stdenv.mkDerivation rec {
     qtbase
     qttools
     qtx11extras
-    dtkcore
 
     wayland
     dwayland
@@ -104,9 +102,7 @@ stdenv.mkDerivation rec {
   ];
 
   cmakeFlags = [
-    #"-DKWIN_BUILD_KCMS=OFF"
     "-DKWIN_BUILD_TABBOX=ON"
-    #"-DKWIN_BUILD_CMS=OFF"
     "-DKWIN_BUILD_RUNNERS=OFF"
   ];
 
