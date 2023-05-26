@@ -18,33 +18,19 @@
 , libxcrypt
 , librsvg
 , runtimeShell
-, tzdata
 , dbus
-, fetchpatch
 }:
 
 stdenv.mkDerivation rec {
   pname = "dde-control-center";
-  version = "6.0.20";
+  version = "6.0.21";
 
   src = fetchFromGitHub {
     owner = "linuxdeepin";
     repo = pname;
     rev = version;
-    sha256 = "sha256-K4U9LlaYjP4aSZAUoJUwsX/tBGJ7EpAo5LUaiRp1U74=";
+    sha256 = "sha256-usG7CIBGLe7JVUsmKFpjKH8w4BEURXR1jxgYoi/LVlc=";
   };
-
-  patches = [
-   (fetchpatch {
-      url = "https://github.com/linuxdeepin/dde-control-center/commit/c8851b0c75f46a4beb72090e17e2c6788fcdfdf4.patch";
-      sha256 = "sha256-IrebFrONkAbSek5bBmdadnnj+WgaNmmcPTTksVZ9OqY=";
-    })
-    ./0001-fix-clear-up-undefineed-symbol.patch
-    (fetchpatch {
-      url = "https://github.com/linuxdeepin/dde-control-center/commit/6bf6e01645abf190f73acd2a025978e980b9e75b.patch";
-      sha256 = "sha256-C3RSdCFooFdEWKCp7HxjEwIRnsZRvkVpxmS7yzbSVFM=";
-    })
-  ];
 
   postPatch = ''
     substituteInPlace src/plugin-accounts/operation/accountsworker.cpp \
