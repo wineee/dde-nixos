@@ -61,7 +61,7 @@
             enable = true;
             full = false;
           };
-          displayManager.defaultSession = "xterm";
+          #displayManager.defaultSession = "xterm";
 
         };
         #environment.deepin.excludePackages = with dde-nixos.packages.${system}; [
