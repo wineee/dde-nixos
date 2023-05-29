@@ -1,19 +1,16 @@
 { stdenv
 , lib
 , fetchFromGitHub
-, fetchpatch
-, dtkwidget
-, qt5integration
-, qt5platform-plugins
-, deepin-gettext-tools
-, dde-qt-dbus-factory
-, image-editor
-, dde-api
 , cmake
 , pkg-config
 , qttools
-, qtmultimedia
 , wrapQtAppsHook
+, dtkwidget
+, qt5integration
+, qt5platform-plugins
+, image-editor
+, qtbase
+, qtmultimedia
 , ffmpeg
 , ffmpegthumbnailer
 , libusb1
@@ -21,104 +18,79 @@
 , libv4l
 , gst_all_1
 , systemd
-, qtbase
 }:
 
-let
-  gstPluginPath = lib.makeSearchPathOutput "lib" "lib/gstreamer-1.0" (with gst_all_1; [ gstreamer gst-plugins-base gst-plugins-good gst-plugins-bad ]);
-in
 stdenv.mkDerivation rec {
   pname = "deepin-camera";
-  version = "1.4.1";
+  version = "1.4.11";
 
   src = fetchFromGitHub {
     owner = "linuxdeepin";
     repo = pname;
     rev = version;
-    sha256 = "sha256-XEv/TBKDLMlE4JEIphKfOBmyo1pyhK8SlxDrclQQfTI=";
+    sha256 = "sha256-GQQFwlJNfdsi0GvDRMIorUnlbXrgbYl9H9aBedOm+ZQ=";
   };
+
+  # QLibrary and dlopen work with LD_LIBRARY_PATH
+  patches = [ ./dont_use_libPath.diff ];
+
+  postPatch = ''
+    substituteInPlace src/CMakeLists.txt \
+      --replace "/usr/share/libimagevisualresult" "${image-editor}/share/libimagevisualresult" \
+      --replace "/usr/include/libusb-1.0" "${lib.getDev libusb1}/include/libusb-1.0"
+    substituteInPlace src/com.deepin.Camera.service \
+      --replace "/usr/bin/qdbus" "${lib.getBin qttools}/bin/qdbus" \
+      --replace "/usr/share" "$out/share"
+  '';
 
   nativeBuildInputs = [
     cmake
     pkg-config
     qttools
-    deepin-gettext-tools
     wrapQtAppsHook
   ];
 
   buildInputs = [
     dtkwidget
-    dde-qt-dbus-factory
+    qt5integration
+    qt5platform-plugins
     image-editor
+    qtbase
     qtmultimedia
     ffmpeg
     ffmpegthumbnailer
     libusb1
     portaudio
     libv4l
-    dde-api
-    qt5integration
-    qt5platform-plugins
   ] ++ (with gst_all_1 ; [
-    gstreamer.dev
+    gstreamer
     gst-plugins-base
+    gst-plugins-good
+    gst-plugins-bad
   ]);
 
-  NIX_CFLAGS_COMPILE = [
+  cmakeFlags = [ "-DVERSION=${version}" ];
+
+  strictDeps = true;
+
+  env.NIX_CFLAGS_COMPILE = toString [
     "-I${gst_all_1.gstreamer.dev}/include/gstreamer-1.0"
     "-I${gst_all_1.gst-plugins-base.dev}/include/gstreamer-1.0"
   ];
 
   qtWrapperArgs = [
-    "--prefix GST_PLUGIN_SYSTEM_PATH_1_0 : ${gstPluginPath}"
+    "--prefix LD_LIBRARY_PATH : ${lib.makeLibraryPath [ ffmpeg ffmpegthumbnailer gst_all_1.gstreamer gst_all_1.gst-plugins-base libusb1 libv4l portaudio systemd ]}"
   ];
 
-  patches = [
-    ./0001-fix-libusb-import.patch
-    (fetchpatch {
-      name = "chore: use GNUInstallDirs in CmakeLists";
-      url = "https://github.com/linuxdeepin/deepin-camera/commit/4679e5e00c7eb21eabf7c7bced0d0b0d196f0eba.patch";
-      sha256 = "sha256-5hn6oFgtLS19Fg/F2q7ExRFN6QVPV1/43XyB1yyjshg=";
-    })
-    (fetchpatch {
-      name = "fix_missing_include_in_windowstatethread_h";
-      url = "https://github.com/linuxdeepin/deepin-camera/commit/9dfc1d18275510a0ed2c96cd4e07933989270ae7.patch";
-      sha256 = "sha256-JGDaPAQciw/A1RG5Fc+ttDsa7XBlwAdQy85MRYWZA3o=";
-    })
-  ];
-
-  fixLoadLibPatch = ''
-    substituteInPlace src/src/mainwindow.cpp \
-      --replace 'libPath("libavcodec.so")'            'QString("${ffmpeg.out}/lib/libavcodec.so")' \
-      --replace 'libPath("libavformat.so")'           'QString("${ffmpeg.out}/lib/libavformat.so")' \
-      --replace 'libPath("libavutil.so")'             'QString("${ffmpeg.out}/lib/libavutil.so")' \
-      --replace 'libPath("libudev.so")'               'QString("${lib.getLib systemd}/lib/libudev.so")' \
-      --replace 'libPath("libusb-1.0.so")'            'QString("${libusb1.out}/lib/libusb-1.0.so")' \
-      --replace 'libPath("libportaudio.so")'          'QString("${portaudio.out}/lib/libportaudio.so")' \
-      --replace 'libPath("libv4l2.so")'               'QString("${libv4l.out}/lib/libv4l2.so")' \
-      --replace 'libPath("libffmpegthumbnailer.so")'  'QString("${ffmpegthumbnailer.out}/lib/libffmpegthumbnailer.so")' \
-      --replace 'libPath("libswscale.so")'            'QString("${ffmpeg.out}/lib/libswscale.so")' \
-      --replace 'libPath("libswresample.so")'         'QString("${ffmpeg.out}/lib/libswresample.so")'
+  preFixup = ''
+    qtWrapperArgs+=(--prefix GST_PLUGIN_SYSTEM_PATH_1_0 : "$GST_PLUGIN_SYSTEM_PATH_1_0")
   '';
-
-  fixLurDirPatch = ''
-    substituteInPlace src/CMakeLists.txt \
-      --replace "/usr/share/libimagevisualresult/filter_cube" "${image-editor}/share/libimagevisualresult/filter_cube"
-  '';
-
-  # qtchooser: /usr/bin/qdbus
-  postPatch = fixLoadLibPatch + fixLurDirPatch + ''
-    substituteInPlace src/com.deepin.Camera.service \
-      --replace "/usr/bin/qdbus" "qdbus" \
-      --replace "/usr/share/applications/deepin-camera.desktop" "$out/share/applications/deepin-camera.desktop"
-  '';
-
-  cmakeFlags = [ "-DVERSION=${version}" ];
 
   meta = with lib; {
     description = "Tool to view camera, take photo and video";
     homepage = "https://github.com/linuxdeepin/deepin-camera";
     license = licenses.gpl3Plus;
     platforms = platforms.linux;
+    maintainers = teams.deepin.members;
   };
 }
