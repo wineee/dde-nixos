@@ -32,12 +32,15 @@ stdenv.mkDerivation rec {
     sha256 = "sha256-usG7CIBGLe7JVUsmKFpjKH8w4BEURXR1jxgYoi/LVlc=";
   };
 
+  outputs = [ "out" "dev" ];
+
+  patches = [
+    ./0001-chore-avoid-use-hardcode-path-in-dbus-services.patch
+  ];
+
   postPatch = ''
     substituteInPlace src/plugin-accounts/operation/accountsworker.cpp \
       --replace "/bin/bash" "${runtimeShell}"
-
-    substituteInPlace misc/org.deepin.dde.ControlCenter1.service \
-      --replace "/usr" "$out"
   '';
 
   nativeBuildInputs = [
