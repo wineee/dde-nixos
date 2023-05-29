@@ -18,19 +18,20 @@
 , gsettings-qt
 , libstartup_notification
 , xorg
-, buildDocs ? true
 }:
 
 stdenv.mkDerivation rec {
   pname = "dtkwidget";
-  version = "5.6.11";
+  version = "5.6.12";
 
   src = fetchFromGitHub {
     owner = "linuxdeepin";
     repo = pname;
     rev = version;
-    sha256 = "sha256-Epd8B1BGORtHk3rR8T5WwFuldNZQ0f/1QDbmMg670eU=";
+    sha256 = "sha256-zpohTjhimiv55X+ipDSgXo5UGCKO1LJay+yjfPGKpV4=";
   };
+
+  outputs = [ "out" "doc" ];
 
   postPatch = ''
     substituteInPlace src/widgets/dapplication.cpp \
@@ -43,9 +44,7 @@ stdenv.mkDerivation rec {
     qttools
     pkg-config
     wrapQtAppsHook
-  ] ++ lib.optional buildDocs [
     doxygen
-    #qttools.dev
   ];
 
   buildInputs = [
@@ -65,7 +64,7 @@ stdenv.mkDerivation rec {
     "-DDVERSION=${version}"
     "-DBUILD_DOCS=ON"
     "-DMKSPECS_INSTALL_DIR=${placeholder "out"}/mkspecs/modules"
-    "-DQCH_INSTALL_DESTINATION=${qtbase.qtDocPrefix}"
+    "-DQCH_INSTALL_DESTINATION=${placeholder "doc"}/${qtbase.qtDocPrefix}"
     "-DCMAKE_INSTALL_LIBDIR=lib"
     "-DCMAKE_INSTALL_INCLUDEDIR=include"
   ];

@@ -11,21 +11,22 @@
 , libuchardet
 , dtkcommon
 , doxygen
-, buildDocs ? true
 , withSystemd ? true
 }:
 
 stdenv.mkDerivation rec {
   pname = "dtkcore";
-  version = "5.6.11";
+  version = "5.6.12";
 
   src = fetchFromGitHub {
     owner = "linuxdeepin";
     repo = pname;
     rev = version;
-    sha256 = "sha256-m3ppXcBYrBRgcxyNOoJkvLUPAg5dneRGX4es4b6R9Gk=";
+    hash = "sha256-AMv2yDmGWkPkBtEq6j44knn2NDS3UrepDyXr6Xl/dQA=";
   };
 
+  outputs = [ "out" "doc" ];
+  
   postPatch = ''
     substituteInPlace src/dsysinfo.cpp \
       --replace "/usr/share/deepin/distribution.info" "/etc/distribution.info" \
@@ -35,9 +36,8 @@ stdenv.mkDerivation rec {
     cmake
     pkg-config
     wrapQtAppsHook
-  ] ++ lib.optional buildDocs [
     doxygen
-    qttools.dev
+    qttools
   ];
 
   dontWrapQtApps = true;
@@ -53,9 +53,9 @@ stdenv.mkDerivation rec {
 
   cmakeFlags = [
     "-DDVERSION=${version}"
-    "-DBUILD_DOCS=${if buildDocs then "ON" else "OFF"}"
+    "-DBUILD_DOCS=ON"
     "-DBUILD_EXAMPLES=OFF"
-    "-DQCH_INSTALL_DESTINATION=${qtbase.qtDocPrefix}"
+    "-DQCH_INSTALL_DESTINATION=${placeholder "doc"}/${qtbase.qtDocPrefix}"
     "-DDSG_PREFIX_PATH='/run/current-system/sw'"
     "-DMKSPECS_INSTALL_DIR=${placeholder "out"}/mkspecs/modules"
     "-DCMAKE_INSTALL_LIBDIR=lib"

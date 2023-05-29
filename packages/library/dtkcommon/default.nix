@@ -15,7 +15,7 @@ stdenv.mkDerivation rec {
     owner = "linuxdeepin";
     repo = pname;
     rev = version;
-    sha256 = "sha256-FHXwgFTevCGTNUPlb/oeltE2//Sjwz7YVvko7QPOsRo=";
+    hash = "sha256-FHXwgFTevCGTNUPlb/oeltE2//Sjwz7YVvko7QPOsRo=";
   };
 
   nativeBuildInputs = [
@@ -37,5 +37,6 @@ stdenv.mkDerivation rec {
     homepage = "https://github.com/linuxdeepin/dtkcommon";
     license = licenses.gpl3Plus;
     platforms = platforms.linux;
+    maintainers = teams.deepin.members;
   };
 }

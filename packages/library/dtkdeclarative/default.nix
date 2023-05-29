@@ -13,27 +13,20 @@
 , qt5integration
 , qt5platform-plugins
 , qtgraphicaleffects
-, fetchpatch
 }:
 
 stdenv.mkDerivation rec {
   pname = "dtkdeclarative";
-  version = "5.6.10";
+  version = "5.6.12";
 
   src = fetchFromGitHub {
     owner = "linuxdeepin";
     repo = pname;
     rev = version;
-    sha256 = "sha256-OiXqFfd1AhcQxdAnhP0fM5AnLiTEJsrH/ia09pXdVXQ=";
+    sha256 = "sha256-n0dNti4DZ+URG4tJcJCCzRclv1N8Wxdoh0xXWr5N1lU=";
   };
 
-  patches = [
-    (fetchpatch {
-      name = "Use find_program to find qhelpgenerator and qmlcachegen";
-      url = "https://github.com/linuxdeepin/dtkdeclarative/commit/672bfd1cbafae84e9c378b60e79d04ca8220043e.patch";
-      sha256 = "sha256-SSjPNL9pNS9/w2PDlgtgVMWkKvlFd/+tc8gWwkSzp/8=";
-    })
-  ];
+  outputs = [ "out" "doc" ];
 
   nativeBuildInputs = [
     cmake
@@ -57,7 +50,7 @@ stdenv.mkDerivation rec {
     "-DBUILD_DOCS=ON"
     "-DBUILD_EXAMPLES=ON"
     "-DMKSPECS_INSTALL_DIR=${placeholder "out"}/mkspecs/modules"
-    "-DQCH_INSTALL_DESTINATION=${qtbase.qtDocPrefix}"
+    "-DQCH_INSTALL_DESTINATION=${placeholder "doc"}/${qtbase.qtDocPrefix}"
     "-DQML_INSTALL_DIR=${qtbase.qtQmlPrefix}"
     "-DCMAKE_INSTALL_LIBDIR=lib"
     "-DCMAKE_INSTALL_INCLUDEDIR=include"

@@ -14,7 +14,6 @@
 , qtimageformats
 , freeimage
 , libraw
-, buildDocs ? true
 }:
 
 stdenv.mkDerivation rec {
@@ -28,14 +27,14 @@ stdenv.mkDerivation rec {
     sha256 = "sha256-b1PtaH5sEAjpi50mSczxiZIRL++ibNmIFgOC3L1fBhk=";
   };
 
+  outputs = [ "out" "doc" ];
+
   nativeBuildInputs = [
     cmake
     qttools
     pkg-config
     wrapQtAppsHook
-  ] ++ lib.optional buildDocs [
     doxygen
-    #qttools.dev
   ];
 
   buildInputs = [
@@ -55,7 +54,7 @@ stdenv.mkDerivation rec {
     "-DDVERSION=${version}"
     "-DBUILD_DOCS=ON"
     "-DMKSPECS_INSTALL_DIR=${placeholder "out"}/mkspecs/modules"
-    "-DQCH_INSTALL_DESTINATION=${qtbase.qtDocPrefix}"
+    "-DQCH_INSTALL_DESTINATION=${placeholder "doc"}/${qtbase.qtDocPrefix}"
     "-DCMAKE_INSTALL_LIBDIR=lib"
     "-DCMAKE_INSTALL_INCLUDEDIR=include"
     #"-DDTK_DISABLE_LIBRSVG=OFF" # librsvg

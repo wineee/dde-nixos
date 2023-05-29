@@ -17,13 +17,13 @@
 
 stdenv.mkDerivation rec {
   pname = "qt5platform-plugins";
-  version = "5.6.11";
+  version = "5.6.12";
 
   src = fetchFromGitHub {
     owner = "linuxdeepin";
     repo = pname;
     rev = version;
-    sha256 = "sha256-ztrNTiHeVcPm4AwQvYH7BaLQxfv2+TL2QdbvvSTbCBY=";
+    hash = "sha256-ET/IRCmMTulV/4KWztnGFgs0Ej3hDheZFsIqh98fmV0=";
   };
 
   # patches = [
