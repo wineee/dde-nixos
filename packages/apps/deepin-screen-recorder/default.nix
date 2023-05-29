@@ -39,10 +39,7 @@ stdenv.mkDerivation rec {
   patches = [ ./dont_use_libPath.diff ];
 
   postPatch = ''
-    substituteInPlace *.pro \
-      deepin-screen-recorder.desktop \
-      assets/com.deepin.Screenshot.service \
-     --replace "/usr" "$out"
+    find . -type f -regex ".*\\.\\(pro\\|service\\|desktop\\)" -exec sed -i -e "s|/usr/|$out/|g" {} \;
   '';
 
   nativeBuildInputs = [
@@ -76,6 +73,10 @@ stdenv.mkDerivation rec {
     gst-plugins-base
     gst-plugins-good
   ]);
+
+  qmakeFlags = [
+   # "DEFINES+=KF5_WAYLAND_FLAGE_ON"
+  ];
 
   # qt5integration must be placed before qtsvg in QT_PLUGIN_PATH
   qtWrapperArgs = [
