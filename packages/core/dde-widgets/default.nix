@@ -33,6 +33,10 @@ stdenv.mkDerivation rec {
       url = "https://github.com/linuxdeepin/dde-widgets/commit/d05630fa89448cb782bf30b5c2ef1ad3c98b8ab5.patch";
       sha256 = "sha256-VrrrVZoL4JO7REKBV0nriY9ORRixhEtiE+DF0xuziCI=";
     })
+    (fetchpatch {
+      url = "https://github.com/linuxdeepin/dde-widgets/commit/6d4306cb4deed1cefb6d28ff8f17a609954b7c15.patch";
+      sha256 = "sha256-X3Px0yWTy5eSm4EusgLTAYA8rpURTpnybrC+wjSP1uI=";
+    })
   ];
 
   postPatch = ''
@@ -56,10 +60,6 @@ stdenv.mkDerivation rec {
     qtx11extras
     dtkwidget
     gtest
-  ];
-
-  qtWrapperArgs = [
-    "--suffix DDE_WIDGETS_PLUGIN_DIRS : ${placeholder "out"}/lib/dde-widgets/plugins"
   ];
 
   meta = with lib; {
