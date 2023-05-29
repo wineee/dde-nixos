@@ -24,6 +24,7 @@
 , udev
 , gst_all_1
 }:
+
 stdenv.mkDerivation rec {
   pname = "deepin-screen-recorder";
   version = "6.0.0.999";
@@ -31,16 +32,15 @@ stdenv.mkDerivation rec {
   src = fetchFromGitHub {
     owner = "linuxdeepin";
     repo = pname;
-    rev = "09d91faf5a5d61c9c55266a5b63b86e2daffd086";
-    sha256 = "sha256-hIH9I/E/izPnGgYPlI2SVo1XZosRNDbIbV+fXQgcw/c=";
+    rev = "83bbfd523842132fa286d419feff4796afcc3e57";
+    sha256 = "sha256-mPoIb0hNfSksADQuRJ4VfcUkgDpOBMtXDIGeq3z5wK0=";
   };
 
   patches = [ ./dont_use_libPath.diff ];
 
   postPatch = ''
-    substituteInPlace screen_shot_recorder.pro deepin-screen-recorder.desktop \
-      src/{src.pro,pin_screenshots/pin_screenshots.pro} \
-      src/dde-dock-plugins/{shotstart/shotstart.pro,recordtime/recordtime.pro} \
+    substituteInPlace *.pro \
+      deepin-screen-recorder.desktop \
       assets/com.deepin.Screenshot.service \
      --replace "/usr" "$out"
   '';
@@ -80,7 +80,7 @@ stdenv.mkDerivation rec {
   # qt5integration must be placed before qtsvg in QT_PLUGIN_PATH
   qtWrapperArgs = [
     "--prefix QT_PLUGIN_PATH : ${qt5integration}/${qtbase.qtPluginPrefix}"
-    "--prefix LD_LIBRARY_PATH : ${lib.makeLibraryPath [ udev gst_all_1.gstreamer libv4l ffmpeg_4 ffmpegthumbnailer ]}"
+    "--prefix LD_LIBRARY_PATH : ${lib.makeLibraryPath [ udev gst_all_1.gstreamer ]}"
   ];
 
   preFixup = ''
