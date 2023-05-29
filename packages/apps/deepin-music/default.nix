@@ -24,14 +24,13 @@
 
 stdenv.mkDerivation rec {
   pname = "deepin-music";
-  version = "7.0.0";
+  version = "7.0.2";
 
   src = fetchFromGitHub {
     owner = "linuxdeepin";
     repo = pname;
-    rev = "3924def3ac0e04dc0358cd989772b8fe30c1cf0e";
-    sha256 = "sha256-RGGnBcQOuM30ghGGSnbTKc7xS2AJpHGG5TOPN75W93A=
-";
+    rev = version;
+    hash = "sha256-/SQbTcvk/LkPljbKTne2oX80wEEObPrz43nekzBCsJ0=";
   };
 
   nativeBuildInputs = [
