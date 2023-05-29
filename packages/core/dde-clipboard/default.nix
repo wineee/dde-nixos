@@ -1,7 +1,6 @@
 { stdenv
 , lib
 , fetchFromGitHub
-, fetchpatch
 , dtkwidget
 , gio-qt
 , cmake
@@ -28,10 +27,7 @@ stdenv.mkDerivation rec {
   };
 
   patches = [
-    (fetchpatch {
-      url = "https://github.com/linuxdeepin/dde-clipboard/pull/134/commits/adbacff5943fe4f1ffadd984e6555eb427676108.patch";
-      sha256 = "sha256-uQB3I52+BqBv9nGNW/mhBcs5iroBVXrUjgJxxxwtGu0=";
-    })
+    ./0001-chore-use-GNUInstallDirs-and-don-t-override-CMAKE_CX.patch
   ];
 
   postPatch = ''
@@ -56,6 +52,10 @@ stdenv.mkDerivation rec {
     dwayland
     glibmm
     gtest
+  ];
+
+  cmakeFlags = [
+    "-DSYSTEMD_USER_UNIT_DIR=${placeholder "out"}/lib/systemd/user"
   ];
 
   meta = with lib; {
