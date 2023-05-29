@@ -22,7 +22,7 @@
 
 stdenv.mkDerivation rec {
   pname = "deepin-camera";
-  version = "1.4.11";
+  version = "6.0.2";
 
   src = fetchFromGitHub {
     owner = "linuxdeepin";
@@ -66,10 +66,11 @@ stdenv.mkDerivation rec {
     gstreamer
     gst-plugins-base
     gst-plugins-good
-    gst-plugins-bad
   ]);
 
-  cmakeFlags = [ "-DVERSION=${version}" ];
+  cmakeFlags = [
+    "-DVERSION=${version}"
+  ];
 
   strictDeps = true;
 
