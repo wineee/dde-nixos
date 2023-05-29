@@ -16,20 +16,22 @@
 
 stdenv.mkDerivation rec {
   pname = "dde-launcher";
-  version = "6.0.10";
+  version = "6.0.13.999";
 
   src = fetchFromGitHub {
     owner = "linuxdeepin";
     repo = pname;
-    rev = version;
-    sha256 = "sha256-XVwozXNAEakyFDUa9vMqxeQVcQ/y2qUJdjawdZfuUAY=";
+    rev = "0f3ee52d3c650efccf46e922023389be330ac0d9";
+    sha256 = "sha256-ZvVMYvSnIl8KhfWW3V/6A0QjcRnImKQH5H1ygyaGp/c=";
   };
+
+  patches = [
+    ./0001-feat-avoid-use-hardcode-path.patch
+  ];
 
   postPatch = ''
     substituteInPlace src/boxframe/{backgroundmanager.cpp,boxframe.cpp} \
       --replace "/usr/share/backgrounds" "/run/current-system/sw/share/backgrounds"
-    substituteInPlace dde-launcher.desktop dde-launcher-wapper src/dbusservices/org.deepin.dde.Launcher1.service \
-      --replace "/usr" "$out"
     substituteInPlace src/global_util/pluginloader.cpp \
       --replace "/usr/lib/dde-launcher" "/run/current-system/sw/lib/dde-launcher"
   '';
