@@ -61,6 +61,10 @@ stdenv.mkDerivation rec {
   ];
   dontWrapGApps = true;
 
+  patches = [
+    ./compile_on_v23.diff
+  ];
+
   postPatch = ''
     patchShebangs .
 
@@ -120,7 +124,6 @@ stdenv.mkDerivation rec {
 
   cmakeFlags = [
     "-DVERSION=${version}"
-    "-DDEEPIN_OS_VERSION=23"
   ];
 
   enableParallelBuilding = true;
