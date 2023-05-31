@@ -153,6 +153,7 @@
                     "/lib/dde-file-manager"
                     "/share/backgrounds"
                     "/share/wallpapers"
+                    #"/share"
                   ];
 
                   environment.etc."distribution.info".text = ''
@@ -165,20 +166,6 @@
                     LogoTransparent=${packages.deepin-desktop-base}/share/pixmaps/distribution_logo_transparent.svg
                   '';
                   environment.etc = {
-                    "deepin/dde.conf".text = ''
-                      [Password]
-                      STRONG_PASSWORD = true
-                      PASSWORD_MIN_LENGTH = 1
-                      PASSWORD_MAX_LENGTH = 510
-                      VALIDATE_POLICY = 1234567890;abcdefghijklmnopqrstuvwxyz;ABCDEFGHIJKLMNOPQRSTUVWXYZ;~`!@#$%^&*()-_+=|\{}[]:"'<>,.?/
-                      VALIDATE_REQUIRED = 1
-                      PALINDROME_NUM = 0
-                      WORD_CHECK = 0
-                      MONOTONE_CHARACTER_NUM = 0
-                      CONSECUTIVE_SAME_CHARACTER_NUM = 0
-                      DICT_PATH = 
-                      FIRST_LETTER_UPPERCASE = false
-                    '';
                     "deepin-installer.conf".text = ''
                       system_info_vendor_name="Copyright (c) 2003-2023 NixOS contributors"
                     '';
@@ -214,6 +201,9 @@
                         qt5platform-plugins
                         deepin-pw-check
                         deepin-turbo
+                        dtkgui
+                        dtkwidget
+                        dtkdeclarative
 
                         dde-account-faces
                         deepin-icon-theme
@@ -300,7 +290,6 @@
                   services.dde-unstable.dde-daemon.enable = mkForce true;
                   services.dde-unstable.dde-api.enable = mkForce true;
                   services.dde-unstable.app-services.enable = mkForce true;
-
                   services.dde-unstable.deepin-anything.enable = true;
                 })
 
