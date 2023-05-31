@@ -21,5 +21,6 @@ stdenvNoCC.mkDerivation rec {
     homepage = "https://github.com/linuxdeepin/dde-account-faces";
     license = with licenses; [ gpl3Plus cc0 ];
     platforms = platforms.linux;
+    maintainers = teams.deepin.members;
   };
 }
