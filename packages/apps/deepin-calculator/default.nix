@@ -3,7 +3,6 @@
 , fetchFromGitHub
 , dtkwidget
 , qt5integration
-, qt5platform-plugins
 , qtbase
 , qtsvg
 , dde-qt-dbus-factory
@@ -35,7 +34,6 @@ stdenv.mkDerivation rec {
   buildInputs = [
     dtkwidget
     qt5integration
-    qt5platform-plugins
     qtbase
     qtsvg
     dde-qt-dbus-factory

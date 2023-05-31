@@ -5,7 +5,6 @@
 , runtimeShell
 , dtkwidget
 , qt5integration
-, qt5platform-plugins
 , dde-file-manager
 , cmake
 , qttools
@@ -61,7 +60,6 @@ stdenv.mkDerivation rec {
     freetype
     gtest
     qt5integration
-    qt5platform-plugins
     (lib.optional fileManagerPlugins dde-file-manager)
   ];
 

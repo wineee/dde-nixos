@@ -5,7 +5,6 @@
 , replaceAll
 , dtkwidget
 , qt5integration
-, qt5platform-plugins
 , dde-qt-dbus-factory
 , qtmpris
 , qtdbusextended
@@ -95,7 +94,6 @@ stdenv.mkDerivation rec {
     xorg.xcbproto
     libpulseaudio
     qt5integration
-    qt5platform-plugins
   ] ++ (with gst_all_1; [
     gstreamer
     gst-plugins-base

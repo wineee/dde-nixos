@@ -8,7 +8,6 @@
 , wrapGAppsHook
 , dtkwidget
 , qt5integration
-, qt5platform-plugins
 , qtbase
 , qtx11extras
 , gsettings-qt
@@ -47,7 +46,6 @@ stdenv.mkDerivation rec {
 
   buildInputs = [
     dtkwidget
-    qt5platform-plugins
     qtbase
     qtx11extras
     gsettings-qt

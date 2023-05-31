@@ -7,8 +7,6 @@
 , wrapQtAppsHook
 , dtkwidget
 , dtkdeclarative
-, qt5integration
-, qt5platform-plugins
 , qtbase
 , qtsvg
 , udisks2-qt5
@@ -39,8 +37,6 @@ stdenv.mkDerivation rec {
   buildInputs = [
     dtkwidget
     dtkdeclarative
-    #qt5integration
-    #qt5platform-plugins
     qtbase
     qtsvg
     udisks2-qt5
