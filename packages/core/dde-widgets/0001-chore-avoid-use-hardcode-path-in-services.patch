@@ -1,0 +1,46 @@
+From 91f293db88d1ccace164f802fcca259364f874b9 Mon Sep 17 00:00:00 2001
+From: rewine <luhongxu@deepin.org>
+Date: Wed, 31 May 2023 16:11:36 +0800
+Subject: [PATCH] chore: avoid use hardcode path in services
+
+Log: avoid use hardcode path in services
+---
+ app/CMakeLists.txt                                          | 6 +++++-
+ .../systemd/{dde-widgets.service => dde-widgets.service.in} | 2 +-
+ 2 files changed, 6 insertions(+), 2 deletions(-)
+ rename app/services/systemd/{dde-widgets.service => dde-widgets.service.in} (71%)
+
+diff --git a/app/CMakeLists.txt b/app/CMakeLists.txt
+index 909485f..3c94d05 100644
+--- a/app/CMakeLists.txt
++++ b/app/CMakeLists.txt
+@@ -94,8 +94,12 @@ install(FILES services/org.deepin.dde.Widgets1.service DESTINATION ${CMAKE_INSTA
+ 
+ install(TARGETS ${PROJECT_NAME} DESTINATION ${CMAKE_INSTALL_PREFIX}/bin)
+ 
++configure_file(
++	${CMAKE_SOURCE_DIR}/app/services/systemd/dde-widgets.service.in
++	${CMAKE_CURRENT_BINARY_DIR}/dde-widgets.service
++	@ONLY)
+ set(SYSTEMD_FILES
+-    ${CMAKE_SOURCE_DIR}/app/services/systemd/dde-widgets.service
++    ${CMAKE_CURRENT_BINARY_DIR}/dde-widgets.service
+ )
+ 
+ macro(install_symlink filepath wantsdir)
+diff --git a/app/services/systemd/dde-widgets.service b/app/services/systemd/dde-widgets.service.in
+similarity index 71%
+rename from app/services/systemd/dde-widgets.service
+rename to app/services/systemd/dde-widgets.service.in
+index 4e47bc5..99b3e00 100644
+--- a/app/services/systemd/dde-widgets.service
++++ b/app/services/systemd/dde-widgets.service.in
+@@ -7,4 +7,4 @@ After=dde-osd.target
+ [Service]
+ Type=simple
+ RemainAfterExit=no
+-ExecStart=/usr/bin/dde-widgets
++ExecStart=@CMAKE_INSTALL_FULL_BINDIR@/dde-widgets
+-- 
+2.40.1
+

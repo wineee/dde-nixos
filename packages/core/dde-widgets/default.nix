@@ -15,38 +15,19 @@
 
 stdenv.mkDerivation rec {
   pname = "dde-widgets";
-  version = "6.0.12";
+  version = "6.0.12.999";
 
   src = fetchFromGitHub {
     owner = "linuxdeepin";
     repo = pname;
-    rev = version;
-    sha256 = "sha256-7qz+frsYs1XifcO+x0Q9nkc2wEoAQL/HOZV1fwAsTy8=";
+    rev = "42dd6566e3f2a010eba3f817afa816b726d9de6a";
+    sha256 = "sha256-I/DSGVOJ+fJRomfDxhaxGjWBTKZIgTS7fVIFqP087ik=";
   };
 
   patches = [
-    (fetchpatch {
-      url = "https://github.com/linuxdeepin/dde-widgets/commit/272bcab458e59219ce59fb6c802daa29efb1b90a.patch";
-      sha256 = "sha256-z6ZLrPcE72JrQw7oWG8LuhpPrQku1TF5FkEOqfiFtJU=";
-    })
-    (fetchpatch {
-      url = "https://github.com/linuxdeepin/dde-widgets/commit/d05630fa89448cb782bf30b5c2ef1ad3c98b8ab5.patch";
-      sha256 = "sha256-VrrrVZoL4JO7REKBV0nriY9ORRixhEtiE+DF0xuziCI=";
-    })
-    (fetchpatch {
-      url = "https://github.com/linuxdeepin/dde-widgets/commit/6d4306cb4deed1cefb6d28ff8f17a609954b7c15.patch";
-      sha256 = "sha256-X3Px0yWTy5eSm4EusgLTAYA8rpURTpnybrC+wjSP1uI=";
-    })
+    ./zone.diff
+    ./0001-chore-avoid-use-hardcode-path-in-services.patch
   ];
-
-  postPatch = ''
-    substituteInPlace worldclock/utils/timezone.cpp \
-     --replace "/usr/share/zoneinfo" "${tzdata}/share/zoneinfo"
-
-    for file in $(grep -rl "/usr/bin"); do
-      substituteInPlace $file --replace "/usr/bin" "/run/current-system/sw/bin"
-    done
-  '';
 
   nativeBuildInputs = [
     cmake
