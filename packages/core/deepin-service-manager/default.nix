@@ -6,6 +6,7 @@
 , pkg-config
 , wrapQtAppsHook
 , qt5integration
+, qt5platform-plugins
 , qtbase
 , dtkgui
 , gsettings-qt

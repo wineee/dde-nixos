@@ -8,6 +8,7 @@
 , qtbase
 , dtkwidget
 , qt5integration
+, qt5platform-plugins
 , dde-dock
 , gsettings-qt
 , qtx11extras
@@ -50,6 +51,7 @@ stdenv.mkDerivation rec {
   buildInputs = [
     qtbase
     dtkwidget
+    qt5platform-plugins
     dde-dock
     gsettings-qt
     qtx11extras

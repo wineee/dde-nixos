@@ -3,6 +3,7 @@
 , fetchFromGitHub
 , dtkwidget
 , qt5integration
+, qt5platform-plugins
 , qmake
 , qtbase
 , qttools
@@ -32,6 +33,7 @@ stdenv.mkDerivation rec {
     qtbase
     dtkwidget
     qt5integration
+    qt5platform-plugins
   ];
 
   qmakeFlags = [

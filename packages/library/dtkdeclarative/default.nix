@@ -11,6 +11,7 @@
 , doxygen
 , qtbase
 , qt5integration
+, qt5platform-plugins
 , qtgraphicaleffects
 }:
 

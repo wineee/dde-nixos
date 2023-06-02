@@ -3,6 +3,7 @@
 , fetchFromGitHub
 , dtkwidget
 , qt5integration
+, qt5platform-plugins
 , udisks2-qt5
 , cmake
 , qtbase
@@ -44,6 +45,7 @@ stdenv.mkDerivation rec {
   buildInputs = [
     dtkwidget
     qt5integration
+    qt5platform-plugins
     udisks2-qt5
     kcodecs
     karchive

@@ -10,6 +10,7 @@
 , qtbase
 , dtkwidget
 , qt5integration
+, qt5platform-plugins
 , deepin-pw-check
 , gsettings-qt
 , lightdm_qt
@@ -79,6 +80,7 @@ stdenv.mkDerivation rec {
   buildInputs = [
     qtbase
     dtkwidget
+    qt5platform-plugins
     deepin-pw-check
     gsettings-qt
     lightdm_qt

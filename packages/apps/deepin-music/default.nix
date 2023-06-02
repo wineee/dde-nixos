@@ -4,6 +4,7 @@
 , fetchpatch
 , dtkwidget
 , qt5integration
+, qt5platform-plugins
 , udisks2-qt5
 , qtmpris
 , cmake
@@ -51,6 +52,7 @@ stdenv.mkDerivation rec {
     taglib
     SDL2
     qt5integration
+    qt5platform-plugins
   ] ++ (with gst_all_1; [
     gstreamer
     gst-plugins-base
