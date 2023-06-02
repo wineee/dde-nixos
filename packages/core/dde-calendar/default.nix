@@ -28,12 +28,13 @@ stdenv.mkDerivation rec {
 
   patches = [
     ./0001-feat-avoid-use-hardcode-path.patch
+    ./a.diff
   ];
 
   postPatch = ''
-    substituteInPlace calendar-service/src/{csystemdtimercontrol.cpp,alarmManager/dalarmmanager.cpp,calendarDataManager/daccountmanagemodule.cpp} \
-      calendar-service/assets/{data/com.dde.calendarserver.calendar.service,dde-calendar-service.desktop} \
-      --replace "/bin/bash" "${runtimeShell}"
+    for file in $(grep -rl "/bin/bash"); do
+      substituteInPlace $file --replace "/bin/bash" "${runtimeShell}"
+    done
   '';
 
   nativeBuildInputs = [

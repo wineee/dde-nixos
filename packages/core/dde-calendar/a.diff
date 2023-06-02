@@ -1,0 +1,12 @@
+diff --git a/calendar-service/src/calendarprogramexitcontrol.cpp b/calendar-service/src/calendarprogramexitcontrol.cpp
+index 34abac5c..16c24125 100644
+--- a/calendar-service/src/calendarprogramexitcontrol.cpp
++++ b/calendar-service/src/calendarprogramexitcontrol.cpp
+@@ -46,7 +46,6 @@ void CalendarProgramExitControl::reduce()
+ void CalendarProgramExitControl::exit()
+ {
+ #ifdef NDEBUG
+-    qApp->exit();
+ #endif
+ }
+ 
