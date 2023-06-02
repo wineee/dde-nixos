@@ -137,7 +137,6 @@
                   environment.sessionVariables = {
                     NIX_GSETTINGS_OVERRIDES_DIR = "${nixos-gsettings-desktop-schemas}/share/gsettings-schemas/nixos-gsettings-overrides/glib-2.0/schemas";
                     DDE_POLKIT_AGENT_PLUGINS_DIRS = [ "${packages.dpa-ext-gnomekeyring}/lib/polkit-1-dde/plugins" ];
-                    DDE_WIDGETS_PLUGIN_DIRS = "";
                   };
 
                   environment.variables = {
@@ -183,21 +182,21 @@
                     "C /var/lib/AccountsService/icons 0775 root root - ${packages.dde-account-faces}/var/lib/AccountsService/icons"
                   ];
 
-                  environment.systemPackages = with pkgs; with packages;
+                  environment.systemPackages = with packages;
                     let
                       requiredPackages = [
-                        pciutils # for dtkcore/startdde
-                        xdotool # for dde-daemon
-                        glib # for gsettings program / gdbus
-                        gtk3 # for gtk-launch program
-                        xdg-user-dirs # Update user dirs
-                        util-linux # runuser
-                        polkit_gnome
-                        librsvg # dde-api use rsvg-convert
-                        lshw # for dtkcore
-                        libsForQt5.kde-gtk-config # deepin-api/gtk-thumbnailer need
-                        libsForQt5.kglobalaccel
-                        xsettingsd # lightdm-deepin-greeter
+                        pkgs.pciutils # for dtkcore/startdde
+                        pkgs.xdotool # for dde-daemon
+                        pkgs.glib # for gsettings program / gdbus
+                        pkgs.gtk3 # for gtk-launch program
+                        pkgs.xdg-user-dirs # Update user dirs
+                        pkgs.util-linux # runuser
+                        pkgs.polkit_gnome
+                        pkgs.librsvg # dde-api use rsvg-convert
+                        pkgs.lshw # for dtkcore
+                        pkgs.libsForQt5.kde-gtk-config # deepin-api/gtk-thumbnailer need
+                        pkgs.libsForQt5.kglobalaccel
+                        pkgs.xsettingsd # lightdm-deepin-greeter
                         qt5platform-plugins
                         deepin-pw-check
                         deepin-turbo
@@ -235,7 +234,7 @@
                         deepin-service-manager
                       ];
                       optionalPackages = [
-                        onboard # dde-dock plugin
+                        pkgs.onboard # dde-dock plugin
                         deepin-camera
                         deepin-calculator
                         deepin-compressor
@@ -290,7 +289,6 @@
                   services.dde-unstable.dde-daemon.enable = mkForce true;
                   services.dde-unstable.dde-api.enable = mkForce true;
                   services.dde-unstable.app-services.enable = mkForce true;
-                  services.dde-unstable.deepin-anything.enable = true;
                 })
 
                 (mkIf config.services.dde-unstable.dde-daemon.enable {
