@@ -32,8 +32,8 @@ stdenv.mkDerivation rec {
   src = fetchFromGitHub {
     owner = "linuxdeepin";
     repo = pname;
-    rev = "83bbfd523842132fa286d419feff4796afcc3e57";
-    sha256 = "sha256-mPoIb0hNfSksADQuRJ4VfcUkgDpOBMtXDIGeq3z5wK0=";
+    rev = "ed96ca36303b97f1719f5e8da3e076cf823ab8a2";
+    sha256 = "";
   };
 
   patches = [ ./dont_use_libPath.diff ];
@@ -74,14 +74,10 @@ stdenv.mkDerivation rec {
     gst-plugins-good
   ]);
 
-  qmakeFlags = [
-   # "DEFINES+=KF5_WAYLAND_FLAGE_ON"
-  ];
-
   # qt5integration must be placed before qtsvg in QT_PLUGIN_PATH
   qtWrapperArgs = [
     "--prefix QT_PLUGIN_PATH : ${qt5integration}/${qtbase.qtPluginPrefix}"
-    "--prefix LD_LIBRARY_PATH : ${lib.makeLibraryPath [ udev gst_all_1.gstreamer libv4l ]}"
+    "--prefix LD_LIBRARY_PATH : ${lib.makeLibraryPath [ udev gst_all_1.gstreamer libv4l ffmpeg_4 ffmpegthumbnailer ]}"
   ];
 
   preFixup = ''
