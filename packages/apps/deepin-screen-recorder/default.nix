@@ -33,7 +33,7 @@ stdenv.mkDerivation rec {
     owner = "linuxdeepin";
     repo = pname;
     rev = "ed96ca36303b97f1719f5e8da3e076cf823ab8a2";
-    sha256 = "";
+    hash = "sha256-0/L84LRjf4JPc5egQ1hVa43sgYfzakxQwAIlv0WHwKI=";
   };
 
   patches = [ ./dont_use_libPath.diff ];
