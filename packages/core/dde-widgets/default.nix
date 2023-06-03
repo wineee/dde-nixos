@@ -3,13 +3,12 @@
 , fetchFromGitHub
 , cmake
 , pkg-config
-, wrapQtAppsHook
 , dde-qt-dbus-factory
+, wrapQtAppsHook
 , qtbase
 , qtx11extras
 , dtkwidget
-, tzdata
-, fetchpatch
+, qt5platform-plugins
 , gtest
 }:
 
@@ -40,6 +39,7 @@ stdenv.mkDerivation rec {
     qtbase
     qtx11extras
     dtkwidget
+    qt5platform-plugins
     gtest
   ];
 
