@@ -8,7 +8,7 @@
 , qtbase
 , qtx11extras
 , dtkwidget
-, qt5platform-plugins
+, qt5integration
 , gtest
 }:
 
@@ -39,7 +39,7 @@ stdenv.mkDerivation rec {
     qtbase
     qtx11extras
     dtkwidget
-    qt5platform-plugins
+    qt5integration
     gtest
   ];
 
