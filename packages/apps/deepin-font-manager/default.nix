@@ -20,13 +20,13 @@
 
 stdenv.mkDerivation rec {
   pname = "deepin-font-manager";
-  version = "5.9.14";
+  version = "6.0.0.999";
 
   src = fetchFromGitHub {
     owner = "linuxdeepin";
     repo = pname;
-    rev = version;
-    sha256 = "sha256-is5WxuWEKSMuOcdaYCmxE9fDOt48CXI0WJ/smr3g7ro=";
+    rev = "96fd33b6b68f7c3830144668d389d82d77ef61f2";
+    hash = "sha256-jY4fNM94u9nfX6wSE7qOwah32IKZVe1E9jx/zXlj0Y8=";
   };
 
   rmPluginPatch = ''
