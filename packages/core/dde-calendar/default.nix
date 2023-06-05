@@ -12,6 +12,7 @@
 , qtbase
 , qtsvg
 , libical
+, sqlite
 , runtimeShell
 }:
 
@@ -51,6 +52,7 @@ stdenv.mkDerivation rec {
     qt5platform-plugins
     dde-qt-dbus-factory
     libical
+    sqlite
   ];
 
   cmakeFlags = [ "-DVERSION=${version}" ];
