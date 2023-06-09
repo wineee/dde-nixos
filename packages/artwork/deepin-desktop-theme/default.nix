@@ -17,8 +17,8 @@ stdenv.mkDerivation rec {
   src = fetchFromGitHub {
     owner = "linuxdeepin";
     repo = pname;
-    rev = "f63dfe84fa8aff61b58ef6a8dae7f99a39ff74a4";
-    sha256 = "sha256-r4rEvNq0MAKUhIW9HrtB2gsQNTjI3v3oCciAP+z62gQ=";
+    rev = "ca4306c8733343d622dccbe7160dc178cfa30357";
+    hash = "sha256-WPdSFsnFfwGrj9ErL0EKasmg6JfnWoxDosPoa21/+GM=";
   };
 
   makeFlags = [ "PREFIX=${placeholder "out"}" ];
@@ -33,6 +33,7 @@ stdenv.mkDerivation rec {
     breeze-icons
     papirus-icon-theme
     hicolor-icon-theme
+    deepin-icon-theme
   ];
 
   dontDropIconThemeCache = true;
