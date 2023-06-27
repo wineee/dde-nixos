@@ -4,8 +4,6 @@ This project is dedicated to packaging DDE for NixOS
 
 [Packaging Progress](https://github.com/linuxdeepin/dde-nixos/projects/1)
 
-## v23 port is WIP, Please use v20 branch !!!
-
 ## [v20 has been merged upstream](https://search.nixos.org/options?channel=unstable&from=0&size=50&sort=relevance&type=packages&query=deepin)
 
 ## USAGE
