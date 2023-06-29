@@ -2,38 +2,34 @@
 , lib
 , buildGoModule
 , fetchFromGitHub
-, pkg-config
 , gettext
+, pkg-config
+, jq
+, wrapGAppsHook
+, glib
 , libgnome-keyring
 , gtk3
 , alsa-lib
 , pulseaudio
 , libgudev
 , libsecret
-, jq
-, glib
-, wrapGAppsHook
 , runtimeShell
-, gnome
-, pciutils
 , dbus
 }:
 
 buildGoModule rec {
   pname = "startdde";
-  version = "6.0.8";
+  version = "6.0.8.999";
 
   src = fetchFromGitHub {
     owner = "linuxdeepin";
     repo = pname;
-    rev = version;
-    hash = "sha256-HvRt5lcCN+0HmVm0bXxx0/+bIM54v8LWH5V24uSPFwM=";
+    rev = "40d2ccd4e7721ef96ede2d16d0c2d08896676061";
+    hash = "sha256-IZv9O61SIU8/etvZGCHZDBYH3qyWGQdz5NMT0G4HAZ4=";
   };
 
   patches = [
     ./0001-avoid-use-hardcode-path.diff
-    ./0002-search-in-XDG-directories.diff
-    ./0003-add-adrg-xdg-for-gomod.diff
   ];
 
   vendorHash = "sha256-5BEOazAygYL1N+CaGAbUwdpHZ1EiHr6yNW27/bXNdZg=";

@@ -1,25 +1,3 @@
-diff --git a/display/wayland.go b/display/wayland.go
-index 83e8b1c..29a525d 100644
---- a/display/wayland.go
-+++ b/display/wayland.go
-@@ -518,7 +518,7 @@ func (mm *kMonitorManager) applyByWLOutput(monitorMap map[uint32]*Monitor) error
- 
- 	if len(args) > 0 {
- 		ctx, cancel := context.WithTimeout(context.Background(), time.Second*5)
--		cmdline := exec.CommandContext(ctx, "/usr/bin/dde_wloutput", "set")
-+		cmdline := exec.CommandContext(ctx, "dde_wloutput", "set")
- 		cmdline.Args = append(cmdline.Args, args...)
- 		logger.Info("cmd line args:", cmdline.Args)
- 
-@@ -543,7 +543,7 @@ func (mm *kMonitorManager) applyByWLOutput(monitorMap map[uint32]*Monitor) error
- 			cancel()
- 			return fmt.Errorf("get monitor %d uuid failed", monitor.ID)
- 		}
--		data, err := exec.CommandContext(ctx, "/usr/bin/dde_wloutput", "set", uuid, "0", "0", "0", "0", "0", "0", "0").CombinedOutput()
-+		data, err := exec.CommandContext(ctx, "dde_wloutput", "set", uuid, "0", "0", "0", "0", "0", "0", "0").CombinedOutput()
- 		cancel()
- 		// ignore timeout signal
- 		if err != nil && !strings.Contains(err.Error(), "killed") {
 diff --git a/misc/auto_launch/chinese.json b/misc/auto_launch/chinese.json
 index 14b8bff..2b2c412 100644
 --- a/misc/auto_launch/chinese.json
@@ -43,18 +21,10 @@ index 14b8bff..2b2c412 100644
          "Args": [
            "-d"
 diff --git a/session.go b/session.go
-index 60f84eb..dd60762 100644
+index da76626..0353ff5 100644
 --- a/session.go
 +++ b/session.go
-@@ -14,6 +14,7 @@ import (
- 	"sync"
- 	"syscall"
- 	"time"
-+	"strings"
- 
- 	"github.com/godbus/dbus/v5"
- 	"github.com/linuxdeepin/dde-api/soundutils"
-@@ -81,7 +82,7 @@ type SessionManager struct {
+@@ -85,7 +85,7 @@ type SessionManager struct {
  }
  
  const (
@@ -63,7 +33,7 @@ index 60f84eb..dd60762 100644
  	lockFrontDest    = "org.deepin.dde.LockFront1"
  	lockFrontIfc     = lockFrontDest
  	lockFrontObjPath = "/org/deepin/dde/LockFront1"
-@@ -454,7 +455,7 @@ func (m *SessionManager) SetLocked(sender dbus.Sender, value bool) *dbus.Error {
+@@ -458,7 +458,7 @@ func (m *SessionManager) SetLocked(sender dbus.Sender, value bool) *dbus.Error {
  		return dbusutil.ToError(err)
  	}
  
@@ -72,7 +42,7 @@ index 60f84eb..dd60762 100644
  		m.setLocked(value)
  		return nil
  	}
-@@ -474,7 +475,7 @@ func (m *SessionManager) SetLocked(sender dbus.Sender, value bool) *dbus.Error {
+@@ -478,7 +478,7 @@ func (m *SessionManager) SetLocked(sender dbus.Sender, value bool) *dbus.Error {
  		return dbusutil.ToError(fmt.Errorf("desktop file %q is invalid", desktopFile))
  	}
  	exe = info.GetExecutable()
@@ -81,25 +51,3 @@ index 60f84eb..dd60762 100644
  		return dbusutil.ToError(fmt.Errorf("exe %q of desktop file %q is invalid", exe, desktopFile))
  	}
  
-diff --git a/wl_display/kwayland_dbus.go b/wl_display/kwayland_dbus.go
-index 74dd6b4..790956b 100644
---- a/wl_display/kwayland_dbus.go
-+++ b/wl_display/kwayland_dbus.go
-@@ -132,7 +132,7 @@ func (m *Manager) applyByWLOutput() error {
- 	}
- 
- 	if len(args) > 0 {
--		cmdline := exec.CommandContext(ctx, "/usr/bin/dde_wloutput", "set")
-+		cmdline := exec.CommandContext(ctx, "dde_wloutput", "set")
- 		cmdline.Args = append(cmdline.Args, args...)
- 		logger.Info("cmd line args:", cmdline.Args)
- 
-@@ -150,7 +150,7 @@ func (m *Manager) applyByWLOutput() error {
- 	for _, monitor := range disabledMonitors {
- 		logger.Debug("-----------Will disable output:", monitor.Name)
- 		ctx, cancel := context.WithTimeout(context.Background(), time.Second*5)
--		data, err := exec.CommandContext(ctx, "/usr/bin/dde_wloutput", "set", monitor.uuid, "0", "0", "0", "0", "0", "0", "0").CombinedOutput()
-+		data, err := exec.CommandContext(ctx, "dde_wloutput", "set", monitor.uuid, "0", "0", "0", "0", "0", "0", "0").CombinedOutput()
- 		cancel()
- 		// ignore timeout signal
- 		if err != nil && !strings.Contains(err.Error(), "killed") {
