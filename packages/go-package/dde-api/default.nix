@@ -2,26 +2,20 @@
 , lib
 , fetchFromGitHub
 , buildGoModule
+, pkg-config
+, deepin-gettext-tools
 , wrapQtAppsHook
 , wrapGAppsHook
-, pkg-config
 , alsa-lib
-, bc
-, blur-effect
-, deepin-gettext-tools
-, fontconfig
 , gtk3
 , libcanberra
 , libgudev
 , librsvg
 , poppler
 , pulseaudio
-, util-linux
-, xcur2png
 , gdk-pixbuf-xlib
-, dbus
 , coreutils
-, deepin-desktop-base
+, dbus
 }:
 
 buildGoModule rec {
@@ -31,11 +25,11 @@ buildGoModule rec {
   src = fetchFromGitHub {
     owner = "linuxdeepin";
     repo = pname;
-    rev = "e9fd08ffcc41c86b08f4a2fdd88240ad81200191";
-    sha256 = "sha256-OoPpnjpVetLcbgz6cKLdr0o9iWuaBsYel2P34B6xZBQ=";
+    rev = "6132370d2ea0afb79ee5532ab2ffc2a438574bc0";
+    hash = "sha256-CFSSebA98J1jFuaaOLGR3rNXgTjD6zvTBgy7AMOeEvc=";
   };
 
-  vendorHash = "sha256-ggcBI8KwvgAQZhAfwCIJaqt7wUAd2lPYYdiJIGetsXo=";
+  vendorHash = "sha256-4Yscw3QjWG1rlju6sMRHGn3dSe65b1nx10B3KeyAzBM=";
 
   postPatch = ''
     substituteInPlace misc/systemd/system/deepin-shutdown-sound.service \
