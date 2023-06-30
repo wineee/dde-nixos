@@ -21,10 +21,18 @@ index 14b8bff..2b2c412 100644
          "Args": [
            "-d"
 diff --git a/session.go b/session.go
-index da76626..0353ff5 100644
+index da76626..bf9a2c4 100644
 --- a/session.go
 +++ b/session.go
-@@ -85,7 +85,7 @@ type SessionManager struct {
+@@ -14,6 +14,7 @@ import (
+ 	"sync"
+ 	"syscall"
+ 	"time"
++	"strings"
+ 
+ 	"github.com/adrg/xdg"
+ 	"github.com/godbus/dbus/v5"
+@@ -85,7 +86,7 @@ type SessionManager struct {
  }
  
  const (
@@ -33,7 +41,7 @@ index da76626..0353ff5 100644
  	lockFrontDest    = "org.deepin.dde.LockFront1"
  	lockFrontIfc     = lockFrontDest
  	lockFrontObjPath = "/org/deepin/dde/LockFront1"
-@@ -458,7 +458,7 @@ func (m *SessionManager) SetLocked(sender dbus.Sender, value bool) *dbus.Error {
+@@ -458,7 +459,7 @@ func (m *SessionManager) SetLocked(sender dbus.Sender, value bool) *dbus.Error {
  		return dbusutil.ToError(err)
  	}
  
@@ -42,7 +50,7 @@ index da76626..0353ff5 100644
  		m.setLocked(value)
  		return nil
  	}
-@@ -478,7 +478,7 @@ func (m *SessionManager) SetLocked(sender dbus.Sender, value bool) *dbus.Error {
+@@ -478,7 +479,7 @@ func (m *SessionManager) SetLocked(sender dbus.Sender, value bool) *dbus.Error {
  		return dbusutil.ToError(fmt.Errorf("desktop file %q is invalid", desktopFile))
  	}
  	exe = info.GetExecutable()
