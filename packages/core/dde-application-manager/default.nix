@@ -16,13 +16,13 @@
 
 stdenv.mkDerivation rec {
   pname = "dde-application-manager";
-  version = "1.0.16";
+  version = "1.0.17";
 
   src = fetchFromGitHub {
     owner = "linuxdeepin";
     repo = pname;
     rev = version;
-    sha256 = "sha256-roEddgKQhe/lsal356ceUG5E3VDUFIbpJ5M+rSHDVnI=";
+    hash = "sha256-3GOt4R5EG5OELyFv+YJ3TyKmjYq6I9ZOA0AbBtL5IrU=";
   };
 
   ## TODO
