@@ -39,13 +39,13 @@
 
 buildGoModule rec {
   pname = "dde-daemon";
-  version = "6.0.16";
+  version = "6.0.16.999";
 
   src = fetchFromGitHub {
     owner = "linuxdeepin";
     repo = pname;
-    rev = version;
-    hash = "sha256-pcVugGTNY7PAwiLEdwF1j8k8zTlG2/2rs0WQMZz38d0=";
+    rev = "44323fd4d6153c99aacfb09cbd8dbefb5dcc179f";
+    hash = "sha256-/7VEaD5DWIN6u9yDdkbt6G4Cp7Phs9FgLiFKYm8Hfpc";
   };
 
   vendorHash = "sha256-4/HGviJGTJoW2cVDsOvOfeHGaiXKBTzat7/5Q0FoTR8=";
@@ -56,9 +56,8 @@ buildGoModule rec {
       src = ./0002-fix-custom-wallpapers-path.diff;
       inherit coreutils;
     })
-    ./0003-search-in-XDG-directories.patch
     (substituteAll {
-      src = ./0004-aviod-use-hardcode-path.patch;
+      src = ./0003-aviod-use-hardcode-path.diff;
       inherit dbus;
     })
   ];
