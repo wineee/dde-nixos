@@ -18,19 +18,14 @@
 
 stdenv.mkDerivation rec {
   pname = "dde-calendar";
-  version = "5.10.0";
+  version = "5.10.0.999";
 
   src = fetchFromGitHub {
     owner = "linuxdeepin";
     repo = pname;
-    rev = version;
-    sha256 = "sha256-MRB4dzjOkdySRD01bMhYIVajz08xA3f3Srscrxc6wgU=";
+    rev = "a5595bfbea2c757d8640924421d502b24e255586";
+    hash = "sha256-K+Rcpl0prMtsiUO+mzqZIsjc6bkjVBRpafYIbwvV02A=";
   };
-
-  patches = [
-    ./0001-feat-avoid-use-hardcode-path.patch
-    ./a.diff
-  ];
 
   postPatch = ''
     for file in $(grep -rl "/bin/bash"); do
@@ -49,6 +44,7 @@ stdenv.mkDerivation rec {
     dtkwidget
     qtbase
     qtsvg
+    qt5integration
     qt5platform-plugins
     dde-qt-dbus-factory
     libical
@@ -56,15 +52,6 @@ stdenv.mkDerivation rec {
   ];
 
   cmakeFlags = [ "-DVERSION=${version}" ];
-
-  # qt5integration must be placed before qtsvg in QT_PLUGIN_PATH
-  qtWrapperArgs = [
-    "--prefix QT_PLUGIN_PATH : ${qt5integration}/${qtbase.qtPluginPrefix}"
-  ];
-
-  # postFixup = ''
-  #   wrapQtApp $out/lib/deepin-daemon/dde-calendar-service
-  # '';
 
   strictDeps = true;
 
