@@ -19,19 +19,14 @@
 
 stdenv.mkDerivation rec {
   pname = "dde-network-core";
-  version = "2.0.7.999";
+  version = "2.0.10";
 
   src = fetchFromGitHub {
     owner = "linuxdeepin";
     repo = pname;
-    rev = "980db32ffaf916dbde7f775e3a916de6dc820cb0";
-    sha256 = "sha256-oGymFAKCvTG+AxI0EkccxC9n+zc/yPSo2z8uIuGENtc=";
+    rev = version;
+    hash = "sha256-yWgFHtaVLK4wYv/JG/92X7SWw192QXl6LRKt/JcuyTg=";
   };
-
-  postPatch = ''
-    substituteInPlace dss-network-plugin/notification/bubbletool.cpp \
-      --replace "/usr/share" "/run/current-system/sw/share"
-  '';
 
   nativeBuildInputs = [
     cmake
