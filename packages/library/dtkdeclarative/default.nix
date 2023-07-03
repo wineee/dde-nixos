@@ -17,13 +17,13 @@
 
 stdenv.mkDerivation rec {
   pname = "dtkdeclarative";
-  version = "5.6.12";
+  version = "5.6.12.999";
 
   src = fetchFromGitHub {
     owner = "linuxdeepin";
     repo = pname;
-    rev = version;
-    sha256 = "sha256-n0dNti4DZ+URG4tJcJCCzRclv1N8Wxdoh0xXWr5N1lU=";
+    rev = "5a730e593984a42fab29b56a233959f126085eea";
+    hash = "sha256-rfIM5c04jikZ2CDq3V/FqQkHsT+dCaJ/O50HhQmm2/M=";
   };
 
   outputs = [ "out" "doc" ];
