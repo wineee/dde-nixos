@@ -19,30 +19,34 @@
 
 stdenv.mkDerivation rec {
   pname = "dde-appearance";
-  version = "1.1.1.999";
+  version = "1.1.2";
 
   src = fetchFromGitHub {
     owner = "linuxdeepin";
     repo = pname;
-    rev = "b8d3533cba9bd6214b5f35962b895e7727e2dd03";
-    sha256 = "sha256-hsyt9ibrYjHycyuORPGgJPubhxMF9Yq5lN7X1xkbDtE=";
+    rev = version;
+    hash = "sha256-53iIXl8VV/V26tzvCmR0mmef5OOJ/TcgizmHUhKhn6k=";
   };
 
-  postPatch = ''
-    substituteInPlace misc/systemd/dde-appearance.service src/service/modules/subthemes/customtheme.cpp \
-      --replace "/usr" "$out"
+  patches = [
+    ./fix-custom-wallpapers-path.diff
+  ];
 
-    substituteInPlace src/service/modules/api/compatibleengine.cpp \
-      src/service/modules/background/backgrounds.cpp \
-      src/service/dbus/deepinwmfaker.cpp \
-      misc/dconfig/org.deepin.dde.appearance.json \
-      misc/dbusservice/org.deepin.dde.Appearance1.service \
-      src/service/impl/appearancemanager.cpp \
+  postPatch = ''
+    substituteInPlace src/service/impl/appearancemanager.cpp \
+      src/service/modules/api/compatibleengine.cpp \
       src/service/modules/subthemes/customtheme.cpp \
       --replace "/usr" "/run/current-system/sw"
+    
+    for file in $(grep -rl "/usr/bin/dde-appearance"); do
+      substituteInPlace $file --replace "/usr/bin/dde-appearance" "$out/bin/dde-appearance"
+    done
 
     substituteInPlace src/service/modules/api/themethumb.cpp \
       --replace "/usr/lib/deepin-api" "/run/current-system/sw/lib/deepin-api"
+
+    substituteInPlace src/service/dbus/deepinwmfaker.cpp \
+      --replace "/usr/lib/deepin-daemon" "/run/current-system/sw/lib/deepin-daemon"
 
     substituteInPlace src/service/modules/api/locale.cpp \
       --replace "/usr/share/locale/locale.alias" "${iconv}/share/locale/locale.alias"
