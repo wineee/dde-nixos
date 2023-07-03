@@ -28,15 +28,11 @@ stdenv.mkDerivation rec {
   src = fetchFromGitHub {
     owner = "linuxdeepin";
     repo = pname;
-    rev = version;
-    sha256 = "sha256-usG7CIBGLe7JVUsmKFpjKH8w4BEURXR1jxgYoi/LVlc=";
+    rev = "a93d388bf758b691bc0f0729b36212d488867dd6";
+    hash = "sha256-IG7sKAp6Srv1qmTkGSFYWv9MQHjOc69w2XA2WuKBry8=";
   };
 
   outputs = [ "out" "dev" ];
-
-  patches = [
-    ./0001-chore-avoid-use-hardcode-path-in-dbus-services.patch
-  ];
 
   postPatch = ''
     substituteInPlace src/plugin-accounts/operation/accountsworker.cpp \
@@ -66,7 +62,7 @@ stdenv.mkDerivation rec {
   ];
 
   cmakeFlags = [
-    "-DDVERSION=${version}"
+    "-DCVERSION=${version}"
     "-DDISABLE_AUTHENTICATION=YES"
     "-DDISABLE_UPDATE=YES"
     "-DDISABLE_LANGUAGE=YES"
