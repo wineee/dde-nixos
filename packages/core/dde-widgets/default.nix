@@ -14,19 +14,14 @@
 
 stdenv.mkDerivation rec {
   pname = "dde-widgets";
-  version = "6.0.12.999";
+  version = "6.0.13";
 
   src = fetchFromGitHub {
     owner = "linuxdeepin";
     repo = pname;
-    rev = "42dd6566e3f2a010eba3f817afa816b726d9de6a";
-    sha256 = "sha256-I/DSGVOJ+fJRomfDxhaxGjWBTKZIgTS7fVIFqP087ik=";
+    rev = version;
+    sha256 = "sha256-cxbXZHd/KUr6zNrmKbHzcP/jDi9oo7Yiru07J4uwYPE=";
   };
-
-  patches = [
-    ./zone.diff
-    ./0001-chore-avoid-use-hardcode-path-in-services.patch
-  ];
 
   nativeBuildInputs = [
     cmake
