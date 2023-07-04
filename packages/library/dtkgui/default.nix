@@ -18,13 +18,13 @@
 
 stdenv.mkDerivation rec {
   pname = "dtkgui";
-  version = "5.6.11";
+  version = "5.6.12";
 
   src = fetchFromGitHub {
     owner = "linuxdeepin";
     repo = pname;
     rev = version;
-    sha256 = "sha256-b1PtaH5sEAjpi50mSczxiZIRL++ibNmIFgOC3L1fBhk=";
+    hash = "sha256-sYJWa4D2BMR/jriVdpDjIFd6e1hC4ttuTBM9oW7TJ6c=";
   };
 
   outputs = [ "out" "doc" ];
@@ -51,7 +51,7 @@ stdenv.mkDerivation rec {
   ];
 
   cmakeFlags = [
-    "-DDVERSION=${version}"
+    "-DDTK_VERSION=${version}"
     "-DBUILD_DOCS=ON"
     "-DMKSPECS_INSTALL_DIR=${placeholder "out"}/mkspecs/modules"
     "-DQCH_INSTALL_DESTINATION=${placeholder "doc"}/${qtbase.qtDocPrefix}"

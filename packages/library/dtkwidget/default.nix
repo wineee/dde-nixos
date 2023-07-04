@@ -22,13 +22,13 @@
 
 stdenv.mkDerivation rec {
   pname = "dtkwidget";
-  version = "5.6.12";
+  version = "5.6.13";
 
   src = fetchFromGitHub {
     owner = "linuxdeepin";
     repo = pname;
     rev = version;
-    sha256 = "sha256-zpohTjhimiv55X+ipDSgXo5UGCKO1LJay+yjfPGKpV4=";
+    hash = "sha256-o38eJgjkc1mfQUvgZaKsOs8UNMugBr/PIB9oKT09BSw=";
   };
 
   outputs = [ "out" "doc" ];
@@ -61,7 +61,7 @@ stdenv.mkDerivation rec {
   propagatedBuildInputs = [ dtkgui ];
 
   cmakeFlags = [
-    "-DDVERSION=${version}"
+    "-DDTK_VERSION=${version}"
     "-DBUILD_DOCS=ON"
     "-DMKSPECS_INSTALL_DIR=${placeholder "out"}/mkspecs/modules"
     "-DQCH_INSTALL_DESTINATION=${placeholder "doc"}/${qtbase.qtDocPrefix}"

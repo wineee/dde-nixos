@@ -16,13 +16,13 @@
 
 stdenv.mkDerivation rec {
   pname = "dtkcore";
-  version = "5.6.12";
+  version = "5.6.13";
 
   src = fetchFromGitHub {
     owner = "linuxdeepin";
     repo = pname;
     rev = version;
-    hash = "sha256-AMv2yDmGWkPkBtEq6j44knn2NDS3UrepDyXr6Xl/dQA=";
+    hash = "sha256-t0bwcc3nW/w92HRfXs9Kt5f0leo2UynufwGX7ai5ifw=";
   };
 
   outputs = [ "out" "doc" ];
@@ -52,7 +52,7 @@ stdenv.mkDerivation rec {
   propagatedBuildInputs = [ dtkcommon ];
 
   cmakeFlags = [
-    "-DDVERSION=${version}"
+    "-DDTK_VERSION=${version}"
     "-DBUILD_DOCS=ON"
     "-DBUILD_EXAMPLES=OFF"
     "-DQCH_INSTALL_DESTINATION=${placeholder "doc"}/${qtbase.qtDocPrefix}"
