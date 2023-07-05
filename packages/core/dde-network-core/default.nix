@@ -19,13 +19,13 @@
 
 stdenv.mkDerivation rec {
   pname = "dde-network-core";
-  version = "2.0.10";
+  version = "2.0.10.999";
 
   src = fetchFromGitHub {
     owner = "linuxdeepin";
     repo = pname;
-    rev = version;
-    hash = "sha256-yWgFHtaVLK4wYv/JG/92X7SWw192QXl6LRKt/JcuyTg=";
+    rev = "a9cf8b3dead543913e00a9acb4b93d437e97ed59";
+    hash = "sha256-CJE+/UtArhebti6f4kAkYq1ZrRb7zeDBNsv/TLiPpMI=";
   };
 
   nativeBuildInputs = [

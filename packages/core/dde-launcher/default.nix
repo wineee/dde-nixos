@@ -21,13 +21,9 @@ stdenv.mkDerivation rec {
   src = fetchFromGitHub {
     owner = "linuxdeepin";
     repo = pname;
-    rev = "0f3ee52d3c650efccf46e922023389be330ac0d9";
-    sha256 = "sha256-ZvVMYvSnIl8KhfWW3V/6A0QjcRnImKQH5H1ygyaGp/c=";
+    rev = "7232ce807dae9b684a4d2896a9582e0909edd78f";
+    hash = "sha256-M4ffCjUsCEdy4AIvjUVupYSPm9eVcEYu9N4D211wme8=";
   };
-
-  patches = [
-    ./0001-feat-avoid-use-hardcode-path.patch
-  ];
 
   postPatch = ''
     substituteInPlace src/boxframe/{backgroundmanager.cpp,boxframe.cpp} \

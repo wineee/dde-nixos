@@ -17,13 +17,13 @@
 
 stdenv.mkDerivation rec {
   pname = "dde-session-ui";
-  version = "6.0.9";
+  version = "6.0.9.999";
 
   src = fetchFromGitHub {
     owner = "linuxdeepin";
     repo = pname;
-    rev = version;
-    hash = "sha256-e1xBc21uf4FgbRxSb/hMQN22RWqwyA8wqO85N3WSD9I=";
+    rev = "3123a556b245cc697796729d5f38ca8c20a50c09";
+    hash = "sha256-LswZEM650OFhzpUPXWErvpZBW7zr0Vubl6o7P/2xfwk=";
   };
 
   postPatch = ''
@@ -33,9 +33,6 @@ stdenv.mkDerivation rec {
 
     substituteInPlace dde-warning-dialog/src/org.deepin.dde.WarningDialog1.service dde-welcome/src/org.deepin.dde.Welcome1.service \
       --replace "/usr/lib/deepin-daemon" "/run/current-system/sw/lib/deepin-daemon"
-
-    substituteInPlace dde-osd/src/notification/bubbletool.cpp \
-      --replace "/usr/share" "/run/current-system/sw/share"
 
     substituteInPlace dmemory-warning-dialog/src/org.deepin.dde.MemoryWarningDialog1.service \
       --replace "/usr" "$out"
