@@ -4,7 +4,6 @@
 , glib
 , gtk3
 , gsettings-desktop-schemas
-, dtkcommon
 , dde-dock
 , startdde
 , dde-launcher
@@ -23,15 +22,14 @@
 
 let
   gsettingsOverridePackages = [
-    dtkcommon
     dde-dock
     startdde
     dde-launcher
     dde-session-shell
-    deepin-movie-reborn
+    #deepin-movie-reborn
     dde-file-manager
-    dde-grand-search
-    deepin-system-monitor
+    #dde-grand-search
+    #deepin-system-monitor
     deepin-desktop-schemas
     gsettings-desktop-schemas
   ] ++ extraGSettingsOverridePackages;
