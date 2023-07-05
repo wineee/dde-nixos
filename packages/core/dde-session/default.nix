@@ -20,8 +20,8 @@ stdenv.mkDerivation rec {
   src = fetchFromGitHub {
     owner = "linuxdeepin";
     repo = pname;
-    rev = version;
-    hash = "sha256-mIz8rIZfiHGfHwtxDIgGTSZnW6aP7W23hOqrU2p0WCc=";
+    rev = "203de6b0e8fde5235106cc0605f3b941a99b4c28";
+    hash = "sha256-nK29HhfoiEfXK8fPi/ODoJVyrVtEuoHzaIc22txXNjQ=";
   };
 
   postPatch = ''
