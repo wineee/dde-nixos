@@ -1,7 +1,6 @@
 { stdenv
 , lib
 , fetchFromGitHub
-, getUsrPatchFrom
 , dtkwidget
 , qt5integration
 , qt5platform-plugins
@@ -16,13 +15,13 @@
 
 stdenv.mkDerivation rec {
   pname = "dde-polkit-agent";
-  version = "6.0.3";
+  version = "6.0.3.999";
 
   src = fetchFromGitHub {
     owner = "linuxdeepin";
     repo = pname;
-    rev = version;
-    sha256 = "sha256-/gQKeHJc59uZ9CycxSWEDy1XXdSV4SmXaVd46wfw3XM=";
+    rev = "8f8505adb00ca1196155652fb2344440d68aae6d";
+    hash = "sha256-Rq4cmqMjHHkhMpNJsD04sHOyONUAYgNagrQHIdWLgwg=";
   };
 
   nativeBuildInputs = [
@@ -34,13 +33,14 @@ stdenv.mkDerivation rec {
 
   buildInputs = [
     dtkwidget
+    qt5platform-plugins
     dde-qt-dbus-factory
     polkit-qt
   ];
 
+  # qt5integration must be placed before qtsvg in QT_PLUGIN_PATH
   qtWrapperArgs = [
     "--prefix QT_PLUGIN_PATH : ${qt5integration}/${qtbase.qtPluginPrefix}"
-    "--prefix QT_QPA_PLATFORM_PLUGIN_PATH : ${qt5platform-plugins}/${qtbase.qtPluginPrefix}"
   ];
 
   postFixup = ''

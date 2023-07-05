@@ -22,13 +22,9 @@ stdenv.mkDerivation rec {
   src = fetchFromGitHub {
     owner = "linuxdeepin";
     repo = pname;
-    rev = "7db6a31d63e27057712b485e7d266f90f0d58d8e";
-    hash = "sha256-2AV+zkCk0R1vcK7E0OQ9dIqog5ViOfMQ3xx/0DFE6FM=";
+    rev = "ca671ae2e3ac2f9370645db363b9d6acfe97cfc8";
+    hash = "sha256-O27Ioye3++4BsyYHe48AqXFjESxmFF+q7WX5U3xhnjo=";
   };
-
-  patches = [
-    ./0001-chore-use-GNUInstallDirs-and-don-t-override-CMAKE_CX.patch
-  ];
 
   postPatch = ''
     substituteInPlace misc/{dde-clipboard.desktop,dde-clipboard-daemon.service,org.deepin.dde.Clipboard1.service} \
