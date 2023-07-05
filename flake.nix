@@ -200,6 +200,8 @@
                         qt5platform-plugins
                         deepin-pw-check
                         deepin-turbo
+                        dtkcommon
+                        dtkcore
                         dtkgui
                         dtkwidget
                         dtkdeclarative
@@ -235,7 +237,7 @@
                       ];
                       optionalPackages = [
                         pkgs.onboard # dde-dock plugin
-                        deepin-camera
+                        # deepin-camera
                         deepin-calculator
                         deepin-compressor
                         deepin-editor
@@ -244,9 +246,9 @@
                         deepin-album
                         deepin-image-viewer
                         deepin-music
-                        deepin-movie-reborn
-                        deepin-system-monitor
-                        deepin-screen-recorder
+                        # deepin-movie-reborn
+                        # deepin-system-monitor
+                        # deepin-screen-recorder
                         deepin-shortcut-viewer
                       ];
                     in
