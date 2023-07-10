@@ -1,16 +1,16 @@
 # dde-nixos
 
-This project is dedicated to packaging DDE for NixOS 
+This is an experimental flake for DDE (Deepin Desktop Environment) on NixOS.
 
 [Packaging Progress](https://github.com/linuxdeepin/dde-nixos/projects/1)
 
-## [v20 has been merged upstream](https://search.nixos.org/options?channel=unstable&from=0&size=50&sort=relevance&type=packages&query=deepin)
+[DDE v20 has been merged into Nixpkgs](https://search.nixos.org/options?channel=unstable&from=0&size=50&sort=relevance&type=packages&query=deepin)
 
-## USAGE
+## Getting Started
 
-### Enable DDE for NixOS
+### Installation for NixOS
 
-In order to use DDE, you must enable [flakes](https://nixos.wiki/wiki/Flakes) to manage your system configuration.
+#### With [flakes](https://nixos.org/manual/nix/stable/command-ref/new-cli/nix3-flake.html) (Recommended):
 
 ```nix
 {
@@ -25,63 +25,85 @@ In order to use DDE, you must enable [flakes](https://nixos.wiki/wiki/Flakes) to
     let
       system = "x86_64-linux";
     in {
-      nixosConfigurations.default = nixpkgs.lib.nixosSystem {
+      nixosConfigurations.<hostname> = nixpkgs.lib.nixosSystem {
         inherit system;
         modules = [
           dde-nixos.nixosModules.${system}
           {
             services.xserver.desktopManager.deepin-unstable.enable = true;
           }
+          ./configuration.nix # your system configuration goes here
         ];
       };
-     # ......
     };
 }
 ```
+example: [rewine's NixOS config](https://github.com/wineee/nixos-config/commit/37c70c2c3b2a8e8ee00eba8ea336f67690683de1)
 
-[an example](https://github.com/wineee/nixos-config/commit/37c70c2c3b2a8e8ee00eba8ea336f67690683de1)
 
-### Use NixOS DDE in Qemu
+#### With ordinary `configuration.nix` and [flake-compat](https://github.com/edolstra/flake-compat):
 
-Even if you aren't in NixOS, as long as you have installed nix, you can run dde-nixos in a virtual machine through `nix run`
+```nix
+{pkgs, ...}: let
+  flake-compat = builtins.fetchTarball "https://github.com/edolstra/flake-compat/archive/master.tar.gz";
+
+  dde-nixos = (import flake-compat {
+    src = builtins.fetchTarball "https://github.com/linuxdeepin/dde-nixos/archive/master.tar.gz";
+  }).defaultNix;
+in {
+  imports = [dde-nixos.nixosModules.${pkgs.system}];
+
+  services.xserver.desktopManager.deepin-unstable.enable = true;
+
+  # other configuration still goes here
+}
+```
+
+### Testing in Qemu
+
+Quickly start an virtual machine to test out as long as you have installed nix:
 
 ``` bash
 git clone git@github.com:linuxdeepin/dde-nixos.git
 cd dde-nixos/vm
-# edit vm/falke.nix
+# edit vm/flake.nix
 nix run -v -L
 ```
-This can be done with a single command if you don't need custom configuration:
+In case you don't apply custom configuration:
 
 `nix --experimental-features 'nix-command flakes' run "github:linuxdeepin/dde-nixos?dir=vm" -v -L --no-write-lock-file`
 
-## Build
+## Building yourself
+
+Using Nix build hooks:
 
 ```bash
 nix build .#deepin-calculator -v -L
 ```
 
+Manually build for debugging purposes:
+
 ```bash
 nix develop .#deepin-calculator
 git clone git@github.com:linuxdeepin/deepin-calculator.git
 git checkout 5.7.16
-... # maintenance code
+... # maintainence code
 cmake --build build
 ```
 
-## Garnix
+## Garnix cache
 
-Thanks [Garnix](https://garnix.io/) provide CI and binary caches.
+Thanks [Garnix](https://garnix.io/) for providing CI and binary cache.
 
-In order to use the cache that garnix provides, adding https://cache.garnix.io to substituters, and cache.garnix.io:CTFPyKSLcx5RMJKfLo5EEPUObbA78b0YQ2DTCJXqr9g= to trusted-public-keys.
+For faster build and test with garnix cache, add `https://cache.garnix.io` to [substituters](https://search.nixos.org/options?channel=unstable&show=nix.settings.substituters&from=0&size=50&sort=relevance&type=packages), and `cache.garnix.io:CTFPyKSLcx5RMJKfLo5EEPUObbA78b0YQ2DTCJXqr9g=` to [trusted-public-keys](https://search.nixos.org/options?channel=unstable&show=nix.settings.trusted-public-keys&from=0&size=50&sort=relevance&type=packages).
 
-## Project use dde-nixos
+## Project using dde-nixos
 
-- [nixos-dde-iso](https://github.com/SamLukeYes/nixos-dde-iso) NixOS live image with DDE @[SamLukeYes](https://github.com/SamLukeYes)
+- [nixos-dde-iso](https://github.com/SamLukeYes/nixos-dde-iso) NixOS live image with DDE [maintainer=@SamLukeYes]
 - [dmarked](https://github.com/DMarked/DMarked)  dtk based markdown editor
 
 ## References
-- [Status of packaging the Deepin Desktop Environment ](https://github.com/NixOS/nixpkgs/issues/94870)
+- [DDE Packaging Status](https://github.com/NixOS/nixpkgs/issues/94870)
 - [Nix User Repository](https://github.com/nix-community/NUR)
 - [nix-cutefish](https://github.com/p3psi-boo/nix-cutefish)
 - [budgie-nix](https://github.com/FedericoSchonborn/budgie-nix)
