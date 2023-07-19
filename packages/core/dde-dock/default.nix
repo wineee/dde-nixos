@@ -21,13 +21,13 @@
 
 stdenv.mkDerivation rec {
   pname = "dde-dock";
-  version = "6.0.16.999";
+  version = "6.0.17";
 
   src = fetchFromGitHub {
     owner = "linuxdeepin";
     repo = pname;
-    rev = "42961e50926d9c6d0e4b571a55ea2755c78ee540";
-    hash = "sha256-ailDmP+8nHX4T7QepTXKv0UAr8+Loyujs7IfcOEnAeM=";
+    rev = version;
+    hash = "sha256-laNqBhPEa/yAmz31imwOe/z8wb/0a65G0QyO6/lxrwI=";
   };
 
   postPatch = ''
@@ -59,6 +59,7 @@ stdenv.mkDerivation rec {
     xorg.libXcursor
     xorg.libXtst
     xorg.libXdmcp
+    xorg.libXres
   ];
 
   outputs = [ "out" "dev" ];
