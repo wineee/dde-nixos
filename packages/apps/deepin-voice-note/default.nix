@@ -18,13 +18,13 @@
 }:
 stdenv.mkDerivation rec {
   pname = "deepin-voice-note";
-  version = "6.0.6";
+  version = "6.0.11";
 
   src = fetchFromGitHub {
     owner = "linuxdeepin";
     repo = pname;
     rev = version;
-    sha256 = "sha256-h3I5NGr9EwMPCw99wjIJDXe774DeFzi49+cfRvExwDg=";
+    sha256 = "sha256-leuG3r82uF29AZukkk0vcNIstGsVyL44Za4U3Qxk/xQ=";
   };
 
   patches = [ 
