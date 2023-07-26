@@ -34,13 +34,13 @@
 
 stdenv.mkDerivation rec {
   pname = "deepin-movie-reborn";
-  version = "6.0.5";
+  version = "6.0.5.999";
 
   src = fetchFromGitHub {
     owner = "linuxdeepin";
     repo = pname;
-    rev = version;
-    hash = "sha256-dWN2IVVpwYwzEuLtT3JvhzKiBwaBq4lzmaEhA9S1hjE=";
+    rev = "f2580a7c8ee067628a50d624d5402412215ace73";
+    hash = "sha256-EG2F3RjWZNBIaXJsF5KsVrhzceno4M2THBtcLyyl2ys=";
   };
 
   patches = [
