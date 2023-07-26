@@ -16,13 +16,13 @@
 
 stdenv.mkDerivation rec {
   pname = "dde-launcher";
-  version = "6.0.13.999";
+  version = "6.0.14";
 
   src = fetchFromGitHub {
     owner = "linuxdeepin";
     repo = pname;
-    rev = "7232ce807dae9b684a4d2896a9582e0909edd78f";
-    hash = "sha256-M4ffCjUsCEdy4AIvjUVupYSPm9eVcEYu9N4D211wme8=";
+    rev = version;
+    hash = "sha256-bJHD/YH/5fqVn4LJAj8ODOVBU2oGHb71NygqmMZQDDM";
   };
 
   postPatch = ''
