@@ -21,21 +21,25 @@
 
 stdenv.mkDerivation rec {
   pname = "dde-dock";
-  version = "6.0.17";
+  version = "6.0.18";
 
   src = fetchFromGitHub {
     owner = "linuxdeepin";
     repo = pname;
     rev = version;
-    hash = "sha256-laNqBhPEa/yAmz31imwOe/z8wb/0a65G0QyO6/lxrwI=";
+    hash = "sha256-/c/8R4NCS5Lu06OvyHhJWrbimwAj2fXZxlaTNtiRLkc=";
   };
 
   postPatch = ''
     substituteInPlace plugins/pluginmanager/pluginmanager.cpp frame/controller/quicksettingcontroller.cpp  \
       --replace "/usr/lib/dde-dock" "/run/current-system/sw/lib/dde-dock"
 
-    substituteInPlace plugins/show-desktop/showdesktopplugin.cpp frame/window/components/desktop_widget.cpp \
-      --replace "/usr/lib/deepin-daemon" "/run/current-system/sw/lib/deepin-daemon"
+    substituteInPlace configs/com.deepin.dde.dock.json frame/util/common.h \
+    --replace "/usr" "/run/current-system/sw"
+
+    for file in $(grep -rl "/usr/lib/deepin-daemon"); do
+      substituteInPlace $file --replace "/usr/lib/deepin-daemon" "/run/current-system/sw/lib/deepin-daemon"
+    done
    '';
 
   nativeBuildInputs = [
