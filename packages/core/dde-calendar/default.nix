@@ -18,14 +18,18 @@
 
 stdenv.mkDerivation rec {
   pname = "dde-calendar";
-  version = "5.10.0.999";
+  version = "5.10.1";
 
   src = fetchFromGitHub {
     owner = "linuxdeepin";
     repo = pname;
-    rev = "a5595bfbea2c757d8640924421d502b24e255586";
-    hash = "sha256-K+Rcpl0prMtsiUO+mzqZIsjc6bkjVBRpafYIbwvV02A=";
+    rev = version;
+    hash = "sha256-oPrtPOCLZof4BysWfsCYeoqbJf30r7LijGEEXZlsAAY=";
   };
+
+  patches = [
+    ./no_client_white.diff
+  ];
 
   postPatch = ''
     for file in $(grep -rl "/bin/bash"); do
@@ -41,11 +45,11 @@ stdenv.mkDerivation rec {
   ];
 
   buildInputs = [
+    qt5integration
+    qt5platform-plugins
     dtkwidget
     qtbase
     qtsvg
-    qt5integration
-    qt5platform-plugins
     dde-qt-dbus-factory
     libical
     sqlite
