@@ -2,8 +2,6 @@
 
 This is an experimental flake for DDE (Deepin Desktop Environment) on NixOS.
 
-[Packaging Progress](https://github.com/linuxdeepin/dde-nixos/projects/1)
-
 [DDE v20 has been merged into Nixpkgs](https://search.nixos.org/options?channel=unstable&from=0&size=50&sort=relevance&type=packages&query=deepin)
 
 ## Getting Started
