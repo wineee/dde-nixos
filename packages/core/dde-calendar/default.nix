@@ -28,7 +28,7 @@ stdenv.mkDerivation rec {
   };
 
   patches = [
-    ./no_client_white.diff
+    ./fix-wrapped-name-not-in-whitelist.diff
   ];
 
   postPatch = ''
