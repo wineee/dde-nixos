@@ -52,7 +52,7 @@ let
     dtkdeclarative = callPackage ./library/dtkdeclarative { };
     util-dfm = callPackage ./library/util-dfm { };
     deepin-pdfium = callPackage ./library/deepin-pdfium { };
-    #deepin-ocr-plugin-manager =  callPackage ./library/deepin-ocr-plugin-manager { };
+    deepin-ocr-plugin-manager =  callPackage ./library/deepin-ocr-plugin-manager { };
     opencv-mobile = callPackage ./library/opencv-mobile { };
 
     #### artwork

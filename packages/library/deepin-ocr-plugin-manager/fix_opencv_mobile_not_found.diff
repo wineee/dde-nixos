@@ -1,0 +1,14 @@
+diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
+index 45e8fb1..d1ec6d2 100644
+--- a/src/CMakeLists.txt
++++ b/src/CMakeLists.txt
+@@ -25,7 +25,8 @@ find_package(OpenMP REQUIRED)
+ set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fopenmp")
+ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fopenmp")
+ 
+-pkg_check_modules(3rd_lib REQUIRED ncnn opencv_mobile)
++pkg_check_modules(3rd_lib REQUIRED ncnn)
++find_package(OpenCV REQUIRED)
+ 
+ target_include_directories(${PROJECT_NAME} PUBLIC ${3rd_lib_INCLUDE_DIRS})
+ target_link_libraries(${PROJECT_NAME} ${3rd_lib_LIBRARIES} -lstdc++fs -ldl)

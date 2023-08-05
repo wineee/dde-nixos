@@ -7,6 +7,8 @@
 , wrapQtAppsHook
 , libisoburn
 , ncnn
+, opencv-mobile
+, vulkan-headers
 }:
 
 stdenv.mkDerivation rec {
@@ -17,8 +19,12 @@ stdenv.mkDerivation rec {
     owner = "linuxdeepin";
     repo = pname;
     rev = "9b5c9e57c83b5adde383ed404b73f9dcbf5e6a48";
-    sha256 = "sha256-U5lxAKTaQvvlqbqRezPIcBGg+DpF1hZ204Y1+8dt14U=";
+    hash = "sha256-U5lxAKTaQvvlqbqRezPIcBGg+DpF1hZ204Y1+8dt14U=";
   };
+
+  patches = [
+    ./fix_opencv_mobile_not_found.diff
+  ];
 
   nativeBuildInputs = [
     cmake
@@ -29,11 +35,18 @@ stdenv.mkDerivation rec {
 
   buildInputs = [
     ncnn
+    opencv-mobile
+    vulkan-headers
   ];
 
-  #qmakeFlags = [ "VERSION=${version}" ];
+  env.NIX_CFLAGS_COMPILE = "-I${opencv-mobile.dev}/include/opencv4";
 
   strictDeps = true;
+
+  cmakeFlags = [
+    "-DCMAKE_INSTALL_LIBDIR=lib"
+    "-DCMAKE_INSTALL_INCLUDEDIR=include"
+  ];
 
   meta = with lib; {
     description = "Plugin manager of optical character recognition for DDE";
