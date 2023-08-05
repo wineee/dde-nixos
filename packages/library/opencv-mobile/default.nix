@@ -31,6 +31,8 @@ stdenv.mkDerivation rec {
     cmake
   ];
 
+  outputs = [ "out" "dev" ];
+
   postPatch = ''
     patch -p1 -i ${patchSrc}/opencv-4.6.0-no-zlib.patch
     truncate -s 0 cmake/OpenCVFindLibsGrfmt.cmake
@@ -41,22 +43,13 @@ stdenv.mkDerivation rec {
     patch -p1 -i ${patchSrc}/opencv-4.6.0-no-rtti.patch
   '';
 
-  configurePhase = ''
-    runHook preBuild
-    mkdir -p build
-    cd build
-    cmake -DCMAKE_INSTALL_PREFIX=$out \
--DCMAKE_BUILD_TYPE=Release \
-`cat ${patchSrc}/opencv4_cmake_options.txt` \
--DBUILD_opencv_world=OFF ..
-    runHook postBuild
+  preConfigure = ''
+    cmakeFlags="`cat ${patchSrc}/opencv4_cmake_options.txt` $cmakeFlags"
   '';
 
-
-  #cmakeFlags = [
-  #  "`cat ${patchSrc}/opencv4_cmake_options.txt`"
-  #  "-DBUILD_opencv_world=OFF"
-  #];
+  cmakeFlags = [
+    "-DBUILD_opencv_world=OFF"
+  ];
 
   meta = with lib; {
     description = "The minimal opencv for Android, iOS, ARM Linux, Windows, Linux, MacOS, WebAssembly";
