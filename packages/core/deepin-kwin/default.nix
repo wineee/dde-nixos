@@ -36,13 +36,13 @@
 
 stdenv.mkDerivation rec {
   pname = "deepin-kwin";
-  version = "5.25.6";
+  version = "5.25.8";
 
   src = fetchFromGitHub {
     owner = "linuxdeepin";
     repo = pname;
     rev = version;
-    hash = "sha256-Wt9H5l4BvesBF0ytYqW4OG/G7i3CLYwV+RqDQnlbGxg=";
+    hash = "sha256-2SCcNm3fukUH7mRSBLruD/9UKubEF0nlTdLLxVQIKcA=";
   };
 
   patches = [
