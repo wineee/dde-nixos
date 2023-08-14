@@ -38,7 +38,7 @@
 , pcre
 , udisks2
 , libisoburn
-, fetchpatch
+, gsettings-qt
 }:
 
 stdenv.mkDerivation rec {
@@ -120,6 +120,7 @@ stdenv.mkDerivation rec {
     pcre
     udisks2
     libisoburn
+    gsettings-qt
   ];
 
   cmakeFlags = [
