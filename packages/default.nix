@@ -132,7 +132,7 @@ let
     };
 
     #### THIRD-PARTY
-    dde-top-panel = callPackage ./third-party/dde-top-panel { };
+    #dde-top-panel = callPackage ./third-party/dde-top-panel { };
     dmarked = callPackage ./third-party/dmarked { };
   };
 in
