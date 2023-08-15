@@ -275,7 +275,6 @@
                   ];
 
                   systemd.packages = with pkgs; with packages; [
-                    dde-dock
                     dde-launcher
                     dde-file-manager
                     dde-calendar

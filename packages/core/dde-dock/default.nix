@@ -66,6 +66,8 @@ stdenv.mkDerivation rec {
     xorg.libXres
   ];
 
+  outputs = [ "out" "dev" ];
+
   cmakeFlags = [ "-DVERSION=${version}" ];
 
   # qt5integration must be placed before qtsvg in QT_PLUGIN_PATH
