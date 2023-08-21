@@ -7,7 +7,7 @@
 , wrapQtAppsHook
 , libisoburn
 , ncnn
-, opencv-mobile
+, opencv
 , vulkan-headers
 }:
 
@@ -26,6 +26,11 @@ stdenv.mkDerivation rec {
     ./fix_opencv_mobile_not_found.diff
   ];
 
+  postPatch = ''
+    substituteInPlace src/paddleocr-ncnn/paddleocr.cpp \
+      --replace "/usr" "$out"
+  '';
+
   nativeBuildInputs = [
     cmake
     qttools
@@ -35,11 +40,9 @@ stdenv.mkDerivation rec {
 
   buildInputs = [
     ncnn
-    opencv-mobile
+    opencv
     vulkan-headers
   ];
-
-  env.NIX_CFLAGS_COMPILE = "-I${opencv-mobile.dev}/include/opencv4";
 
   strictDeps = true;
 
