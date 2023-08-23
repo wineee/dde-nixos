@@ -20,16 +20,16 @@
 
 buildGoModule rec {
   pname = "dde-api";
-  version = "6.0.6.p7";
+  version = "6.0.7";
 
   src = fetchFromGitHub {
     owner = "linuxdeepin";
     repo = pname;
-    rev = "6132370d2ea0afb79ee5532ab2ffc2a438574bc0";
-    hash = "sha256-CFSSebA98J1jFuaaOLGR3rNXgTjD6zvTBgy7AMOeEvc=";
+    rev = version;
+    hash = "sha256-ggcBI8KwvgAQZhAfwCIJaqt7wUAd2lPYYdiJIGetsXo=";
   };
 
-  vendorHash = "sha256-4Yscw3QjWG1rlju6sMRHGn3dSe65b1nx10B3KeyAzBM=";
+  vendorHash = "sha256-kdf1CoZUyda6bOTW0WJTgaXYhocrjRU9ptj7i+k8aaQ=";
 
   postPatch = ''
     substituteInPlace misc/systemd/system/deepin-shutdown-sound.service \
