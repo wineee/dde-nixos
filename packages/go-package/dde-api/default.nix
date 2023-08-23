@@ -26,10 +26,10 @@ buildGoModule rec {
     owner = "linuxdeepin";
     repo = pname;
     rev = version;
-    hash = "sha256-ggcBI8KwvgAQZhAfwCIJaqt7wUAd2lPYYdiJIGetsXo=";
+    hash = "sha256-kdf1CoZUyda6bOTW0WJTgaXYhocrjRU9ptj7i+k8aaQ=";
   };
 
-  vendorHash = "sha256-kdf1CoZUyda6bOTW0WJTgaXYhocrjRU9ptj7i+k8aaQ=";
+  vendorHash = "sha256-ggcBI8KwvgAQZhAfwCIJaqt7wUAd2lPYYdiJIGetsXo=";
 
   postPatch = ''
     substituteInPlace misc/systemd/system/deepin-shutdown-sound.service \
