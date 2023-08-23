@@ -39,16 +39,16 @@
 
 buildGoModule rec {
   pname = "dde-daemon";
-  version = "6.0.16.999";
+  version = "6.0.18";
 
   src = fetchFromGitHub {
     owner = "linuxdeepin";
     repo = pname;
-    rev = "44323fd4d6153c99aacfb09cbd8dbefb5dcc179f";
-    hash = "sha256-/7VEaD5DWIN6u9yDdkbt6G4Cp7Phs9FgLiFKYm8Hfpc";
+    rev = version;
+    hash = "sha256-DUFBJFpHzCXBkomhAXcfqVNztx3SF1PpSXX//6EYHo0=";
   };
 
-  vendorHash = "sha256-4/HGviJGTJoW2cVDsOvOfeHGaiXKBTzat7/5Q0FoTR8=";
+  vendorHash = "sha256-U+G5CELpor34RgFzHpxfvJ/jBfWfE4ShjY2b2Z61BhE=";
 
   patches = [
     ./0001-dont-set-PATH.diff
