@@ -16,6 +16,7 @@
 , gdk-pixbuf-xlib
 , coreutils
 , dbus
+, fetchpatch
 }:
 
 buildGoModule rec {
@@ -29,7 +30,15 @@ buildGoModule rec {
     hash = "sha256-kdf1CoZUyda6bOTW0WJTgaXYhocrjRU9ptj7i+k8aaQ=";
   };
 
-  vendorHash = "sha256-ggcBI8KwvgAQZhAfwCIJaqt7wUAd2lPYYdiJIGetsXo=";
+  patches = [
+    (fetchpatch {
+      name = "modify_PKGBUILD_to_support_OBS.patch";
+      url = "https://github.com/linuxdeepin/dde-api/commit/1399522d032c6c649db79a33348cdb1a233bc23a.patch";
+      hash = "sha256-kSHnYaOxIvv7lAJnvxpSwyRDPyDxpAq9x+gJcBdU3T8=";
+    })
+  ];
+
+  vendorHash = "sha256-4Yscw3QjWG1rlju6sMRHGn3dSe65b1nx10B3KeyAzBM=";
 
   postPatch = ''
     substituteInPlace misc/systemd/system/deepin-shutdown-sound.service \
