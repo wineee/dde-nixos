@@ -19,13 +19,13 @@
 
 buildGoModule rec {
   pname = "startdde";
-  version = "6.0.8.999";
+  version = "6.0.9";
 
   src = fetchFromGitHub {
     owner = "linuxdeepin";
     repo = pname;
-    rev = "40d2ccd4e7721ef96ede2d16d0c2d08896676061";
-    hash = "sha256-IZv9O61SIU8/etvZGCHZDBYH3qyWGQdz5NMT0G4HAZ4=";
+    rev = version;
+    hash = "sha256-2aB04EtzIkUlT+ZaLOo21TCvPRHRVgzE3mZ1KNnIgQ4=";
   };
 
   patches = [
