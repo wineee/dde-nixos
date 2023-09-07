@@ -90,6 +90,7 @@ let
     dde-permission-manager = callPackage ./core/dde-permission-manager { };
     deepin-service-manager = callPackage ./core/deepin-service-manager { };
     #dde-wloutput-daemon = callPackage ./core/dde-wloutput-daemon { };
+    dde-am = callPackage ./core/dde-am { };
 
     #### MISC
     deepin-desktop-base = callPackage ./misc/deepin-desktop-base { };
