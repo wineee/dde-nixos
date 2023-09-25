@@ -17,16 +17,18 @@
 
 stdenv.mkDerivation rec {
   pname = "dtkdeclarative";
-  version = "5.6.12.999";
+  version = "5.6.17";
 
   src = fetchFromGitHub {
     owner = "linuxdeepin";
     repo = pname;
-    rev = "5a730e593984a42fab29b56a233959f126085eea";
-    hash = "sha256-rfIM5c04jikZ2CDq3V/FqQkHsT+dCaJ/O50HhQmm2/M=";
+    rev = version;
+    hash = "sha256-P0F6GidGp+CkNplKnLiaYVtcxs6N66gGIx6UcplEt08=";
   };
 
-  outputs = [ "out" "doc" ];
+  patches = [
+    ./fix-pkgconfig-path.patch
+  ];
 
   nativeBuildInputs = [
     cmake
@@ -46,14 +48,14 @@ stdenv.mkDerivation rec {
   ];
 
   cmakeFlags = [
-    "-DVERSION=${version}"
+    "-DDTK_VERSION=${version}"
     "-DBUILD_DOCS=ON"
     "-DBUILD_EXAMPLES=ON"
     "-DMKSPECS_INSTALL_DIR=${placeholder "out"}/mkspecs/modules"
-    "-DQCH_INSTALL_DESTINATION=${placeholder "doc"}/${qtbase.qtDocPrefix}"
-    "-DQML_INSTALL_DIR=${qtbase.qtQmlPrefix}"
-    "-DCMAKE_INSTALL_LIBDIR=lib"
-    "-DCMAKE_INSTALL_INCLUDEDIR=include"
+    "-DQCH_INSTALL_DESTINATION=${placeholder "out"}/${qtbase.qtDocPrefix}"
+    "-DQML_INSTALL_DIR=${placeholder "out"}/${qtbase.qtQmlPrefix}"
+    #"-DCMAKE_INSTALL_LIBDIR=lib"
+    #"-DCMAKE_INSTALL_INCLUDEDIR=include"
   ];
 
   preConfigure = ''

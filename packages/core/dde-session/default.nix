@@ -15,13 +15,13 @@
 
 stdenv.mkDerivation rec {
   pname = "dde-session";
-  version = "1.1.5";
+  version = "1.1.9";
 
   src = fetchFromGitHub {
     owner = "linuxdeepin";
     repo = pname;
     rev = version;
-    hash = "sha256-sf8zZwmtB3UBNLozNM3067u39HiDClFIbb/lj12hPNo=";
+    hash = "sha256-CyHvvNALXe4fOMjD48By/iaU6/xNUhH9yG19Ob3bHy0=";
   };
 
   postPatch = ''
@@ -29,7 +29,7 @@ stdenv.mkDerivation rec {
     substituteInPlace src/dde-session/impl/sessionmanager.cpp \
       --replace 'file.readAll().startsWith("/usr/bin/dde-lock")' 'file.readAll().contains("dde-dock")' \
 
-    substituteInPlace systemd/dde-session-daemon.target.wants/dde-polkit-agent.service \
+    substituteInPlace systemd/dde-session-initialized.target.wants/dde-polkit-agent.service \
       --replace "/usr/lib/polkit-1-dde" "${dde-polkit-agent}/lib/polkit-1-dde"
 
     for file in $(grep -rl "/usr/lib/deepin-daemon"); do
@@ -56,7 +56,7 @@ stdenv.mkDerivation rec {
     systemd
   ];
 
-  passthru.providedSessions = [ "dde-x11" "dde-wayland" ];
+  passthru.providedSessions = [ "dde-x11" /* "dde-wayland" */ ];
 
   meta = with lib; {
     description = "New deepin session, based on systemd and existing projects";

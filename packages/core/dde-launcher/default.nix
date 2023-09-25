@@ -5,60 +5,52 @@
 , qttools
 , pkg-config
 , wrapQtAppsHook
-, wrapGAppsHook
 , dtkwidget
-, qt5integration
-, qt5platform-plugins
+, dtkdeclarative
 , qtbase
-, qtx11extras
-, gsettings-qt
+, qtdeclarative
+, qtquickcontrols2
+, appstream-qt
+, kitemmodels
+, qt5integration
 }:
 
 stdenv.mkDerivation rec {
-  pname = "dde-launcher";
-  version = "6.0.14";
+  pname = "dde-launchpad";
+  version = "0.0.2";
 
   src = fetchFromGitHub {
     owner = "linuxdeepin";
     repo = pname;
     rev = version;
-    hash = "sha256-bJHD/YH/5fqVn4LJAj8ODOVBU2oGHb71NygqmMZQDDM";
+    hash = "sha256-tWlh7BS+qUgzZIDGxI/giDZnU54jMtRxzRSOX76DAzk=";
   };
-
-  postPatch = ''
-    substituteInPlace src/boxframe/{backgroundmanager.cpp,boxframe.cpp} \
-      --replace "/usr/share/backgrounds" "/run/current-system/sw/share/backgrounds"
-    substituteInPlace src/global_util/pluginloader.cpp \
-      --replace "/usr/lib/dde-launcher" "/run/current-system/sw/lib/dde-launcher"
-  '';
 
   nativeBuildInputs = [
     cmake
     qttools
     pkg-config
     wrapQtAppsHook
-    wrapGAppsHook
   ];
   dontWrapGApps = true;
 
   buildInputs = [
     dtkwidget
-    qt5platform-plugins
+    dtkdeclarative
     qtbase
-    qtx11extras
-    gsettings-qt
+    qtdeclarative
+    qtquickcontrols2
+    appstream-qt
+    kitemmodels
   ];
 
-  cmakeFlags = [ "-DVERSION=${version}" ];
+  cmakeFlags = [
+    "-DSYSTEMD_USER_UNIT_DIR=${placeholder "out"}/lib/systemd/user"
+  ];
 
-  # qt5integration must be placed before qtsvg in QT_PLUGIN_PATH
   qtWrapperArgs = [
     "--prefix QT_PLUGIN_PATH : ${qt5integration}/${qtbase.qtPluginPrefix}"
   ];
-
-  preFixup = ''
-    qtWrapperArgs+=("''${gappsWrapperArgs[@]}")
-  '';
 
   meta = with lib; {
     description = "Deepin desktop-environment - Launcher module";

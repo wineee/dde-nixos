@@ -1,17 +1,13 @@
 { stdenv
 , lib
 , fetchFromGitHub
-, fetchpatch
 , dtkwidget
-, qmake
+, cmake
+, pkg-config
 , qtbase
 , qtsvg
-, pkg-config
-, wrapQtAppsHook
 , qtx11extras
-, qt5platform-plugins
 , lxqt
-, kiconthemes
 , mtdev
 , xorg
 , gtest
@@ -19,44 +15,36 @@
 
 stdenv.mkDerivation rec {
   pname = "qt5integration";
-  version = "5.6.11";
+  version = "5.6.17";
 
   src = fetchFromGitHub {
     owner = "linuxdeepin";
     repo = pname;
     rev = version;
-    sha256 = "sha256-6q75QGerve5l1NXppbMQ/4qjZiWq23+LxDrIZeAIF6E=";
+    hash = "sha256-8ag/cFkjp5u/0/71xKR6z6dXp2NGRIYNNbzzEmgsDmc=";
   };
 
-  # patches = [
-  #  (fetchpatch {
-  #    name = "refactor: use KIconEngine instead";
-  #    url = "https://github.com/linuxdeepin/qt5integration/commit/822a6a40cddca1c89cc06169e42828b86c6f5a80.patch";
-  #    sha256 = "sha256-PRcae63FSAzV0EKG/YipjqwsW6lR+CgKyRbkAY4ZoM4=";
-  #  })
-  # ];
-
   nativeBuildInputs = [
-    qmake
+    cmake
     pkg-config
-    wrapQtAppsHook
   ];
 
   buildInputs = [
     dtkwidget
+    qtbase
+    qtsvg
     qtx11extras
-    qt5platform-plugins
     mtdev
     lxqt.libqtxdg
-    kiconthemes
     xorg.xcbutilrenderutil
     gtest
   ];
 
-  installPhase = ''
-    mkdir -p $out/${qtbase.qtPluginPrefix}
-    cp -r bin/plugins/* $out/${qtbase.qtPluginPrefix}/
-  '';
+  cmakeFlags = [
+    "-DPLUGIN_INSTALL_BASE_DIR=${placeholder "out"}/${qtbase.qtPluginPrefix}"
+  ];
+
+  dontWrapQtApps = true;
 
   meta = with lib; {
     description = "Qt platform theme integration plugins for DDE";

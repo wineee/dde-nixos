@@ -22,13 +22,13 @@
 
 stdenv.mkDerivation rec {
   pname = "dtkwidget";
-  version = "5.6.13";
+  version = "5.6.17";
 
   src = fetchFromGitHub {
     owner = "linuxdeepin";
     repo = pname;
     rev = version;
-    hash = "sha256-o38eJgjkc1mfQUvgZaKsOs8UNMugBr/PIB9oKT09BSw=";
+    hash = "sha256-oFmM0e7ht3lCL50pwS/v/BLFmT2jymQaUZ4SmLdxvMo=";
   };
 
   outputs = [ "out" "doc" ];

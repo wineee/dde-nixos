@@ -6,7 +6,6 @@
 , gsettings-desktop-schemas
 , dde-dock
 , startdde
-, dde-launcher
 , dde-session-shell
 , dde-session-ui
 , dde-control-center
@@ -24,7 +23,6 @@ let
   gsettingsOverridePackages = [
     dde-dock
     startdde
-    dde-launcher
     dde-session-shell
     #deepin-movie-reborn
     dde-file-manager

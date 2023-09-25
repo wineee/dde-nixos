@@ -18,19 +18,19 @@
 }:
 stdenv.mkDerivation rec {
   pname = "deepin-voice-note";
-  version = "6.0.11";
+  version = "6.0.13";
 
   src = fetchFromGitHub {
     owner = "linuxdeepin";
     repo = pname;
     rev = version;
-    sha256 = "sha256-leuG3r82uF29AZukkk0vcNIstGsVyL44Za4U3Qxk/xQ=";
+    hash = "sha256-yDlWyMGkSToGCN7tuZNR8Mz7MUOZ7355w4H0OzeHBrs=";
   };
 
   patches = [ 
     "${src}/patches/use-cmake-variable-if-define.patch"
     "${src}/patches/fix-create-vnote-db-failed.patch"
- ];
+  ];
 
   postPatch = ''
     substituteInPlace src/common/audiowatcher.cpp \

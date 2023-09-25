@@ -9,6 +9,7 @@
 , qttools
 , lshw
 , libuchardet
+, spdlog
 , dtkcommon
 , doxygen
 , withSystemd ? true
@@ -16,13 +17,13 @@
 
 stdenv.mkDerivation rec {
   pname = "dtkcore";
-  version = "5.6.13";
+  version = "5.6.17";
 
   src = fetchFromGitHub {
     owner = "linuxdeepin";
     repo = pname;
     rev = version;
-    hash = "sha256-t0bwcc3nW/w92HRfXs9Kt5f0leo2UynufwGX7ai5ifw=";
+    hash = "sha256-/MGSvT8tPn+KqqlM6FY2iFsArmAkYMW5Q3Sl4g4zvH0=";
   };
 
   outputs = [ "out" "doc" ];
@@ -47,6 +48,7 @@ stdenv.mkDerivation rec {
     gsettings-qt
     lshw
     libuchardet
+    spdlog
   ];
 
   propagatedBuildInputs = [ dtkcommon ];

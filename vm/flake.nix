@@ -30,7 +30,6 @@
           fd
           ripgrep
           ranger
-          exa
           ffmpeg
           xorg.xev
           

@@ -19,13 +19,13 @@
 
 stdenv.mkDerivation rec {
   pname = "dde-appearance";
-  version = "1.1.2";
+  version = "1.1.6";
 
   src = fetchFromGitHub {
     owner = "linuxdeepin";
     repo = pname;
     rev = version;
-    hash = "sha256-53iIXl8VV/V26tzvCmR0mmef5OOJ/TcgizmHUhKhn6k=";
+    hash = "sha256-7oRbydLXw8yRzi9L1GH/q0cjMY/DLyWbj4RUSyNpVNM=";
   };
 
   patches = [
@@ -71,6 +71,7 @@ stdenv.mkDerivation rec {
 
   cmakeFlags = [
     "-DDSG_DATA_DIR=/run/current-system/sw/share/dsg"
+    "-DSYSTEMD_USER_UNIT_DIR=${placeholder "out"}/lib/systemd/user"
   ];
 
   meta = with lib; {

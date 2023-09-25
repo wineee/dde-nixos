@@ -10,15 +10,16 @@
 , deepin-wayland-protocols
 , qttools
 }:
+
 stdenv.mkDerivation rec {
   pname = "dwayland";
-  version = "5.24.3-deepin.1.4";
+  version = "5.25.0";
 
   src = fetchFromGitHub {
     owner = "linuxdeepin";
     repo = pname;
-    rev = "3e2d16d4278959c2aa76e1e1f4c0cff9f52a109f";
-    sha256 = "sha256-/aWS4uvhxi9azxJWjRE+Bw+veURFO+mC8l9yypseclU=";
+    rev = version;
+    hash = "sha256-XZvL3lauVW5D3r3kybpS3SiitvwEScqgYe2h9c1DuCs=";
   };
 
   nativeBuildInputs = [

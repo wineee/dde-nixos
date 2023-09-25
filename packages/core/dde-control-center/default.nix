@@ -19,20 +19,27 @@
 , librsvg
 , runtimeShell
 , dbus
+, fetchpatch
 }:
 
 stdenv.mkDerivation rec {
   pname = "dde-control-center";
-  version = "6.0.21";
+  version = "6.0.28";
 
   src = fetchFromGitHub {
     owner = "linuxdeepin";
     repo = pname;
-    rev = "a93d388bf758b691bc0f0729b36212d488867dd6";
-    hash = "sha256-IG7sKAp6Srv1qmTkGSFYWv9MQHjOc69w2XA2WuKBry8=";
+    rev = version;
+    hash = "sha256-kgQ4ySiYtaklOqER56QtKD9lk1CnRSEAU4QPHycl9eI=";
   };
 
-  outputs = [ "out" "dev" ];
+  patches = [
+    (fetchpatch {
+      name = "fix-icon.path";
+      url = "https://github.com/linuxdeepin/dde-control-center/pull/1445/commits/d6b779e7ee3087f7c3044978f4c44c10e852b0e5.patch";
+      hash = "sha256-muO+b9pgVqM9f3v0IJyLecOHiIzRRwUkghJIWQUQSsQ=";
+    })
+  ];
 
   postPatch = ''
     substituteInPlace src/plugin-accounts/operation/accountsworker.cpp \
@@ -86,6 +93,8 @@ stdenv.mkDerivation rec {
   preFixup = ''
     qtWrapperArgs+=("''${gappsWrapperArgs[@]}")
   '';
+
+  outputs = [ "out" "dev" ];
 
   meta = with lib; {
     description = "Control panel of Deepin Desktop Environment";

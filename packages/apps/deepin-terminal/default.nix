@@ -21,13 +21,13 @@
 
 stdenv.mkDerivation rec {
   pname = "deepin-terminal";
-  version = "6.0.5.999";
+  version = "6.0.7";
 
   src = fetchFromGitHub {
     owner = "linuxdeepin";
     repo = pname;
-    rev = "b9ef82d2561563031f6bbff95ae93779f210dacc";
-    hash = "sha256-WBbQT9i1jLjW0KNP3UFK61tV5LKgV4aHBYNUscMjgYc=";
+    rev = version;
+    hash = "sha256-vXykC/x9F+cPTSqKTWimUhnr+IsfoeQncdj75sXG4/g=";
   };
 
   cmakeFlags = [ "-DVERSION=${version}" ];

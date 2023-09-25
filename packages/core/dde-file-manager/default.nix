@@ -39,17 +39,18 @@
 , udisks2
 , libisoburn
 , gsettings-qt
+, fetchpatch
 }:
 
 stdenv.mkDerivation rec {
   pname = "dde-file-manager";
-  version = "6.0.23";
+  version = "6.0.31";
 
   src = fetchFromGitHub {
     owner = "linuxdeepin";
     repo = pname;
     rev = version;
-    hash = "sha256-H+pCWZ1jj5p3gOKXYyLxSmjCMv5/BPIz5A25JGGzrR8=";
+    hash = "sha256-mc2HcoLrwMXKU8w34KUEh62ZfEIfbJLVzz4JGnUE5EM=";
   };
 
   nativeBuildInputs = [
@@ -63,6 +64,11 @@ stdenv.mkDerivation rec {
 
   patches = [
     ./compile_on_v23.diff
+
+    (fetchpatch {
+      url = "https://github.com/linuxdeepin/dde-file-manager/commit/b6c210057d991591df45b80607a614e7a57a9dc0.patch";
+      hash = "sha256-k0ZYlOVN3hHs1qvvRaJ3i6okOhDE+DoUKGs9AhSFBGU=";
+    })
   ];
 
   postPatch = ''

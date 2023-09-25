@@ -26,7 +26,7 @@
           deepinPkgsDbg = with pkgs.lib.attrsets; mapAttrs' getDbgVersion deepinPkgs;
         in
         rec {
-          packages = deepinPkgs // deepinPkgsDbg;
+          packages = deepinPkgs; # // deepinPkgsDbg;
           devShells = builtins.mapAttrs
             (
               name: value:
