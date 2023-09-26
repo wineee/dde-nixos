@@ -1,23 +1,11 @@
 { stdenv
 , lib
 , fetchFromGitHub
-, fetchpatch
 , cmake
 , pkg-config
 , wrapQtAppsHook
-, qt5integration
-, qt5platform-plugins
-, qtbase
-, dtkgui
-, gsettings-qt
-, gtk3
-, kconfig
-, kwindowsystem
-, kglobalaccel
-, xorg
-, tzdata
-, iconv
 }:
+
 stdenv.mkDerivation rec {
   pname = "deepin-service-manager";
   version = "1.0.3";
@@ -26,7 +14,7 @@ stdenv.mkDerivation rec {
     owner = "linuxdeepin";
     repo = pname;
     rev = version;
-    sha256 = "sha256-gTzyQHFPyn2+A+o+4VYySDBCZftfG2WnTXuqzeF+QhA=";
+    hash = "sha256-gTzyQHFPyn2+A+o+4VYySDBCZftfG2WnTXuqzeF+QhA=";
   };
 
   postPatch = ''
@@ -39,12 +27,6 @@ stdenv.mkDerivation rec {
     cmake
     pkg-config
     wrapQtAppsHook
-  ];
-
-  buildInputs = [
-  ];
-
-  cmakeFlags = [
   ];
 
   meta = with lib; {

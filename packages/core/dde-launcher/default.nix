@@ -8,8 +8,6 @@
 , dtkwidget
 , dtkdeclarative
 , qtbase
-, qtdeclarative
-, qtquickcontrols2
 , appstream-qt
 , kitemmodels
 , qt5integration
@@ -38,8 +36,6 @@ stdenv.mkDerivation rec {
     dtkwidget
     dtkdeclarative
     qtbase
-    qtdeclarative
-    qtquickcontrols2
     appstream-qt
     kitemmodels
   ];

@@ -36,7 +36,7 @@ stdenv.mkDerivation rec {
     substituteInPlace src/service/impl/appearancemanager.cpp \
       src/service/modules/api/compatibleengine.cpp \
       src/service/modules/subthemes/customtheme.cpp \
-      --replace "/usr" "/run/current-system/sw"
+      --replace "/usr/share" "/run/current-system/sw/share"
     
     for file in $(grep -rl "/usr/bin/dde-appearance"); do
       substituteInPlace $file --replace "/usr/bin/dde-appearance" "$out/bin/dde-appearance"

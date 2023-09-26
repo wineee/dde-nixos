@@ -10,6 +10,7 @@
 , dtkgui
 , qtdeclarative
 , qtquickcontrols2
+, qtgraphicaleffects
 }:
 
 stdenv.mkDerivation rec {
@@ -39,6 +40,7 @@ stdenv.mkDerivation rec {
     dtkgui
     qtdeclarative
     qtquickcontrols2
+    qtgraphicaleffects
   ];
 
   cmakeFlags = [

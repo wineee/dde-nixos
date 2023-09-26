@@ -152,6 +152,8 @@
                     "/lib/dde-file-manager"
                     "/share/backgrounds"
                     "/share/wallpapers"
+                    "/share/dsg"
+                    "/share/dde-daemon"
                     #"/share"
                   ];
 
