@@ -28,14 +28,14 @@ stdenv.mkDerivation rec {
   };
 
   patches = [
+    ./fix-pkgconfig-path.patch
+
     (fetchpatch {
       name = "fix_svg_with_filter_attribute_rendering_exception.patch";
       url = "https://github.com/linuxdeepin/dtkgui/commit/f2c9327eb4989ab8ea96af7560c67d1cada794de.patch";
       hash = "sha256-lfg09tgS4vPuYachRbHdaMYKWdZZ0lP0Hxakkr9JKGs=";
     })
   ];
-
-  outputs = [ "out" "doc" ];
 
   nativeBuildInputs = [
     cmake
@@ -63,8 +63,9 @@ stdenv.mkDerivation rec {
     "-DBUILD_DOCS=ON"
     "-DMKSPECS_INSTALL_DIR=${placeholder "out"}/mkspecs/modules"
     "-DQCH_INSTALL_DESTINATION=${placeholder "doc"}/${qtbase.qtDocPrefix}"
-    "-DCMAKE_INSTALL_LIBDIR=lib"
-    "-DCMAKE_INSTALL_INCLUDEDIR=include"
+    "-DCMAKE_INSTALL_LIBEXECDIR=${placeholder "dev"}/libexec"
+    #"-DCMAKE_INSTALL_LIBDIR=lib"
+    #"-DCMAKE_INSTALL_INCLUDEDIR=include"
     #"-DDTK_DISABLE_LIBRSVG=OFF" # librsvg
     #"-DDTK_DISABLE_LIBXDG=OFF" # libqtxdg
     #"-DDTK_DISABLE_EX_IMAGE_FORMAT=OFF" # freeimage
@@ -75,6 +76,8 @@ stdenv.mkDerivation rec {
     # A workaround is to set QT_PLUGIN_PATH explicitly
     export QT_PLUGIN_PATH=${qtbase.bin}/${qtbase.qtPluginPrefix}
   '';
+  
+  outputs = [ "out" "dev" "doc" ];
 
   meta = with lib; {
     description = "Deepin Toolkit, gui module for DDE look and feel";

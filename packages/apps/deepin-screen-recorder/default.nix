@@ -27,13 +27,13 @@
 
 stdenv.mkDerivation rec {
   pname = "deepin-screen-recorder";
-  version = "6.0.0.999";
+  version = "unstable-2023-07-10";
 
   src = fetchFromGitHub {
     owner = "linuxdeepin";
     repo = pname;
-    rev = "ed96ca36303b97f1719f5e8da3e076cf823ab8a2";
-    hash = "sha256-0/L84LRjf4JPc5egQ1hVa43sgYfzakxQwAIlv0WHwKI=";
+    rev = "e8ee1e8330e2f3923e22acc952a0bd01bee94ad1";
+    hash = "sha256-QHV3hSALXI4e31YBDXRSRgT8b/J8gwm024bzlPWu2FA=";
   };
 
   patches = [ ./dont_use_libPath.diff ];

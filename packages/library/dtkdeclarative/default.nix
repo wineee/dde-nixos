@@ -51,8 +51,8 @@ stdenv.mkDerivation rec {
     "-DDTK_VERSION=${version}"
     "-DBUILD_DOCS=ON"
     "-DBUILD_EXAMPLES=ON"
-    "-DMKSPECS_INSTALL_DIR=${placeholder "out"}/mkspecs/modules"
-    "-DQCH_INSTALL_DESTINATION=${placeholder "out"}/${qtbase.qtDocPrefix}"
+    "-DMKSPECS_INSTALL_DIR=${placeholder "dev"}/mkspecs/modules"
+    "-DQCH_INSTALL_DESTINATION=${placeholder "doc"}/${qtbase.qtDocPrefix}"
     "-DQML_INSTALL_DIR=${placeholder "out"}/${qtbase.qtQmlPrefix}"
     #"-DCMAKE_INSTALL_LIBDIR=lib"
     #"-DCMAKE_INSTALL_INCLUDEDIR=include"
@@ -64,6 +64,8 @@ stdenv.mkDerivation rec {
     export QT_PLUGIN_PATH=${qtbase.bin}/${qtbase.qtPluginPrefix}
     export QML2_IMPORT_PATH=${qtdeclarative.bin}/${qtbase.qtQmlPrefix}
   '';
+
+  outputs = [ "out" "dev" "doc" ];
 
   meta = with lib; {
     description = "A widget development toolkit based on QtQuick/QtQml";

@@ -17,20 +17,14 @@
 
 stdenv.mkDerivation rec {
   pname = "dde-clipboard";
-  version = "6.0.4.999";
+  version = "6.0.7";
 
   src = fetchFromGitHub {
     owner = "linuxdeepin";
     repo = pname;
-    rev = "ca671ae2e3ac2f9370645db363b9d6acfe97cfc8";
-    hash = "sha256-O27Ioye3++4BsyYHe48AqXFjESxmFF+q7WX5U3xhnjo=";
+    rev = version;
+    hash = "sha256-6CbCor0vgVMsMt8KY2uWrNqOsBEIaz7s2nViiHz+m1g=";
   };
-
-  postPatch = ''
-    substituteInPlace misc/{dde-clipboard.desktop,dde-clipboard-daemon.service,org.deepin.dde.Clipboard1.service} \
-      --replace "/usr/bin/qdbus" "${lib.getBin qttools}/bin/qdbus" \
-      --replace "/usr" "$out"
-  '';
 
   nativeBuildInputs = [
     cmake

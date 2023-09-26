@@ -26,7 +26,9 @@ stdenv.mkDerivation rec {
     hash = "sha256-/MGSvT8tPn+KqqlM6FY2iFsArmAkYMW5Q3Sl4g4zvH0=";
   };
 
-  outputs = [ "out" "doc" ];
+  patches = [
+    ./fix-pkgconfig-path.patch
+  ];
   
   postPatch = ''
     substituteInPlace src/dsysinfo.cpp \
@@ -60,8 +62,9 @@ stdenv.mkDerivation rec {
     "-DQCH_INSTALL_DESTINATION=${placeholder "doc"}/${qtbase.qtDocPrefix}"
     "-DDSG_PREFIX_PATH='/run/current-system/sw'"
     "-DMKSPECS_INSTALL_DIR=${placeholder "out"}/mkspecs/modules"
-    "-DCMAKE_INSTALL_LIBDIR=lib"
-    "-DCMAKE_INSTALL_INCLUDEDIR=include"
+    "-DCMAKE_INSTALL_LIBEXECDIR=${placeholder "dev"}/libexec"
+    #"-DCMAKE_INSTALL_LIBDIR=lib"
+    #"-DCMAKE_INSTALL_INCLUDEDIR=include"
     "-DD_DSG_APP_DATA_FALLBACK=/var/dsg/appdata"
     "-DBUILD_WITH_SYSTEMD=${if withSystemd then "ON" else "OFF"}"
   ];
@@ -71,6 +74,8 @@ stdenv.mkDerivation rec {
     # A workaround is to set QT_PLUGIN_PATH explicitly
     export QT_PLUGIN_PATH=${qtbase.bin}/${qtbase.qtPluginPrefix}
   '';
+
+  outputs = [ "out" "dev" "doc" ];
 
   meta = with lib; {
     description = "Deepin tool kit core library";
