@@ -15,19 +15,16 @@
 
 stdenv.mkDerivation rec {
   pname = "image-editor";
-  version = "1.0.34";
+  version = "1.0.35";
 
   src = fetchFromGitHub {
     owner = "linuxdeepin";
     repo = pname;
     rev = version;
-    hash = "sha256-EIrxFY3w7EVvJT87nwBUGENDcxNLxllIhKj6DdhZrJA=";
+    hash = "sha256-Xr4tueipQbRHyKLStTWeUcVbX7Baiz0YooaaVk65Y+U=";
   };
 
   postPatch = ''
-    substituteInPlace libimageviewer/service/ffmpegvideothumbnailer.cpp \
-        --replace 'libPath("libffmpegthumbnailer.so")'  'QString("${ffmpegthumbnailer.out}/lib/libffmpegthumbnailer.so")'
-
     substituteInPlace libimageviewer/CMakeLists.txt --replace '/usr' '$out'
     substituteInPlace libimagevisualresult/CMakeLists.txt --replace '/usr' '$out'
   '';

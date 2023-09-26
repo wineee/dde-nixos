@@ -12,13 +12,13 @@
 
 stdenv.mkDerivation rec {
   pname = "deepin-desktop-theme";
-  version = "1.0.8.999";
+  version = "1.0.8";
 
   src = fetchFromGitHub {
-    owner = "felixonmars";
+    owner = "linuxdeepin";
     repo = pname;
-    rev = "b07fa5b706db490713b0849056a2e2b5a762d1eb";
-    hash = "sha256-gp+CkIVocvUnrroUfNkD7/xcXaZsilUOxao8JMk1uqw=";
+    rev = version;
+    hash = "sha256-Zn4QbVuzySHHizvw78uawbdBNKsvxhNQdq+WlLbabc0=";
   };
 
   makeFlags = [ "PREFIX=${placeholder "out"}" ];
@@ -38,6 +38,8 @@ stdenv.mkDerivation rec {
 
   dontDropIconThemeCache = true;
 
+  # flow theme has invalid gtk icon cache
+  # https://github.com/linuxdeepin/developer-center/issues/4291
   postFixup = ''
     rm -r $out/share/icons/flow
     for theme in $out/share/icons/*; do
@@ -46,9 +48,9 @@ stdenv.mkDerivation rec {
   '';
 
   meta = with lib; {
-    description = "deepin desktop theme";
-    homepage = "https://github.com/linuxdeepin/deepin-icon-theme";
-    license = licenses.gpl3Plus;
+    description = "Provides a variety of well-designed theme resources";
+    homepage = "https://github.com/linuxdeepin/deepin-desktop-theme";
+    license = with licenses; [ gpl3Plus cc-by-sa-40 ];
     platforms = platforms.linux;
     maintainers = teams.deepin.members;
   };

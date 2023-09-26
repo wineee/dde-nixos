@@ -14,13 +14,13 @@
 
 buildGoModule rec {
   pname = "deepin-pw-check";
-  version = "6.0.1";
+  version = "6.0.2";
 
   src = fetchFromGitHub {
     owner = "linuxdeepin";
     repo = pname;
-    rev = "e97cd33ec258cbcf04d4d7866581b6f50b288c02";
-    sha256 = "sha256-HMKM1pgJRj/qavN6g7+hpvqG1bhcNPIlVyBu8qnFzT0=";
+    rev = version;
+    hash = "sha256-kBrkcB0IWGUV4ZrkFzwdPglRgDcnVvYDFhTXS20pKOk=";
   };
 
   vendorSha256 = "sha256-L0vUEkUN70Hrx5roIvTfaZBHbbq7mf3WpQJeFAMU5HY=";

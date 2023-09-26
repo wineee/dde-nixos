@@ -1,7 +1,6 @@
 { stdenv
 , lib
 , fetchFromGitHub
-, fetchpatch
 , cmake
 , qttools
 , pkg-config
@@ -19,13 +18,13 @@
 
 stdenv.mkDerivation rec {
   pname = "dde-network-core";
-  version = "2.0.12";
+  version = "2.0.15";
 
   src = fetchFromGitHub {
     owner = "linuxdeepin";
     repo = pname;
     rev = version;
-    hash = "sha256-EmveO6GHhYxQZ0LPmGPoBy/jTdL7q+0YwXDgcprkYzQ=";
+    hash = "sha256-AMuWEz3Eyw0tG0srLWpqS7MO7Z4ZzIay4z59cZQZU0o=";
   };
 
   nativeBuildInputs = [

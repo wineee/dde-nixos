@@ -1,6 +1,7 @@
 { stdenv
 , lib
 , fetchFromGitHub
+, fetchpatch
 , buildGoModule
 , pkg-config
 , deepin-gettext-tools
@@ -16,7 +17,6 @@
 , gdk-pixbuf-xlib
 , coreutils
 , dbus
-, fetchpatch
 }:
 
 buildGoModule rec {

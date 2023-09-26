@@ -15,13 +15,13 @@
 
 stdenv.mkDerivation rec {
   pname = "dde-polkit-agent";
-  version = "6.0.4";
+  version = "6.0.5";
 
   src = fetchFromGitHub {
     owner = "linuxdeepin";
     repo = pname;
     rev = version;
-    hash = "sha256-tmLm1V+aV7VrPsrcbNPCJpW+yxOI4b2Ags/CK5XKWE8=";
+    hash = "sha256-NSMwNL4ttCaqo0h0sF11bOJ20FhOB+SG27K4k8F4O/o=";
   };
 
   nativeBuildInputs = [
@@ -49,8 +49,9 @@ stdenv.mkDerivation rec {
 
   meta = with lib; {
     description = "PolicyKit agent for Deepin Desktop Environment";
-    homepage = https://github.com/linuxdeepin/dde-polkit-agent;
+    homepage = "https://github.com/linuxdeepin/dde-polkit-agent";
     license = licenses.gpl3Plus;
     platforms = platforms.linux;
+    maintainers = teams.deepin.members;
   };
 }
