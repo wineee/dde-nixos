@@ -1,18 +1,19 @@
 { stdenv
 , lib
 , fetchFromGitHub
-, pkg-config
 , cmake
-, gsettings-qt
+, pkg-config
+, qttools
+, doxygen
 , wrapQtAppsHook
 , qtbase
-, qttools
+, gsettings-qt
 , lshw
 , libuchardet
 , spdlog
 , dtkcommon
-, doxygen
-, withSystemd ? true
+, systemd
+, withSystemd ? lib.meta.availableOn stdenv.hostPlatform systemd
 }:
 
 stdenv.mkDerivation rec {
@@ -29,7 +30,7 @@ stdenv.mkDerivation rec {
   patches = [
     ./fix-pkgconfig-path.patch
   ];
-  
+
   postPatch = ''
     substituteInPlace src/dsysinfo.cpp \
       --replace "/usr/share/deepin/distribution.info" "/etc/distribution.info" \
@@ -38,9 +39,9 @@ stdenv.mkDerivation rec {
   nativeBuildInputs = [
     cmake
     pkg-config
-    wrapQtAppsHook
-    doxygen
     qttools
+    doxygen
+    wrapQtAppsHook
   ];
 
   dontWrapQtApps = true;
@@ -51,7 +52,8 @@ stdenv.mkDerivation rec {
     lshw
     libuchardet
     spdlog
-  ];
+  ]
+  ++ lib.optional withSystemd systemd;
 
   propagatedBuildInputs = [ dtkcommon ];
 
@@ -63,8 +65,6 @@ stdenv.mkDerivation rec {
     "-DDSG_PREFIX_PATH='/run/current-system/sw'"
     "-DMKSPECS_INSTALL_DIR=${placeholder "out"}/mkspecs/modules"
     "-DCMAKE_INSTALL_LIBEXECDIR=${placeholder "dev"}/libexec"
-    #"-DCMAKE_INSTALL_LIBDIR=lib"
-    #"-DCMAKE_INSTALL_INCLUDEDIR=include"
     "-DD_DSG_APP_DATA_FALLBACK=/var/dsg/appdata"
     "-DBUILD_WITH_SYSTEMD=${if withSystemd then "ON" else "OFF"}"
   ];

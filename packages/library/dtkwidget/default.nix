@@ -2,18 +2,16 @@
 , lib
 , fetchFromGitHub
 , fetchpatch
-, dtkcore
-, dtkgui
-, dtkcommon
-, pkg-config
 , cmake
+, pkg-config
 , qttools
+, doxygen
+, wrapQtAppsHook
+, dtkgui
 , qtbase
 , qtmultimedia
 , qtsvg
 , qtx11extras
-, doxygen
-, wrapQtAppsHook
 , cups
 , gsettings-qt
 , libstartup_notification
@@ -44,9 +42,9 @@ stdenv.mkDerivation rec {
   nativeBuildInputs = [
     cmake
     qttools
+    doxygen
     pkg-config
     wrapQtAppsHook
-    doxygen
   ];
 
   buildInputs = [
@@ -68,8 +66,6 @@ stdenv.mkDerivation rec {
     "-DMKSPECS_INSTALL_DIR=${placeholder "dev"}/mkspecs/modules"
     "-DQCH_INSTALL_DESTINATION=${placeholder "doc"}/${qtbase.qtDocPrefix}"
     "-DCMAKE_INSTALL_LIBEXECDIR=${placeholder "dev"}/libexec"
-    # "-DCMAKE_INSTALL_LIBDIR=lib"
-    # "-DCMAKE_INSTALL_INCLUDEDIR=include"
   ];
 
   preConfigure = ''

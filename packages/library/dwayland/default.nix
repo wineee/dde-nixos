@@ -38,10 +38,16 @@ stdenv.mkDerivation rec {
 
   dontWrapQtApps = true;
 
+  # cmake requires that the kf5 directory must not empty
+  postInstall = ''
+     mkdir $out/include/KF5
+  '';
+
   meta = with lib; {
     description = "Qt-style API to interact with the wayland-client and wayland-server";
     homepage = "https://github.com/linuxdeepin/dwayland";
     license = licenses.lgpl21Plus;
     platforms = platforms.linux;
+    maintainers = teams.deepin.members;
   };
 }

@@ -1,19 +1,19 @@
 { stdenv
 , lib
 , fetchFromGitHub
+, fetchpatch
 , pkg-config
 , cmake
 , qttools
 , doxygen
 , wrapQtAppsHook
-, librsvg
-, lxqt
-, dtkcore
 , qtbase
+, dtkcore
 , qtimageformats
+, lxqt
+, librsvg
 , freeimage
 , libraw
-, fetchpatch
 }:
 
 stdenv.mkDerivation rec {
@@ -40,9 +40,9 @@ stdenv.mkDerivation rec {
   nativeBuildInputs = [
     cmake
     qttools
+    doxygen
     pkg-config
     wrapQtAppsHook
-    doxygen
   ];
 
   buildInputs = [
@@ -54,8 +54,8 @@ stdenv.mkDerivation rec {
   ];
 
   propagatedBuildInputs = [
-    qtimageformats
     dtkcore
+    qtimageformats
   ];
 
   cmakeFlags = [
@@ -64,11 +64,6 @@ stdenv.mkDerivation rec {
     "-DMKSPECS_INSTALL_DIR=${placeholder "out"}/mkspecs/modules"
     "-DQCH_INSTALL_DESTINATION=${placeholder "doc"}/${qtbase.qtDocPrefix}"
     "-DCMAKE_INSTALL_LIBEXECDIR=${placeholder "dev"}/libexec"
-    #"-DCMAKE_INSTALL_LIBDIR=lib"
-    #"-DCMAKE_INSTALL_INCLUDEDIR=include"
-    #"-DDTK_DISABLE_LIBRSVG=OFF" # librsvg
-    #"-DDTK_DISABLE_LIBXDG=OFF" # libqtxdg
-    #"-DDTK_DISABLE_EX_IMAGE_FORMAT=OFF" # freeimage
   ];
 
   preConfigure = ''
@@ -76,7 +71,7 @@ stdenv.mkDerivation rec {
     # A workaround is to set QT_PLUGIN_PATH explicitly
     export QT_PLUGIN_PATH=${qtbase.bin}/${qtbase.qtPluginPrefix}
   '';
-  
+
   outputs = [ "out" "dev" "doc" ];
 
   meta = with lib; {

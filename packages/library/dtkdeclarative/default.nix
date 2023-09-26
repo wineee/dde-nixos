@@ -1,18 +1,15 @@
 { stdenv
 , lib
 , fetchFromGitHub
-, dtkgui
-, pkg-config
 , cmake
+, pkg-config
 , qttools
+, doxygen
 , wrapQtAppsHook
+, qtbase
+, dtkgui
 , qtdeclarative
 , qtquickcontrols2
-, doxygen
-, qtbase
-, qt5integration
-, qt5platform-plugins
-, qtgraphicaleffects
 }:
 
 stdenv.mkDerivation rec {
@@ -32,19 +29,16 @@ stdenv.mkDerivation rec {
 
   nativeBuildInputs = [
     cmake
-    qttools
     pkg-config
-    wrapQtAppsHook
-    qtdeclarative
     doxygen
     qttools
+    wrapQtAppsHook
   ];
 
   propagatedBuildInputs = [ 
     dtkgui
     qtdeclarative
     qtquickcontrols2
-    qtgraphicaleffects
   ];
 
   cmakeFlags = [
@@ -54,8 +48,6 @@ stdenv.mkDerivation rec {
     "-DMKSPECS_INSTALL_DIR=${placeholder "dev"}/mkspecs/modules"
     "-DQCH_INSTALL_DESTINATION=${placeholder "doc"}/${qtbase.qtDocPrefix}"
     "-DQML_INSTALL_DIR=${placeholder "out"}/${qtbase.qtQmlPrefix}"
-    #"-DCMAKE_INSTALL_LIBDIR=lib"
-    #"-DCMAKE_INSTALL_INCLUDEDIR=include"
   ];
 
   preConfigure = ''

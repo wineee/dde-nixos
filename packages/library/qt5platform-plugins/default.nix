@@ -1,6 +1,7 @@
 { stdenv
 , lib
 , fetchFromGitHub
+, fetchpatch
 , cmake
 , extra-cmake-modules
 , pkg-config
@@ -10,14 +11,9 @@
 , mtdev
 , cairo
 , xorg
-, libuuid
-, libglvnd
-, libxkbcommon
-, qtwayland
-, dwayland
 , wayland
-, waylandSupport ? false
-, fetchpatch
+, dwayland
+, qtwayland
 }:
 
 stdenv.mkDerivation rec {
@@ -44,41 +40,23 @@ stdenv.mkDerivation rec {
     qtbase
     qtx11extras
     xorg.libSM
-    xorg.libXdmcp
-    xorg.libxcb
-    xorg.libXi
-    xorg.libX11
-    xorg.xcbutilwm
-
-    libuuid
-    libglvnd
-    libxkbcommon
-  ] ++ lib.optionals waylandSupport [
-    qtwayland
-    dwayland
     wayland
+    dwayland
+    qtwayland
   ];
 
   patches = [
     (fetchpatch {
+      name = "use-ECM-to-help-dwayland-find-wayland.patch";
       url = "https://github.com/linuxdeepin/qt5platform-plugins/commit/d7f6230716a0ff5ce34fc7d292ec0af5bbac30e4.patch";
       hash = "sha256-RY2+QBR3OjUGBX4Y9oVvIRY90IH9rTOCg8dCddkB2WE=";
     })
   ];
 
-  postPatch = ''
-    substituteInPlace CMakeLists.txt --replace "add_subdirectory(wayland)" " "
-  '';
-
   cmakeFlags = [
     "-DINSTALL_PATH=${placeholder "out"}/${qtbase.qtPluginPrefix}/platforms"
     "-DQT_XCB_PRIVATE_HEADERS=${qtbase.src}/src/plugins/platforms/xcb"
-  ] ++ lib.optional (!waylandSupport) [ 
   ];
-
-  #NIX_CFLAGS_COMPILE = lib.optional waylandSupport [
-  #  "-I${wayland.dev}/include"
-  #];
 
   dontWrapQtApps = true;
 

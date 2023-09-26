@@ -21,8 +21,6 @@ stdenv.mkDerivation rec {
 
   dontWrapQtApps = true;
 
-  qmakeFlags = [ "PREFIX=${placeholder "out"}" ];
-
   meta = with lib; {
     description = "A public project for building DTK Library";
     homepage = "https://github.com/linuxdeepin/dtkcommon";
