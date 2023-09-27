@@ -17,7 +17,7 @@
 , xorg
 , libusb1
 , libv4l
-, ffmpeg_4
+, ffmpeg
 , ffmpegthumbnailer
 , portaudio
 , kwayland
@@ -36,7 +36,9 @@ stdenv.mkDerivation rec {
     hash = "sha256-QHV3hSALXI4e31YBDXRSRgT8b/J8gwm024bzlPWu2FA=";
   };
 
-  patches = [ ./dont_use_libPath.diff ];
+  patches = [
+    ./dont_use_libPath.diff
+  ];
 
   postPatch = ''
     find . -type f -regex ".*\\.\\(pro\\|service\\|desktop\\)" -exec sed -i -e "s|/usr/|$out/|g" {} \;
@@ -63,7 +65,7 @@ stdenv.mkDerivation rec {
     xorg.libXcursor
     libusb1
     libv4l
-    ffmpeg_4
+    ffmpeg
     ffmpegthumbnailer
     portaudio
     kwayland
@@ -77,7 +79,7 @@ stdenv.mkDerivation rec {
   # qt5integration must be placed before qtsvg in QT_PLUGIN_PATH
   qtWrapperArgs = [
     "--prefix QT_PLUGIN_PATH : ${qt5integration}/${qtbase.qtPluginPrefix}"
-    "--prefix LD_LIBRARY_PATH : ${lib.makeLibraryPath [ udev gst_all_1.gstreamer libv4l ffmpeg_4 ffmpegthumbnailer ]}"
+    "--prefix LD_LIBRARY_PATH : ${lib.makeLibraryPath [ udev gst_all_1.gstreamer libv4l ffmpeg ffmpegthumbnailer ]}"
   ];
 
   preFixup = ''

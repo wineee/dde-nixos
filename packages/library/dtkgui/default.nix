@@ -29,6 +29,7 @@ stdenv.mkDerivation rec {
 
   patches = [
     ./fix-pkgconfig-path.patch
+    ./fix-pri-path.patch
 
     (fetchpatch {
       name = "fix_svg_with_filter_attribute_rendering_exception.patch";

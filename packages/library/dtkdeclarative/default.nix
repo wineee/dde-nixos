@@ -26,6 +26,7 @@ stdenv.mkDerivation rec {
 
   patches = [
     ./fix-pkgconfig-path.patch
+    ./fix-pri-path.patch
   ];
 
   nativeBuildInputs = [
