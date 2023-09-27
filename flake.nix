@@ -152,9 +152,9 @@
                     "/lib/dde-file-manager"
                     "/share/backgrounds"
                     "/share/wallpapers"
-                    "/share/dsg"
                     "/share/dde-daemon"
-                    #"/share"
+                    "/share/dsg"
+                    "/share/deepin-themes"
                   ];
 
                   environment.etc."distribution.info".text = ''
@@ -169,13 +169,6 @@
                   environment.etc = {
                     "deepin-installer.conf".text = ''
                       system_info_vendor_name="Copyright (c) 2003-2023 NixOS contributors"
-                    '';
-                    "os-version".text = ''
-                      [Version]
-                      SystemName=NixOS
-                      ProductType=Desktop
-                      EditionName=Community
-                      MajorVersion=23
                     '';
                   };
 
