@@ -2,20 +2,20 @@
 , lib
 , fetchFromGitHub
 , fetchpatch
-, dtkwidget
-, deepin-ocr-plugin-manager
-, qt5platform-plugins
-, gio-qt
-, udisks2-qt5
-, image-editor
 , cmake
 , pkg-config
 , qttools
 , wrapQtAppsHook
+, qt5platform-plugins
+, qtbase
+, dtkwidget
+, dtkdeclarative
+, deepin-ocr-plugin-manager
+, gio-qt
+, udisks2-qt5
+, image-editor
 , libraw
 , libexif
-, qtbase
-, dtkdeclarative
 , freeimage
 }:
 
@@ -31,11 +31,10 @@ stdenv.mkDerivation rec {
   };
 
   patches = [
-    #./0001-fix-fhs-path-for-nix.patch
     (fetchpatch {
       name = "fix build with libraw 0.21";
       url = "https://raw.githubusercontent.com/archlinux/svntogit-community/2ff11979704dd7156a7e7c3bae9b30f08894063d/trunk/libraw-0.21.patch";
-      sha256 = "sha256-I/w4uiANT8Z8ud/F9WCd3iRHOfplu3fpqnu8ZIs4C+w=";
+      hash = "sha256-I/w4uiANT8Z8ud/F9WCd3iRHOfplu3fpqnu8ZIs4C+w=";
     })
   ];
 
@@ -47,23 +46,23 @@ stdenv.mkDerivation rec {
   ];
 
   buildInputs = [
-    dtkdeclarative
+    qt5platform-plugins
     dtkwidget
+    dtkdeclarative
     deepin-ocr-plugin-manager
     libraw
     freeimage
-    qt5platform-plugins
   ];
 
-  cmakeFlags = [ 
-    "-DVERSION=${version}" 
-    #"-DDDE_OCR_ENABLE=OFF"
-  ];
+  strictDeps = true;
+
+  cmakeFlags = [ "-DVERSION=${version}" ];
 
   meta = with lib; {
     description = "An image viewing tool with fashion interface and smooth performance";
     homepage = "https://github.com/linuxdeepin/deepin-image-viewer";
     license = licenses.gpl3Plus;
     platforms = platforms.linux;
+    maintainers = teams.deepin.members;
   };
 }

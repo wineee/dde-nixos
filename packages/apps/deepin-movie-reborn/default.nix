@@ -1,6 +1,7 @@
 { stdenv
 , lib
 , fetchFromGitHub
+, fetchpatch
 , cmake
 , pkg-config
 , wrapQtAppsHook
@@ -34,16 +35,22 @@
 
 stdenv.mkDerivation rec {
   pname = "deepin-movie-reborn";
-  version = "6.0.5.999";
+  version = "6.0.5";
 
   src = fetchFromGitHub {
     owner = "linuxdeepin";
     repo = pname;
-    rev = "f2580a7c8ee067628a50d624d5402412215ace73";
-    hash = "sha256-EG2F3RjWZNBIaXJsF5KsVrhzceno4M2THBtcLyyl2ys=";
+    rev = version;
+    hash = "sha256-dWN2IVVpwYwzEuLtT3JvhzKiBwaBq4lzmaEhA9S1hjE=";
   };
 
   patches = [
+    (fetchpatch {
+      name = "fix-build-for-new-dtk.patch";
+      url = "https://github.com/linuxdeepin/deepin-movie-reborn/commit/ab05eb557dbcef2da7a09f210b0c0cf6d92de0d3.patch";
+      hash = "sha256-CnJoMF0BzrUL/7vAq+qjoGNdeVM+UnwbHg1qa9DLEAU=";
+    })
+
     ./dont_use_libPath.diff
   ];
 

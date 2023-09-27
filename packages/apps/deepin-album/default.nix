@@ -26,7 +26,7 @@ stdenv.mkDerivation rec {
     owner = "linuxdeepin";
     repo = pname;
     rev = version;
-    sha256 = "sha256-kRQiH6LvXDpQOgBQiFHM+YQzQFSupOj98aEPbcUumZ8=";
+    hash = "sha256-kRQiH6LvXDpQOgBQiFHM+YQzQFSupOj98aEPbcUumZ8=";
   };
 
   nativeBuildInputs = [
@@ -39,8 +39,8 @@ stdenv.mkDerivation rec {
   buildInputs = [
     dtkwidget
     dtkdeclarative
-    #qt5integration
-    #qt5platform-plugins
+    qt5integration
+    qt5platform-plugins
     qtbase
     qtsvg
     udisks2-qt5

@@ -41,11 +41,11 @@ stdenv.mkDerivation rec {
       url = "https://github.com/linuxdeepin/deepin-voice-note/commit/9ce211f603deaff21b881e1c4f43d53e33a85347.patch";
       hash = "sha256-oP+AzMniONxjYIFust8fGaD8/UOjKr4yZiRUkdTMd5w=";
     })
-    "${src}/patches/use-cmake-variable-if-define.patch"
-    "${src}/patches/fix-create-vnote-db-failed.patch"
   ];
 
   postPatch = ''
+    substituteInPlace CMakeLists.txt \
+      --replace "/usr" "$out"
     substituteInPlace src/common/audiowatcher.cpp \
       --replace "/usr/share" "$out/share"
   '';

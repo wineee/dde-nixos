@@ -13,7 +13,7 @@
 
 stdenv.mkDerivation rec {
   pname = "deepin-ocr-plugin-manager";
-  version = "0.0.1.999";
+  version = "unstable-2023-07-10";
 
   src = fetchFromGitHub {
     owner = "linuxdeepin";
@@ -22,11 +22,10 @@ stdenv.mkDerivation rec {
     hash = "sha256-U5lxAKTaQvvlqbqRezPIcBGg+DpF1hZ204Y1+8dt14U=";
   };
 
-  patches = [
-    ./fix_opencv_mobile_not_found.diff
-  ];
-
+  # don't use vendored opencv
   postPatch = ''
+    substituteInPlace src/CMakeLists.txt \
+      --replace "opencv_mobile" "opencv4"
     substituteInPlace src/paddleocr-ncnn/paddleocr.cpp \
       --replace "/usr" "$out"
   '';
