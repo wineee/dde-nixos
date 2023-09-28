@@ -1,3 +1,7 @@
+# This project will archive soon
+
+Move To https://github.com/NixOS/nixpkgs/pull/257400
+
 # dde-nixos
 
 This is an experimental flake for DDE (Deepin Desktop Environment) on NixOS.
