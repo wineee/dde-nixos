@@ -19,7 +19,6 @@
 , librsvg
 , runtimeShell
 , dbus
-, fetchpatch
 }:
 
 stdenv.mkDerivation rec {
@@ -32,14 +31,6 @@ stdenv.mkDerivation rec {
     rev = version;
     hash = "sha256-kgQ4ySiYtaklOqER56QtKD9lk1CnRSEAU4QPHycl9eI=";
   };
-
-  patches = [
-    (fetchpatch {
-      name = "fix-icon.path";
-      url = "https://github.com/linuxdeepin/dde-control-center/pull/1445/commits/d6b779e7ee3087f7c3044978f4c44c10e852b0e5.patch";
-      hash = "sha256-muO+b9pgVqM9f3v0IJyLecOHiIzRRwUkghJIWQUQSsQ=";
-    })
-  ];
 
   postPatch = ''
     substituteInPlace src/plugin-accounts/operation/accountsworker.cpp \
