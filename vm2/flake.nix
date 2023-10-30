@@ -1,7 +1,7 @@
 # nix run -v -L
 {
-  inputs.nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
-  #inputs.nixpkgs.url = "path:/home/rewine/nur/nixpkgs";
+  #inputs.nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
+  inputs.nixpkgs.url = "git+file:///home/rewine/nixpkgs";
 
   outputs = inputs@{ self, nixpkgs }: let 
     system = "x86_64-linux";
@@ -24,6 +24,10 @@
           desktopManager.deepin.enable = true;
         };
         
+        environment.systemPackages = with pkgs; [
+          dfeet
+        ];
+ 
         users.users.test = {
           isNormalUser = true;
           uid = 1000;

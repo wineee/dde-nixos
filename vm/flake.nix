@@ -35,7 +35,7 @@
           
         ] ++ (with dde-nixos.packages.${super.system}; [
           # deepin-draw
-          # deepin-voice-note
+           deepin-voice-note
         ]);
         
         services.xserver = {
