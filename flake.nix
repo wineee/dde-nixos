@@ -123,7 +123,7 @@
 
                   #TODO: programs.gnupg.agent.pinentryFlavor = "qt";
 
-                  fonts.fonts = with pkgs; [ noto-fonts ];
+                  fonts.packages = with pkgs; [ noto-fonts ];
                   xdg.mime.enable = true;
                   xdg.menus.enable = true;
                   xdg.icons.enable = true;

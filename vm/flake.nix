@@ -35,7 +35,7 @@
           
         ] ++ (with dde-nixos.packages.${super.system}; [
           # deepin-draw
-           deepin-voice-note
+          # deepin-voice-note
         ]);
         
         services.xserver = {
@@ -68,7 +68,7 @@
         #];
         time.timeZone = "Asia/Shanghai";
         fonts = {
-          fonts = with pkgs; [
+          packages = with pkgs; [
             noto-fonts
             noto-fonts-cjk
             noto-fonts-emoji
