@@ -1,7 +1,6 @@
 { stdenv
 , lib
 , fetchFromGitHub
-, fetchpatch
 , substituteAll
 , buildGoModule
 , pkg-config
@@ -60,6 +59,7 @@ buildGoModule rec {
       src = ./0003-aviod-use-hardcode-path.diff;
       inherit dbus;
     })
+    ./0004-fix-build-with-ddcutil-2.patch
   ];
 
   postPatch = ''
