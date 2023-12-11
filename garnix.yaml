@@ -1,9 +1,3 @@
 builds:
   include:
-    - 'packages.*.dtkcommon'
-    - 'packages.*.dtkcore'
-    - 'packages.*.dtkgui'
-    - 'packages.*.dtkwidget'
-    - 'packages.*.qt5platform-plugins'
-    - 'packages.*.qt5integration'
     - 'packages.x86_64-linux.*'

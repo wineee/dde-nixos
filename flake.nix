@@ -18,35 +18,11 @@
           qt6Scope = import ./packages/qt6.nix { inherit pkgs; };
           deepinPkgs = flake-utils.lib.flattenTree deepinScope;
           qt6Pkgs = flake-utils.lib.flattenTree qt6Scope;
-          getDbgVersion = name: value:
-            (pkgs.lib.attrsets.nameValuePair
-              (name + "-dbg")
-              (if value.stdenv == pkgs.stdenvNoCC then value else
-              value.override {
-                stdenv = pkgs.stdenvAdapters.keepDebugInfo pkgs.stdenv;
-              }));
-          deepinPkgsDbg = with pkgs.lib.attrsets; mapAttrs' getDbgVersion deepinPkgs;
         in
         rec {
           packages = deepinPkgs // {
             qt6 = qt6Pkgs;
           } ;
-          #deepinPkgs; # // deepinPkgsDbg;
-          devShells = builtins.mapAttrs
-            (
-              name: value:
-                pkgs.mkShell {
-                  nativeBuildInputs = deepinPkgs.${name}.nativeBuildInputs;
-                  buildInputs = deepinPkgs.${name}.buildInputs
-                    ++ deepinPkgs.${name}.propagatedBuildInputs;
-                  shellHook = ''
-                    # export QT_LOGGING_RULES=*.debug=true
-                    export QT_PLUGIN_PATH="$QT_PLUGIN_PATH:${deepinPkgs.qt5integration}/plugins"
-                    export QT_QPA_PLATFORM_PLUGIN_PATH="${deepinPkgs.qt5platform-plugins}/plugins"
-                  '';
-                }
-            )
-            deepinPkgs;
 
           nixosModules = { config, lib, pkgs, utils, ... }:
             with lib;
