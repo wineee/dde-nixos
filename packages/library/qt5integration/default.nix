@@ -6,7 +6,7 @@
 , pkg-config
 , qtbase
 , qtsvg
-, qtx11extras
+, qtx11extras ? null
 , lxqt
 , mtdev
 , xorg
@@ -41,6 +41,7 @@ stdenv.mkDerivation rec {
   ];
 
   cmakeFlags = [
+    "-DDTK_VERSION=${if lib.versionAtLeast qtbase.version "6" then "6.0.0" else "5.6.17"}"
     "-DPLUGIN_INSTALL_BASE_DIR=${placeholder "out"}/${qtbase.qtPluginPrefix}"
   ];
 

@@ -15,7 +15,9 @@
         let
           pkgs = nixpkgs.legacyPackages.${system};
           deepinScope = import ./packages { inherit pkgs; };
+          qt6Scope = import ./packages/qt6.nix { inherit pkgs; };
           deepinPkgs = flake-utils.lib.flattenTree deepinScope;
+          qt6Pkgs = flake-utils.lib.flattenTree qt6Scope;
           getDbgVersion = name: value:
             (pkgs.lib.attrsets.nameValuePair
               (name + "-dbg")
@@ -26,7 +28,10 @@
           deepinPkgsDbg = with pkgs.lib.attrsets; mapAttrs' getDbgVersion deepinPkgs;
         in
         rec {
-          packages = deepinPkgs; # // deepinPkgsDbg;
+          packages = deepinPkgs // {
+            qt6 = qt6Pkgs;
+          } ;
+          #deepinPkgs; # // deepinPkgsDbg;
           devShells = builtins.mapAttrs
             (
               name: value:

@@ -1,0 +1,13 @@
+diff --git a/src/targets.cmake b/src/targets.cmake
+index 35a199e..a010b7f 100644
+--- a/src/targets.cmake
++++ b/src/targets.cmake
+@@ -64,7 +64,7 @@ target_include_directories(${LIB_NAME}_properties INTERFACE
+ )
+ 
+ target_link_directories(${LIB_NAME}_properties INTERFACE
+-    $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}>
++    $<BUILD_INTERFACE:${LIB_INSTALL_DIR}>
+     $<INSTALL_INTERFACE:${LIB_INSTALL_DIR}>
+ )
+ 

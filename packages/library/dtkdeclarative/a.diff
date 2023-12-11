@@ -1,0 +1,12 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 1a48fd6..863ea1e 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -56,6 +56,7 @@ set(MKSPECS_INSTALL_DIR "${CMAKE_INSTALL_LIBDIR}/qt${QT_VERSION_MAJOR}/mkspecs/m
+ set(QML_INSTALL_DIR "${CMAKE_INSTALL_LIBDIR}/qt${QT_VERSION_MAJOR}/qml" CACHE STRING "Qml plugin install directory")
+ 
+ set(USE_QQuickStylePluginPrivate OFF)
++find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Core)
+ find_package(Qt${QT_VERSION_MAJOR}QuickControls2)
+ if(EnableQt5)
+ if(TARGET Qt::QuickControls2 AND TARGET Qt::QuickControls2Private)

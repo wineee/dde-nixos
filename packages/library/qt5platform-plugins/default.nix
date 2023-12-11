@@ -7,12 +7,12 @@
 , pkg-config
 , dtkcommon
 , qtbase
-, qtx11extras
+, qtx11extras ? null
 , mtdev
 , cairo
 , xorg
 , wayland
-, dwayland
+, dwayland ? null
 , qtwayland
 }:
 
@@ -41,7 +41,7 @@ stdenv.mkDerivation rec {
     qtx11extras
     xorg.libSM
     wayland
-    dwayland
+    #dwayland
     qtwayland
   ];
 
@@ -54,6 +54,7 @@ stdenv.mkDerivation rec {
   ];
 
   cmakeFlags = [
+    "-DDTK_VERSION=${if lib.versionAtLeast qtbase.version "6" then "6.0.0" else "5.6.16"}"
     "-DINSTALL_PATH=${placeholder "out"}/${qtbase.qtPluginPrefix}/platforms"
     "-DQT_XCB_PRIVATE_HEADERS=${qtbase.src}/src/plugins/platforms/xcb"
   ];
