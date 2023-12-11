@@ -15,13 +15,13 @@
 
 stdenv.mkDerivation rec {
   pname = "dtkdeclarative";
-  version = "5.6.17";
+  version = "5.6.20";
 
   src = fetchFromGitHub {
     owner = "linuxdeepin";
     repo = pname;
     rev = version;
-    hash = "sha256-P0F6GidGp+CkNplKnLiaYVtcxs6N66gGIx6UcplEt08=";
+    hash = "sha256-teI6KWjyK9GqWtK3O8ELuzAcCB2QmO5elzfe/FhcmJg=";
   };
 
   patches = [
@@ -37,7 +37,7 @@ stdenv.mkDerivation rec {
     wrapQtAppsHook
   ];
 
-  propagatedBuildInputs = [ 
+  propagatedBuildInputs = [
     dtkgui
     qtdeclarative
     qtquickcontrols2
