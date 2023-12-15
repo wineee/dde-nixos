@@ -1,6 +1,7 @@
 { stdenv
 , lib
 , fetchFromGitHub
+, fetchpatch
 , cmake
 , pkg-config
 , qttools
@@ -32,7 +33,10 @@ stdenv.mkDerivation rec {
     ./fix-pkgconfig-path.patch
     ./fix-pri-path.patch
     ./a.diff
-    ./b.diff
+     (fetchpatch {
+      url = "https://github.com/linuxdeepin/dtkdeclarative/commit/a7c09ac55585df2e58627d99de71e86f455772a8.patch";
+      hash = "sha256-fTLJKqXT5zO6PQWXuxJ0jLqCBkj9OXjzYn9ejanPqkc";
+    })
   ];
 
   nativeBuildInputs = [
