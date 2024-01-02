@@ -22,6 +22,7 @@ let
     dtkdeclarative = callPackage ./library/dtkdeclarative { 
       inherit (pkgs.qt6Packages) qtshadertools qt5compat;
     };
+    dtksystemsettings = callPackage ./library/dtksystemsettings { };
   };
 in
 makeScope newScope packages
