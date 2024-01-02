@@ -24,8 +24,8 @@ stdenv.mkDerivation rec {
 
   patches = [
     (fetchpatch {
-      url = "https://github.com/linuxdeepin/dtksystemsettings/commit/f776b9c6ab2752857fbaaf50fd1ea26e9e85ec87.patch";
-      hash = "sha256-VRG2Chp6mVJQ4sAmu2iA3ln6BfMDqzvHMhFx7ABPXA8=";
+      url = "https://github.com/linuxdeepin/dtksystemsettings/commit/26fec835366743676c91c4889eed3e7ba31cb1b2.patch";
+      hash = "sha256-b6HbQ/cS7xqlmGg7WqapUajOnE3C1YBAOdzf2hOWJCg=";
     })
   ];
 
