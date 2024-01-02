@@ -1,11 +1,11 @@
 { stdenv
 , lib
 , fetchFromGitHub
+, fetchpatch
 , cmake
 , pkg-config
 , qttools
 , doxygen
-, wrapQtAppsHook
 , qtbase
 , dtkcore
 , libxcrypt
@@ -22,12 +22,18 @@ stdenv.mkDerivation rec {
     hash = "sha256-1FDTtdDwa2G/cPtPqq2/hMMZxyTD9ErGtDX0dVu3jrw=";
   };
 
+  patches = [
+    (fetchpatch {
+      url = "https://github.com/linuxdeepin/dtksystemsettings/commit/f776b9c6ab2752857fbaaf50fd1ea26e9e85ec87.patch";
+      hash = "sha256-VRG2Chp6mVJQ4sAmu2iA3ln6BfMDqzvHMhFx7ABPXA8=";
+    })
+  ];
+
   nativeBuildInputs = [
     cmake
     pkg-config
     qttools
     doxygen
-    wrapQtAppsHook
   ];
 
   dontWrapQtApps = true;
@@ -44,6 +50,7 @@ stdenv.mkDerivation rec {
     "-DBUILD_EXAMPLES=OFF"
     "-DQCH_INSTALL_DESTINATION=${placeholder "doc"}/share/doc"
     "-DMKSPECS_INSTALL_DIR=${placeholder "out"}/mkspecs/modules"
+    "-DDTK_INCLUDE_INSTALL_DIR=${placeholder "dev"}/include/dtk/DSystemSettings"
   ];
 
   preConfigure = ''
