@@ -48,6 +48,9 @@ stdenv.mkDerivation (finalAttrs: {
     (lib.cmakeFeature "SYSTEMD_USER_UNIT_DIR" "${placeholder "out"}/lib/systemd/user")
   ];
 
+  #FIXME: lib/qt6/qml/org/deepin/ds/dock/libdock-plugin.so
+  noAuditTmpdir = true;
+
   meta = {
     description = "A plugin system that integrates plugins developed on DDE";
     homepage = "https://github.com/vioken/qwlroots";
