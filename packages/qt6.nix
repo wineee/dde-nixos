@@ -23,6 +23,7 @@ let
       inherit (pkgs.qt6Packages) qtshadertools qt5compat;
     };
     dtksystemsettings = callPackage ./library/dtksystemsettings { };
+    dde-shell = callPackage ./core/dde-shell { };
   };
 in
 makeScope newScope packages

@@ -1,0 +1,12 @@
+diff --git a/panels/dock/dockplugin/CMakeLists.txt b/panels/dock/dockplugin/CMakeLists.txt
+index 452c825..b9d33a7 100644
+--- a/panels/dock/dockplugin/CMakeLists.txt
++++ b/panels/dock/dockplugin/CMakeLists.txt
+@@ -2,5 +2,5 @@
+ #
+ # SPDX-License-Identifier: CC0-1.0
+ 
+-add_subdirectory(plugin)
+-add_subdirectory(loader)
++#add_subdirectory(plugin)
++#add_subdirectory(loader)
