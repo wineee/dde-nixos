@@ -1,7 +1,7 @@
 # nix run -v -L
 {
   #inputs.nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
-  inputs.nixpkgs.url = "git+file:///home/rewine/nixpkgs";
+  inputs.nixpkgs.url = "git+file:///home/rewine/nixpkgs?depth=1";
 
   outputs = inputs@{ self, nixpkgs }: let 
     system = "x86_64-linux";
@@ -23,15 +23,20 @@
           };
           desktopManager.deepin.enable = true;
         };
+        services.openssh.enable = true;
         
         environment.systemPackages = with pkgs; [
           dfeet
+          gnome.dconf-editor
+
+          neovim
+          jq
         ];
  
         users.users.test = {
           isNormalUser = true;
           uid = 1000;
-          extraGroups = [ "wheel" "networkmanager" ];
+          extraGroups = [ "wheel" "networkmanager" "libvirtd" "docker" "audio" "sound" "video" "input" "tty" "camera" "ssh" ];
           password = "test";
           createHome = true;
         };
