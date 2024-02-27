@@ -26,6 +26,7 @@ stdenv.mkDerivation (finalAttrs: {
 
   patches = [
     ./no-plugin.diff
+    ./a.diff
   ];
 
   nativeBuildInputs = [
@@ -49,7 +50,7 @@ stdenv.mkDerivation (finalAttrs: {
   ];
 
   #FIXME: lib/qt6/qml/org/deepin/ds/dock/libdock-plugin.so
-  noAuditTmpdir = true;
+  # noAuditTmpdir = true;
 
   meta = {
     description = "A plugin system that integrates plugins developed on DDE";
