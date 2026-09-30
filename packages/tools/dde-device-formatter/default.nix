@@ -1,73 +1,59 @@
-{ stdenv
-, lib
-, fetchFromGitHub
-, fetchpatch
-, getUsrPatchFrom
-, dtkwidget
-, deepin-gettext-tools
-, qt5integration
-, qmake
-, qttools
-, qtx11extras
-, pkg-config
-, wrapQtAppsHook
-, udisks2-qt5
-, gtest
-, qtbase
+{
+  stdenv,
+  lib,
+  fetchFromGitHub,
+  pkg-config,
+  deepin-gettext-tools,
+  libsForQt5,
+  dtkwidget,
+  udisks2-qt5,
+  qt5platform-plugins,
+  qt5integration,
 }:
-let
-  patchList = {
-    ## INSTALL
-    "dde-device-formatter.pro" = [ ];
-  };
-in
+
 stdenv.mkDerivation rec {
   pname = "dde-device-formatter";
-  version = "unstable-2022-09-05";
+  version = "0.0.1.16";
 
   src = fetchFromGitHub {
     owner = "linuxdeepin";
     repo = pname;
-    rev = "9b8489cb2bb7c85bd62557d16a5eabc94100512e";
-    sha256 = "sha256-Mi48dSDCoKhr8CGt9z64/9d7+r9QSrPPICv+R5VDuaU=";
+    rev = version;
+    hash = "sha256-l2D+j+u5Q6G45KTM7eg1QNEakEPtEJ0tzlDlQO5/08I=";
   };
 
-  patches = [
-    (fetchpatch {
-      name = "chore: don't use hardcode path";
-      url = "https://github.com/linuxdeepin/dde-device-formatter/commit/b836a498b8e783e0dff3820302957f15ee8416eb.patch";
-      sha256 = "sha256-i/VqJ6EmCyhE6weHKUB66bW6b51gLyssIAzb5li4aJM=";
-    })
-  ];
-
-  postPatch = getUsrPatchFrom patchList + ''
+  postPatch = ''
+    substituteInPlace translate_desktop2ts.sh translate_ts2desktop.sh \
+      --replace "/usr/bin/deepin-desktop-ts-convert" "deepin-desktop-ts-convert"
+    substituteInPlace dde-device-formatter.pro dde-device-formatter.desktop \
+      --replace "/usr" "$out"
     patchShebangs *.sh
   '';
 
   nativeBuildInputs = [
-    qmake
-    qttools
+    libsForQt5.qmake
+    libsForQt5.qttools
+    libsForQt5.wrapQtAppsHook
     pkg-config
-    wrapQtAppsHook
     deepin-gettext-tools
   ];
 
   buildInputs = [
     dtkwidget
     udisks2-qt5
-    qtx11extras
+    qt5platform-plugins
+    qt5integration
+    libsForQt5.qtx11extras
   ];
 
   cmakeFlags = [ "-DVERSION=${version}" ];
 
-  qtWrapperArgs = [
-    "--prefix QT_PLUGIN_PATH : ${qt5integration}/${qtbase.qtPluginPrefix}"
-  ];
-
-  meta = with lib; {
-    description = "A simple graphical interface for creating file system in a block device";
+  meta = {
+    description = "Simple graphical interface for creating file system in a block device";
+    mainProgram = "dde-device-formatter";
     homepage = "https://github.com/linuxdeepin/dde-device-formatter";
-    license = licenses.gpl3Plus;
-    platforms = platforms.linux;
+    license = lib.licenses.gpl3Plus;
+    platforms = lib.platforms.linux;
+    teams = [ lib.teams.deepin ];
   };
 }

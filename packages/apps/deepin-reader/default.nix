@@ -1,36 +1,35 @@
-{ stdenv
-, lib
-, fetchFromGitHub
-, qmake
-, pkg-config
-, qttools
-, wrapQtAppsHook
-, dtkwidget
-, qt5integration
-, qt5platform-plugins
-, dde-qt-dbus-factory
-, qtwebengine
-, karchive
-, poppler
-, libchardet
-, libspectre
-, openjpeg
-, djvulibre
-, qtbase
-, gtest
+{
+  stdenv,
+  lib,
+  fetchFromGitHub,
+  pkg-config,
+  libsForQt5,
+  dtkwidget,
+  qt5integration,
+  qt5platform-plugins,
+  dde-qt-dbus-factory,
+  poppler,
+  libchardet,
+  libspectre,
+  openjpeg,
+  djvulibre,
+  gtest,
 }:
 
 stdenv.mkDerivation rec {
   pname = "deepin-reader";
-  version = "6.0.1";
+  version = "6.0.5";
 
   src = fetchFromGitHub {
     owner = "linuxdeepin";
     repo = pname;
-    rev = "6032d2c5b3c83e4fadae5f230b23937263e29f52";
-    sha256 = "sha256-FEvsjSui0ehLAQKypRJVEttCuYKRUHN7lwLjTNRH2Y0=";
+    rev = version;
+    hash = "sha256-G5UZ8lBrUo5G3jMae70p/zi9kOVqHWMNCedOy45L1PA=";
   };
 
+  patches = [ ./0001-build-tests-with-cpp-14.patch ];
+
+  # don't use vendored htmltopdf
   postPatch = ''
     substituteInPlace deepin_reader.pro \
       --replace "SUBDIRS += htmltopdf" " "
@@ -39,10 +38,10 @@ stdenv.mkDerivation rec {
   '';
 
   nativeBuildInputs = [
-    qmake
+    libsForQt5.qmake
     pkg-config
-    qttools
-    wrapQtAppsHook
+    libsForQt5.qttools
+    libsForQt5.wrapQtAppsHook
   ];
 
   buildInputs = [
@@ -50,8 +49,8 @@ stdenv.mkDerivation rec {
     qt5integration
     qt5platform-plugins
     dde-qt-dbus-factory
-    qtwebengine
-    karchive
+    libsForQt5.qtwebengine
+    libsForQt5.karchive
     poppler
     libchardet
     libspectre
@@ -60,16 +59,14 @@ stdenv.mkDerivation rec {
     gtest
   ];
 
-  qmakeFlags = [
-    "DEFINES+=VERSION=${version}"
-    "DEFINES+=OS_BUILD_V23"
-  ];
+  qmakeFlags = [ "DEFINES+=VERSION=${version}" ];
 
   meta = with lib; {
-    description = "A simple memo software with texts and voice recordings";
+    description = "Simple memo software with texts and voice recordings";
+    mainProgram = "deepin-reader";
     homepage = "https://github.com/linuxdeepin/deepin-reader";
     license = licenses.gpl3Plus;
     platforms = platforms.linux;
-    maintainers = teams.deepin.members;
+    teams = [ teams.deepin ];
   };
 }

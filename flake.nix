@@ -10,363 +10,67 @@
   };
 
   outputs = { self, nixpkgs, flake-utils }:
-    flake-utils.lib.eachSystem [ "x86_64-linux" "aarch64-linux" "i686-linux" ]
+    let
+      systems = [ "x86_64-linux" "aarch64-linux" "i686-linux" ];
+
+      # NixOS modules for the Deepin Desktop Environment, synced from the last
+      # nixpkgs revision that still contained them (314fe5f12f46^ = 15a586f29d59):
+      #   nixos/modules/services/x11/desktop-managers/deepin.nix
+      #   nixos/modules/services/desktops/deepin/{app-services,dde-api,dde-daemon,deepin-anything}.nix
+      #
+      # The desktop manager module references `pkgs.deepin`, which is provided
+      # here through `nixpkgs.overlays` from `./packages`.
+      deepinModule =
+        { config, lib, pkgs, ... }:
+        {
+          nixpkgs.overlays = [
+            (final: prev: {
+              deepin = final.callPackage ./packages { };
+            })
+          ];
+
+          imports = [
+            ./nixos-modules/deepin/deepin.nix
+            ./nixos-modules/deepin/app-services.nix
+            ./nixos-modules/deepin/dde-api.nix
+            ./nixos-modules/deepin/dde-daemon.nix
+            ./nixos-modules/deepin/deepin-anything.nix
+          ];
+        };
+    in
+    {
+      # Canonical module name, plus per-system aliases for backwards
+      # compatibility with the historical `dde-nixos.nixosModules.<system>`.
+      nixosModules =
+        {
+          deepin = deepinModule;
+        }
+        // builtins.listToAttrs (
+          map (system: {
+            name = system;
+            value = deepinModule;
+          }) systems
+        );
+    }
+    // flake-utils.lib.eachSystem systems
       (system:
         let
           pkgs = nixpkgs.legacyPackages.${system};
-          deepinScope = import ./packages { inherit pkgs; };
-          qt6Scope = import ./packages/qt6.nix { inherit pkgs; };
-          deepinPkgs = flake-utils.lib.flattenTree deepinScope;
-          qt6Pkgs = flake-utils.lib.flattenTree qt6Scope;
+
+          # DDE package set, synced from nixpkgs `pkgs/desktops/deepin` at the
+          # last revision that still contained it (96e751adaf2f). The scope
+          # exposes helpers (callPackage/newScope/...) and `throw`-based
+          # aliases for removed packages, so only the derivations are exposed
+          # as `packages.*`.
+          deepin = pkgs.callPackage ./packages { };
+          isDerivation = value: (builtins.tryEval (value.type or null)).value == "derivation";
+          deepinPackages = pkgs.lib.filterAttrs (_: isDerivation) deepin;
         in
-        rec {
-          packages = deepinPkgs // {
-            qt6 = qt6Pkgs;
-          } ;
+        {
+          # flake-utils flattens this into packages.<system>.<name>.
+          packages = deepinPackages;
 
-          nixosModules = { config, lib, pkgs, utils, ... }:
-            with lib;
-            let
-              xcfg = config.services.xserver;
-              cfg = xcfg.desktopManager.deepin-unstable;
-
-              nixos-gsettings-desktop-schemas = packages.nixos-gsettings-schemas.override {
-                extraGSettingsOverridePackages = cfg.extraGSettingsOverridePackages;
-                extraGSettingsOverrides = cfg.extraGSettingsOverrides;
-              };
-            in
-            {
-              options = {
-                services.xserver.desktopManager.deepin-unstable = {
-                  enable = mkOption {
-                    type = types.bool;
-                    default = false;
-                    description = "Enable Deepin desktop manager";
-                  };
-                  full = mkOption {
-                    type = types.bool;
-                    default = false;
-                    description = "Install all deepin software";
-                  };
-                  extraGSettingsOverrides = mkOption {
-                    default = "";
-                    type = types.lines;
-                    description = "Additional gsettings overrides.";
-                  };
-                  extraGSettingsOverridePackages = mkOption {
-                    default = [ ];
-                    type = types.listOf types.path;
-                    description = "List of packages for which gsettings are overridden.";
-                  };
-                };
-
-                environment.deepin-unstable.excludePackages = mkOption {
-                  default = [ ];
-                  type = types.listOf types.package;
-                  description = lib.mdDoc "Which Deepin packages should exclude from systemPackages";
-                };
-
-                services.dde-unstable = {
-                  dde-daemon.enable = mkEnableOption "Daemon for handling Deepin Desktop Environment session settings";
-                  deepin-anything.enable = mkEnableOption "Lightning-fast filename search function for Linux users, and provides offline search functions";
-                  dde-api.enable = mkEnableOption "Dbus interfaces that is used for screen zone detecting, thumbnail generating, sound playing, etc";
-                  app-services.enable = mkEnableOption "Service collection of DDE applications, including dconfig-center";
-                };
-
-              };
-
-              config = mkMerge [
-                (mkIf cfg.enable {
-                  services.xserver.displayManager.sessionPackages = [ packages.dde-session ];
-                  services.xserver.displayManager.defaultSession = mkDefault "dde-x11";
-
-                  # Update the DBus activation environment after launching the desktop manager.
-                  services.xserver.displayManager.sessionCommands = ''
-                    ${lib.getBin pkgs.dbus}/bin/dbus-update-activation-environment --systemd --all
-                  '';
-
-                  hardware.bluetooth.enable = mkDefault true;
-                  hardware.pulseaudio.enable = mkDefault true;
-                  security.polkit.enable = true;
-
-                  services.colord.enable = mkDefault true;
-                  services.accounts-daemon.enable = mkDefault true;
-                  services.gvfs.enable = mkDefault true;
-                  services.gnome.glib-networking.enable = true;
-                  services.gnome.gnome-keyring.enable = mkDefault true;
-                  services.bamf.enable = true;
-
-                  services.xserver.libinput.enable = mkDefault true;
-                  services.udisks2.enable = true;
-                  services.upower.enable = mkDefault config.powerManagement.enable;
-                  networking.networkmanager.enable = mkDefault true;
-                  programs.dconf.enable = true;
-
-                  #TODO: programs.gnupg.agent.pinentryFlavor = "qt";
-
-                  fonts.packages = with pkgs; [ noto-fonts ];
-                  xdg.mime.enable = true;
-                  xdg.menus.enable = true;
-                  xdg.icons.enable = true;
-                  xdg.portal.enable = mkDefault true;
-                  xdg.portal.extraPortals = mkDefault [
-                    (pkgs.xdg-desktop-portal-gtk.override {
-                      buildPortalsInGnome = false;
-                    })
-                  ];
-
-                  environment.sessionVariables = {
-                    NIX_GSETTINGS_OVERRIDES_DIR = "${nixos-gsettings-desktop-schemas}/share/gsettings-schemas/nixos-gsettings-overrides/glib-2.0/schemas";
-                    DDE_POLKIT_AGENT_PLUGINS_DIRS = [ "${packages.dpa-ext-gnomekeyring}/lib/polkit-1-dde/plugins" ];
-                  };
-
-                  environment.variables = {
-                    #QT_QPA_PLATFORMTHEME = "dxcb"; # nixos/modules/config/qt5.nix
-                    #QT_STYLE_OVERRIDE = "chameleon";
-                    # D_PROXY_ICON_ENGINE = "KIconEngine";
-                  };
-
-                  environment.pathsToLink = [
-                    "/lib/dde-dock/plugins"
-                    "/lib/dde-control-center"
-                    "/lib/dde-session-shell"
-                    "/lib/dde-file-manager"
-                    "/share/backgrounds"
-                    "/share/wallpapers"
-                    "/share/dde-daemon"
-                    "/share/dsg"
-                    "/share/deepin-themes"
-                  ];
-
-                  environment.etc."distribution.info".text = ''
-                    [Distribution]
-                    Name=NixOS
-                    WebsiteName=www.nixos.org
-                    Website=https://www.nixos.org
-                    Logo=${pkgs.nixos-icons}/share/icons/hicolor/96x96/apps/nix-snowflake.png
-                    LogoLight=${pkgs.nixos-icons}/share/icons/hicolor/32x32/apps/nix-snowflake.png
-                    LogoTransparent=${packages.deepin-desktop-base}/share/pixmaps/distribution_logo_transparent.svg
-                  '';
-                  environment.etc = {
-                    "deepin-installer.conf".text = ''
-                      system_info_vendor_name="Copyright (c) 2003-2023 NixOS contributors"
-                    '';
-                  };
-
-                  systemd.tmpfiles.rules = [
-                    "d /var/lib/AccountsService 0775 root root - -"
-                    "C /var/lib/AccountsService/icons 0775 root root - ${packages.dde-account-faces}/var/lib/AccountsService/icons"
-                  ];
-
-                  environment.systemPackages = with packages;
-                    let
-                      requiredPackages = [
-                        pkgs.pciutils # for dtkcore/startdde
-                        pkgs.xdotool # for dde-daemon
-                        pkgs.glib # for gsettings program / gdbus
-                        pkgs.gtk3 # for gtk-launch program
-                        pkgs.xdg-user-dirs # Update user dirs
-                        pkgs.util-linux # runuser
-                        pkgs.polkit_gnome
-                        pkgs.librsvg # dde-api use rsvg-convert
-                        pkgs.lshw # for dtkcore
-                        pkgs.libsForQt5.kde-gtk-config # deepin-api/gtk-thumbnailer need
-                        pkgs.libsForQt5.kglobalaccel
-                        pkgs.xsettingsd # lightdm-deepin-greeter
-                        qt5platform-plugins
-                        deepin-pw-check
-                        deepin-turbo
-                        dtkcommon
-                        dtkcore
-                        dtkgui
-                        dtkwidget
-                        dtkdeclarative
-
-                        dde-account-faces
-                        deepin-icon-theme
-                        deepin-desktop-theme
-                        deepin-sound-theme
-                        deepin-gtk-theme
-                        deepin-wallpapers
-
-                        startdde
-                        dde-dock
-                        dde-launcher
-                        dde-session-ui
-                        dde-session-shell
-                        dde-file-manager
-                        dde-control-center
-                        dde-network-core
-                        dde-clipboard
-                        dde-calendar
-                        dde-polkit-agent
-                        dpa-ext-gnomekeyring
-                        deepin-desktop-schemas
-                        deepin-terminal
-                        deepin-kwin
-                        dde-session
-                        dde-widgets
-                        dde-appearance
-                        dde-application-manager
-                        dde-permission-manager
-                        deepin-service-manager
-                      ];
-                      optionalPackages = [
-                        pkgs.onboard # dde-dock plugin
-                        # deepin-camera
-                        deepin-calculator
-                        deepin-compressor
-                        deepin-editor
-                        deepin-picker
-                        deepin-draw
-                        deepin-album
-                        deepin-image-viewer
-                        deepin-music
-                        # deepin-movie-reborn
-                        # deepin-system-monitor
-                        # deepin-screen-recorder
-                        deepin-shortcut-viewer
-                      ];
-                    in
-                    requiredPackages
-                    ++ utils.removePackagesByName optionalPackages config.environment.deepin-unstable.excludePackages;
-
-                  services.dbus.packages = with pkgs; with packages; [
-                    dde-dock
-                    dde-launcher
-                    dde-session-ui
-                    dde-session-shell
-                    dde-file-manager
-                    dde-control-center
-                    dde-calendar
-                    dde-clipboard
-                    deepin-kwin
-                    deepin-pw-check
-                    dde-widgets
-                    dde-session
-                    dde-appearance
-                    dde-application-manager
-                    dde-permission-manager
-                    deepin-service-manager
-                  ];
-
-                  systemd.packages = with pkgs; with packages; [
-                    dde-launcher
-                    dde-file-manager
-                    dde-calendar
-                    dde-clipboard
-                    deepin-kwin
-                    dde-appearance
-                    dde-widgets
-                    dde-session
-                    dde-application-manager
-                    dde-permission-manager
-                    deepin-service-manager
-                  ];
-
-                  services.dde-unstable.dde-daemon.enable = mkForce true;
-                  services.dde-unstable.dde-api.enable = mkForce true;
-                  services.dde-unstable.app-services.enable = mkForce true;
-                })
-
-                (mkIf config.services.dde-unstable.dde-daemon.enable {
-                  environment.systemPackages = [ packages.dde-daemon ];
-                  services.dbus.packages = [ packages.dde-daemon ];
-                  services.udev.packages = [ packages.dde-daemon ];
-                  systemd.packages = [ packages.dde-daemon ];
-                  environment.pathsToLink = [ "/lib/deepin-daemon" ];
-                  security.pam.services.dde-lock.text = ''
-                    # original at {dde-session-shell}/etc/pam.d/dde-lock
-                    auth      substack      login
-                    account   include       login
-                    password  substack      login
-                    session   include       login
-                  '';
-                })
-
-                (mkIf config.services.dde-unstable.deepin-anything.enable {
-                  environment.systemPackages = [ packages.deepin-anything ];
-                  services.dbus.packages = [ packages.deepin-anything ];
-                  # systemd.packages = [ packages.deepin-anything ];
-                  environment.pathsToLink = [ "/lib/deepin-anything-server-lib" ];
-                  environment.sessionVariables.DAS_PLUGIN_PATH = [ "/run/current-system/sw/lib/deepin-anything-server-lib/plugins/handlers" ];
-                  users.groups.deepin-anything-server = { };
-                  users.users.deepin-anything-server = {
-                    description = "Deepin Anything Server";
-                    group = "deepin-anything-server";
-                    isSystemUser = true;
-                  };
-                  boot.extraModulePackages = [ (deepinScope.deepin-anything-module config.boot.kernelPackages.kernel) ];
-                  boot.kernelModules = [ "vfs_monitor" ];
-                  systemd.services.deepin-anything-tool = {
-                    unitConfig = {
-                      Description = "Deepin anything tool service";
-                      After = [ "dbus.service" "udisks2.service" ];
-                      Before = [ "deepin-anything-monitor.service" ];
-                    };
-                    serviceConfig = {
-                      Type = "dbus";
-                      User = "root";
-                      Group = "root";
-                      BusName = "com.deepin.anything";
-                      ExecStart = "${packages.deepin-anything}/bin/deepin-anything-tool-ionice --dbus";
-                      Restart = "on-failure";
-                      RestartSec = 10;
-                    };
-                    wantedBy = [ "multi-user.target" ];
-                    path = [ pkgs.util-linux packages.deepin-anything ]; # ionice
-                  };
-                  systemd.services.deepin-anything-monitor = {
-                    unitConfig = {
-                      Description = "Deepin anything service";
-                      After = [ "deepin-anything-tool.service" ];
-                    };
-                    serviceConfig = {
-                      User = "root";
-                      Group = "deepin-anything-server";
-                      ExecStart = "${packages.deepin-anything}/bin/deepin-anything-monitor";
-                      ExecStartPre = "${pkgs.kmod}/bin/modprobe vfs_monitor";
-                      ExecStopPost = "${pkgs.kmod}/bin/rmmod vfs_monitor";
-                      Environment = [ "DAS_DEBUG_PLUGINS=1" ];
-                      Restart = "always";
-                      RestartSec = 10;
-                    };
-                    wantedBy = [ "multi-user.target" ];
-                    path = [ pkgs.kmod packages.deepin-anything ]; # modprobe/rmmod
-                  };
-                })
-
-                (mkIf config.services.dde-unstable.dde-api.enable {
-                  environment.systemPackages = [ packages.dde-api ];
-                  services.dbus.packages = [ packages.dde-api ];
-                  systemd.packages = [ packages.dde-api ];
-                  environment.pathsToLink = [ "/lib/deepin-api" ];
-                  users.groups.deepin-sound-player = { };
-                  users.users.deepin-sound-player = {
-                    description = "Deepin sound player";
-                    home = "/var/lib/deepin-sound-player";
-                    createHome = true;
-                    group = "deepin-sound-player";
-                    isSystemUser = true;
-                  };
-                })
-
-                (mkIf config.services.dde-unstable.app-services.enable {
-                  users.groups.dde-dconfig-daemon = { };
-                  users.users.dde-dconfig-daemon = {
-                    description = "Dconfig daemon user";
-                    home = "/var/lib/dde-dconfig-daemon";
-                    createHome = true;
-                    group = "dde-dconfig-daemon";
-                    isSystemUser = true;
-                  };
-                  environment.systemPackages = [ packages.dde-app-services ];
-                  services.dbus.packages = [ packages.dde-app-services ];
-                  systemd.packages = [ packages.dde-app-services ];
-                  environment.pathsToLink = [ "/share/dsg" ];
-                })
-
-              ];
-            };
+          # The DDE package scope (pkgs.deepin) expected by the NixOS module.
+          legacyPackages.deepin = deepin;
         });
 }

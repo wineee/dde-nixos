@@ -1,26 +1,25 @@
-{ stdenv
-, lib
-, fetchFromGitHub
-, dtkwidget
-, dde-polkit-agent
-, qt5integration
-, cmake
-, pkg-config
-, qttools
-, wrapQtAppsHook
-, libsecret
-, libgnome-keyring
+{
+  stdenv,
+  lib,
+  fetchFromGitHub,
+  cmake,
+  pkg-config,
+  libsForQt5,
+  dtkwidget,
+  dde-polkit-agent,
+  qt5integration,
+  libsecret,
 }:
 
 stdenv.mkDerivation rec {
   pname = "dpa-ext-gnomekeyring";
-  version = "5.0.11";
+  version = "6.0.1";
 
   src = fetchFromGitHub {
     owner = "linuxdeepin";
     repo = pname;
     rev = version;
-    sha256 = "sha256-mXaGwbtEwaqfOT0izK64zX4s3VFmsRpUGOVm6oSEhn8=";
+    hash = "sha256-SyoahSdGPkWitDek4RD5M2hTR78GFpuijryteKVAx6k=";
   };
 
   postPatch = ''
@@ -31,22 +30,22 @@ stdenv.mkDerivation rec {
   nativeBuildInputs = [
     cmake
     pkg-config
-    qttools
-    wrapQtAppsHook
+    libsForQt5.qttools
+    libsForQt5.wrapQtAppsHook
   ];
 
   buildInputs = [
     dtkwidget
     dde-polkit-agent
     qt5integration
-    libgnome-keyring
     libsecret
   ];
 
   meta = with lib; {
     description = "GNOME keyring extension for dde-polkit-agent";
-    homepage = https://github.com/linuxdeepin/dpa-ext-gnomekeyring;
+    homepage = "https://github.com/linuxdeepin/dpa-ext-gnomekeyring";
     license = licenses.gpl3Plus;
     platforms = platforms.linux;
+    teams = [ teams.deepin ];
   };
 }

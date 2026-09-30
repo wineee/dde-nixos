@@ -1,140 +1,121 @@
-{ pkgs ? import <nixpkgs> { } }:
+{
+  lib,
+  config,
+  pkgs,
+}:
 let
-  makeScope = pkgs.lib.makeScope;
+  packages =
+    self:
+    let
+      inherit (self) callPackage;
+    in
+    {
+      #### LIBRARIES
+      dtkcommon = callPackage ./library/dtkcommon { };
+      dtkcore = callPackage ./library/dtkcore { };
+      dtkgui = callPackage ./library/dtkgui { };
+      dtkwidget = callPackage ./library/dtkwidget { };
+      dtkdeclarative = callPackage ./library/dtkdeclarative { };
+      dtklog = callPackage ./library/dtklog { };
+      deepin-pdfium = callPackage ./library/deepin-pdfium { };
+      qt5platform-plugins = callPackage ./library/qt5platform-plugins { };
+      qt5integration = callPackage ./library/qt5integration { };
+      deepin-wayland-protocols = callPackage ./library/deepin-wayland-protocols { };
+      dwayland = callPackage ./library/dwayland { };
+      dde-qt-dbus-factory = callPackage ./library/dde-qt-dbus-factory { };
+      disomaster = callPackage ./library/disomaster { };
+      docparser = callPackage ./library/docparser { };
+      gio-qt = callPackage ./library/gio-qt { };
+      udisks2-qt5 = callPackage ./library/udisks2-qt5 { };
+      util-dfm = callPackage ./library/util-dfm { };
+      dtk6core = callPackage ./library/dtk6core { };
+      dtk6gui = callPackage ./library/dtk6gui { };
+      dtk6widget = callPackage ./library/dtk6widget { };
+      dtk6declarative = callPackage ./library/dtk6declarative { };
+      dtk6systemsettings = callPackage ./library/dtk6systemsettings { };
+      dtk6log = callPackage ./library/dtk6log { };
+      qt6platform-plugins = callPackage ./library/qt6platform-plugins { };
+      qt6integration = callPackage ./library/qt6integration { };
+      qt6mpris = callPackage ./library/qt6mpris { };
+      treeland-protocols = callPackage ./library/treeland-protocols { };
 
-  newScope = pkgs.libsForQt5.newScope;
+      #### CORE
+      deepin-kwin = callPackage ./core/deepin-kwin { };
+      dde-appearance = callPackage ./core/dde-appearance { };
+      dde-app-services = callPackage ./core/dde-app-services { };
+      dde-application-manager = callPackage ./core/dde-application-manager { };
+      dde-control-center = callPackage ./core/dde-control-center { };
+      dde-calendar = callPackage ./core/dde-calendar { };
+      dde-clipboard = callPackage ./core/dde-clipboard { };
+      dde-file-manager = callPackage ./core/dde-file-manager { };
+      dde-launchpad = callPackage ./core/dde-launchpad { };
+      dde-network-core = callPackage ./core/dde-network-core { };
+      dde-session = callPackage ./core/dde-session { };
+      dde-session-shell = callPackage ./core/dde-session-shell { };
+      dde-session-ui = callPackage ./core/dde-session-ui { };
+      deepin-service-manager = callPackage ./core/deepin-service-manager { };
+      dde-polkit-agent = callPackage ./core/dde-polkit-agent { };
+      dpa-ext-gnomekeyring = callPackage ./core/dpa-ext-gnomekeyring { };
+      dde-gsettings-schemas = callPackage ./core/dde-gsettings-schemas { };
+      dde-widgets = callPackage ./core/dde-widgets { };
+      dde-shell = callPackage ./core/dde-shell { };
+      dde-grand-search = callPackage ./core/dde-grand-search { };
+      dde-tray-loader = callPackage ./core/dde-tray-loader { };
+      dde-api-proxy = callPackage ./core/dde-api-proxy { };
 
-  functions = with pkgs; rec {
-    getPatchFrom' = commonRp:
-      let
-        rpstr = a: b: " --replace \"${a}\" \"${b}\"";
-        rpstrL = l: if lib.length l == 2 then rpstr (lib.head l) (lib.last l) else (throw "input must be a list of 2 string: [original  ]");
-        rpfile = filePath: replaceLists:
-          "substituteInPlace ${filePath}" + lib.concatMapStrings rpstrL replaceLists;
-      in
-      x: lib.pipe x [
-        (x: lib.mapAttrs (name: value: value ++ commonRp) x)
-        (x: lib.mapAttrsToList (name: value: rpfile name value) x)
-        (lib.concatStringsSep "\n")
-        (s: s + "\n")
-      ];
+      #### Dtk Application
+      deepin-calculator = callPackage ./apps/deepin-calculator { };
+      deepin-compressor = callPackage ./apps/deepin-compressor { };
+      deepin-draw = callPackage ./apps/deepin-draw { };
+      deepin-editor = callPackage ./apps/deepin-editor { };
+      deepin-music = callPackage ./apps/deepin-music { };
+      deepin-picker = callPackage ./apps/deepin-picker { };
+      deepin-shortcut-viewer = callPackage ./apps/deepin-shortcut-viewer { };
+      deepin-system-monitor = callPackage ./apps/deepin-system-monitor { };
+      deepin-terminal = callPackage ./apps/deepin-terminal { };
+      deepin-reader = callPackage ./apps/deepin-reader { };
+      deepin-screensaver = callPackage ./apps/deepin-screensaver { };
 
-    getPatchFrom = getPatchFrom' [ ];
-    getUsrPatchFrom = getPatchFrom' [ [ "/usr" "$out" ] ];
+      #### Go Packages
+      dde-api = callPackage ./go-package/dde-api { };
+      dde-daemon = callPackage ./go-package/dde-daemon { };
+      deepin-pw-check = callPackage ./go-package/deepin-pw-check { };
+      deepin-desktop-schemas = callPackage ./go-package/deepin-desktop-schemas { };
+      startdde = callPackage ./go-package/startdde { };
 
-    replaceAll = x: y: ''
-      echo Replacing "${x}" to "${y}":
-      for file in $(grep -rl "${x}")
-      do
-        echo -- $file
-        substituteInPlace $file \
-          --replace "${x}" "${y}"
-      done
-    '';
-  };
+      #### TOOLS
+      dde-device-formatter = callPackage ./tools/dde-device-formatter { };
+      deepin-gettext-tools = callPackage ./tools/deepin-gettext-tools { };
+      deepin-anything = callPackage ./tools/deepin-anything { };
 
-  packages = self: with self; functions // {
-    #### LIBRARIES
-    dtkcommon = callPackage ./library/dtkcommon { };
-    dtkcore = callPackage ./library/dtkcore { };
-    dtkgui = callPackage ./library/dtkgui { };
-    dtkwidget = callPackage ./library/dtkwidget { };
-    disomaster = callPackage ./library/disomaster { };
-    image-editor = callPackage ./library/image-editor { };
-    gio-qt = callPackage ./library/gio-qt { };
-    udisks2-qt5 = callPackage ./library/udisks2-qt5 { };
-    dde-qt-dbus-factory = callPackage ./library/dde-qt-dbus-factory { };
-    qt5platform-plugins = callPackage ./library/qt5platform-plugins { };
-    qt5integration = callPackage ./library/qt5integration { };
-    docparser = callPackage ./library/docparser { };
-    dwayland = callPackage ./library/dwayland { };
-    deepin-wayland-protocols = callPackage ./library/deepin-wayland-protocols { };
-    dtkdeclarative = callPackage ./library/dtkdeclarative { };
-    util-dfm = callPackage ./library/util-dfm { };
-    deepin-pdfium = callPackage ./library/deepin-pdfium { };
-    deepin-ocr-plugin-manager =  callPackage ./library/deepin-ocr-plugin-manager { };
-    # opencv-mobile = callPackage ./library/opencv-mobile { };
+      #### ARTWORK
+      dde-account-faces = callPackage ./artwork/dde-account-faces { };
+      deepin-icon-theme = callPackage ./artwork/deepin-icon-theme { };
+      deepin-wallpapers = callPackage ./artwork/deepin-wallpapers { };
+      deepin-gtk-theme = callPackage ./artwork/deepin-gtk-theme { };
+      deepin-sound-theme = callPackage ./artwork/deepin-sound-theme { };
+      deepin-desktop-theme = callPackage ./artwork/deepin-desktop-theme { };
 
-    #### artwork
-    deepin-icon-theme = callPackage ./artwork/deepin-icon-theme { };
-    deepin-desktop-theme = callPackage ./artwork/deepin-desktop-theme { };
-    deepin-gtk-theme = callPackage ./artwork/deepin-gtk-theme { };
-    deepin-wallpapers = callPackage ./artwork/deepin-wallpapers { };
-    deepin-sound-theme = callPackage ./artwork/deepin-sound-theme { };
-    dde-account-faces = callPackage ./artwork/dde-account-faces { };
-
-    #### TOOLS
-    deepin-gettext-tools = callPackage ./tools/deepin-gettext-tools { };
-    deepin-anything = callPackage ./tools/deepin-anything { };
-    dde-device-formatter = callPackage ./tools/dde-device-formatter { };
-
-    ### CORE
-    deepin-kwin = callPackage ./core/deepin-kwin { };
-    dde-dock = callPackage ./core/dde-dock { };
-    dde-launcher = callPackage ./core/dde-launcher { };
-    dde-control-center = callPackage ./core/dde-control-center {
+      #### MISC
+      deepin-desktop-base = callPackage ./misc/deepin-desktop-base { };
+    }
+    // lib.optionalAttrs config.allowAliases {
+      dde-kwin = throw "The 'deepin.dde-kwin' package was removed as it is outdated and no longer relevant."; # added 2023-09-27
+      dde-launcher = throw "The 'deepin.dde-launcher' is no longer maintained. Please use 'deepin.dde-launchpad' instead."; # added 2023-11-23
+      dde-dock = throw "The 'deepin.dde-dock' is no longer maintained. Please use 'deepin.dde-tray-loader' instead."; # added 2024-08-28
+      deepin-clone = throw "The 'deepin.deepin-clone' package was removed as it is broken and unmaintained."; # added 2024-08-23
+      deepin-turbo = throw "The 'deepin.deepin-turbo' package was removed as it is outdated and no longer relevant."; # added 2024-12-06
+      go-lib = throw "Then 'deepin.go-lib' package was removed, use 'go mod' to manage it"; # added 2024-05-31
+      go-gir-generator = throw "Then 'deepin.go-gir-generator' package was removed, use 'go mod' to manage it"; # added 2024-05-31
+      go-dbus-factory = throw "Then 'deepin.go-dbus-factory' package was removed, use 'go mod' to manage it"; # added 2024-05-31
+      deepin-movie-reborn = throw "'deepin.deepin-movie-reborn' has been removed as it was broken and unmaintained in nixpkgs, Please use 'vlc' instead"; # added 2025-01-16;
+      deepin-album = throw "'deepin.deepin-album' has been removed as it was broken and unmaintained in nixpkgs, Please use 'kdePackages.gwenview' instead"; # added 2025-01-16
+      deepin-voice-note = throw "'deepin.deepin-voice-note' has been removed as it depending on deepin-movie-reborn which was broken"; # added 2025-01-16
+      deepin-screen-recorder = throw "'deepin.deepin-screen-recorder' has been removed as it was broken and unmaintained in nixpkgs, Please use 'flameshot' or 'simplescreenrecorder' instead"; # added 2025-01-16
+      deepin-ocr-plugin-manager = throw "'deepin.deepin-ocr-plugin-manager' has been removed as it was outdated"; # added 2025-01-16
+      deepin-camera = throw "'deepin.deepin-camera' has been removed as it was unmaintained in nixpkgs, Please use 'snapshot' instead"; # added 2025-01-16
+      deepin-image-viewer = throw "'deepin.deepin-image-viewer' has been removed as it was broken and unmaintained in nixpkgs, Please use 'kdePackages.gwenview' instead"; # added 2025-01-16
+      image-editor = throw "'deepin.image-editor' has been removed as it was unmaintained in nixpkgs"; # added 2025-01-16
     };
-    dde-file-manager = callPackage ./core/dde-file-manager { };
-    dde-calendar = callPackage ./core/dde-calendar { };
-    dde-clipboard = callPackage ./core/dde-clipboard { };
-    dde-app-services = callPackage ./core/dde-app-services { };
-    dde-network-core = callPackage ./core/dde-network-core { };
-    dde-session-shell = callPackage ./core/dde-session-shell { };
-    dde-session-ui = callPackage ./core/dde-session-ui { };
-    dde-polkit-agent = callPackage ./core/dde-polkit-agent { };
-    dpa-ext-gnomekeyring = callPackage ./core/dpa-ext-gnomekeyring { };
-    dde-appearance = callPackage ./core/dde-appearance { };
-    dde-session = callPackage ./core/dde-session { };
-    dde-widgets = callPackage ./core/dde-widgets { };
-    dde-application-manager = callPackage ./core/dde-application-manager { };
-    dde-permission-manager = callPackage ./core/dde-permission-manager { };
-    deepin-service-manager = callPackage ./core/deepin-service-manager { };
-    #dde-wloutput-daemon = callPackage ./core/dde-wloutput-daemon { };
-    dde-am = callPackage ./core/dde-am { };
-
-    #### MISC
-    deepin-desktop-base = callPackage ./misc/deepin-desktop-base { };
-    deepin-turbo = callPackage ./misc/deepin-turbo { };
-    nixos-gsettings-schemas = callPackage ./misc/nixos-gsettings-schemas { };
-
-    #### Go Packages
-    dde-api = callPackage ./go-package/dde-api { };
-    deepin-desktop-schemas = callPackage ./go-package/deepin-desktop-schemas { };
-    dde-daemon = callPackage ./go-package/dde-daemon { };
-    deepin-pw-check = callPackage ./go-package/deepin-pw-check { };
-    startdde = callPackage ./go-package/startdde { };
-
-    #### Dtk Application
-    dde-grand-search = callPackage ./apps/dde-grand-search { };
-    deepin-compressor = callPackage ./apps/deepin-compressor { };
-    deepin-terminal = callPackage ./apps/deepin-terminal { };
-    deepin-editor = callPackage ./apps/deepin-editor { };
-    deepin-music = callPackage ./apps/deepin-music { };
-    deepin-movie-reborn = callPackage ./apps/deepin-movie-reborn { };
-    deepin-album = callPackage ./apps/deepin-album { };
-    deepin-image-viewer = callPackage ./apps/deepin-image-viewer { };
-    deepin-calculator = callPackage ./apps/deepin-calculator { };
-    deepin-font-manager = callPackage ./apps/deepin-font-manager { };
-    deepin-system-monitor = callPackage ./apps/deepin-system-monitor { };
-    deepin-picker = callPackage ./apps/deepin-picker { };
-    deepin-draw = callPackage ./apps/deepin-draw { };
-    deepin-camera = callPackage ./apps/deepin-camera { };
-    deepin-screen-recorder = callPackage ./apps/deepin-screen-recorder { };
-    deepin-shortcut-viewer = callPackage ./apps/deepin-shortcut-viewer { };
-    deepin-voice-note = callPackage ./apps/deepin-voice-note { };
-    deepin-reader = callPackage ./apps/deepin-reader { };
-    deepin-ocr = callPackage ./apps/deepin-ocr { };
-    deepin-tweak = callPackage ./apps/deepin-tweak { };
-
-    #### OS-SPECIFIC
-    ## pkgs/top-level/linux-kernels.nix
-    deepin-anything-module = _kernel: callPackage ./os-specific/deepin-anything-module {
-      kernel = _kernel;
-    };
-
-    #### THIRD-PARTY
-    #dde-top-panel = callPackage ./third-party/dde-top-panel { };
-    dmarked = callPackage ./third-party/dmarked { };
-  };
 in
-makeScope newScope packages
+lib.makeScope pkgs.newScope packages

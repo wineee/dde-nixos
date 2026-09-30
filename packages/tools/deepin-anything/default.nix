@@ -1,111 +1,56 @@
-{ stdenv
-, lib
-, fetchFromGitHub
-, getUsrPatchFrom
-, dtkcore
-, qmake
-, pkg-config
-, wrapQtAppsHook
-, udisks2-qt5
-, util-linux
-, libnl
-, pcre
+{
+  stdenv,
+  lib,
+  fetchFromGitHub,
+  cmake,
+  pkg-config,
+  libsForQt5,
+  udisks2-qt5,
+  util-linux,
+  libnl,
+  glib,
+  pcre,
 }:
+
 stdenv.mkDerivation rec {
   pname = "deepin-anything";
-  version = "5.0.18";
+  version = "6.2.10";
 
   src = fetchFromGitHub {
     owner = "linuxdeepin";
-    repo = pname;
+    repo = "deepin-anything";
     rev = version;
-    sha256 = "sha256-md1ITvzzH19VRWoYCAr81BmftT5/oXAcz0gzenjM5/A=";
+    hash = "sha256-eGel+pLAYHYkPXQxzTz+lMPSlgNiDFAev2bzGjj4ZFw=";
   };
 
-  outputs = [ "out" "modsrc" ];
+  postPatch = ''
+    substituteInPlace src/CMakeLists.txt \
+      --replace-fail 'add_subdirectory("kernelmod")' " "
+    substituteInPlace src/server/backend/CMakeLists.txt \
+      --replace-fail "/usr" "$out" \
+      --replace-fail "/etc" "$out/etc"
+  '';
 
   nativeBuildInputs = [
-    qmake
+    cmake
     pkg-config
-    wrapQtAppsHook
+    libsForQt5.wrapQtAppsHook
   ];
 
   buildInputs = [
-    dtkcore
     udisks2-qt5
     util-linux
-    libnl.dev
+    libnl
+    libsForQt5.polkit-qt
+    glib
     pcre
   ];
 
-  #dontWrapQtApps = true;
-  dontUseQmakeConfigure = true;
-
-  postPatch = getUsrPatchFrom {
-    "server/tool/tool.pro" = [
-      [ "/usr/share/dbus-1" "/share/dbus-1" ]
-    ];
-    "server/monitor/deepin-anything-monitor.service" = [ ];
-    "server/tool/com.deepin.anything.service" = [ ];
-    "server/tool/deepin-anything-tool.service" = [ ];
-  };
-
-  buildPhase = ''
-    runHook preBuild
-    sed 's|@@VERSION@@|${version}|g' debian/deepin-anything-dkms.dkms.in | tee debian/deepin-anything-dkms.dkms
-    make -C library all
-    (cd server 
-      qmake -makefile -nocache QMAKE_STRIP=: PREFIX=/ LIB_INSTALL_DIR=/lib deepin-anything-server.pro 
-      make all
-    )
-    runHook postBuild
-  '';
-
-  installPhase = ''
-    runHook preInstall
-    mkdir -p $out/lib
-    cp library/bin/release/* $out/lib
-    
-    mkdir -p ${placeholder "modsrc"}/src/deepin-anything-${version}
-    cp -r kernelmod/* ${placeholder "modsrc"}/src/deepin-anything-${version}
-    mkdir -p ${placeholder "modsrc"}/lib/modules-load.d
-    echo "" | tee ${placeholder "modsrc"}/lib/modules-load.d/anything.conf
-    
-    install -D debian/deepin-anything-dkms.dkms ${placeholder "modsrc"}/src/deepin-anything-${version}/dkms.conf
-    install -D debian/deepin-anything-libs.lintian-overrides $out/share/lintian/overrides/deepin-anything-libs
-
-    mkdir -p $out/include/deepin-anything
-    cp -r library/inc/* $out/include/deepin-anything
-    cp -r kernelmod/vfs_change_uapi.h  $out/include/deepin-anything
-    cp -r kernelmod/vfs_change_consts.h $out/include/deepin-anything
-
-    make -C server install INSTALL_ROOT=$out
-    runHook postInstall
-  '';
-
-  deepin_anything_backend_pc = ''
-    prefix=${placeholder "out"}
-    exec_prefix=''${prefix}
-    libdir=''${prefix}/lib
-    includedir=''${prefix}/include/deepin-anything-server
-    Name: deepin-anything-server-lib
-    Description: Deepin anything backend library
-    Version: ${version}
-    Libs: -L''${libdir} -ldeepin-anything-server-lib
-    Cflags: -I''${includedir}
-  '';
-
-  postInstall = ''
-    echo ${lib.strings.escapeShellArg deepin_anything_backend_pc} > $out/lib/pkgconfig/deepin-anything-server-lib.pc
-  '';
-
-  # dontFixup = true;
-
-  meta = with lib; {
+  meta = {
     description = "Deepin Anything file search tool";
     homepage = "https://github.com/linuxdeepin/deepin-anything";
-    license = licenses.gpl3Plus;
-    platforms = platforms.linux;
-    outputsToInstall = [ "out" ];
+    license = lib.licenses.gpl3Plus;
+    platforms = lib.platforms.linux;
+    teams = [ lib.teams.deepin ];
   };
 }

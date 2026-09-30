@@ -1,73 +1,76 @@
-{ stdenv
-, lib
-, fetchFromGitHub
-, cmake
-, pkg-config
-, qttools
-, deepin-gettext-tools
-, wrapQtAppsHook
-, dtkwidget
-, qt5integration
-, qt5platform-plugins
-, qtbase
-, qtsvg
-, qtx11extras
-, dde-qt-dbus-factory
-, dde-dock
-, gsettings-qt
-, procps
-, libpcap
-, libnl
-, util-linux
-, systemd
-, polkit
-, wayland
-, dwayland
+{
+  stdenv,
+  lib,
+  fetchFromGitHub,
+  cmake,
+  pkg-config,
+  deepin-gettext-tools,
+  libsForQt5,
+  dtkwidget,
+  qt5integration,
+  qt5platform-plugins,
+  dde-qt-dbus-factory,
+  dde-tray-loader,
+  gsettings-qt,
+  procps,
+  libpcap,
+  libnl,
+  util-linux,
+  systemd,
+  polkit,
+  wayland,
+  dwayland,
 }:
 
 stdenv.mkDerivation rec {
   pname = "deepin-system-monitor";
-  version = "6.0.6";
+  version = "6.5.4";
 
   src = fetchFromGitHub {
     owner = "linuxdeepin";
     repo = pname;
     rev = version;
-    sha256 = "sha256-4GViTW0Yho2uiLdsb6LYswZL2GQGWlM1W9G+mfrbNdo=";
+    hash = "sha256-xLlWQaoKC+/jgDD9sBikh5Z1QqDuCFcMulo0vqxJM7k=";
   };
 
   postPatch = ''
-    substituteInPlace deepin-system-monitor-main/{service/service_manager.cpp,process/{priority_controller.cpp,process_controller.cpp}} \
+    substituteInPlace deepin-system-monitor-main/process/process_controller.cpp \
+      deepin-system-monitor-main/process/priority_controller.cpp \
+      deepin-system-monitor-main/service/service_manager.cpp \
       deepin-system-monitor-main/translations/policy/com.deepin.pkexec.deepin-system-monitor.policy \
-      --replace "/usr/bin/pkexec" "${lib.getBin polkit}/bin/pkexec" \
-      --replace "/usr/bin/kill" "${util-linux}/bin/kill" \
-      --replace "/usr/bin/renice" "${util-linux}/bin/renice" \
-      --replace '/usr/bin/systemctl' '${lib.getBin systemd}/systemctl'
+        --replace "/usr/bin/kill" "${lib.getBin util-linux}/bin/kill" \
+        --replace "/usr/bin/renice" "${lib.getBin util-linux}/bin/renice" \
+        --replace '/usr/bin/systemctl' '${lib.getBin systemd}/systemctl'
+
+    substituteInPlace deepin-system-monitor-main/{service/service_manager.cpp,process/{priority_controller.cpp,process_controller.cpp}} \
+      --replace "/usr/bin/pkexec" "${lib.getBin polkit}/bin/pkexec"
 
     for file in $(grep -rl "/usr")
     do
-      substituteInPlace $file --replace "/usr" "$out"
+      substituteInPlace $file \
+        --replace "/usr" "$out"
     done
   '';
 
   nativeBuildInputs = [
     cmake
     pkg-config
-    qttools
+    libsForQt5.qttools
     deepin-gettext-tools
-    wrapQtAppsHook
+    libsForQt5.wrapQtAppsHook
   ];
 
   buildInputs = [
     dtkwidget
     qt5integration
     qt5platform-plugins
-    qtbase
-    qtsvg
-    qtx11extras
+    libsForQt5.qtbase
+    libsForQt5.qtsvg
+    libsForQt5.qtx11extras
     dde-qt-dbus-factory
-    dde-dock
+    dde-tray-loader
     gsettings-qt
+    libsForQt5.polkit-qt
     procps
     libpcap
     libnl
@@ -75,17 +78,21 @@ stdenv.mkDerivation rec {
     dwayland
   ];
 
-  cmakeFlags = [
-    "-DVERSION=${version}"
+  cmakeFlags = [ "-DVERSION=${version}" ];
+
+  # To build with icu4c need at least c++17
+  env.NIX_CFLAGS_COMPILE = toString [
+    "-Wno-error=incompatible-pointer-types"
+    "--std=c++17"
   ];
 
   strictDeps = true;
 
   meta = with lib; {
-    description = "A more user-friendly system monitor";
+    description = "More user-friendly system monitor";
     homepage = "https://github.com/linuxdeepin/deepin-system-monitor";
     license = licenses.gpl3Plus;
     platforms = platforms.linux;
-    maintainers = teams.deepin.members;
+    teams = [ teams.deepin ];
   };
 }

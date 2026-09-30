@@ -1,7 +1,8 @@
-{ stdenv
-, lib
-, fetchFromGitHub
-, dde-api
+{
+  stdenv,
+  lib,
+  fetchFromGitHub,
+  dde-api,
 }:
 
 stdenv.mkDerivation rec {
@@ -23,22 +24,24 @@ stdenv.mkDerivation rec {
   '';
 
   installPhase = ''
+    runHook preInstall
     mkdir -p $out/share/wallpapers/deepin
     cp deepin/* $out/share/wallpapers/deepin
-
     mkdir -p $out/share/wallpapers/image-blur
     cp image-blur/* $out/share/wallpapers/image-blur
-
     mkdir -p $out/share/backgrounds
-
     ln -s $out/share/wallpapers/deepin/desktop.jpg  $out/share/backgrounds/default_background.jpg
+    runHook postInstall
   '';
 
   meta = with lib; {
-    description = "deepin-wallpapers provides wallpapers of dde";
+    description = "Deepin-wallpapers provides wallpapers of dde";
     homepage = "https://github.com/linuxdeepin/deepin-wallpapers";
-    license = with licenses; [ gpl3Plus cc-by-sa-30 ];
+    license = with licenses; [
+      gpl3Plus
+      cc-by-sa-30
+    ];
     platforms = platforms.linux;
-    maintainers = teams.deepin.members;
+    teams = [ teams.deepin ];
   };
 }

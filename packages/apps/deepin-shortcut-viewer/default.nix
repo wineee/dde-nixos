@@ -1,36 +1,34 @@
-{ stdenv
-, lib
-, fetchFromGitHub
-, dtkwidget
-, qt5integration
-, qt5platform-plugins
-, qmake
-, qtbase
-, qttools
-, pkg-config
-, wrapQtAppsHook
+{
+  stdenv,
+  lib,
+  fetchFromGitHub,
+  dtkwidget,
+  qt5integration,
+  qt5platform-plugins,
+  pkg-config,
+  libsForQt5,
 }:
 
 stdenv.mkDerivation rec {
   pname = "deepin-shortcut-viewer";
-  version = "6.0.0";
+  version = "5.0.9";
 
   src = fetchFromGitHub {
     owner = "linuxdeepin";
     repo = pname;
-    rev = "703e2053e99eae1fc53917ff0a8009aee1307692";
-    sha256 = "sha256-LrvENN37q8iy24BqKfHZAXACBqWHwe2uMiq+YTNQhCA=";
+    rev = version;
+    sha256 = "sha256-A4LFi0KcqChjgYrO90paMBAivv02TsRjYQ26I0k71x0=";
   };
 
   nativeBuildInputs = [
-    qmake
-    qttools
+    libsForQt5.qmake
+    libsForQt5.qttools
     pkg-config
-    wrapQtAppsHook
+    libsForQt5.wrapQtAppsHook
   ];
 
   buildInputs = [
-    qtbase
+    libsForQt5.qtbase
     dtkwidget
     qt5integration
     qt5platform-plugins
@@ -43,9 +41,10 @@ stdenv.mkDerivation rec {
 
   meta = with lib; {
     description = "Deepin Shortcut Viewer";
+    mainProgram = "deepin-shortcut-viewer";
     homepage = "https://github.com/linuxdeepin/deepin-shortcut-viewer";
     license = licenses.gpl3Plus;
     platforms = platforms.linux;
-    maintainers = teams.deepin.members;
+    teams = [ teams.deepin ];
   };
 }

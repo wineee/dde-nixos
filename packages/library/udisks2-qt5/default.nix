@@ -1,10 +1,10 @@
-{ stdenv
-, lib
-, fetchFromGitHub
-, qmake
-, pkg-config
-, wrapQtAppsHook
-, udisks
+{
+  stdenv,
+  lib,
+  fetchFromGitHub,
+  libsForQt5,
+  pkg-config,
+  udisks,
 }:
 
 stdenv.mkDerivation rec {
@@ -18,7 +18,11 @@ stdenv.mkDerivation rec {
     sha256 = "sha256-WS4fmqEYXi5dkn8RvyJBzy3+r+UgFcGDFFpQlbblLu4=";
   };
 
-  nativeBuildInputs = [ qmake pkg-config wrapQtAppsHook ];
+  nativeBuildInputs = [
+    libsForQt5.qmake
+    pkg-config
+    libsForQt5.wrapQtAppsHook
+  ];
 
   buildInputs = [ udisks ];
 
@@ -27,7 +31,8 @@ stdenv.mkDerivation rec {
   meta = with lib; {
     description = "UDisks2 D-Bus interfaces binding for Qt5";
     homepage = "https://github.com/linuxdeepin/udisks2-qt5";
-    license = licenses.lgpl3Plus;
+    license = licenses.gpl3Plus;
     platforms = platforms.linux;
+    teams = [ teams.deepin ];
   };
 }
