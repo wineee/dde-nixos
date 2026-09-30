@@ -83,12 +83,12 @@ let
       # deepin-anything = callPackage ./tools/deepin-anything { };
 
       #### ARTWORK
-      # dde-account-faces = callPackage ./artwork/dde-account-faces { };
-      # deepin-icon-theme = callPackage ./artwork/deepin-icon-theme { };
-      # deepin-wallpapers = callPackage ./artwork/deepin-wallpapers { };
-      # deepin-gtk-theme = callPackage ./artwork/deepin-gtk-theme { };
-      # deepin-sound-theme = callPackage ./artwork/deepin-sound-theme { };
-      # deepin-desktop-theme = callPackage ./artwork/deepin-desktop-theme { };
+      dde-account-faces = callPackage ./artwork/dde-account-faces { };
+      deepin-icon-theme = callPackage ./artwork/deepin-icon-theme { };
+      deepin-wallpapers = callPackage ./artwork/deepin-wallpapers { };
+      deepin-gtk-theme = callPackage ./artwork/deepin-gtk-theme { };
+      deepin-sound-theme = callPackage ./artwork/deepin-sound-theme { };
+      deepin-desktop-theme = callPackage ./artwork/deepin-desktop-theme { };
 
       #### MISC
       # deepin-desktop-base = callPackage ./misc/deepin-desktop-base { };

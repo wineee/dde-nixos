@@ -3,59 +3,52 @@
   lib,
   fetchFromGitHub,
   cmake,
-  gtk3,
-  xcursorgen,
-  papirus-icon-theme,
-  libsForQt5,
-  hicolor-icon-theme,
-  deepin-icon-theme,
+  qt6Packages,
+  dtkcommon,
+  dtkcore,
+  dtkgui,
+  dtkwidget,
 }:
 
-stdenv.mkDerivation rec {
+stdenv.mkDerivation (finalAttrs: {
   pname = "deepin-desktop-theme";
-  version = "1.0.13";
+  version = "1.1.31";
 
   src = fetchFromGitHub {
     owner = "linuxdeepin";
-    repo = pname;
-    rev = version;
-    hash = "sha256-uNeRAsPbgC7IHHBIlczPXhnwZI65Le70D9MsbH+6Fwk=";
+    repo = "deepin-desktop-theme";
+    rev = finalAttrs.version;
+    hash = "sha256-Vc/MkBt0ioa7jPDwJWMkmOSHzH3ZFv+EZcaxCD97BR0=";
   };
-
-  makeFlags = [ "PREFIX=${placeholder "out"}" ];
 
   nativeBuildInputs = [
     cmake
-    gtk3
-    xcursorgen
+    qt6Packages.qttools
   ];
 
-  propagatedBuildInputs = [
-    libsForQt5.breeze-icons
-    papirus-icon-theme
-    hicolor-icon-theme
-    deepin-icon-theme
+  buildInputs = [
+    qt6Packages.qtbase
+    dtkcommon
+    dtkcore
+    dtkgui
+    dtkwidget
   ];
 
-  # breeze-icons propagates qtbase
   dontWrapQtApps = true;
 
-  dontDropIconThemeCache = true;
+  # Upstream has broken symlinks in bloom-classic themes
+  dontCheckForBrokenSymlinks = true;
 
-  preFixup = ''
-    for theme in $out/share/icons/*; do
-      gtk-update-icon-cache $theme
-    done
-  '';
+  cmakeFlags = [ "-DVERSION=${finalAttrs.version}" ];
 
-  meta = with lib; {
+  meta = {
     description = "Provides a variety of well-designed theme resources";
     homepage = "https://github.com/linuxdeepin/deepin-desktop-theme";
-    license = with licenses; [
+    license = with lib.licenses; [
       gpl3Plus
       cc-by-sa-40
     ];
-    platforms = platforms.linux;
-    teams = [ teams.deepin ];
+    platforms = lib.platforms.linux;
+    teams = [ lib.teams.deepin ];
   };
-}
+})

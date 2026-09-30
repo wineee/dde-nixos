@@ -3,48 +3,59 @@
   lib,
   fetchFromGitHub,
   gtk3,
-  xcursorgen,
+  hicolor-icon-theme,
   papirus-icon-theme,
 }:
 
-stdenvNoCC.mkDerivation rec {
+stdenvNoCC.mkDerivation (finalAttrs: {
   pname = "deepin-icon-theme";
-  version = "2024.07.31";
+  version = "2026.02.27";
 
   src = fetchFromGitHub {
     owner = "linuxdeepin";
-    repo = pname;
-    rev = version;
-    hash = "sha256-Vt2rYZthGelXVUp8/L57ZlDsVEjjZhCv+kSGeU6nC2s=";
+    repo = "deepin-icon-theme";
+    rev = finalAttrs.version;
+    hash = "sha256-hSbTrA6MQkaZEGAe9MmvlUe8x+CHT6AWf4ahv5ikiyE=";
   };
 
-  makeFlags = [ "PREFIX=${placeholder "out"}" ];
+  nativeBuildInputs = [ gtk3 ]; # gtk-update-icon-cache
 
-  nativeBuildInputs = [
-    gtk3
-    xcursorgen
+  propagatedBuildInputs = [
+    hicolor-icon-theme
+    papirus-icon-theme # bloom Inherits=Papirus
   ];
 
-  propagatedBuildInputs = [ papirus-icon-theme ];
+  dontBuild = true;
 
-  # breeze-icons propagates qtbase
+  # papirus-icon-theme propagates qtbase
   dontWrapQtApps = true;
 
-  dontDropIconThemeCache = true;
+  # Upstream has broken/dangling symlinks (bloom Inherits blobs referenced via
+  # hicolor-links), so skip the symlink check.
+  dontCheckForBrokenSymlinks = true;
 
-  # Remove broken symbolic link(https://github.com/linuxdeepin/developer-center/issues/11245)
-  preFixup = ''
-    rm $out/share/icons/bloom/actions/24/{draw-triangle1.svg,draw-triangle2.svg,draw-triangle3.svg,draw-triangle4.svg}
-    for theme in $out/share/icons/*; do
-      gtk-update-icon-cache $theme
+  installPhase = ''
+    runHook preInstall
+
+    for theme in bloom bloom-dark vintage bloom-classic bloom-classic-dark bloom-fantacy Sea; do
+      mkdir -p $out/share/icons/$theme
+      cp -r $theme/* $out/share/icons/$theme/
     done
+
+    for theme in $out/share/icons/*; do
+      if [ -f $theme/index.theme ]; then
+        gtk-update-icon-cache $theme
+      fi
+    done
+
+    runHook postInstall
   '';
 
-  meta = with lib; {
+  meta = {
     description = "Provides the base icon themes on deepin";
     homepage = "https://github.com/linuxdeepin/deepin-icon-theme";
-    license = licenses.gpl3Plus;
-    platforms = platforms.linux;
-    teams = [ teams.deepin ];
+    license = lib.licenses.gpl3Plus;
+    platforms = lib.platforms.linux;
+    teams = [ lib.teams.deepin ];
   };
-}
+})

@@ -1,47 +1,45 @@
 {
-  stdenv,
+  stdenvNoCC,
   lib,
   fetchFromGitHub,
-  dde-api,
 }:
 
-stdenv.mkDerivation rec {
+stdenvNoCC.mkDerivation (finalAttrs: {
   pname = "deepin-wallpapers";
-  version = "1.7.16";
+  version = "1.7.27";
 
   src = fetchFromGitHub {
     owner = "linuxdeepin";
-    repo = pname;
-    rev = version;
-    hash = "sha256-o5rg1l8N6Ch+BdBLp+HMbVBBvrTdRtn8NSgH/9AnB2Q=";
+    repo = "deepin-wallpapers";
+    rev = finalAttrs.version;
+    hash = "sha256-kh/CskukvXijbXAp8vZx+2IkFqoAnVaTIQU0DvVPbFM=";
   };
 
-  nativeBuildInputs = [ dde-api ];
-
-  postPatch = ''
-    substituteInPlace Makefile \
-      --replace /usr/lib/deepin-api/image-blur ${dde-api}/lib/deepin-api/image-blur
-  '';
+  # Pure data package — skip the Makefile (blur generation needs dde-api).
+  dontBuild = true;
 
   installPhase = ''
     runHook preInstall
+
+    # Mirror the Makefile's prepare step: pick the deepin platform variant.
+    cp -r deepin/platform/deepin/* deepin/
+
     mkdir -p $out/share/wallpapers/deepin
-    cp deepin/* $out/share/wallpapers/deepin
-    mkdir -p $out/share/wallpapers/image-blur
-    cp image-blur/* $out/share/wallpapers/image-blur
+    cp -r deepin/*.jpg deepin/*.jpeg deepin/*.png $out/share/wallpapers/deepin/ 2>/dev/null || true
+
     mkdir -p $out/share/backgrounds
-    ln -s $out/share/wallpapers/deepin/desktop.jpg  $out/share/backgrounds/default_background.jpg
+    ln -s $out/share/wallpapers/deepin/desktop.jpg $out/share/backgrounds/default_background.jpg
     runHook postInstall
   '';
 
-  meta = with lib; {
+  meta = {
     description = "Deepin-wallpapers provides wallpapers of dde";
     homepage = "https://github.com/linuxdeepin/deepin-wallpapers";
-    license = with licenses; [
+    license = with lib.licenses; [
       gpl3Plus
       cc-by-sa-30
     ];
-    platforms = platforms.linux;
-    teams = [ teams.deepin ];
+    platforms = lib.platforms.linux;
+    teams = [ lib.teams.deepin ];
   };
-}
+})

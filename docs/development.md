@@ -29,6 +29,12 @@ be re-enabled one by one as it is upgraded.
 | gio-qt | 0.0.16 | Qt6 | was Qt5 (now qt6-only via patch) |
 | udisks2-qt6 | 6.0.1 | Qt6 | replaces udisks2-qt5 (deleted) |
 | qt6mpris | 1.0.0.1-1deepin2 | Qt6 | was already Qt6; version bump |
+| dde-account-faces | 1.0.19 | n/a | data (avatars) |
+| deepin-gtk-theme | 25.3.7 | n/a | data (GTK themes) |
+| deepin-sound-theme | 15.10.6 | n/a | data (sounds) |
+| deepin-wallpapers | 1.7.27 | n/a | data (wallpapers) |
+| deepin-icon-theme | 2026.02.27 | n/a | data (icons) |
+| deepin-desktop-theme | 1.1.31 | Qt6 | cmake + Dtk6 tools |
 | deepin-terminal | 6.5.40 | Qt6 | first app upgraded to Qt6           |
 
 ## Upgrade log
@@ -70,6 +76,24 @@ be re-enabled one by one as it is upgraded.
 - **udisks2-qt6** new package `6.0.1` (cmake/Qt6), replaces `udisks2-qt5`
   (deleted). Fixes `.pc` double-prefix in postInstall.
 - **qt6mpris** `1.0.0.1-1deepin1` -> `1.0.0.1-1deepin2`. Version bump only.
+- **dde-account-faces** `1.0.16` -> `1.0.19`. Pure data; installPhase copies
+  `icons` into `$out/var/lib/AccountsService`.
+- **deepin-gtk-theme** `23.11.23` -> `25.3.7`. Pure data; dropped
+  `gtk-engine-murrine` (removed from nixpkgs, GTK2-only) and
+  `propagatedUserEnvPkgs`. installPhase copies `deepin` + `deepin-dark`.
+- **deepin-sound-theme** `15.10.6`. Keep version; `stdenvNoCC`, Makefile-driven.
+- **deepin-wallpapers** `1.7.16` -> `1.7.27`. Dropped `dde-api` blur step;
+  installPhase copies `deepin/platform/deepin/*` (the `desktop.jpg` lives there)
+  and symlinks `default_background.jpg`.
+- **deepin-icon-theme** `2024.07.31` -> `2026.02.27`. Manual installPhase
+  (7 themes + `gtk-update-icon-cache` guarded by `index.theme`); dropped
+  `xorg.xcursorgen`/broken-symlink workaround in favour of
+  `dontCheckForBrokenSymlinks`; propagated `papirus-icon-theme` (bloom
+  `Inherits=Papirus`).
+- **deepin-desktop-theme** `1.0.13` -> `1.1.31`. Now cmake and needs the Dtk6
+  tooling (`find_package(Dtk6 COMPONENTS Core Gui Widget)` + Qt6). Depends on
+  `dtkcore`/`dtkgui`/`dtkwidget` (which still expose `Dtk6*Config.cmake` in their
+  `dev` outputs) and `qt6Packages.qtbase` (6.11 provides `Qt6::GuiPrivate`).
 
 ## Not yet upgraded (recorded blockers)
 

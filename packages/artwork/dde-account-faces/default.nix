@@ -4,27 +4,35 @@
   fetchFromGitHub,
 }:
 
-stdenvNoCC.mkDerivation rec {
+stdenvNoCC.mkDerivation (finalAttrs: {
   pname = "dde-account-faces";
-  version = "1.0.16";
+  version = "1.0.19";
 
   src = fetchFromGitHub {
     owner = "linuxdeepin";
-    repo = pname;
-    rev = version;
-    hash = "sha256-PtbEsFQl6M5Ouadxy9CTVh1Bmmect83NODO4Ks+ckKU=";
+    repo = "dde-account-faces";
+    rev = finalAttrs.version;
+    hash = "sha256-cKvcF3s8nFjIXjdQJd6oAoiJJ2vgwrL0DLh9aUc9JBc=";
   };
 
-  makeFlags = [ "PREFIX=${placeholder "out"}/var" ];
+  # Pure data package — no compilation needed
+  dontBuild = true;
 
-  meta = with lib; {
+  installPhase = ''
+    runHook preInstall
+    mkdir -p $out/var/lib/AccountsService
+    cp -r icons $out/var/lib/AccountsService/
+    runHook postInstall
+  '';
+
+  meta = {
     description = "Account faces of deepin desktop environment";
     homepage = "https://github.com/linuxdeepin/dde-account-faces";
-    license = with licenses; [
+    license = with lib.licenses; [
       gpl3Plus
       cc0
     ];
-    platforms = platforms.linux;
-    teams = [ teams.deepin ];
+    platforms = lib.platforms.linux;
+    teams = [ lib.teams.deepin ];
   };
-}
+})

@@ -2,29 +2,35 @@
   stdenvNoCC,
   lib,
   fetchFromGitHub,
-  gtk-engine-murrine,
 }:
 
-stdenvNoCC.mkDerivation rec {
+stdenvNoCC.mkDerivation (finalAttrs: {
   pname = "deepin-gtk-theme";
-  version = "23.11.23";
+  version = "25.3.7";
 
   src = fetchFromGitHub {
     owner = "linuxdeepin";
     repo = "deepin-gtk-theme";
-    rev = version;
-    hash = "sha256-2B2BtbPeg3cEbnEIgdGFzy8MjCMWlbP/Sq4jzG5cjmc=";
+    rev = finalAttrs.version;
+    hash = "sha256-RbhbyxU/n+7JfW5vV4ORPtLlRqSG2BLhjb/UusR2JTo=";
   };
 
-  propagatedUserEnvPkgs = [ gtk-engine-murrine ];
+  # Pure data package — the Makefile just copies theme dirs.
+  dontBuild = true;
 
-  makeFlags = [ "PREFIX=${placeholder "out"}" ];
+  installPhase = ''
+    runHook preInstall
+    mkdir -p $out/share/themes
+    cp -r deepin $out/share/themes/
+    cp -r deepin-dark $out/share/themes/
+    runHook postInstall
+  '';
 
-  meta = with lib; {
+  meta = {
     description = "Deepin GTK Theme";
     homepage = "https://github.com/linuxdeepin/deepin-gtk-theme";
-    license = licenses.gpl3Plus;
-    platforms = platforms.unix;
-    teams = [ teams.deepin ];
+    license = lib.licenses.gpl3Plus;
+    platforms = lib.platforms.unix;
+    teams = [ lib.teams.deepin ];
   };
-}
+})
