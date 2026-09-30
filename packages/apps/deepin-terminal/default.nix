@@ -4,6 +4,8 @@
   fetchFromGitHub,
   nixosTests,
   dtkwidget,
+  qt6integration,
+  qt6platform-plugins,
   cmake,
   qt6Packages,
   pkg-config,
@@ -49,6 +51,8 @@ stdenv.mkDerivation (finalAttrs: {
     qt6Packages.qtsvg
     qt6Packages.qt5compat
     dtkwidget
+    qt6integration
+    qt6platform-plugins
     libsecret
     glib
     icu
