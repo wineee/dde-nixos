@@ -56,6 +56,7 @@ let
       # dde-grand-search = callPackage ./core/dde-grand-search { };
       # dde-tray-loader = callPackage ./core/dde-tray-loader { };
       # dde-api-proxy = callPackage ./core/dde-api-proxy { };
+      deepin-desktop-base = callPackage ./core/deepin-desktop-base { };
 
       #### Dtk Application
       # deepin-calculator = callPackage ./apps/deepin-calculator { };
@@ -89,9 +90,6 @@ let
       deepin-gtk-theme = callPackage ./artwork/deepin-gtk-theme { };
       deepin-sound-theme = callPackage ./artwork/deepin-sound-theme { };
       deepin-desktop-theme = callPackage ./artwork/deepin-desktop-theme { };
-
-      #### MISC
-      # deepin-desktop-base = callPackage ./misc/deepin-desktop-base { };
     }
     // lib.optionalAttrs config.allowAliases {
       dde-kwin = throw "The 'deepin.dde-kwin' package was removed as it is outdated and no longer relevant. Treeland is the future compositor."; # added 2023-09-27

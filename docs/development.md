@@ -35,6 +35,7 @@ be re-enabled one by one as it is upgraded.
 | deepin-wallpapers | 1.7.27 | n/a | data (wallpapers) |
 | deepin-icon-theme | 2026.02.27 | n/a | data (icons) |
 | deepin-desktop-theme | 1.1.31 | Qt6 | cmake + Dtk6 tools |
+| deepin-desktop-base | 2026.09.04 | n/a | moved to core; NixOS-branded |
 | deepin-terminal | 6.5.40 | Qt6 | first app upgraded to Qt6           |
 
 ## Upgrade log
@@ -94,6 +95,12 @@ be re-enabled one by one as it is upgraded.
   tooling (`find_package(Dtk6 COMPONENTS Core Gui Widget)` + Qt6). Depends on
   `dtkcore`/`dtkgui`/`dtkwidget` (which still expose `Dtk6*Config.cmake` in their
   `dev` outputs) and `qt6Packages.qtbase` (6.11 provides `Qt6::GuiPrivate`).
+- **deepin-desktop-base** `2024.07.24` -> `2026.09.04`. Moved from
+  `packages/misc/` to `packages/core/` (the empty `misc` dir was removed). The
+  new Makefile hardcodes `/usr/...` paths under `DESTDIR`, so postInstall
+  strips `$out/etc`, python-apt/plymouth/distro-info, and relocates `usr/*`.
+  The Makefile no longer installs `distribution.info`/`distribution/*` (only the
+  debian `.install` does), so we install them ourselves, rebranded to NixOS.
 
 ## Not yet upgraded (recorded blockers)
 
