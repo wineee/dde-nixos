@@ -7,13 +7,13 @@
 
 stdenv.mkDerivation (finalAttrs: {
   pname = "qt6mpris";
-  version = "1.0.0.1-1deepin1";
+  version = "1.0.0.1-1deepin2";
 
   src = fetchFromGitHub {
     owner = "deepin-community";
     repo = "qt6mpris";
     rev = finalAttrs.version;
-    hash = "sha256-PCdA9q/txaL2Fbr2/4+Z7L4zxWeULl3bq8MVH3i1g3g=";
+    hash = "sha256-KuznVBaiz1lBPz4T1iCFU5EaoM7GHP25b3K8gJ7dbLM=";
   };
 
   postPatch = ''

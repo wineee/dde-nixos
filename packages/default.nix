@@ -23,15 +23,16 @@ let
       qt6integration = callPackage ./library/qt6integration { };
       treeland-protocols = callPackage ./library/treeland-protocols { };
 
+      deepin-pdfium = callPackage ./library/deepin-pdfium { };
+      docparser = callPackage ./library/docparser { };
+      gio-qt = callPackage ./library/gio-qt { };
+      udisks2-qt6 = callPackage ./library/udisks2-qt6 { };
+      qt6mpris = callPackage ./library/qt6mpris { };
+
       # TODO: upgrade to Qt6 and re-enable
-      # deepin-pdfium = callPackage ./library/deepin-pdfium { };
       # dde-qt-dbus-factory = callPackage ./library/dde-qt-dbus-factory { };
       # disomaster = callPackage ./library/disomaster { };
-      # docparser = callPackage ./library/docparser { };
-      # gio-qt = callPackage ./library/gio-qt { };
-      # udisks2-qt5 = callPackage ./library/udisks2-qt5 { };
       # util-dfm = callPackage ./library/util-dfm { };
-      # qt6mpris = callPackage ./library/qt6mpris { };
 
       #### CORE
       # dde-appearance = callPackage ./core/dde-appearance { };

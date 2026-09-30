@@ -24,6 +24,11 @@ be re-enabled one by one as it is upgraded.
 | qt6platform-plugins | 6.0.50 | Qt6 |                                      |
 | qt6integration | 6.0.50 | Qt6 | depends on dtkwidget                 |
 | treeland-protocols | 0.6.0 | n/a |                                      |
+| deepin-pdfium | 1.5.8 | Qt6 | PDFium rendering lib (was Qt5 qmake) |
+| docparser | 1.0.26 | n/a | doc content analysis lib (was Qt5) |
+| gio-qt | 0.0.16 | Qt6 | was Qt5 (now qt6-only via patch) |
+| udisks2-qt6 | 6.0.1 | Qt6 | replaces udisks2-qt5 (deleted) |
+| qt6mpris | 1.0.0.1-1deepin2 | Qt6 | was already Qt6; version bump |
 | deepin-terminal | 6.5.40 | Qt6 | first app upgraded to Qt6           |
 
 ## Upgrade log
@@ -53,6 +58,39 @@ be re-enabled one by one as it is upgraded.
   Widget). Dropped qt5integration/qt5platform-plugins/chrpath deps; added
   qt5compat, libchardet, libuchardet, glib, icu, xorg.xcbutilwm. Patched out two
   hardcoded `/usr/...` install paths.
+- **deepin-pdfium** `1.0.2` -> `1.5.8`. Switched from qmake/Qt5 to cmake/Qt6.
+  Added zlib/libpng/libjpeg/icu/openjpeg/lcms2/freetype/libchardet; dropped
+  Qt5. Fixes `.pc` double-prefix in postInstall.
+- **docparser** `1.0.11` -> `1.0.26`. No Qt needed anymore (pure cmake). Added
+  freetype, minizip, zlib, file (libmagic); dropped Qt5/qttools. Patched
+  `add_link_options(-pie)` (CMake 4.x breaks shared-lib link with `-pie`).
+- **gio-qt** `0.0.14` -> `0.0.16`. Upstream builds qt5+qt6 in one run; patch out
+  `include(qt5.cmake)`. Library only, so `dontWrapQtApps = true`. Docs disabled
+  by default.
+- **udisks2-qt6** new package `6.0.1` (cmake/Qt6), replaces `udisks2-qt5`
+  (deleted). Fixes `.pc` double-prefix in postInstall.
+- **qt6mpris** `1.0.0.1-1deepin1` -> `1.0.0.1-1deepin2`. Version bump only.
+
+## Not yet upgraded (recorded blockers)
+
+These were investigated and deliberately left commented out in
+`packages/default.nix`. Revisit when their blockers are resolved.
+
+- **dde-qt-dbus-factory** `6.0.1`: still qmake. Its `libdframeworkdbus.pro`
+  does `load(dtk_qmake)` and `load(dtk_translation)`, but our dtkcore 6.7.50
+  (Qt6 build) installs no `mkspecs/features`/`mkspecs/modules` (no `dtk_qmake`
+  .prf/.pri). Needs either a Qt6-era qmake feature package or a cmake upstream
+  migration. Reference (`nixos-unstable-dde-25-flake`) does not package it.
+- **disomaster** `5.0.8`: still qmake (`libisoburn-1` only dep, no dtk). Should
+  build with `qt6Packages.qmake` but untested; low priority (only used by
+  dde-file-manager burn backend via util-dfm).
+- **util-dfm** `1.4.5`: cmake/Qt6 available (`OPT_ENABLE_QT6=ON`), but pulls a
+  wide dep chain — `Dtk6::Core` (dtkcore), `lucenepp` (needs boost),
+  libmediainfo/libisoburn/libsecret/udisks2/libmount/glib. Reference uses
+  `dtk6core` (6.0.50) + `lucenepp` + `boost`. Blocked on deciding whether to
+  also ship the `dtk6*`-suffixed alias set, since util-dfm's
+  `find_package(Dtk${DFM_VERSION_MAJOR} ...)` expects `Dtk6Core` while our
+  scope only exposes `dtkcore`. Defer until dde-file-manager is unblocked.
 
 ## Gotchas
 
@@ -124,6 +162,25 @@ postPatch = ''
 
 Note: `''` cannot be used as an empty `--replace` target in an indented Nix
 string (it terminates the string); replace with a comment instead.
+
+### `add_link_options(-pie)` breaks shared libs on CMake 4.x
+
+`docparser` (and other deepin cmake projects) set
+`add_link_options(-z noexecstack -pie -fPIC)` globally. On CMake 4.4.x that
+`-pie` reaches the shared-library link and fails with
+`undefined reference to main`. Strip `-pie` in `postPatch`.
+
+### `.pc` double-prefix (`${prefix}//nix/store/...`)
+
+Deepin cmake libraries generate pkg-config files with
+`libdir=${prefix}/@CMAKE_INSTALL_LIBDIR@` while nix already sets absolute
+install dirs, producing `${prefix}//nix/store/...`. Fix in `postInstall`:
+
+```nix
+postInstall = ''
+  find $out/lib/pkgconfig -name "*.pc" -exec sed -i "s|''${prefix}/|/|g" {} +
+'';
+```
 
 ### `dtk*` 6.7.x build docs only for Qt5
 

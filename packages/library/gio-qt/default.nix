@@ -4,59 +4,66 @@
   fetchFromGitHub,
   cmake,
   pkg-config,
-  libsForQt5,
+  qt6Packages,
   glibmm,
   doxygen,
-  buildDocs ? true,
+  buildDocs ? false,
 }:
 
-stdenv.mkDerivation rec {
+stdenv.mkDerivation (finalAttrs: {
   pname = "gio-qt";
-  version = "0.0.14";
+  version = "0.0.16";
 
   src = fetchFromGitHub {
     owner = "linuxdeepin";
-    repo = pname;
-    rev = version;
-    hash = "sha256-qDkkLqGsrw+otUy3/iZJJZ2RtpNYPGc/wktdVpw2weg=";
+    repo = "gio-qt";
+    rev = finalAttrs.version;
+    hash = "sha256-O8ZWtkwpafiThxa0Wp4xogcouAbHUsR6ZBU256LNRWI=";
   };
 
-  # Upstream compiles both qt5 and qt6 versions, which is not possible in nixpkgs
-  # because of the conflict between qt5 hooks and qt6 hooks
+  # Upstream builds both qt5 and qt6 versions, which conflicts with
+  # qt6 hooks (no qt5 available in this scope). Keep only qt6.
   postPatch = ''
-    substituteInPlace {gio-qt,qgio-tools}/CMakeLists.txt \
-      --replace "include(qt6.cmake)" " "
+    substituteInPlace gio-qt/CMakeLists.txt qgio-tools/CMakeLists.txt \
+      --replace-fail "include(qt5.cmake)" " "
   '';
 
   nativeBuildInputs = [
     cmake
     pkg-config
-    libsForQt5.wrapQtAppsHook
   ]
   ++ lib.optionals buildDocs [
     doxygen
-    libsForQt5.qttools
+    qt6Packages.qttools
+  ];
+
+  buildInputs = [
+    qt6Packages.qtbase
   ];
 
   cmakeFlags = [
     "-DCMAKE_INSTALL_LIBDIR=lib"
-    "-DPROJECT_VERSION=${version}"
-  ]
-  ++ lib.optionals (!buildDocs) [ "-DBUILD_DOCS=OFF" ];
+    "-DPROJECT_VERSION=${finalAttrs.version}"
+    (lib.cmakeBool "BUILD_DOCS" buildDocs)
+    (lib.cmakeBool "BUILD_UTILS" false)
+    (lib.cmakeBool "BUILD_TESTS" false)
+  ];
 
   propagatedBuildInputs = [ glibmm ];
+
+  dontWrapQtApps = true;
 
   preConfigure = ''
     # qt.qpa.plugin: Could not find the Qt platform plugin "minimal"
     # A workaround is to set QT_PLUGIN_PATH explicitly
-    export QT_PLUGIN_PATH=${libsForQt5.qtbase.bin}/${libsForQt5.qtbase.qtPluginPrefix}
+    export QT_PLUGIN_PATH=${lib.getBin qt6Packages.qtbase}/${qt6Packages.qtbase.qtPluginPrefix}
   '';
 
-  meta = with lib; {
+  meta = {
     description = "Gio wrapper for Qt applications";
     homepage = "https://github.com/linuxdeepin/gio-qt";
-    license = licenses.lgpl3Plus;
-    platforms = platforms.linux;
-    teams = [ teams.deepin ];
+    license = lib.licenses.lgpl3Plus;
+    platforms = lib.platforms.linux;
+    teams = [ lib.teams.deepin ];
   };
-}
+})

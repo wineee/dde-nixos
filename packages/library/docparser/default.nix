@@ -2,50 +2,66 @@
   stdenv,
   lib,
   fetchFromGitHub,
+  cmake,
   pkg-config,
-  libsForQt5,
   poppler,
-  pugixml,
   libzip,
-  libuuid,
+  pugixml,
+  freetype,
   libxml2,
+  util-linux,
   tinyxml-2,
+  file,
+  minizip,
+  zlib,
 }:
 
-stdenv.mkDerivation rec {
+stdenv.mkDerivation (finalAttrs: {
   pname = "docparser";
-  version = "1.0.11";
+  version = "1.0.26";
 
   src = fetchFromGitHub {
     owner = "linuxdeepin";
-    repo = pname;
-    rev = version;
-    hash = "sha256-shZXhs9ncgm6rECvCWrLi26RO1WAc1gRowoYmeKesfk=";
+    repo = "docparser";
+    rev = finalAttrs.version;
+    hash = "sha256-5OlIspH7F/YigQvAaPVPSQElDprrmCjId7QSD/A/wxo=";
   };
 
   nativeBuildInputs = [
-    libsForQt5.qmake
-    libsForQt5.qttools
+    cmake
     pkg-config
-    libsForQt5.wrapQtAppsHook
   ];
 
   buildInputs = [
     poppler
-    pugixml
     libzip
-    libuuid
+    pugixml
+    freetype
     libxml2
+    util-linux # libuuid
     tinyxml-2
+    file # libmagic
+    minizip
+    zlib
   ];
 
-  qmakeFlags = [ "VERSION=${version}" ];
+  # Fix pkgconfig double-prefix issue (NixOS uses absolute install dirs)
+  postPatch = ''
+    # CMake >= 4 errors when add_link_options(-pie) is applied to a shared
+    # library (undefined reference to main). Drop it; nix hardens separately.
+    substituteInPlace CMakeLists.txt \
+      --replace-fail '-z noexecstack -pie -fPIC' '-z noexecstack -fPIC'
+  '';
+
+  postInstall = ''
+    sed -i "s|''${prefix}/|/|g" $out/lib/pkgconfig/docparser.pc
+  '';
 
   meta = {
-    description = "Document parser library ported from document2html";
+    description = "Document content analysis library for full-text search";
     homepage = "https://github.com/linuxdeepin/docparser";
     license = lib.licenses.gpl3Plus;
     platforms = lib.platforms.linux;
     teams = [ lib.teams.deepin ];
   };
-}
+})
