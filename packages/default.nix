@@ -25,8 +25,6 @@ let
 
       # TODO: upgrade to Qt6 and re-enable
       # deepin-pdfium = callPackage ./library/deepin-pdfium { };
-      # deepin-wayland-protocols = callPackage ./library/deepin-wayland-protocols { };
-      # dwayland = callPackage ./library/dwayland { };
       # dde-qt-dbus-factory = callPackage ./library/dde-qt-dbus-factory { };
       # disomaster = callPackage ./library/disomaster { };
       # docparser = callPackage ./library/docparser { };
@@ -36,7 +34,6 @@ let
       # qt6mpris = callPackage ./library/qt6mpris { };
 
       #### CORE
-      # deepin-kwin = callPackage ./core/deepin-kwin { };
       # dde-appearance = callPackage ./core/dde-appearance { };
       # dde-app-services = callPackage ./core/dde-app-services { };
       # dde-application-manager = callPackage ./core/dde-application-manager { };
@@ -96,7 +93,7 @@ let
       # deepin-desktop-base = callPackage ./misc/deepin-desktop-base { };
     }
     // lib.optionalAttrs config.allowAliases {
-      dde-kwin = throw "The 'deepin.dde-kwin' package was removed as it is outdated and no longer relevant."; # added 2023-09-27
+      dde-kwin = throw "The 'deepin.dde-kwin' package was removed as it is outdated and no longer relevant. Treeland is the future compositor."; # added 2023-09-27
       dde-launcher = throw "The 'deepin.dde-launcher' is no longer maintained. Please use 'deepin.dde-launchpad' instead."; # added 2023-11-23
       dde-dock = throw "The 'deepin.dde-dock' is no longer maintained. Please use 'deepin.dde-tray-loader' instead."; # added 2024-08-28
       deepin-clone = throw "The 'deepin.deepin-clone' package was removed as it is broken and unmaintained."; # added 2024-08-23
