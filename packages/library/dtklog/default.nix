@@ -4,7 +4,7 @@
   fetchFromGitHub,
   cmake,
   pkg-config,
-  libsForQt5,
+  qt6Packages,
   spdlog,
   systemd,
   withSystemd ? lib.meta.availableOn stdenv.hostPlatform systemd,
@@ -12,30 +12,31 @@
 
 stdenv.mkDerivation (finalAttrs: {
   pname = "dtklog";
-  version = "0.0.1";
+  version = "6.7.50";
 
   src = fetchFromGitHub {
     owner = "linuxdeepin";
     repo = "dtklog";
     rev = finalAttrs.version;
-    hash = "sha256-8c3KL6pjAFPC4jRpOpPEbEDRBMWnDptwBSbEtcQcf5E=";
+    hash = "sha256-yjRapg6mNq0edPj5nLJ+wcqqsuEODdPV8+AgRJk6QNQ=";
   };
 
   nativeBuildInputs = [
     cmake
     pkg-config
-    libsForQt5.wrapQtAppsHook
+    qt6Packages.wrapQtAppsHook
   ];
 
   dontWrapQtApps = true;
 
   buildInputs = [
-    libsForQt5.qtbase
+    qt6Packages.qtbase
     spdlog
   ]
   ++ lib.optional withSystemd systemd;
 
   cmakeFlags = [
+    (lib.cmakeBool "DTK5" false)
     (lib.cmakeBool "BUILD_WITH_SYSTEMD" withSystemd)
     (lib.cmakeFeature "CMAKE_INSTALL_LIBDIR" "lib")
     (lib.cmakeFeature "CMAKE_INSTALL_INCLUDEDIR" "include")

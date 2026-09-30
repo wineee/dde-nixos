@@ -6,7 +6,7 @@
   pkg-config,
   doxygen,
   qt6Packages,
-  dtk6core,
+  dtkcore,
   libxcrypt,
 }:
 
@@ -32,7 +32,7 @@ stdenv.mkDerivation rec {
 
   buildInputs = [
     qt6Packages.qtbase
-    dtk6core
+    dtkcore
     libxcrypt
   ];
 

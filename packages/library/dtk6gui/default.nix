@@ -7,7 +7,7 @@
   pkg-config,
   doxygen,
   qt6Packages,
-  dtk6core,
+  dtkcore,
   librsvg,
 }:
 
@@ -54,7 +54,7 @@ stdenv.mkDerivation (finalAttrs: {
   ];
 
   propagatedBuildInputs = [
-    dtk6core
+    dtkcore
     qt6Packages.qtimageformats
   ];
 

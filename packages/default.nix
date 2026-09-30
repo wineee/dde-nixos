@@ -11,93 +11,94 @@ let
     in
     {
       #### LIBRARIES
+      # Upgraded and maintained (Qt6):
       dtkcommon = callPackage ./library/dtkcommon { };
       dtkcore = callPackage ./library/dtkcore { };
-      dtkgui = callPackage ./library/dtkgui { };
-      dtkwidget = callPackage ./library/dtkwidget { };
-      dtkdeclarative = callPackage ./library/dtkdeclarative { };
       dtklog = callPackage ./library/dtklog { };
-      deepin-pdfium = callPackage ./library/deepin-pdfium { };
-      qt5platform-plugins = callPackage ./library/qt5platform-plugins { };
-      qt5integration = callPackage ./library/qt5integration { };
-      deepin-wayland-protocols = callPackage ./library/deepin-wayland-protocols { };
-      dwayland = callPackage ./library/dwayland { };
-      dde-qt-dbus-factory = callPackage ./library/dde-qt-dbus-factory { };
-      disomaster = callPackage ./library/disomaster { };
-      docparser = callPackage ./library/docparser { };
-      gio-qt = callPackage ./library/gio-qt { };
-      udisks2-qt5 = callPackage ./library/udisks2-qt5 { };
-      util-dfm = callPackage ./library/util-dfm { };
-      dtk6core = callPackage ./library/dtk6core { };
-      dtk6gui = callPackage ./library/dtk6gui { };
-      dtk6widget = callPackage ./library/dtk6widget { };
-      dtk6declarative = callPackage ./library/dtk6declarative { };
-      dtk6systemsettings = callPackage ./library/dtk6systemsettings { };
-      dtk6log = callPackage ./library/dtk6log { };
-      qt6platform-plugins = callPackage ./library/qt6platform-plugins { };
-      qt6integration = callPackage ./library/qt6integration { };
-      qt6mpris = callPackage ./library/qt6mpris { };
-      treeland-protocols = callPackage ./library/treeland-protocols { };
+
+      # TODO: upgrade to Qt6 and re-enable
+      # dtkgui = callPackage ./library/dtkgui { };
+      # dtkwidget = callPackage ./library/dtkwidget { };
+      # dtkdeclarative = callPackage ./library/dtkdeclarative { };
+      # deepin-pdfium = callPackage ./library/deepin-pdfium { };
+      # qt5platform-plugins = callPackage ./library/qt5platform-plugins { };
+      # qt5integration = callPackage ./library/qt5integration { };
+      # deepin-wayland-protocols = callPackage ./library/deepin-wayland-protocols { };
+      # dwayland = callPackage ./library/dwayland { };
+      # dde-qt-dbus-factory = callPackage ./library/dde-qt-dbus-factory { };
+      # disomaster = callPackage ./library/disomaster { };
+      # docparser = callPackage ./library/docparser { };
+      # gio-qt = callPackage ./library/gio-qt { };
+      # udisks2-qt5 = callPackage ./library/udisks2-qt5 { };
+      # util-dfm = callPackage ./library/util-dfm { };
+      # dtk6gui = callPackage ./library/dtk6gui { };
+      # dtk6widget = callPackage ./library/dtk6widget { };
+      # dtk6declarative = callPackage ./library/dtk6declarative { };
+      # dtk6systemsettings = callPackage ./library/dtk6systemsettings { };
+      # qt6platform-plugins = callPackage ./library/qt6platform-plugins { };
+      # qt6integration = callPackage ./library/qt6integration { };
+      # qt6mpris = callPackage ./library/qt6mpris { };
+      # treeland-protocols = callPackage ./library/treeland-protocols { };
 
       #### CORE
-      deepin-kwin = callPackage ./core/deepin-kwin { };
-      dde-appearance = callPackage ./core/dde-appearance { };
-      dde-app-services = callPackage ./core/dde-app-services { };
-      dde-application-manager = callPackage ./core/dde-application-manager { };
-      dde-control-center = callPackage ./core/dde-control-center { };
-      dde-calendar = callPackage ./core/dde-calendar { };
-      dde-clipboard = callPackage ./core/dde-clipboard { };
-      dde-file-manager = callPackage ./core/dde-file-manager { };
-      dde-launchpad = callPackage ./core/dde-launchpad { };
-      dde-network-core = callPackage ./core/dde-network-core { };
-      dde-session = callPackage ./core/dde-session { };
-      dde-session-shell = callPackage ./core/dde-session-shell { };
-      dde-session-ui = callPackage ./core/dde-session-ui { };
-      deepin-service-manager = callPackage ./core/deepin-service-manager { };
-      dde-polkit-agent = callPackage ./core/dde-polkit-agent { };
-      dpa-ext-gnomekeyring = callPackage ./core/dpa-ext-gnomekeyring { };
-      dde-gsettings-schemas = callPackage ./core/dde-gsettings-schemas { };
-      dde-widgets = callPackage ./core/dde-widgets { };
-      dde-shell = callPackage ./core/dde-shell { };
-      dde-grand-search = callPackage ./core/dde-grand-search { };
-      dde-tray-loader = callPackage ./core/dde-tray-loader { };
-      dde-api-proxy = callPackage ./core/dde-api-proxy { };
+      # deepin-kwin = callPackage ./core/deepin-kwin { };
+      # dde-appearance = callPackage ./core/dde-appearance { };
+      # dde-app-services = callPackage ./core/dde-app-services { };
+      # dde-application-manager = callPackage ./core/dde-application-manager { };
+      # dde-control-center = callPackage ./core/dde-control-center { };
+      # dde-calendar = callPackage ./core/dde-calendar { };
+      # dde-clipboard = callPackage ./core/dde-clipboard { };
+      # dde-file-manager = callPackage ./core/dde-file-manager { };
+      # dde-launchpad = callPackage ./core/dde-launchpad { };
+      # dde-network-core = callPackage ./core/dde-network-core { };
+      # dde-session = callPackage ./core/dde-session { };
+      # dde-session-shell = callPackage ./core/dde-session-shell { };
+      # dde-session-ui = callPackage ./core/dde-session-ui { };
+      # deepin-service-manager = callPackage ./core/deepin-service-manager { };
+      # dde-polkit-agent = callPackage ./core/dde-polkit-agent { };
+      # dpa-ext-gnomekeyring = callPackage ./core/dpa-ext-gnomekeyring { };
+      # dde-gsettings-schemas = callPackage ./core/dde-gsettings-schemas { };
+      # dde-widgets = callPackage ./core/dde-widgets { };
+      # dde-shell = callPackage ./core/dde-shell { };
+      # dde-grand-search = callPackage ./core/dde-grand-search { };
+      # dde-tray-loader = callPackage ./core/dde-tray-loader { };
+      # dde-api-proxy = callPackage ./core/dde-api-proxy { };
 
       #### Dtk Application
-      deepin-calculator = callPackage ./apps/deepin-calculator { };
-      deepin-compressor = callPackage ./apps/deepin-compressor { };
-      deepin-draw = callPackage ./apps/deepin-draw { };
-      deepin-editor = callPackage ./apps/deepin-editor { };
-      deepin-music = callPackage ./apps/deepin-music { };
-      deepin-picker = callPackage ./apps/deepin-picker { };
-      deepin-shortcut-viewer = callPackage ./apps/deepin-shortcut-viewer { };
-      deepin-system-monitor = callPackage ./apps/deepin-system-monitor { };
-      deepin-terminal = callPackage ./apps/deepin-terminal { };
-      deepin-reader = callPackage ./apps/deepin-reader { };
-      deepin-screensaver = callPackage ./apps/deepin-screensaver { };
+      # deepin-calculator = callPackage ./apps/deepin-calculator { };
+      # deepin-compressor = callPackage ./apps/deepin-compressor { };
+      # deepin-draw = callPackage ./apps/deepin-draw { };
+      # deepin-editor = callPackage ./apps/deepin-editor { };
+      # deepin-music = callPackage ./apps/deepin-music { };
+      # deepin-picker = callPackage ./apps/deepin-picker { };
+      # deepin-shortcut-viewer = callPackage ./apps/deepin-shortcut-viewer { };
+      # deepin-system-monitor = callPackage ./apps/deepin-system-monitor { };
+      # deepin-terminal = callPackage ./apps/deepin-terminal { };
+      # deepin-reader = callPackage ./apps/deepin-reader { };
+      # deepin-screensaver = callPackage ./apps/deepin-screensaver { };
 
       #### Go Packages
-      dde-api = callPackage ./go-package/dde-api { };
-      dde-daemon = callPackage ./go-package/dde-daemon { };
-      deepin-pw-check = callPackage ./go-package/deepin-pw-check { };
-      deepin-desktop-schemas = callPackage ./go-package/deepin-desktop-schemas { };
-      startdde = callPackage ./go-package/startdde { };
+      # dde-api = callPackage ./go-package/dde-api { };
+      # dde-daemon = callPackage ./go-package/dde-daemon { };
+      # deepin-pw-check = callPackage ./go-package/deepin-pw-check { };
+      # deepin-desktop-schemas = callPackage ./go-package/deepin-desktop-schemas { };
+      # startdde = callPackage ./go-package/startdde { };
 
       #### TOOLS
-      dde-device-formatter = callPackage ./tools/dde-device-formatter { };
-      deepin-gettext-tools = callPackage ./tools/deepin-gettext-tools { };
-      deepin-anything = callPackage ./tools/deepin-anything { };
+      # dde-device-formatter = callPackage ./tools/dde-device-formatter { };
+      # deepin-gettext-tools = callPackage ./tools/deepin-gettext-tools { };
+      # deepin-anything = callPackage ./tools/deepin-anything { };
 
       #### ARTWORK
-      dde-account-faces = callPackage ./artwork/dde-account-faces { };
-      deepin-icon-theme = callPackage ./artwork/deepin-icon-theme { };
-      deepin-wallpapers = callPackage ./artwork/deepin-wallpapers { };
-      deepin-gtk-theme = callPackage ./artwork/deepin-gtk-theme { };
-      deepin-sound-theme = callPackage ./artwork/deepin-sound-theme { };
-      deepin-desktop-theme = callPackage ./artwork/deepin-desktop-theme { };
+      # dde-account-faces = callPackage ./artwork/dde-account-faces { };
+      # deepin-icon-theme = callPackage ./artwork/deepin-icon-theme { };
+      # deepin-wallpapers = callPackage ./artwork/deepin-wallpapers { };
+      # deepin-gtk-theme = callPackage ./artwork/deepin-gtk-theme { };
+      # deepin-sound-theme = callPackage ./artwork/deepin-sound-theme { };
+      # deepin-desktop-theme = callPackage ./artwork/deepin-desktop-theme { };
 
       #### MISC
-      deepin-desktop-base = callPackage ./misc/deepin-desktop-base { };
+      # deepin-desktop-base = callPackage ./misc/deepin-desktop-base { };
     }
     // lib.optionalAttrs config.allowAliases {
       dde-kwin = throw "The 'deepin.dde-kwin' package was removed as it is outdated and no longer relevant."; # added 2023-09-27

@@ -2,6 +2,9 @@
 
 Move To https://github.com/NixOS/nixpkgs/pull/257400
 
+See [docs/development.md](docs/development.md) for the current Qt6 upgrade
+status, maintainers' notes, and gotchas.
+
 # dde-nixos
 
 This is an experimental flake for DDE (Deepin Desktop Environment) on NixOS.

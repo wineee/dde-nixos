@@ -10,5 +10,5 @@ index 83eecb7..da24ce8 100644
 +libdir=@LIBRARY_INSTALL_DIR@
 +includedir=@INCLUDE_INSTALL_DIR@
  
- Name: dtk@DTK_VERSION_MAJOR@core
- Description: Deepin Tool Kit dtkcore header files
+ Name: dtk@DTK_NAME_SUFFIX@core
+ Description: Development ToolKit Core Devel Library
