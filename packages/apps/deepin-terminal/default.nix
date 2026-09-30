@@ -4,46 +4,58 @@
   fetchFromGitHub,
   nixosTests,
   dtkwidget,
-  qt5integration,
-  qt5platform-plugins,
   cmake,
-  libsForQt5,
+  qt6Packages,
   pkg-config,
   libsecret,
-  chrpath,
   lxqt,
+  libuchardet,
+  libchardet,
+  glib,
+  icu,
+  xorg,
 }:
 
-stdenv.mkDerivation rec {
+stdenv.mkDerivation (finalAttrs: {
   pname = "deepin-terminal";
-  version = "6.0.17";
+  version = "6.5.40";
 
   src = fetchFromGitHub {
     owner = "linuxdeepin";
-    repo = pname;
-    rev = version;
-    hash = "sha256-T5tjjbNYUaiG9a5zMoKN6I0ec/WLftF2xwUPczlNwB8=";
+    repo = "deepin-terminal";
+    rev = finalAttrs.version;
+    hash = "sha256-F9FKgUuwbatqAjJbzKQ1SmmrxOlN5fSQXrOvMyONEYY=";
   };
 
-  cmakeFlags = [ "-DVERSION=${version}" ];
+  postPatch = ''
+    substituteInPlace CMakeLists.txt \
+      --replace-fail '/usr/share/deepin-manual/manual-assets/application/' 'share/deepin-manual/manual-assets/application/'
+    substituteInPlace 3rdparty/terminalwidget/CMakeLists.txt \
+      --replace-fail 'set(CMAKE_INSTALL_PREFIX "/usr")' '# nix: do not override install prefix'
+  '';
+
+  cmakeFlags = [ "-DVERSION=${finalAttrs.version}" ];
 
   nativeBuildInputs = [
     cmake
-    libsForQt5.qttools
+    qt6Packages.qttools
     pkg-config
-    libsForQt5.wrapQtAppsHook
-    lxqt.lxqt-build-tools_0_13
+    qt6Packages.wrapQtAppsHook
+    lxqt.lxqt-build-tools
   ];
 
   buildInputs = [
-    qt5integration
-    qt5platform-plugins
-    libsForQt5.qtbase
-    libsForQt5.qtsvg
+    qt6Packages.qtbase
+    qt6Packages.qtsvg
+    qt6Packages.qt5compat
     dtkwidget
-    libsForQt5.qtx11extras
     libsecret
-    chrpath
+    glib
+    icu
+    libuchardet
+    libchardet
+    xorg.xcbutilwm
+    xorg.libX11
   ];
 
   strictDeps = true;
@@ -58,4 +70,4 @@ stdenv.mkDerivation rec {
     platforms = lib.platforms.linux;
     teams = [ lib.teams.deepin ];
   };
-}
+})

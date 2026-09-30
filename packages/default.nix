@@ -65,7 +65,7 @@ let
       # deepin-picker = callPackage ./apps/deepin-picker { };
       # deepin-shortcut-viewer = callPackage ./apps/deepin-shortcut-viewer { };
       # deepin-system-monitor = callPackage ./apps/deepin-system-monitor { };
-      # deepin-terminal = callPackage ./apps/deepin-terminal { };
+      deepin-terminal = callPackage ./apps/deepin-terminal { };
       # deepin-reader = callPackage ./apps/deepin-reader { };
       # deepin-screensaver = callPackage ./apps/deepin-screensaver { };
 

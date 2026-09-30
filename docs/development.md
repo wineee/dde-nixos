@@ -24,6 +24,7 @@ be re-enabled one by one as it is upgraded.
 | qt6platform-plugins | 6.0.50 | Qt6 |                                      |
 | qt6integration | 6.0.50 | Qt6 | depends on dtkwidget                 |
 | treeland-protocols | 0.6.0 | n/a |                                      |
+| deepin-terminal | 6.5.40 | Qt6 | first app upgraded to Qt6           |
 
 ## Upgrade log
 
@@ -48,6 +49,10 @@ be re-enabled one by one as it is upgraded.
 - **qt6integration** `6.0.33` -> `6.0.50`. Qt 6.9 / missing-include patches are
   upstream in 6.0.50, so no fetchpatch needed.
 - **treeland-protocols** `0.4.5` -> `0.6.0`.
+- **deepin-terminal** `6.0.17` -> `6.5.40`. First app upgraded to Qt6 (Dtk6
+  Widget). Dropped qt5integration/qt5platform-plugins/chrpath deps; added
+  qt5compat, libchardet, libuchardet, glib, icu, xorg.xcbutilwm. Patched out two
+  hardcoded `/usr/...` install paths.
 
 ## Gotchas
 
@@ -100,6 +105,25 @@ postUnpack = ''
      ${finalAttrs.src.name}/xcb/libqt6xcbqpa-dev/${qt6Packages.qtbase.version}
 '';
 ```
+
+### deepin-terminal 6.5.40 hardcodes `/usr` install paths
+
+`deepin-terminal` installs the manual into
+`/usr/share/deepin-manual/manual-assets/application/`, and its vendored
+`3rdparty/terminalwidget/CMakeLists.txt` does `set(CMAKE_INSTALL_PREFIX "/usr")`,
+which breaks the nix install phase. Patch both in `postPatch`:
+
+```nix
+postPatch = ''
+  substituteInPlace CMakeLists.txt \
+    --replace-fail '/usr/share/deepin-manual/manual-assets/application/' 'share/deepin-manual/manual-assets/application/'
+  substituteInPlace 3rdparty/terminalwidget/CMakeLists.txt \
+    --replace-fail 'set(CMAKE_INSTALL_PREFIX "/usr")' '# nix: do not override install prefix'
+'';
+```
+
+Note: `''` cannot be used as an empty `--replace` target in an indented Nix
+string (it terminates the string); replace with a comment instead.
 
 ### `dtk*` 6.7.x build docs only for Qt5
 
