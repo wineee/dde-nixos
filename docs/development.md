@@ -21,6 +21,9 @@ be re-enabled one by one as it is upgraded.
 | dtkwidget        | 6.7.50  | Qt6  | was `dtkwidget` (Qt5) + `dtk6widget`   |
 | dtkdeclarative   | 6.7.50  | Qt6  | was `dtkdeclarative` (Qt5) + `dtk6declarative` |
 | dtksystemsettings| 6.6.22  | Qt6  | was `dtk6systemsettings`               |
+| qt6platform-plugins | 6.0.50 | Qt6 |                                      |
+| qt6integration | 6.0.50 | Qt6 | depends on dtkwidget                 |
+| treeland-protocols | 0.6.0 | n/a |                                      |
 
 ## Upgrade log
 
@@ -40,6 +43,11 @@ be re-enabled one by one as it is upgraded.
   `dtkdeclarative` and upgraded `6.0.33` -> `6.7.50`. `-DDTK5=OFF`.
 - **dtksystemsettings** `dtk6systemsettings` renamed `dtksystemsettings` and
   upgraded `6.0.2` -> `6.6.22` (repo `dtksystemsettings`). `-DDTK5=OFF`.
+- **qt6platform-plugins** `6.0.33` -> `6.0.50`. Built against the qtbase
+  private xcb headers (unpacked from `qt6Packages.qtbase.src`).
+- **qt6integration** `6.0.33` -> `6.0.50`. Qt 6.9 / missing-include patches are
+  upstream in 6.0.50, so no fetchpatch needed.
+- **treeland-protocols** `0.4.5` -> `0.6.0`.
 
 ## Gotchas
 
@@ -78,6 +86,19 @@ exists inside the `dtkcommon` store path. Patch it in `postPatch`:
 substituteInPlace src/kernel/kernel.cmake \
   --replace-fail '/usr/share/dsg/configs/org.deepin.dtk.preference.json' \
                  '${dtkcommon}/share/dsg/configs/org.deepin.dtk.preference.json'
+```
+
+### `finalAttrs` derivation cannot use bare `src` in postUnpack
+
+In `stdenv.mkDerivation (finalAttrs: { ... })`, the `postUnpack` (and other
+phases) must reference the source via `finalAttrs.src.name`, not `${src}`:
+
+```nix
+postUnpack = ''
+  tar -xf ${qt6Packages.qtbase.src}
+  mv qtbase-everywhere-src-${qt6Packages.qtbase.version}/src/plugins/platforms/xcb \
+     ${finalAttrs.src.name}/xcb/libqt6xcbqpa-dev/${qt6Packages.qtbase.version}
+'';
 ```
 
 ### `dtk*` 6.7.x build docs only for Qt5

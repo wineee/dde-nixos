@@ -19,6 +19,9 @@ let
       dtkdeclarative = callPackage ./library/dtkdeclarative { };
       dtksystemsettings = callPackage ./library/dtksystemsettings { };
       dtklog = callPackage ./library/dtklog { };
+      qt6platform-plugins = callPackage ./library/qt6platform-plugins { };
+      qt6integration = callPackage ./library/qt6integration { };
+      treeland-protocols = callPackage ./library/treeland-protocols { };
 
       # TODO: upgrade to Qt6 and re-enable
       # deepin-pdfium = callPackage ./library/deepin-pdfium { };
@@ -32,10 +35,7 @@ let
       # gio-qt = callPackage ./library/gio-qt { };
       # udisks2-qt5 = callPackage ./library/udisks2-qt5 { };
       # util-dfm = callPackage ./library/util-dfm { };
-      # qt6platform-plugins = callPackage ./library/qt6platform-plugins { };
-      # qt6integration = callPackage ./library/qt6integration { };
       # qt6mpris = callPackage ./library/qt6mpris { };
-      # treeland-protocols = callPackage ./library/treeland-protocols { };
 
       #### CORE
       # deepin-kwin = callPackage ./core/deepin-kwin { };

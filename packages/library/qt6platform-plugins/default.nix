@@ -10,20 +10,20 @@
   qt6Packages,
 }:
 
-stdenv.mkDerivation rec {
+stdenv.mkDerivation (finalAttrs: {
   pname = "qt6platform-plugins";
-  version = "6.0.33";
+  version = "6.0.50";
 
   src = fetchFromGitHub {
     owner = "linuxdeepin";
-    repo = pname;
-    rev = version;
-    hash = "sha256-uQ/dfk/HEvngTjHDLQOg965Jy+fH2YNfhKwXB+1BoUM=";
+    repo = "qt6platform-plugins";
+    rev = finalAttrs.version;
+    hash = "sha256-3Dgm/cVL22fDQAer9EqvRNJKlRwIT1Z62RPiJ7bhgPI=";
   };
 
   postUnpack = ''
     tar -xf ${qt6Packages.qtbase.src}
-    mv qtbase-everywhere-src-${qt6Packages.qtbase.version}/src/plugins/platforms/xcb ${src.name}/xcb/libqt6xcbqpa-dev/${qt6Packages.qtbase.version}
+    mv qtbase-everywhere-src-${qt6Packages.qtbase.version}/src/plugins/platforms/xcb ${finalAttrs.src.name}/xcb/libqt6xcbqpa-dev/${qt6Packages.qtbase.version}
   '';
 
   nativeBuildInputs = [
@@ -39,7 +39,7 @@ stdenv.mkDerivation rec {
   ];
 
   cmakeFlags = [
-    "-DDTK_VERSION=${version}"
+    "-DDTK_VERSION=${finalAttrs.version}"
     "-DINSTALL_PATH=${placeholder "out"}/${qt6Packages.qtbase.qtPluginPrefix}/platforms"
   ];
 
@@ -52,4 +52,4 @@ stdenv.mkDerivation rec {
     platforms = lib.platforms.linux;
     teams = [ lib.teams.deepin ];
   };
-}
+})
