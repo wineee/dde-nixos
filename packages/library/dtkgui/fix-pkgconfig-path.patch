@@ -1,7 +1,5 @@
-diff --git a/misc/dtkgui.pc.in b/misc/dtkgui.pc.in
-index 89fdbbf..ad817c4 100644
---- a/misc/dtkgui.pc.in
-+++ b/misc/dtkgui.pc.in
+--- a/misc/dtkgui.pc.in	2026-09-22 17:18:41.000000000 +0800
++++ b/misc/dtkgui.pc.in	2026-09-30 15:37:11.566278169 +0800
 @@ -1,8 +1,8 @@
  prefix=@CMAKE_INSTALL_PREFIX@
  exec_prefix=${prefix}
@@ -12,5 +10,5 @@ index 89fdbbf..ad817c4 100644
 +includedir=@INCLUDE_INSTALL_DIR@
 +tooldir=@PACKAGE_TOOL_INSTALL_DIR@
  
- Name: dtk@DTK_VERSION_MAJOR@gui
- Description: Deepin Tool Kit dtkgui header files
+ Name: dtk@DTK_NAME_SUFFIX@gui
+ Description: Development ToolKit Gui Devel Library

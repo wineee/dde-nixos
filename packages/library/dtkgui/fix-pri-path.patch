@@ -1,11 +1,9 @@
-diff --git a/misc/qt_lib_dtkgui.pri.in b/misc/qt_lib_dtkgui.pri.in
-index 28308ee..9fb25e6 100644
---- a/misc/qt_lib_dtkgui.pri.in
-+++ b/misc/qt_lib_dtkgui.pri.in
-@@ -4,9 +4,9 @@ QT.dtkgui.MINOR_VERSION = @PROJECT_VERSION_MINOR@
- QT.dtkgui.PATCH_VERSION = @PROJECT_VERSION_PATCH@
+--- a/misc/qt_lib_dtkgui.pri.in	2026-09-22 17:18:41.000000000 +0800
++++ b/misc/qt_lib_dtkgui.pri.in	2026-09-30 15:37:11.568166900 +0800
+@@ -4,9 +4,9 @@
+ QT.dtkgui.PATCH_VERSION = @DTK_VERSION_PATCH@
  QT.dtkgui.name = dtkgui
- QT.dtkgui.module = dtk@DTK_VERSION_MAJOR@gui
+ QT.dtkgui.module = dtk@DTK_NAME_SUFFIX@gui
 -QT.dtkgui.tools = @CMAKE_INSTALL_PREFIX@/@TOOL_INSTALL_DIR@
 -QT.dtkgui.libs = @CMAKE_INSTALL_PREFIX@/@LIBRARY_INSTALL_DIR@
 -QT.dtkgui.includes = @CMAKE_INSTALL_PREFIX@/@INCLUDE_INSTALL_DIR@

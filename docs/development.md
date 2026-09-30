@@ -12,11 +12,15 @@ be re-enabled one by one as it is upgraded.
 
 ## Maintained packages
 
-| Package    | Version | Qt   | Notes                          |
-|------------|---------|------|--------------------------------|
-| dtkcommon  | 6.7.50  | n/a  | provides `DtkBuildHelper.cmake` |
-| dtklog     | 6.7.50  | Qt6  | was `dtk6log`, now `dtklog`    |
-| dtkcore    | 6.7.50  | Qt6  | was `dtkcore` (Qt5) + `dtk6core` |
+| Package          | Version | Qt   | Notes                                  |
+|------------------|---------|------|----------------------------------------|
+| dtkcommon        | 6.7.50  | n/a  | provides `DtkBuildHelper.cmake`         |
+| dtklog           | 6.7.50  | Qt6  | was `dtk6log`, now `dtklog`            |
+| dtkcore          | 6.7.50  | Qt6  | was `dtkcore` (Qt5) + `dtk6core`       |
+| dtkgui           | 6.7.50  | Qt6  | was `dtkgui` (Qt5) + `dtk6gui`         |
+| dtkwidget        | 6.7.50  | Qt6  | was `dtkwidget` (Qt5) + `dtk6widget`   |
+| dtkdeclarative   | 6.7.50  | Qt6  | was `dtkdeclarative` (Qt5) + `dtk6declarative` |
+| dtksystemsettings| 6.6.22  | Qt6  | was `dtk6systemsettings`               |
 
 ## Upgrade log
 
@@ -28,6 +32,14 @@ be re-enabled one by one as it is upgraded.
 - **dtkcore** Qt5 `dtkcore` (5.6.32) removed; `dtk6core` deleted and `dtkcore`
   upgraded `5.6.32` -> `6.7.50`. Built with `-DDTK5=OFF` to produce
   `libdtk6core.so` + `Dtk6CoreConfig.cmake` / `Dtk6ToolsConfig.cmake`.
+- **dtkgui** Qt5 `dtkgui` removed; `dtk6gui` renamed `dtkgui` and upgraded
+  `6.0.33` -> `6.7.50`. `-DDTK5=OFF`.
+- **dtkwidget** Qt5 `dtkwidget` removed; `dtk6widget` renamed `dtkwidget` and
+  upgraded `6.0.33` -> `6.7.50`. `-DDTK5=OFF`.
+- **dtkdeclarative** Qt5 `dtkdeclarative` removed; `dtk6declarative` renamed
+  `dtkdeclarative` and upgraded `6.0.33` -> `6.7.50`. `-DDTK5=OFF`.
+- **dtksystemsettings** `dtk6systemsettings` renamed `dtksystemsettings` and
+  upgraded `6.0.2` -> `6.6.22` (repo `dtksystemsettings`). `-DDTK5=OFF`.
 
 ## Gotchas
 
@@ -56,12 +68,25 @@ The `fetchpatch` Qt 6.9 compatibility patches used by nixpkgs for the 6.0.x
 `dconfig2cpp` unicode cast) are already merged into the 6.7.50 tags. Do not
 carry them over when upgrading to 6.7.x.
 
-### `doc` output does not exist for Qt6 builds
+### dtkgui needs dtkcommon's dsg config JSON at configure time
 
-`dtkcore`'s CMake sets `BUILD_DOCS=OFF` for non-Qt5 builds, so nothing installs
-into the `doc` output and nix fails with
+`dtkgui`'s `src/kernel/kernel.cmake` hardcodes
+`/usr/share/dsg/configs/org.deepin.dtk.preference.json` on Linux, which only
+exists inside the `dtkcommon` store path. Patch it in `postPatch`:
+
+```nix
+substituteInPlace src/kernel/kernel.cmake \
+  --replace-fail '/usr/share/dsg/configs/org.deepin.dtk.preference.json' \
+                 '${dtkcommon}/share/dsg/configs/org.deepin.dtk.preference.json'
+```
+
+### `dtk*` 6.7.x build docs only for Qt5
+
+The 6.7.x `dtkgui`/`dtkcore` CMake force `BUILD_DOCS=OFF` when Qt6 is selected,
+so nothing installs into the `doc` output and nix fails with
 `failed to produce output path for output 'doc'`. Drop the `doc` output (or keep
-`-DBUILD_DOCS=ON` + `doxygen`).
+`-DBUILD_DOCS=ON` + `doxygen`) and pass `-DBUILD_DOCS=OFF` to keep the build
+clean.
 
 ### Path-fix patches changed context in 6.7.x
 

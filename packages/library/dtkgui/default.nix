@@ -2,24 +2,23 @@
   stdenv,
   lib,
   fetchFromGitHub,
-  pkg-config,
   cmake,
-  doxygen,
-  libsForQt5,
+  pkg-config,
+  qt6Packages,
+  dtkcommon,
   dtkcore,
-  lxqt,
   librsvg,
 }:
 
-stdenv.mkDerivation rec {
+stdenv.mkDerivation (finalAttrs: {
   pname = "dtkgui";
-  version = "5.6.32";
+  version = "6.7.50";
 
   src = fetchFromGitHub {
     owner = "linuxdeepin";
-    repo = pname;
-    rev = version;
-    hash = "sha256-F3tuLV1hWoUZle0O66MQ+Ew9LRnP6N++HaqS88xBLRY=";
+    repo = "dtkgui";
+    rev = finalAttrs.version;
+    hash = "sha256-McPspHK2F5rrO339LJrgw8XDuTGMFaJO9/QCpwPxrOU=";
   };
 
   patches = [
@@ -30,57 +29,56 @@ stdenv.mkDerivation rec {
   postPatch = ''
     substituteInPlace src/util/dsvgrenderer.cpp \
       --replace-fail 'QLibrary("rsvg-2", "2")' 'QLibrary("${lib.getLib librsvg}/lib/librsvg-2.so")'
+    substituteInPlace src/kernel/kernel.cmake \
+      --replace-fail '/usr/share/dsg/configs/org.deepin.dtk.preference.json' '${dtkcommon}/share/dsg/configs/org.deepin.dtk.preference.json'
   '';
 
   nativeBuildInputs = [
     cmake
-    doxygen
     pkg-config
-    libsForQt5.qttools
-    libsForQt5.wrapQtAppsHook
+    qt6Packages.qttools
+    qt6Packages.wrapQtAppsHook
   ];
 
   buildInputs = [
-    libsForQt5.qtbase
-    lxqt.libqtxdg
+    qt6Packages.qtbase
+    qt6Packages.qtwayland
     librsvg
   ];
 
   propagatedBuildInputs = [
     dtkcore
-    libsForQt5.qtimageformats
+    qt6Packages.qtimageformats
   ];
 
   cmakeFlags = [
-    "-DDTK_VERSION=${version}"
-    "-DBUILD_DOCS=ON"
+    "-DDTK5=OFF"
+    "-DBUILD_DOCS=OFF"
     "-DMKSPECS_INSTALL_DIR=${placeholder "out"}/mkspecs/modules"
-    "-DQCH_INSTALL_DESTINATION=${placeholder "doc"}/${libsForQt5.qtbase.qtDocPrefix}"
   ];
 
   preConfigure = ''
     # qt.qpa.plugin: Could not find the Qt platform plugin "minimal"
     # A workaround is to set QT_PLUGIN_PATH explicitly
-    export QT_PLUGIN_PATH=${libsForQt5.qtbase.bin}/${libsForQt5.qtbase.qtPluginPrefix}
+    export QT_PLUGIN_PATH=${lib.getBin qt6Packages.qtbase}/${qt6Packages.qtbase.qtPluginPrefix}
   '';
 
   outputs = [
     "out"
     "dev"
-    "doc"
   ];
 
   postFixup = ''
-    for binary in $out/libexec/dtk5/DGui/bin/*; do
+    for binary in $out/libexec/dtk6/DGui/bin/*; do
       wrapQtApp $binary
     done
   '';
 
-  meta = with lib; {
+  meta = {
     description = "Deepin Toolkit, gui module for DDE look and feel";
     homepage = "https://github.com/linuxdeepin/dtkgui";
-    license = licenses.lgpl3Plus;
-    platforms = platforms.linux;
-    teams = [ teams.deepin ];
+    license = lib.licenses.lgpl3Plus;
+    platforms = lib.platforms.linux;
+    teams = [ lib.teams.deepin ];
   };
-}
+})

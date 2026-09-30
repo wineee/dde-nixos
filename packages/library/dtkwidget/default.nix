@@ -4,24 +4,21 @@
   fetchFromGitHub,
   cmake,
   pkg-config,
-  doxygen,
-  libsForQt5,
+  qt6Packages,
   dtkgui,
   cups,
-  gsettings-qt,
   libstartup_notification,
-  xorg,
 }:
 
-stdenv.mkDerivation rec {
+stdenv.mkDerivation (finalAttrs: {
   pname = "dtkwidget";
-  version = "5.6.31";
+  version = "6.7.50";
 
   src = fetchFromGitHub {
     owner = "linuxdeepin";
-    repo = pname;
-    rev = version;
-    hash = "sha256-FAF66FsmUX0dhFlbT5wAUWkxY0TOU6dcKNwlY10Qou0=";
+    repo = "dtkwidget";
+    rev = finalAttrs.version;
+    hash = "sha256-TsBRuDaylxEAFDHDKmXqJyizQRBpErBh7FSH33l6h7Q=";
   };
 
   patches = [
@@ -31,61 +28,57 @@ stdenv.mkDerivation rec {
 
   postPatch = ''
     substituteInPlace src/widgets/dapplication.cpp \
-      --replace "auto dataDirs = DStandardPaths::standardLocations(QStandardPaths::GenericDataLocation);" \
+      --replace-fail "auto dataDirs = DStandardPaths::standardLocations(QStandardPaths::GenericDataLocation);" \
                 "auto dataDirs = DStandardPaths::standardLocations(QStandardPaths::GenericDataLocation) << \"$out/share\";"
   '';
 
   nativeBuildInputs = [
     cmake
-    doxygen
     pkg-config
-    libsForQt5.qttools
-    libsForQt5.wrapQtAppsHook
+    qt6Packages.qttools
+    qt6Packages.wrapQtAppsHook
   ];
 
   buildInputs = [
-    libsForQt5.qtbase
-    libsForQt5.qtmultimedia
-    libsForQt5.qtsvg
-    libsForQt5.qtx11extras
     cups
-    gsettings-qt
     libstartup_notification
-    xorg.libXdmcp
-  ];
+  ]
+  ++ (with qt6Packages; [
+    qtbase
+    qtmultimedia
+    qtsvg
+  ]);
 
   propagatedBuildInputs = [ dtkgui ];
 
   cmakeFlags = [
-    "-DDTK_VERSION=${version}"
-    "-DBUILD_DOCS=ON"
+    "-DDTK5=OFF"
+    "-DBUILD_DOCS=OFF"
     "-DMKSPECS_INSTALL_DIR=${placeholder "dev"}/mkspecs/modules"
-    "-DQCH_INSTALL_DESTINATION=${placeholder "doc"}/${libsForQt5.qtbase.qtDocPrefix}"
   ];
 
   preConfigure = ''
     # qt.qpa.plugin: Could not find the Qt platform plugin "minimal"
     # A workaround is to set QT_PLUGIN_PATH explicitly
-    export QT_PLUGIN_PATH=${libsForQt5.qtbase.bin}/${libsForQt5.qtbase.qtPluginPrefix}
+    export QT_PLUGIN_PATH=${lib.getBin qt6Packages.qtbase}/${qt6Packages.qtbase.qtPluginPrefix}
   '';
 
   outputs = [
     "out"
     "dev"
-    "doc"
   ];
 
   postFixup = ''
-    for binary in $out/lib/dtk5/DWidget/bin/*; do
-        wrapQtApp $binary
+    for binary in $out/lib/dtk6/DWidget/bin/*; do
+      wrapQtApp $binary
     done
   '';
 
-  meta = with lib; {
+  meta = {
     description = "Deepin graphical user interface library";
     homepage = "https://github.com/linuxdeepin/dtkwidget";
-    license = licenses.lgpl3Plus;
-    platforms = platforms.linux;
-    teams = [ teams.deepin ];
+    license = lib.licenses.lgpl3Plus;
+    platforms = lib.platforms.linux;
+    teams = [ lib.teams.deepin ];
   };
-}
+})

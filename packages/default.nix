@@ -14,12 +14,13 @@ let
       # Upgraded and maintained (Qt6):
       dtkcommon = callPackage ./library/dtkcommon { };
       dtkcore = callPackage ./library/dtkcore { };
+      dtkgui = callPackage ./library/dtkgui { };
+      dtkwidget = callPackage ./library/dtkwidget { };
+      dtkdeclarative = callPackage ./library/dtkdeclarative { };
+      dtksystemsettings = callPackage ./library/dtksystemsettings { };
       dtklog = callPackage ./library/dtklog { };
 
       # TODO: upgrade to Qt6 and re-enable
-      # dtkgui = callPackage ./library/dtkgui { };
-      # dtkwidget = callPackage ./library/dtkwidget { };
-      # dtkdeclarative = callPackage ./library/dtkdeclarative { };
       # deepin-pdfium = callPackage ./library/deepin-pdfium { };
       # qt5platform-plugins = callPackage ./library/qt5platform-plugins { };
       # qt5integration = callPackage ./library/qt5integration { };
@@ -31,10 +32,6 @@ let
       # gio-qt = callPackage ./library/gio-qt { };
       # udisks2-qt5 = callPackage ./library/udisks2-qt5 { };
       # util-dfm = callPackage ./library/util-dfm { };
-      # dtk6gui = callPackage ./library/dtk6gui { };
-      # dtk6widget = callPackage ./library/dtk6widget { };
-      # dtk6declarative = callPackage ./library/dtk6declarative { };
-      # dtk6systemsettings = callPackage ./library/dtk6systemsettings { };
       # qt6platform-plugins = callPackage ./library/qt6platform-plugins { };
       # qt6integration = callPackage ./library/qt6integration { };
       # qt6mpris = callPackage ./library/qt6mpris { };

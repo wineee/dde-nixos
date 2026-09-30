@@ -4,27 +4,25 @@
   fetchFromGitHub,
   cmake,
   pkg-config,
-  doxygen,
   qt6Packages,
   dtkcore,
   libxcrypt,
 }:
 
-stdenv.mkDerivation rec {
-  pname = "dtk6systemsettings";
-  version = "6.0.2";
+stdenv.mkDerivation (finalAttrs: {
+  pname = "dtksystemsettings";
+  version = "6.6.22";
 
   src = fetchFromGitHub {
     owner = "linuxdeepin";
-    repo = pname;
-    rev = version;
-    hash = "sha256-b/iI2OKQQoFj3vWatfGdDP9z+SEsK5XBra9KqjlGzqs=";
+    repo = "dtksystemsettings";
+    rev = finalAttrs.version;
+    hash = "sha256-bGTWGFV6MUfvbY2Rppyd2nI69M+vQyES+cNciBc9XJI=";
   };
 
   nativeBuildInputs = [
     cmake
     pkg-config
-    doxygen
     qt6Packages.qttools
   ];
 
@@ -37,10 +35,9 @@ stdenv.mkDerivation rec {
   ];
 
   cmakeFlags = [
-    "-DDTK_VERSION=${version}"
-    "-DBUILD_DOCS=ON"
+    "-DDTK5=OFF"
+    "-DBUILD_DOCS=OFF"
     "-DBUILD_EXAMPLES=OFF"
-    "-DQCH_INSTALL_DESTINATION=${placeholder "doc"}/share/doc"
     "-DMKSPECS_INSTALL_DIR=${placeholder "out"}/mkspecs/modules"
     "-DDTK_INCLUDE_INSTALL_DIR=${placeholder "dev"}/include/dtk/DSystemSettings"
   ];
@@ -54,14 +51,13 @@ stdenv.mkDerivation rec {
   outputs = [
     "out"
     "dev"
-    "doc"
   ];
 
   meta = {
     description = "Qt-based development library for system settings";
-    homepage = "https://github.com/linuxdeepin/dtk6systemsettings";
+    homepage = "https://github.com/linuxdeepin/dtksystemsettings";
     license = lib.licenses.lgpl3Plus;
     platforms = lib.platforms.linux;
     teams = [ lib.teams.deepin ];
   };
-}
+})

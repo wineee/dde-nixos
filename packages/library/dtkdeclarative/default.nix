@@ -4,20 +4,19 @@
   fetchFromGitHub,
   cmake,
   pkg-config,
-  doxygen,
-  libsForQt5,
+  qt6Packages,
   dtkgui,
 }:
 
-stdenv.mkDerivation rec {
+stdenv.mkDerivation (finalAttrs: {
   pname = "dtkdeclarative";
-  version = "5.6.32";
+  version = "6.7.50";
 
   src = fetchFromGitHub {
     owner = "linuxdeepin";
-    repo = pname;
-    rev = version;
-    hash = "sha256-MOiNpuvYwJi9rNKx6TuUuWnlGhmZrRbL48EFapy442M=";
+    repo = "dtkdeclarative";
+    rev = finalAttrs.version;
+    hash = "sha256-x62jzHrEcIFeMettwpCp6xdE9m2OsLJjwT8l53+B4gM=";
   };
 
   patches = [
@@ -28,46 +27,46 @@ stdenv.mkDerivation rec {
   nativeBuildInputs = [
     cmake
     pkg-config
-    doxygen
-    libsForQt5.qttools
-    libsForQt5.wrapQtAppsHook
+    qt6Packages.qttools
+    qt6Packages.wrapQtAppsHook
   ];
 
   propagatedBuildInputs = [
     dtkgui
-    libsForQt5.qtdeclarative
-    libsForQt5.qtquickcontrols2
-    libsForQt5.qtgraphicaleffects
-  ];
+  ]
+  ++ (with qt6Packages; [
+    qtbase
+    qtdeclarative
+    qtshadertools
+    qt5compat
+  ]);
 
   cmakeFlags = [
-    "-DDTK_VERSION=${version}"
-    "-DBUILD_DOCS=ON"
-    "-DBUILD_EXAMPLES=ON"
+    "-DDTK5=OFF"
+    "-DBUILD_DOCS=OFF"
+    "-DBUILD_EXAMPLES=OFF"
     "-DMKSPECS_INSTALL_DIR=${placeholder "dev"}/mkspecs/modules"
-    "-DQCH_INSTALL_DESTINATION=${placeholder "doc"}/${libsForQt5.qtbase.qtDocPrefix}"
-    "-DQML_INSTALL_DIR=${placeholder "out"}/${libsForQt5.qtbase.qtQmlPrefix}"
+    "-DQML_INSTALL_DIR=${placeholder "out"}/${qt6Packages.qtbase.qtQmlPrefix}"
   ];
 
   preConfigure = ''
     # qt.qpa.plugin: Could not find the Qt platform plugin "minimal"
     # A workaround is to set QT_PLUGIN_PATH explicitly
-    export QT_PLUGIN_PATH=${libsForQt5.qtbase.bin}/${libsForQt5.qtbase.qtPluginPrefix}
-    export QML2_IMPORT_PATH=${libsForQt5.qtdeclarative.bin}/${libsForQt5.qtbase.qtQmlPrefix}
+    export QT_PLUGIN_PATH=${lib.getBin qt6Packages.qtbase}/${qt6Packages.qtbase.qtPluginPrefix}
+    export QML2_IMPORT_PATH=${lib.getBin qt6Packages.qtdeclarative}/${qt6Packages.qtbase.qtQmlPrefix}
   '';
 
   outputs = [
     "out"
     "dev"
-    "doc"
   ];
 
-  meta = with lib; {
+  meta = {
     description = "Widget development toolkit based on QtQuick/QtQml";
     mainProgram = "dtk-exhibition";
     homepage = "https://github.com/linuxdeepin/dtkdeclarative";
-    license = licenses.lgpl3Plus;
-    platforms = platforms.linux;
-    teams = [ teams.deepin ];
+    license = lib.licenses.lgpl3Plus;
+    platforms = lib.platforms.linux;
+    teams = [ lib.teams.deepin ];
   };
-}
+})
