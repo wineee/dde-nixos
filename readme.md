@@ -93,12 +93,6 @@ git checkout 5.7.16
 cmake --build build
 ```
 
-## Garnix cache
-
-Thanks [Garnix](https://garnix.io/) for providing CI and binary cache.
-
-For faster build and test with garnix cache, add `https://cache.garnix.io` to [substituters](https://search.nixos.org/options?channel=unstable&show=nix.settings.substituters&from=0&size=50&sort=relevance&type=packages), and `cache.garnix.io:CTFPyKSLcx5RMJKfLo5EEPUObbA78b0YQ2DTCJXqr9g=` to [trusted-public-keys](https://search.nixos.org/options?channel=unstable&show=nix.settings.trusted-public-keys&from=0&size=50&sort=relevance&type=packages).
-
 ## Project using dde-nixos
 
 - [nixos-dde-iso](https://github.com/SamLukeYes/nixos-dde-iso) NixOS live image with DDE [maintainer=@SamLukeYes]
