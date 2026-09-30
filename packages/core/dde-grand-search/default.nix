@@ -53,8 +53,7 @@ stdenv.mkDerivation rec {
   ];
 
   patches = [
-    # This patch revert the commit e6735e7
-    # FIXME: why StartManager can't work, is dde-api-proxy still required?
+    # This patch reverts the commit e6735e7
     ./fix-dbus-path-for-daemon.diff
   ];
 

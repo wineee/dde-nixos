@@ -55,7 +55,6 @@ let
       # dde-shell = callPackage ./core/dde-shell { };
       # dde-grand-search = callPackage ./core/dde-grand-search { };
       # dde-tray-loader = callPackage ./core/dde-tray-loader { };
-      # dde-api-proxy = callPackage ./core/dde-api-proxy { };
       deepin-desktop-base = callPackage ./core/deepin-desktop-base { };
 
       #### Dtk Application
