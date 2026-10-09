@@ -30,8 +30,6 @@ let
       qt6mpris = callPackage ./library/qt6mpris { };
 
       # TODO: upgrade to Qt6 and re-enable
-      # dde-qt-dbus-factory = callPackage ./library/dde-qt-dbus-factory { };
-      # disomaster = callPackage ./library/disomaster { };
       # util-dfm = callPackage ./library/util-dfm { };
 
       #### CORE
@@ -49,7 +47,6 @@ let
       # dde-session-ui = callPackage ./core/dde-session-ui { };
       # deepin-service-manager = callPackage ./core/deepin-service-manager { };
       # dde-polkit-agent = callPackage ./core/dde-polkit-agent { };
-      # dpa-ext-gnomekeyring = callPackage ./core/dpa-ext-gnomekeyring { };
       # dde-gsettings-schemas = callPackage ./core/dde-gsettings-schemas { };
       # dde-widgets = callPackage ./core/dde-widgets { };
       # dde-shell = callPackage ./core/dde-shell { };
@@ -59,16 +56,16 @@ let
 
       #### Dtk Application
       deepin-calculator = callPackage ./apps/deepin-calculator { };
-      # deepin-compressor = callPackage ./apps/deepin-compressor { };
-      # deepin-draw = callPackage ./apps/deepin-draw { };
-      # deepin-editor = callPackage ./apps/deepin-editor { };
-      # deepin-music = callPackage ./apps/deepin-music { };
-      # deepin-picker = callPackage ./apps/deepin-picker { };
-      # deepin-shortcut-viewer = callPackage ./apps/deepin-shortcut-viewer { };
+      deepin-compressor = callPackage ./apps/deepin-compressor { };
+      deepin-draw = callPackage ./apps/deepin-draw { };
+      deepin-editor = callPackage ./apps/deepin-editor { };
+      deepin-music = callPackage ./apps/deepin-music { };
+      deepin-picker = callPackage ./apps/deepin-picker { };
+      deepin-shortcut-viewer = callPackage ./apps/deepin-shortcut-viewer { };
       # deepin-system-monitor = callPackage ./apps/deepin-system-monitor { };
       deepin-terminal = callPackage ./apps/deepin-terminal { };
       # deepin-reader = callPackage ./apps/deepin-reader { };
-      # deepin-screensaver = callPackage ./apps/deepin-screensaver { };
+      deepin-screensaver = callPackage ./apps/deepin-screensaver { };
 
       #### Go Packages
       # dde-api = callPackage ./go-package/dde-api { };
@@ -91,6 +88,9 @@ let
       deepin-desktop-theme = callPackage ./artwork/deepin-desktop-theme { };
     }
     // lib.optionalAttrs config.allowAliases {
+      dpa-ext-gnomekeyring = throw "The 'deepin.dpa-ext-gnomekeyring' package was removed as it is abandoned upstream."; # added 2026-10-09
+      dde-qt-dbus-factory = throw "The 'deepin.dde-qt-dbus-factory' package was removed as it is abandoned upstream. Use go-dbus-factory (Go) or dtkcore (Qt6) instead."; # added 2026-10-09
+      disomaster = throw "The 'deepin.disomaster' package was removed as it is abandoned upstream."; # added 2026-10-09
       dde-kwin = throw "The 'deepin.dde-kwin' package was removed as it is outdated and no longer relevant. Treeland is the future compositor."; # added 2023-09-27
       dde-launcher = throw "The 'deepin.dde-launcher' is no longer maintained. Please use 'deepin.dde-launchpad' instead."; # added 2023-11-23
       dde-dock = throw "The 'deepin.dde-dock' is no longer maintained. Please use 'deepin.dde-tray-loader' instead."; # added 2024-08-28

@@ -46,9 +46,9 @@
   sound-theme / desktop-theme。
 - ✅ `deepin-desktop-base`（2026.09.04，已移到 core/ 并 NixOS 品牌化）。
 - ❌ 已删除：`qt5platform-plugins`、`qt5integration`、`deepin-wayland-protocols`、
-  `dwayland`、`deepin-kwin`、`udisks2-qt5`、`dde-api-proxy`。
-- ⏳ 阻塞项：`dde-qt-dbus-factory`（qmake + `load(dtk_qmake)`）、`disomaster`
-  （qmake）、`util-dfm`（依赖 `Dtk6::Core` 命名 + lucenepp/boost 链）。
+  `dwayland`、`deepin-kwin`、`udisks2-qt5`、`dde-api-proxy`、
+  `dde-qt-dbus-factory`、`disomaster`、`dpa-ext-gnomekeyring`（后三个已加 alias throw）。
+- ⏳ 阻塞项：`util-dfm`（依赖 `Dtk6::Core` 命名 + lucenepp/boost 链）。
 
 详见 `docs/development.md` 的「Maintained packages」表与「Not yet upgraded
 (recorded blockers)」清单。
@@ -133,8 +133,7 @@ type 常用：`feat`/`fix`/`refactor`/`remove`/`chore`；scope 用包名或目�
 
 ## 8. 待办 / 下一步
 
-1. 处理剩余 blocker：`dde-qt-dbus-factory`（等 qmake→cmake 或补 mkspec）、
-   `disomaster`（换 `qt6Packages.qmake` 试）、`util-dfm`（Dtk6 命名问题）。
+1. 处理剩余 blocker：`util-dfm`（Dtk6 命名问题）。
 2. 逐步升级 `packages/core/` 与 `packages/apps/` 里引用已删组件（dwayland、
    qt5platform-plugins 等）的注释包。
 3. 未来窗管：treeland（当前已删 deepin-kwin/dwayland/deepin-wayland-protocols）。

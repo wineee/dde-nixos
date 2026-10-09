@@ -40,6 +40,10 @@ be re-enabled one by one as it is upgraded.
 | deepin-pw-check | 6.0.12 | n/a | full build (Go service + C lib + PAM) |
 | deepin-terminal | 6.5.40 | Qt6 | first app upgraded to Qt6           |
 | deepin-calculator | 6.5.40 | Qt6 | upgraded to Qt6 (Dtk6 Widget)       |
+| deepin-compressor | 6.5.34 | Qt6 | Qt6 (Dtk6 + KF6); pzip + plugins   |
+| deepin-draw | 6.5.43 | Qt6 | Qt6 (Dtk6 Widget)                   |
+| deepin-shortcut-viewer | 5.5.6 | Qt6 | Qt6 (Dtk6 Widget); was qmake/Qt5  |
+| deepin-editor | 6.7.0 | Qt6 | Qt6 (Dtk6 + KF6 + QtWebEngine)    |
 
 ## Upgrade log
 
@@ -73,6 +77,29 @@ be re-enabled one by one as it is upgraded.
   forwarder; the `DFrameworkDBus_LIBRARIES` variables are unset in our DTK
   6.7.50 build but upstream no longer uses them. `strictDeps = false` retained
   so `qtsvg` is found (same as the Qt5-era definition).
+- **deepin-compressor** `6.0.1` -> `6.5.34`. Upgraded to Qt6 (Dtk6 Widget + KF6
+  `kcodecs`/`karchive`). Dropped Qt5 (`libsForQt5.kcodecs`/`karchive`) and
+  `udisks2-qt5` (no longer used upstream). Added `qt5compat` (Core5Compat),
+  `glib` (gio/gobject via pkg-config), `util-linux` (`mount`). Patched the
+  bundled `cmake/translation-generate.cmake` fallback to use the `Qt6::lrelease`
+  imported target (was hardcoded `/lib/qt6/bin/lrelease`), stripped `-pie` from
+  the global `CMAKE_CXX_FLAGS`, and fixed `/usr` paths in
+  `pluginmanager.cpp`/`.desktop`/`.service`/`clipzipplugin.cpp`.
+- **deepin-draw** `7.0.2` -> `6.5.43`. Upgraded to Qt6 (Dtk6 Widget). The
+  upstream tag scheme reset from `7.0.2` back to `6.5.x` (the 6.5.43 tag is the
+  current head). Patched the `com.deepin.Draw.service` `/usr/bin/deepin-draw`
+  exec path.
+- **deepin-shortcut-viewer** `5.0.9` -> `5.5.6`. Switched from qmake/Qt5 to
+  cmake/Qt6 (Dtk6 Core+Widget). Dropped `libsForQt5.qmake`/`qttools`; added
+  `qt6Packages.qttools` and cmake. Patched
+  `install(TARGETS ... DESTINATION ''${CMAKE_INSTALL_PREFIX}/bin)` (was
+  installing into `$out/$out/bin`).
+- **deepin-editor** `6.5.15` -> `6.7.0`. Upgraded to Qt6 (Dtk6 Widget + KF6
+  `kcodecs`/`syntax-highlighting` + QtWebEngine). Dropped `dde-qt-dbus-factory`
+  (dframeworkdbus only referenced in the legacy `.pro`), Qt5 `kcodecs`/
+  `syntax-highlighting`. Added `qtwebengine`/`qtwebchannel`/`qt5compat`; set
+  `-DBUILD_TESTS=OFF` (tests need Catch2/gtest + daemon-only fixtures). Patched
+  the hardcoded `/usr/share/deepin-editor/themes/deepin.theme` default.
 - **deepin-pdfium** `1.0.2` -> `1.5.8`. Switched from qmake/Qt5 to cmake/Qt6.
   Added zlib/libpng/libjpeg/icu/openjpeg/lcms2/freetype/libchardet; dropped
   Qt5. Fixes `.pc` double-prefix in postInstall.
@@ -123,14 +150,6 @@ be re-enabled one by one as it is upgraded.
 These were investigated and deliberately left commented out in
 `packages/default.nix`. Revisit when their blockers are resolved.
 
-- **dde-qt-dbus-factory** `6.0.1`: still qmake. Its `libdframeworkdbus.pro`
-  does `load(dtk_qmake)` and `load(dtk_translation)`, but our dtkcore 6.7.50
-  (Qt6 build) installs no `mkspecs/features`/`mkspecs/modules` (no `dtk_qmake`
-  .prf/.pri). Needs either a Qt6-era qmake feature package or a cmake upstream
-  migration. Reference (`nixos-unstable-dde-25-flake`) does not package it.
-- **disomaster** `5.0.8`: still qmake (`libisoburn-1` only dep, no dtk). Should
-  build with `qt6Packages.qmake` but untested; low priority (only used by
-  dde-file-manager burn backend via util-dfm).
 - **util-dfm** `1.4.5`: cmake/Qt6 available (`OPT_ENABLE_QT6=ON`), but pulls a
   wide dep chain — `Dtk6::Core` (dtkcore), `lucenepp` (needs boost),
   libmediainfo/libisoburn/libsecret/udisks2/libmount/glib. Reference uses
@@ -138,6 +157,15 @@ These were investigated and deliberately left commented out in
   also ship the `dtk6*`-suffixed alias set, since util-dfm's
   `find_package(Dtk${DFM_VERSION_MAJOR} ...)` expects `Dtk6Core` while our
   scope only exposes `dtkcore`. Defer until dde-file-manager is unblocked.
+
+## Removed (abandoned upstream)
+
+- **dde-qt-dbus-factory** `6.0.1`: abandoned upstream (superseded by
+  go-dbus-factory / dtkcore DBus). Removed with an alias throw.
+- **disomaster** `5.0.8`: abandoned upstream. Removed with an alias throw.
+- **dpa-ext-gnomekeyring** `1.0.1`: abandoned upstream. Removed with an alias
+  throw, and dropped from the NixOS module (`DDE_POLKIT_AGENT_PLUGINS_DIRS`
+  session var and `requiredPackages`).
 
 ## Gotchas
 
