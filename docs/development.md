@@ -39,6 +39,7 @@ be re-enabled one by one as it is upgraded.
 | deepin-desktop-base | 2026.09.04 | n/a | moved to core; NixOS-branded |
 | deepin-gettext-tools | 1.0.11 | n/a | was already latest; re-enabled |
 | deepin-pw-check | 6.0.12 | n/a | full build (Go service + C lib + PAM) |
+| dde-device-formatter | 1.5.11 | Qt6 | was qmake/Qt5; now cmake/Qt6 |
 | deepin-terminal | 6.5.40 | Qt6 | first app upgraded to Qt6           |
 | deepin-calculator | 6.5.40 | Qt6 | upgraded to Qt6 (Dtk6 Widget)       |
 | deepin-compressor | 6.5.34 | Qt6 | Qt6 (Dtk6 + KF6); pzip + plugins   |
@@ -145,6 +146,12 @@ be re-enabled one by one as it is upgraded.
   `substituteInPlace` on the dbus service file (its `Exec=/bin/false` is
   intentional, no `/usr` path to patch), and the rpm cracklib patch still
   applies cleanly in 6.0.12.
+- **dde-device-formatter** `0.0.1.16` -> `1.5.11`. Switched from qmake/Qt5 to
+  cmake/Qt6 (Dtk6 Widget+Gui). Upstream now uses `qt_add_translations` (no
+  more `deepin-gettext-tools` translate scripts). Added `udisks2-qt6` (the
+  `udisks2-qt6.pc` satisfies `pkg_check_modules(udisks2-qt6)`). Patched
+  `set(QT_COMPONENTS ...)` to add `GuiPrivate` (linked but not declared in
+  `find_package`).
 - **util-dfm** `1.3.2` -> `1.4.5`. cmake/Qt6 (`OPT_ENABLE_QT6=ON` is default).
   Builds `libdfm6-io`/`-mount`/`-burn`/`-search` + headers/pkgconfig/cmake
   config. Note: our `dtkcore` 6.7.50 dev output ships `Dtk6CoreConfig.cmake`

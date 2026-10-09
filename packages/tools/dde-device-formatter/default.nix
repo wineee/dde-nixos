@@ -2,51 +2,52 @@
   stdenv,
   lib,
   fetchFromGitHub,
+  cmake,
   pkg-config,
-  deepin-gettext-tools,
-  libsForQt5,
+  qt6Packages,
   dtkwidget,
-  udisks2-qt5,
-  qt5platform-plugins,
-  qt5integration,
+  dtkgui,
+  udisks2-qt6,
+  xorg,
 }:
 
-stdenv.mkDerivation rec {
+stdenv.mkDerivation (finalAttrs: {
   pname = "dde-device-formatter";
-  version = "0.0.1.16";
+  version = "1.5.11";
 
   src = fetchFromGitHub {
     owner = "linuxdeepin";
-    repo = pname;
-    rev = version;
-    hash = "sha256-l2D+j+u5Q6G45KTM7eg1QNEakEPtEJ0tzlDlQO5/08I=";
+    repo = "dde-device-formatter";
+    rev = finalAttrs.version;
+    hash = "sha256-N2teUYKtwKsj58eFXAtHfw4kqR4+x/Dbdbx0FSvx2Vs=";
   };
 
   postPatch = ''
-    substituteInPlace translate_desktop2ts.sh translate_ts2desktop.sh \
-      --replace "/usr/bin/deepin-desktop-ts-convert" "deepin-desktop-ts-convert"
-    substituteInPlace dde-device-formatter.pro dde-device-formatter.desktop \
-      --replace "/usr" "$out"
-    patchShebangs *.sh
+    substituteInPlace dde-device-formatter.desktop \
+      --replace-fail "/usr/bin/dde-device-formatter" "$out/bin/dde-device-formatter"
+
+    # Qt6::GuiPrivate is linked but not listed in find_package COMPONENTS.
+    substituteInPlace CMakeLists.txt \
+      --replace-fail 'set(QT_COMPONENTS Core Gui Widgets Concurrent Network DBus LinguistTools)' \
+                     'set(QT_COMPONENTS Core Gui Widgets Concurrent Network DBus LinguistTools GuiPrivate)'
   '';
 
   nativeBuildInputs = [
-    libsForQt5.qmake
-    libsForQt5.qttools
-    libsForQt5.wrapQtAppsHook
+    cmake
     pkg-config
-    deepin-gettext-tools
+    qt6Packages.qttools
+    qt6Packages.wrapQtAppsHook
   ];
 
   buildInputs = [
     dtkwidget
-    udisks2-qt5
-    qt5platform-plugins
-    qt5integration
-    libsForQt5.qtx11extras
+    dtkgui
+    udisks2-qt6
+    qt6Packages.qtbase
+    xorg.libX11
   ];
 
-  cmakeFlags = [ "-DVERSION=${version}" ];
+  cmakeFlags = [ "-DVERSION=${finalAttrs.version}" ];
 
   meta = {
     description = "Simple graphical interface for creating file system in a block device";
@@ -56,4 +57,4 @@ stdenv.mkDerivation rec {
     platforms = lib.platforms.linux;
     teams = [ lib.teams.deepin ];
   };
-}
+})

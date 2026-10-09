@@ -64,7 +64,7 @@ let
       deepin-shortcut-viewer = callPackage ./apps/deepin-shortcut-viewer { };
       # deepin-system-monitor = callPackage ./apps/deepin-system-monitor { };
       deepin-terminal = callPackage ./apps/deepin-terminal { };
-      # deepin-reader = callPackage ./apps/deepin-reader { };
+      deepin-reader = callPackage ./apps/deepin-reader { };
       deepin-screensaver = callPackage ./apps/deepin-screensaver { };
 
       #### Go Packages
@@ -75,7 +75,7 @@ let
       # startdde = callPackage ./go-package/startdde { };
 
       #### TOOLS
-      # dde-device-formatter = callPackage ./tools/dde-device-formatter { };
+      dde-device-formatter = callPackage ./tools/dde-device-formatter { };
       deepin-gettext-tools = callPackage ./tools/deepin-gettext-tools { };
       # deepin-anything = callPackage ./tools/deepin-anything { };
 
