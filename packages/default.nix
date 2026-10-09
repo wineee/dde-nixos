@@ -58,7 +58,7 @@ let
       deepin-desktop-base = callPackage ./core/deepin-desktop-base { };
 
       #### Dtk Application
-      # deepin-calculator = callPackage ./apps/deepin-calculator { };
+      deepin-calculator = callPackage ./apps/deepin-calculator { };
       # deepin-compressor = callPackage ./apps/deepin-compressor { };
       # deepin-draw = callPackage ./apps/deepin-draw { };
       # deepin-editor = callPackage ./apps/deepin-editor { };
@@ -73,13 +73,13 @@ let
       #### Go Packages
       # dde-api = callPackage ./go-package/dde-api { };
       # dde-daemon = callPackage ./go-package/dde-daemon { };
-      # deepin-pw-check = callPackage ./go-package/deepin-pw-check { };
+      deepin-pw-check = callPackage ./go-package/deepin-pw-check { };
       # deepin-desktop-schemas = callPackage ./go-package/deepin-desktop-schemas { };
       # startdde = callPackage ./go-package/startdde { };
 
       #### TOOLS
       # dde-device-formatter = callPackage ./tools/dde-device-formatter { };
-      # deepin-gettext-tools = callPackage ./tools/deepin-gettext-tools { };
+      deepin-gettext-tools = callPackage ./tools/deepin-gettext-tools { };
       # deepin-anything = callPackage ./tools/deepin-anything { };
 
       #### ARTWORK

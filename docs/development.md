@@ -36,7 +36,10 @@ be re-enabled one by one as it is upgraded.
 | deepin-icon-theme | 2026.02.27 | n/a | data (icons) |
 | deepin-desktop-theme | 1.1.31 | Qt6 | cmake + Dtk6 tools |
 | deepin-desktop-base | 2026.09.04 | n/a | moved to core; NixOS-branded |
+| deepin-gettext-tools | 1.0.11 | n/a | was already latest; re-enabled |
+| deepin-pw-check | 6.0.12 | n/a | full build (Go service + C lib + PAM) |
 | deepin-terminal | 6.5.40 | Qt6 | first app upgraded to Qt6           |
+| deepin-calculator | 6.5.40 | Qt6 | upgraded to Qt6 (Dtk6 Widget)       |
 
 ## Upgrade log
 
@@ -65,6 +68,11 @@ be re-enabled one by one as it is upgraded.
   Widget). Dropped qt5integration/qt5platform-plugins/chrpath deps; added
   qt5compat, libchardet, libuchardet, glib, icu, xorg.xcbutilwm. Patched out two
   hardcoded `/usr/...` install paths.
+- **deepin-calculator** `6.5.7` -> `6.5.40`. Upgraded to Qt6 (Dtk6 Widget).
+  `find_package(Dtk6 ...)` resolves via the `dtkcommon` `Dtk6Config.cmake`
+  forwarder; the `DFrameworkDBus_LIBRARIES` variables are unset in our DTK
+  6.7.50 build but upstream no longer uses them. `strictDeps = false` retained
+  so `qtsvg` is found (same as the Qt5-era definition).
 - **deepin-pdfium** `1.0.2` -> `1.5.8`. Switched from qmake/Qt5 to cmake/Qt6.
   Added zlib/libpng/libjpeg/icu/openjpeg/lcms2/freetype/libchardet; dropped
   Qt5. Fixes `.pc` double-prefix in postInstall.
@@ -101,6 +109,14 @@ be re-enabled one by one as it is upgraded.
   strips `$out/etc`, python-apt/plymouth/distro-info, and relocates `usr/*`.
   The Makefile no longer installs `distribution.info`/`distribution/*` (only the
   debian `.install` does), so we install them ourselves, rebranded to NixOS.
+- **deepin-gettext-tools** keep `1.0.11` (already latest upstream). Re-enabled;
+  build-dependency for all Go services and polkit translation.
+- **deepin-pw-check** `6.0.2` -> `6.0.12`. Kept the nixpkgs `buildGoModule`
+  structure (Go D-Bus service + C library + PAM module + polkit/systemd/dbus
+  files) — only bumped version and refreshed `vendorHash`. Dropped the
+  `substituteInPlace` on the dbus service file (its `Exec=/bin/false` is
+  intentional, no `/usr` path to patch), and the rpm cracklib patch still
+  applies cleanly in 6.0.12.
 
 ## Not yet upgraded (recorded blockers)
 

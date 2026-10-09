@@ -2,7 +2,7 @@
   stdenv,
   lib,
   fetchFromGitHub,
-  dtk6widget,
+  dtkwidget,
   qt6integration,
   qt6platform-plugins,
   qt6Packages,
@@ -11,15 +11,15 @@
   gtest,
 }:
 
-stdenv.mkDerivation rec {
+stdenv.mkDerivation (finalAttrs: {
   pname = "deepin-calculator";
-  version = "6.5.7";
+  version = "6.5.40";
 
   src = fetchFromGitHub {
     owner = "linuxdeepin";
-    repo = pname;
-    rev = version;
-    hash = "sha256-p3tEUIM7rxYUVLl7ZaEm20IZWRMNi12AIj9mQe6iB5I=";
+    repo = "deepin-calculator";
+    rev = finalAttrs.version;
+    hash = "sha256-4Eg6bWn3EPZo65m5UNKD9GViO9WI1iqoBcXjZp3vYfE=";
   };
 
   nativeBuildInputs = [
@@ -30,7 +30,7 @@ stdenv.mkDerivation rec {
   ];
 
   buildInputs = [
-    dtk6widget
+    dtkwidget
     qt6integration
     qt6platform-plugins
     qt6Packages.qtbase
@@ -38,10 +38,10 @@ stdenv.mkDerivation rec {
     gtest
   ];
 
-  # qtsvg can't not be found with strictDeps
+  # qtsvg can't be found with strictDeps
   strictDeps = false;
 
-  cmakeFlags = [ "-DVERSION=${version}" ];
+  cmakeFlags = [ "-DVERSION=${finalAttrs.version}" ];
 
   meta = {
     description = "Easy to use calculator for ordinary users";
@@ -51,4 +51,4 @@ stdenv.mkDerivation rec {
     platforms = lib.platforms.linux;
     teams = [ lib.teams.deepin ];
   };
-}
+})

@@ -15,18 +15,18 @@
 
 buildGoModule rec {
   pname = "deepin-pw-check";
-  version = "6.0.2";
+  version = "6.0.12";
 
   src = fetchFromGitHub {
     owner = "linuxdeepin";
     repo = pname;
     rev = version;
-    hash = "sha256-kBrkcB0IWGUV4ZrkFzwdPglRgDcnVvYDFhTXS20pKOk=";
+    hash = "sha256-t/2sBe+fToVXaRMt4UPj0oQ/wqmCrLLe3ymX+oVlgWU=";
   };
 
   patches = [ "${src}/rpm/0001-Mangle-Suit-Cracklib2.9.6.patch" ];
 
-  vendorHash = "sha256-L0vUEkUN70Hrx5roIvTfaZBHbbq7mf3WpQJeFAMU5HY=";
+  vendorHash = "sha256-kgVdodkFC1/9FHhQ8h6MOyu97QX8RkSaWPotIUFj2oI=";
 
   nativeBuildInputs = [
     pkg-config
@@ -45,7 +45,7 @@ buildGoModule rec {
 
   postPatch = ''
     sed -i '1i#include <stdlib.h>\n#include <string.h>' tool/pwd_conf_update.c
-    substituteInPlace misc/{pkgconfig/libdeepin_pw_check.pc,system-services/org.deepin.dde.PasswdConf1.service} \
+    substituteInPlace misc/pkgconfig/libdeepin_pw_check.pc \
       --replace-fail "/usr" "$out"
   '';
 
