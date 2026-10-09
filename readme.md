@@ -3,7 +3,8 @@
 Move To https://github.com/NixOS/nixpkgs/pull/257400
 
 See [docs/development.md](docs/development.md) for the current Qt6 upgrade
-status, maintainers' notes, and gotchas.
+status, maintainers' notes, and gotchas. For AI agents / tooling context see
+[docs/AI-GUIDE.md](docs/AI-GUIDE.md).
 
 # dde-nixos
 
