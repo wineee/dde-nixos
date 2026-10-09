@@ -4,21 +4,21 @@
   fetchFromGitHub,
   cmake,
   pkg-config,
-  libsForQt5,
+  qt6Packages,
   dtkwidget,
-  qt5integration,
-  qt5platform-plugins,
+  qt6integration,
+  qt6platform-plugins,
 }:
 
-stdenv.mkDerivation rec {
+stdenv.mkDerivation (finalAttrs: {
   pname = "deepin-draw";
-  version = "7.0.2";
+  version = "6.5.43";
 
   src = fetchFromGitHub {
     owner = "linuxdeepin";
-    repo = pname;
-    rev = version;
-    hash = "sha256-WeubXsshN4tUlIwEHTxHXv1L2dvJ2DZ6qtSPyiVtc98=";
+    repo = "deepin-draw";
+    rev = finalAttrs.version;
+    hash = "sha256-C7Bv/PY1wrJS7wsbF8ozczouyRxWCM7na5Swnb/FFOY=";
   };
 
   postPatch = ''
@@ -28,20 +28,20 @@ stdenv.mkDerivation rec {
 
   nativeBuildInputs = [
     cmake
-    libsForQt5.qttools
+    qt6Packages.qttools
     pkg-config
-    libsForQt5.wrapQtAppsHook
+    qt6Packages.wrapQtAppsHook
   ];
 
   buildInputs = [
-    libsForQt5.qtbase
-    qt5integration
-    libsForQt5.qtsvg
+    qt6Packages.qtbase
+    qt6integration
+    qt6Packages.qtsvg
     dtkwidget
-    qt5platform-plugins
+    qt6platform-plugins
   ];
 
-  cmakeFlags = [ "-DVERSION=${version}" ];
+  cmakeFlags = [ "-DVERSION=${finalAttrs.version}" ];
 
   strictDeps = true;
 
@@ -53,4 +53,4 @@ stdenv.mkDerivation rec {
     platforms = lib.platforms.linux;
     teams = [ lib.teams.deepin ];
   };
-}
+})

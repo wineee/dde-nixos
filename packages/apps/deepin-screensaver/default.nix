@@ -2,56 +2,87 @@
   stdenv,
   lib,
   fetchFromGitHub,
+  cmake,
   pkg-config,
-  libsForQt5,
+  qt6Packages,
   dtkwidget,
-  dde-qt-dbus-factory,
+  dtkgui,
+  dtkcore,
   xorg,
   xscreensaver,
 }:
 
 stdenv.mkDerivation rec {
   pname = "deepin-screensaver";
-  version = "5.0.18";
+  version = "6.5.11";
 
   src = fetchFromGitHub {
     owner = "linuxdeepin";
     repo = pname;
     rev = version;
-    hash = "sha256-7lyHPE/x7rmwh7FtCPkuA8JgYpy90jRXhUWoaeZpVag=";
+    hash = "sha256-dQIYkEA+hWVdBlvFyU2CARlsJIe74gTiwqfHkY4oWKQ=";
   };
 
   postPatch = ''
-    patchShebangs {src,customscreensaver/deepin-custom-screensaver}/{generate_translations.sh,update_translations.sh}
+    # Use the Qt6::lrelease imported target instead of a distro hardcoded path
+    substituteInPlace cmake/translation-generate.cmake \
+      --replace-fail 'set(QT_LRELEASE "/lib/qt''${QT_VERSION_MAJOR}/bin/lrelease")' \
+                     'get_target_property(QT_LRELEASE Qt''${QT_VERSION_MAJOR}::lrelease IMPORTED_LOCATION)'
 
-    substituteInPlace src/{dbusscreensaver.cpp,com.deepin.ScreenSaver.service,src.pro} \
-      customscreensaver/deepin-custom-screensaver/deepin-custom-screensaver.pro \
-      --replace "/usr" "$out" \
-      --replace "/etc" "$out/etc"
+    # Install into the Nix prefix instead of absolute /usr//etc paths.
+    substituteInPlace customscreensaver/saverpic/CMakeLists.txt \
+      --replace "/usr/lib/deepin-screensaver/modules" "$out/lib/deepin-screensaver/modules"
+    substituteInPlace customscreensaver/deepin-custom-screensaver/CMakeLists.txt \
+      --replace "/usr/lib/deepin-screensaver/modules" "$out/lib/deepin-screensaver/modules" \
+      --replace "/usr/share/dconfig/overrides" "$out/share/dconfig/overrides" \
+      --replace "/etc/deepin-screensaver/deepin-custom-screensaver" "$out/etc/deepin-screensaver/deepin-custom-screensaver"
 
+    # Fix runtime paths embedded in sources
+    substituteInPlace src/com.deepin.ScreenSaver.service \
+      --replace "/usr/bin/deepin-screensaver" "$out/bin/deepin-screensaver"
+    substituteInPlace src/dbusscreensaver.cpp \
+      --replace "/usr/bin/deepin-screensaver" "$out/bin/deepin-screensaver"
+    substituteInPlace src/utils.cpp \
+      --replace "/etc/deepin-screensaver/" "$out/etc/deepin-screensaver/"
     substituteInPlace tools/preview/main.cpp \
       --replace "/usr/lib/xscreensaver" "${xscreensaver}/libexec/xscreensaver"
+    substituteInPlace customscreensaver/deepin-custom-screensaver/data/deepin-custom-screensaver.desktop \
+      --replace "/usr/lib/deepin-screensaver/modules/deepin-custom-screensaver" "$out/lib/deepin-screensaver/modules/deepin-custom-screensaver"
+
+    # Neutralize the xscreensaver subdir (Debian postinst regeneration).
+    substituteInPlace CMakeLists.txt \
+      --replace "add_subdirectory(xscreensaver)" ""
+
+    # Qt6::GuiPrivate is linked but never found (the find_package lists only
+    # Gui/Widgets/DBus/Quick); add the missing find_package for it.
+    substituteInPlace src/CMakeLists.txt \
+      --replace 'find_package(Qt''${QT_DESIRED_VERSION} REQUIRED COMPONENTS ''${qt_required_components})' \
+                'find_package(Qt''${QT_DESIRED_VERSION} REQUIRED COMPONENTS ''${qt_required_components} GuiPrivate)'
   '';
 
   nativeBuildInputs = [
-    libsForQt5.qmake
-    libsForQt5.qttools
+    cmake
     pkg-config
-    libsForQt5.wrapQtAppsHook
+    qt6Packages.qttools
+    qt6Packages.wrapQtAppsHook
   ];
 
   buildInputs = [
-    libsForQt5.qtbase
-    libsForQt5.qtx11extras
-    libsForQt5.qtdeclarative
     dtkwidget
-    dde-qt-dbus-factory
+    dtkgui
+    dtkcore
+    qt6Packages.qtbase
+    qt6Packages.qtdeclarative
+    qt6Packages.qt5compat
+    xorg.libX11
     xorg.libXScrnSaver
+    xorg.libXext
+    xorg.libxcb
   ];
 
-  qmakeFlags = [
-    "XSCREENSAVER_DATA_PATH=${xscreensaver}/libexec/xscreensaver"
-    "COMPILE_ON_V23=true"
+  cmakeFlags = [
+    "-DVERSION=${version}"
+    "-DXSCREENSAVER_DATA_PATH=${xscreensaver}/libexec/xscreensaver"
   ];
 
   meta = with lib; {

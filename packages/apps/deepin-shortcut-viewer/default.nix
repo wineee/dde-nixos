@@ -3,41 +3,46 @@
   lib,
   fetchFromGitHub,
   dtkwidget,
-  qt5integration,
-  qt5platform-plugins,
+  qt6integration,
+  qt6platform-plugins,
+  cmake,
   pkg-config,
-  libsForQt5,
+  qt6Packages,
 }:
 
-stdenv.mkDerivation rec {
+stdenv.mkDerivation (finalAttrs: {
   pname = "deepin-shortcut-viewer";
-  version = "5.0.9";
+  version = "5.5.6";
 
   src = fetchFromGitHub {
     owner = "linuxdeepin";
-    repo = pname;
-    rev = version;
-    sha256 = "sha256-A4LFi0KcqChjgYrO90paMBAivv02TsRjYQ26I0k71x0=";
+    repo = "deepin-shortcut-viewer";
+    rev = finalAttrs.version;
+    hash = "sha256-D1ZWPVdKuKjq77V0giWWbIdQef4g3Nvzy0ryktE4qts=";
   };
 
+  postPatch = ''
+    # install(TARGETS ... DESTINATION ''${CMAKE_INSTALL_PREFIX}/bin) would
+    # install into $out/$out/bin; upstream hardcodes an absolute prefix.
+    substituteInPlace CMakeLists.txt \
+      --replace-fail 'DESTINATION ''${CMAKE_INSTALL_PREFIX}/bin' 'DESTINATION ''${CMAKE_INSTALL_BINDIR}'
+  '';
+
   nativeBuildInputs = [
-    libsForQt5.qmake
-    libsForQt5.qttools
+    cmake
+    qt6Packages.qttools
     pkg-config
-    libsForQt5.wrapQtAppsHook
+    qt6Packages.wrapQtAppsHook
   ];
 
   buildInputs = [
-    libsForQt5.qtbase
+    qt6Packages.qtbase
     dtkwidget
-    qt5integration
-    qt5platform-plugins
+    qt6integration
+    qt6platform-plugins
   ];
 
-  qmakeFlags = [
-    "VERSION=${version}"
-    "PREFIX=${placeholder "out"}"
-  ];
+  strictDeps = true;
 
   meta = with lib; {
     description = "Deepin Shortcut Viewer";
@@ -47,4 +52,4 @@ stdenv.mkDerivation rec {
     platforms = platforms.linux;
     teams = [ teams.deepin ];
   };
-}
+})

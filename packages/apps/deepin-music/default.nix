@@ -4,31 +4,31 @@
   fetchFromGitHub,
   cmake,
   pkg-config,
-  dtk6widget,
-  dtk6declarative,
+  dtkwidget,
+  dtkdeclarative,
+  dtkcore,
+  dtkgui,
   qt6integration,
   qt6platform-plugins,
   qt6mpris,
   ffmpeg_6,
   libvlc,
   qt6Packages,
-  taglib_1,
+  taglib,
   SDL2,
-  gst_all_1,
+  icu,
 }:
 
 stdenv.mkDerivation rec {
   pname = "deepin-music";
-  version = "7.0.9";
+  version = "7.0.68";
 
   src = fetchFromGitHub {
     owner = "linuxdeepin";
     repo = pname;
     rev = version;
-    hash = "sha256-tj0XICmp7sM2m6aSf/DgxS7JXO3Wy/83sZIPGV17gFo=";
+    hash = "sha256-gZkr0MjXTeFd3h+l+fP0CXCIptscYhDF2FEfOuS3Niw=";
   };
-
-  patches = [ "${src}/patches/fix-library-path.patch" ];
 
   nativeBuildInputs = [
     cmake
@@ -38,38 +38,34 @@ stdenv.mkDerivation rec {
   ];
 
   buildInputs = [
-    dtk6widget
-    dtk6declarative
+    dtkwidget
+    dtkdeclarative
+    dtkcore
+    dtkgui
     qt6integration
     qt6platform-plugins
     qt6mpris
     qt6Packages.qtbase
-    qt6Packages.qt5compat
+    qt6Packages.qtdeclarative
     qt6Packages.qtmultimedia
+    qt6Packages.qtsvg
+    qt6Packages.qt5compat
     ffmpeg_6
     libvlc
-    taglib_1
+    taglib
     SDL2
-  ]
-  ++ (with gst_all_1; [
-    gstreamer
-    gst-plugins-base
-    gst-plugins-good
-  ]);
+    icu
+  ];
 
   cmakeFlags = [ "-DVERSION=${version}" ];
 
   env.NIX_CFLAGS_COMPILE = toString [
-    "-I${libvlc}/include/vlc/plugins"
-    "-I${libvlc}/include/vlc"
+    "-I${lib.getDev libvlc}/include/vlc/plugins"
+    "-I${lib.getDev libvlc}/include/vlc"
   ];
 
-  # qtmultimedia can't not be found with strictDeps
+  # qtmultimedia can't be found with strictDeps
   strictDeps = false;
-
-  preFixup = ''
-    qtWrapperArgs+=(--prefix GST_PLUGIN_SYSTEM_PATH_1_0 : "$GST_PLUGIN_SYSTEM_PATH_1_0")
-  '';
 
   meta = {
     description = "Awesome music player with brilliant and tweakful UI Deepin-UI based";

@@ -3,58 +3,78 @@
   lib,
   fetchFromGitHub,
   dtkwidget,
-  qt5integration,
-  qt5platform-plugins,
-  udisks2-qt5,
+  qt6integration,
+  qt6platform-plugins,
+  kdePackages,
   cmake,
   pkg-config,
-  libsForQt5,
+  qt6Packages,
   minizip,
   libzip,
-  libuuid,
   libarchive,
+  glib,
+  util-linux,
 }:
 
-stdenv.mkDerivation rec {
+stdenv.mkDerivation (finalAttrs: {
   pname = "deepin-compressor";
-  version = "6.0.1";
+  version = "6.5.34";
 
   src = fetchFromGitHub {
     owner = "linuxdeepin";
-    repo = pname;
-    rev = version;
-    hash = "sha256-DUpYb1xNmWpBcKo9kajeVm/+z4yj2OBE+qOyEkCHbUI=";
+    repo = "deepin-compressor";
+    rev = finalAttrs.version;
+    hash = "sha256-5L3tnfwXP/tiRk4Po7oEqN+nGwi4OuqVSvEq4mpuXzc=";
   };
 
   postPatch = ''
+    # fix hardcoded /usr paths
     substituteInPlace src/source/common/pluginmanager.cpp \
       --replace-fail "/usr/lib" "$out/lib"
     substituteInPlace src/desktop/deepin-compressor.desktop \
       --replace-fail "/usr" "$out"
+    substituteInPlace src/com.deepin.Compressor.service \
+      --replace-fail "/usr/bin/deepin-compressor" "$out/bin/deepin-compressor"
+    substituteInPlace 3rdparty/clipzipplugin/clipzipplugin.cpp \
+      --replace-fail "/usr/lib/deepin-compressor" "$out/lib/deepin-compressor"
+
+    # -pie in CMAKE_CXX_FLAGS reaches the shared plugin link and breaks on
+    # CMake 4.x (undefined reference to main)
+    substituteInPlace CMakeLists.txt \
+      --replace-fail "-fstack-protector-strong -D_FORTIFY_SOURCE=2 -z noexecstack -pie -fPIC -z lazy" \
+                     "-fstack-protector-strong -D_FORTIFY_SOURCE=2 -z noexecstack -fPIC -z lazy"
+
+    # bundled translation-generate.cmake falls back to a hardcoded
+    # /lib/qt6/bin/lrelease; use the Qt6::lrelease imported target instead
+    substituteInPlace cmake/translation-generate.cmake \
+      --replace-fail 'set(QT_LRELEASE "/lib/qt''${QT_VERSION_MAJOR}/bin/lrelease")' \
+                     'get_target_property(QT_LRELEASE Qt''${QT_VERSION_MAJOR}::lrelease IMPORTED_LOCATION)'
   '';
 
   nativeBuildInputs = [
     cmake
-    libsForQt5.qttools
+    qt6Packages.qttools
     pkg-config
-    libsForQt5.wrapQtAppsHook
+    qt6Packages.wrapQtAppsHook
   ];
 
   buildInputs = [
     dtkwidget
-    qt5integration
-    qt5platform-plugins
-    udisks2-qt5
-    libsForQt5.kcodecs
-    libsForQt5.karchive
+    qt6integration
+    qt6platform-plugins
+    qt6Packages.qtbase
+    qt6Packages.qt5compat
+    kdePackages.kcodecs
+    kdePackages.karchive
     minizip
     libzip
-    libuuid
     libarchive
+    glib
+    util-linux
   ];
 
   cmakeFlags = [
-    "-DVERSION=${version}"
+    "-DVERSION=${finalAttrs.version}"
     "-DUSE_TEST=OFF"
   ];
 
@@ -68,4 +88,4 @@ stdenv.mkDerivation rec {
     platforms = platforms.linux;
     teams = [ teams.deepin ];
   };
-}
+})

@@ -5,88 +5,95 @@
   cmake,
   pkg-config,
   deepin-gettext-tools,
-  libsForQt5,
+  qt6Packages,
+  kdePackages,
   dtkwidget,
-  qt5integration,
-  qt5platform-plugins,
-  dde-qt-dbus-factory,
-  dde-tray-loader,
-  gsettings-qt,
-  procps,
+  dtkgui,
+  dtkcore,
   libpcap,
   libnl,
   util-linux,
   systemd,
   polkit,
-  wayland,
-  dwayland,
+  icu,
+  xorg,
 }:
 
 stdenv.mkDerivation rec {
   pname = "deepin-system-monitor";
-  version = "6.5.4";
+  version = "6.5.47";
 
   src = fetchFromGitHub {
     owner = "linuxdeepin";
     repo = pname;
     rev = version;
-    hash = "sha256-xLlWQaoKC+/jgDD9sBikh5Z1QqDuCFcMulo0vqxJM7k=";
+    hash = "sha256-c3zouzVc//tAk6yl7jCeHCyl9uaBTYKqyY31hGoaEwk=";
   };
 
   postPatch = ''
+    # Dock plugin/popup require dde-dock headers which are not packaged here;
+    # build only the main app + daemon + dbus/system servers.
+    substituteInPlace CMakeLists.txt \
+      --replace "ADD_SUBDIRECTORY(deepin-system-monitor-plugin)" "" \
+      --replace "ADD_SUBDIRECTORY(deepin-system-monitor-plugin-popup)" ""
+
+    # Drop the global -pie (breaks the daemon MODULE target on CMake 4.x).
+    substituteInPlace CMakeLists.txt \
+      --replace "-Wl,-z,relro -Wl,-z,now -Wl,-z,noexecstack -pie -fstack-protector-all" \
+                "-Wl,-z,relro -Wl,-z,now -Wl,-z,noexecstack -fstack-protector-all"
+
+    # Install the privileged backend under the Nix prefix.
+    substituteInPlace deepin-system-monitor-system-server/CMakeLists.txt \
+      --replace "/usr/lib/deepin-daemon/" "$out/lib/deepin-daemon/"
+
+    # Fix runtime tool/service paths.
+    substituteInPlace deepin-system-monitor-main/service/service_manager.cpp \
+      --replace "/usr/bin/pkexec" "${lib.getBin polkit}/bin/pkexec" \
+      --replace "/usr/bin/systemctl" "${lib.getBin systemd}/bin/systemctl"
+
     substituteInPlace deepin-system-monitor-main/process/process_controller.cpp \
       deepin-system-monitor-main/process/priority_controller.cpp \
-      deepin-system-monitor-main/service/service_manager.cpp \
-      deepin-system-monitor-main/translations/policy/com.deepin.pkexec.deepin-system-monitor.policy \
-        --replace "/usr/bin/kill" "${lib.getBin util-linux}/bin/kill" \
-        --replace "/usr/bin/renice" "${lib.getBin util-linux}/bin/renice" \
-        --replace '/usr/bin/systemctl' '${lib.getBin systemd}/systemctl'
+      --replace "/usr/bin/kill" "${lib.getBin util-linux}/bin/kill" \
+      --replace "/usr/bin/renice" "${lib.getBin util-linux}/bin/renice"
 
-    substituteInPlace deepin-system-monitor-main/{service/service_manager.cpp,process/{priority_controller.cpp,process_controller.cpp}} \
-      --replace "/usr/bin/pkexec" "${lib.getBin polkit}/bin/pkexec"
-
-    for file in $(grep -rl "/usr")
-    do
-      substituteInPlace $file \
-        --replace "/usr" "$out"
-    done
+    substituteInPlace deepin-system-monitor-server/src/dbusserver.cpp \
+      --replace "/usr/bin/deepin-system-monitor" "$out/bin/deepin-system-monitor"
+    substituteInPlace deepin-system-monitor-server/com.deepin.SystemMonitorServer.service \
+      --replace "/usr/bin/deepin-system-monitor-server" "$out/bin/deepin-system-monitor-server"
+    substituteInPlace deepin-system-monitor-system-server/misc/org.deepin.deepin-system-monitor-system-server.policy \
+      --replace "/usr/bin/deepin-system-monitor" "$out/bin/deepin-system-monitor"
+    substituteInPlace deepin-system-monitor-system-server/misc/deepin-system-monitor-system-server.service \
+      --replace "/usr/lib/deepin-daemon/deepin-system-monitor-system-server" "$out/lib/deepin-daemon/deepin-system-monitor-system-server"
   '';
 
   nativeBuildInputs = [
     cmake
     pkg-config
-    libsForQt5.qttools
+    qt6Packages.qttools
     deepin-gettext-tools
-    libsForQt5.wrapQtAppsHook
+    qt6Packages.wrapQtAppsHook
   ];
 
   buildInputs = [
     dtkwidget
-    qt5integration
-    qt5platform-plugins
-    libsForQt5.qtbase
-    libsForQt5.qtsvg
-    libsForQt5.qtx11extras
-    dde-qt-dbus-factory
-    dde-tray-loader
-    gsettings-qt
-    libsForQt5.polkit-qt
-    procps
+    dtkgui
+    dtkcore
+    qt6Packages.qtbase
+    qt6Packages.qtsvg
+    kdePackages.polkit-qt-1
     libpcap
     libnl
-    wayland
-    dwayland
+    systemd
+    icu
+    xorg.libxcb
+    xorg.libXext
+    xorg.xcbutilwm
   ];
 
   cmakeFlags = [ "-DVERSION=${version}" ];
 
-  # To build with icu4c need at least c++17
-  env.NIX_CFLAGS_COMPILE = toString [
-    "-Wno-error=incompatible-pointer-types"
-    "--std=c++17"
-  ];
-
-  strictDeps = true;
+  # The dtk*/polkit-qt-1/ICU pkg-config/cmake deps are resolved transitively.
+  strictDeps = false;
 
   meta = with lib; {
     description = "More user-friendly system monitor";

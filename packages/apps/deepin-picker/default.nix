@@ -4,20 +4,31 @@
   fetchFromGitHub,
   pkg-config,
   qt6Packages,
-  dtk6widget,
+  dtkwidget,
+  dtkgui,
   xorg,
 }:
 
 stdenv.mkDerivation rec {
   pname = "deepin-picker";
-  version = "6.0.4";
+  version = "6.0.12";
 
   src = fetchFromGitHub {
     owner = "linuxdeepin";
     repo = pname;
     rev = version;
-    hash = "sha256-TeUhDEldte5PJJe1l0q4wUTnnaXY052YP1JAhpLz/sA=";
+    hash = "sha256-dp5+7HwtUa52aMn3VwATqFZ3H+DS+kqsnluzFf/xy8k=";
   };
+
+  postPatch = ''
+    substituteInPlace com.deepin.Picker.service \
+      --replace "/usr/bin/deepin-picker" "$out/bin/deepin-picker"
+
+    # Do not rely on distro-specific hardcoded lrelease/lupdate paths
+    substituteInPlace deepin-picker.pro \
+      --replace "/usr/lib/qt6/bin/lrelease" "lrelease" \
+      --replace "/usr/lib/qt6/bin/lupdate" "lupdate"
+  '';
 
   nativeBuildInputs = [
     qt6Packages.qmake
@@ -28,17 +39,16 @@ stdenv.mkDerivation rec {
 
   buildInputs = [
     qt6Packages.qtbase
-    dtk6widget
     qt6Packages.qtsvg
+    dtkwidget
+    dtkgui
     xorg.libXtst
+    xorg.libxcb
+    xorg.xcbutil
   ];
 
-  postPatch = ''
-    substituteInPlace com.deepin.Picker.service \
-      --replace "/usr/bin/deepin-picker" "$out/bin/deepin-picker"
-  '';
-
   qmakeFlags = [
+    "PREFIX=${placeholder "out"}"
     "BINDIR=${placeholder "out"}/bin"
     "ICONDIR=${placeholder "out"}/share/icons/hicolor/scalable/apps"
     "APPDIR=${placeholder "out"}/share/applications"
