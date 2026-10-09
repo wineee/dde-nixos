@@ -43,6 +43,8 @@
 - ✅ 应用：`deepin-terminal`（6.5.40，第一个 Qt6 应用）。
 - ✅ 支撑库：`deepin-pdfium`、`docparser`、`gio-qt`、`udisks2-qt6`、`qt6mpris`、
   `util-dfm`。
+- ✅ Go 服务：`dde-api`（6.0.48）、`dde-daemon`（6.1.107）、`startdde`（6.1.6）、
+  `deepin-pw-check`（6.0.12）、`deepin-desktop-schemas`（6.0.13）。
 - ✅ artwork 全家桶：account-faces / icon / wallpapers / gtk-theme /
   sound-theme / desktop-theme。
 - ✅ `deepin-desktop-base`（2026.09.04，已移到 core/ 并 NixOS 品牌化）。

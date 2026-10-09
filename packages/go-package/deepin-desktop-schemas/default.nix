@@ -8,13 +8,13 @@
 
 buildGoModule rec {
   pname = "deepin-desktop-schemas";
-  version = "6.0.7";
+  version = "6.0.13";
 
   src = fetchFromGitHub {
     owner = "linuxdeepin";
     repo = pname;
     rev = version;
-    hash = "sha256-Zp80Yz0qkFAwpQJPgs/gcfCG2DMtvpKdVKRlqOTmaCk=";
+    hash = "sha256-2WGrda800xIFlOrSkbEeF4MKTDIhYMhwervB1xu2nZA=";
   };
 
   vendorHash = "sha256-q6ugetchJLv2JjZ9+nevUI0ptizh2V+6SByoY/eFJJQ=";

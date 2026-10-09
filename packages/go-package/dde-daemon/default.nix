@@ -1,7 +1,6 @@
 {
   lib,
   fetchFromGitHub,
-  replaceVars,
   buildGoModule,
   pkg-config,
   deepin-gettext-tools,
@@ -26,67 +25,68 @@
   runtimeShell,
   dbus,
   util-linux,
-  dde-session-ui,
-  coreutils,
   lshw,
-  dmidecode,
   systemd,
-  udevCheckHook,
 }:
 
 buildGoModule rec {
   pname = "dde-daemon";
-  version = "6.0.43";
+  version = "6.1.107";
 
   src = fetchFromGitHub {
     owner = "linuxdeepin";
     repo = pname;
     rev = version;
-    hash = "sha256-3BzFFlcNwNWNcysD3qRYfdyGaX7gW2XJZ4HzdGiK7jU=";
+    hash = "sha256-Zta+sqTSenwzgABPoFsBDQ7tIJFG8chTF/aU8b4im44=";
   };
 
-  vendorHash = "sha256-3kUAaVXERqNZhBFytzVbWY6/a8M0jIkWrN+QHdWp1HU=";
-
-  patches = [
-    ./0001-dont-set-PATH.diff
-    (replaceVars ./0002-fix-custom-wallpapers-path.diff {
-      inherit coreutils;
-    })
-    (replaceVars ./0003-aviod-use-hardcode-path.diff {
-      inherit dbus;
-    })
-  ];
+  vendorHash = "sha256-iekvou3IWxIZ9VzF5pk+QhLAx6/IrPUvXMhLYMSYAos=";
 
   postPatch = ''
-    substituteInPlace session/eventlog/{app_event.go,login_event.go} \
-      --replace-fail "/bin/bash" "${runtimeShell}"
+    # Remove hardcoded PATH overrides
+    sed -i '/os.Setenv("PATH"/d' grub2/modify_manger.go bin/dde-system-daemon/main.go
 
-    substituteInPlace inputdevices/layout_list.go \
+    # Fix /bin/bash references
+    find . -name "*.go" -exec sed -i 's|"/bin/bash"|"${runtimeShell}"|g' {} +
+
+    # Fix xkb path
+    substituteInPlace inputdevices1/layout_list.go \
       --replace-fail "/usr/share/X11/xkb" "${xkeyboard_config}/share/X11/xkb"
 
-    substituteInPlace accounts1/user.go \
-      --replace-fail "/usr/share/wallpapers" "/run/current-system/sw/share/wallpapers"
+    # Fix timezone paths
+    find . -name "*.go" -exec sed -i \
+      's|"/usr/share/zoneinfo|"${tzdata}/share/zoneinfo|g' {} +
 
-    substituteInPlace timedate1/zoneinfo/zone.go \
-      --replace-fail "/usr/share/dde" "$out/share/dde" \
-      --replace-fail "/usr/share/zoneinfo" "${tzdata}/share/zoneinfo"
+    # Fix dde-api path
+    find . -name "*.go" -exec sed -i \
+      's|"/usr/lib/deepin-api|"/run/current-system/sw/lib/deepin-api|g' {} +
 
-    substituteInPlace accounts1/image_blur.go grub2/modify_manger.go \
-      --replace-fail "/usr/lib/deepin-api" "/run/current-system/sw/lib/deepin-api"
+    # Fix dde-control-center path
+    find . -name "*.go" -exec sed -i \
+      's|"/usr/lib/dde-control-center|"/run/current-system/sw/lib/dde-control-center|g' {} +
 
-    substituteInPlace accounts1/user_chpwd_union_id.go \
-      --replace-fail "/usr/lib/dde-control-center" "/run/current-system/sw/lib/dde-control-center"
-
-    substituteInPlace system/uadp1/crypto.go \
-      --replace-fail "/usr/share/uadp" "/var/lib/dde-daemon/uadp"
-
-    for file in $(grep "/usr/lib/deepin-daemon" * -nR |awk -F: '{print $1}')
-    do
-      sed -i 's|/usr/lib/deepin-daemon|/run/current-system/sw/lib/deepin-daemon|g' $file
+    # Fix deepin-daemon binary paths
+    for file in $(grep -rl "/usr/lib/deepin-daemon" .); do
+      sed -i 's|/usr/lib/deepin-daemon|/run/current-system/sw/lib/deepin-daemon|g' "$file"
     done
+
+    # getconf lives in glibc.bin on NixOS, drop the /usr/bin prefix
+    find . -name "*.go" -exec sed -i 's|"/usr/bin/getconf"|"getconf"|g' {} +
+
+    # Fix dbus-send in the display brightness systemd task
+    substituteInPlace misc/systemd_task/dde-display-task-refresh-brightness.service \
+      --replace-fail "/usr/bin/dbus-send" "${dbus}/bin/dbus-send"
+
+    # Fix /usr/share/dde path in zoneinfo
+    find . -name "*.go" -exec sed -i \
+      's|"/usr/share/dde/zoneinfo|"'$out'/share/dde/zoneinfo|g' {} +
 
     patchShebangs .
   '';
+
+  # go-gir generates old-style C declarations with () that GCC 14 treats as
+  # (void), conflicting with cgo's proper prototypes. Force C11 standard.
+  env.CGO_CFLAGS = "-std=gnu11";
 
   nativeBuildInputs = [
     pkg-config
@@ -94,7 +94,6 @@ buildGoModule rec {
     gettext
     python3
     wrapGAppsHook3
-    udevCheckHook
   ];
 
   buildInputs = [
@@ -129,17 +128,13 @@ buildGoModule rec {
 
   doCheck = false;
 
-  doInstallCheck = true;
-
   preFixup = ''
     gappsWrapperArgs+=(
       --prefix PATH : "${
         lib.makeBinPath [
           util-linux
-          dde-session-ui
           glib
           lshw
-          dmidecode
           systemd
         ]
       }"
@@ -148,10 +143,11 @@ buildGoModule rec {
 
   postFixup = ''
     for binary in $out/lib/deepin-daemon/*; do
-      if [ "$binary" == "$out/lib/deepin-daemon/service-trigger" ] ; then
-        continue;
+      if [ -f "$binary" ] && [ -x "$binary" ]; then
+        if file "$binary" | grep -q "ELF"; then
+          wrapGApp "$binary"
+        fi
       fi
-      wrapGApp $binary
     done
   '';
 

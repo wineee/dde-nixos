@@ -19,16 +19,16 @@
 
 buildGoModule rec {
   pname = "startdde";
-  version = "6.0.15";
+  version = "6.1.6";
 
   src = fetchFromGitHub {
     owner = "linuxdeepin";
     repo = pname;
     rev = version;
-    hash = "sha256-RSfdlLT2v3fM4P8E0mIyZZ8A1MWVIS0N0MDczqq7Y64=";
+    hash = "sha256-znpp5lyGNUTHfyHcIu05pCWgzdNB0sKr+jNPZm+86O4=";
   };
 
-  vendorHash = "sha256-Y81p3yPQayXbvyUI7N6PvFDO3hSU3SL0AuUKxvZkZNE=";
+  vendorHash = "sha256-DaDF/1RI2XJ8R/RvsKKRISLJlI7+4EwXjIlJWWma2zk=";
 
   postPatch = ''
     substituteInPlace display/manager.go \
@@ -59,6 +59,10 @@ buildGoModule rec {
     libgudev
     libsecret
   ];
+
+  # go-gir generates old-style C declarations with () that GCC 14 treats as
+  # (void), conflicting with cgo's proper prototypes. Force C11 standard.
+  env.CGO_CFLAGS = "-std=gnu11";
 
   buildPhase = ''
     runHook preBuild

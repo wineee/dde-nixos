@@ -19,16 +19,16 @@
 
 buildGoModule rec {
   pname = "dde-api";
-  version = "6.0.11";
+  version = "6.0.48";
 
   src = fetchFromGitHub {
     owner = "linuxdeepin";
     repo = pname;
     rev = version;
-    hash = "sha256-VpZwVNXxdi8ODwxbksQpT0nnUuLOTJ9h0JYucEKdGYM=";
+    hash = "sha256-racnByst4+Un1/rrR241xIpHRUI8HdBBTpRBJOPYIHA=";
   };
 
-  vendorHash = "sha256-zrtUsCF2+301DKwgWectw+UbOehOp8h8u/IMf09XQ8Q=";
+  vendorHash = "sha256-Kkw+YTwtjEbfdntlcAjk/sD7tQV0AVXiAeZCqTg7pR0=";
 
   postPatch = ''
     substituteInPlace misc/systemd/system/deepin-shutdown-sound.service \
@@ -37,14 +37,11 @@ buildGoModule rec {
     substituteInPlace sound-theme-player/main.go \
       --replace-fail "/usr/sbin/alsactl" "alsactl"
 
-    substituteInPlace misc/{scripts/deepin-boot-sound.sh,systemd/system/deepin-login-sound.service} \
+    substituteInPlace misc/scripts/deepin-boot-sound.sh \
       --replace-fail "/usr/bin/dbus-send" "${dbus}/bin/dbus-send"
 
-    substituteInPlace lunar-calendar/huangli.go adjust-grub-theme/main.go \
+    substituteInPlace adjust-grub-theme/main.go language_support/lang_support.go \
       --replace-fail "/usr/share/dde-api" "$out/share/dde-api"
-
-    substituteInPlace themes/{theme.go,settings.go} \
-      --replace-fail "/usr/share" "/run/current-system/sw/share"
 
     for file in $(grep "/usr/lib/deepin-api" * -nR |awk -F: '{print $1}')
     do

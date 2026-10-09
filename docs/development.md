@@ -39,6 +39,10 @@ be re-enabled one by one as it is upgraded.
 | deepin-desktop-base | 2026.09.04 | n/a | moved to core; NixOS-branded |
 | deepin-gettext-tools | 1.0.11 | n/a | was already latest; re-enabled |
 | deepin-pw-check | 6.0.12 | n/a | full build (Go service + C lib + PAM) |
+| dde-api | 6.0.48 | n/a | Go D-Bus service (thumbnails, sound, etc) |
+| dde-daemon | 6.1.107 | n/a | Go system/session daemon (16 binaries) |
+| deepin-desktop-schemas | 6.0.13 | n/a | Go gschema build tool + schemas |
+| startdde | 6.1.6 | n/a | Go session starter |
 | dde-device-formatter | 1.5.11 | Qt6 | was qmake/Qt5; now cmake/Qt6 |
 | deepin-terminal | 6.5.40 | Qt6 | first app upgraded to Qt6           |
 | deepin-calculator | 6.5.40 | Qt6 | upgraded to Qt6 (Dtk6 Widget)       |
@@ -46,6 +50,11 @@ be re-enabled one by one as it is upgraded.
 | deepin-draw | 6.5.43 | Qt6 | Qt6 (Dtk6 Widget)                   |
 | deepin-shortcut-viewer | 5.5.6 | Qt6 | Qt6 (Dtk6 Widget); was qmake/Qt5  |
 | deepin-editor | 6.7.0 | Qt6 | Qt6 (Dtk6 + KF6 + QtWebEngine)    |
+| deepin-music | 7.0.68 | Qt6 | Qt6 (Dtk6 + QtMultimedia + libvlc)   |
+| deepin-picker | 6.0.12 | Qt6 | Qt6 (Dtk6 Widget); qmake/xcb        |
+| deepin-reader | 6.6.2 | Qt6 | Qt6 (Dtk6 + WebEngine + bundled pdfium) |
+| deepin-screensaver | 6.5.11 | Qt6 | Qt6 (Dtk6 Widget+Gui, cmake)       |
+| deepin-system-monitor | 6.5.47 | Qt6 | Qt6 (Dtk6 + polkit-qt-1)          |
 
 ## Upgrade log
 
@@ -102,6 +111,44 @@ be re-enabled one by one as it is upgraded.
   `syntax-highlighting`. Added `qtwebengine`/`qtwebchannel`/`qt5compat`; set
   `-DBUILD_TESTS=OFF` (tests need Catch2/gtest + daemon-only fixtures). Patched
   the hardcoded `/usr/share/deepin-editor/themes/deepin.theme` default.
+- **deepin-music** `7.0.9` -> `7.0.68`. Kept Qt6 (Dtk6 Declarative+Gui+Core +
+  QtMultimedia + libvlc + ffmpeg + taglib + SDL2 + ICU). Dropped the bundled
+  `fix-library-path.patch` (upstream `DmGlobal::libPath()` now uses
+  `QLibraryInfo::path()` with a bare-soname ld.so fallback); switched
+  `taglib_1` -> `taglib` (upstream moved to `<taglib/...>` include style),
+  `ffmpeg_6` kept for the `libavcodec`/`libavformat` pkg-config; renamed
+  `dtk6*` attrs to the de-suffixed `dtk*` set and added explicit `dtkcore`/
+  `dtkgui` (pkg-config `dtk6core`/`dtk6gui`) + `icu`.
+- **deepin-picker** `6.0.4` -> `6.0.12`. Still qmake but Qt6-aware; renamed
+  `dtk6widget` -> `dtkwidget` (+ added `dtkgui` for the `dtk6gui` pkg-config),
+  added `xorg.libxcb`/`xorg.xcbutil` (pkg-config `xcb`/`xcb-util`). Patched the
+  hardcoded `/usr/lib/qt6/bin/lrelease|lupdate` paths and the
+  `com.deepin.Picker.service` exec path.
+- **deepin-reader** `6.0.5` -> `6.6.2`. Switched qmake/Qt5 -> cmake/Qt6
+  (Dtk6 Widget+Gui+Core, QtWebEngine, QtWebChannel, Core5Compat). Dropped
+  `libspectre`/`poppler`/`dde-qt-dbus-factory` (no longer referenced upstream);
+  keeps DjVu/libjpeg/libgxps (XPS) + cairo/glib/freetype + cups (batch print
+  dlopens libcups). Uses the bundled `3rdparty/deepin-pdfium` snapshot (our
+  standalone `deepin-pdfium` 1.5.8 predates the reader-only APIs
+  `imageObjectRects`/`fileIdentifier`); force-includes `<cstdint>` for the
+  pdfium target (the CMake port drops upstream's global forced-include).
+- **deepin-screensaver** `5.0.18` -> `6.5.11`. Switched qmake/Qt5 -> cmake/Qt6
+  (Dtk6 Widget+Gui+Core + Qt Quick + Core5Compat). Dropped
+  `dde-qt-dbus-factory` (no dframeworkdbus in the cmake tree). Patched the
+  `translation-generate.cmake` lrelease fallback, added a missing
+  `find_package(... GuiPrivate)`, and fixed `/usr`/`/etc` install + runtime
+  paths (`.service`, `dbusscreensaver.cpp`, `utils.cpp`, custom-screensaver
+  cmake/desktop). The xscreensaver subdir only regenerates a Debian postinst
+  (CRLF, absolute paths), so it is neutralized.
+- **deepin-system-monitor** `6.5.4` -> `6.5.47`. Upgraded to Qt6 (Dtk6
+  Core+Gui+Widget + polkit-qt-1 via `kdePackages.polkit-qt-1`). Dropped
+  `dde-qt-dbus-factory`/`dde-tray-loader`/`gsettings-qt`/`dwayland` (dock
+  plugin + Qt5 wayland). The dock plugin and popup subdirs need the
+  unpackaged `dde-dock` headers, so they are disabled; builds the main app +
+  daemon (service-manager module) + dbus server + polkit system server. Fixed
+  `/usr/bin/{kill,renice,pkexec,systemctl}` tool paths, the
+  `/usr/lib/deepin-daemon/` install path, and dropped the global `-pie` (breaks
+  the daemon MODULE on CMake 4.x).
 - **deepin-pdfium** `1.0.2` -> `1.5.8`. Switched from qmake/Qt5 to cmake/Qt6.
   Added zlib/libpng/libjpeg/icu/openjpeg/lcms2/freetype/libchardet; dropped
   Qt5. Fixes `.pc` double-prefix in postInstall.
@@ -152,6 +199,25 @@ be re-enabled one by one as it is upgraded.
   `udisks2-qt6.pc` satisfies `pkg_check_modules(udisks2-qt6)`). Patched
   `set(QT_COMPONENTS ...)` to add `GuiPrivate` (linked but not declared in
   `find_package`).
+- **dde-api** `6.0.11` -> `6.0.48`. Refreshed `vendorHash`. The old postPatch
+  targeted files that no longer exist (`lunar-calendar/huangli.go`,
+  `themes/theme.go`, `deepin-login-sound.service`); rebuilt the postPatch
+  against the new tree (`adjust-grub-theme/main.go` +
+  `language_support/lang_support.go` for `/usr/share/dde-api`, and only
+  `misc/scripts/deepin-boot-sound.sh` for `dbus-send`).
+- **dde-daemon** `6.0.43` -> `6.1.107`. Dropped the three stale `.diff` patches
+  (upstream already fixed wallpaper dir, caller checks, and PATH handling).
+  Rebuilt postPatch as broad `find -name '*.go' -exec sed` replacements for
+  `/bin/bash`, timezone, xkb, deepin-api/deepin-daemon/dde-control-center
+  paths, and `/usr/bin/getconf` (lives in glibc.bin on NixOS). Dropped the
+  `dde-session-ui` buildInput/makeBinPath (runtime PATH is provided by the
+  NixOS module). Added `env.CGO_CFLAGS = "-std=gnu11"` (go-gir emits old-style
+  `()` declarations that clash with GCC 14). Refreshed `vendorHash`.
+- **deepin-desktop-schemas** `6.0.7` -> `6.0.13`. Still `buildGoModule` (the
+  `override_tool` builds fine in the sandbox — no network needed since it only
+  imports go-lib). Refreshed `vendorHash`.
+- **startdde** `6.0.15` -> `6.1.6`. Refreshed `vendorHash`; added
+  `env.CGO_CFLAGS = "-std=gnu11"` (same go-gir/GCC14 issue).
 - **util-dfm** `1.3.2` -> `1.4.5`. cmake/Qt6 (`OPT_ENABLE_QT6=ON` is default).
   Builds `libdfm6-io`/`-mount`/`-burn`/`-search` + headers/pkgconfig/cmake
   config. Note: our `dtkcore` 6.7.50 dev output ships `Dtk6CoreConfig.cmake`

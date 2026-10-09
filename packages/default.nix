@@ -62,17 +62,17 @@ let
       deepin-music = callPackage ./apps/deepin-music { };
       deepin-picker = callPackage ./apps/deepin-picker { };
       deepin-shortcut-viewer = callPackage ./apps/deepin-shortcut-viewer { };
-      # deepin-system-monitor = callPackage ./apps/deepin-system-monitor { };
+      deepin-system-monitor = callPackage ./apps/deepin-system-monitor { };
       deepin-terminal = callPackage ./apps/deepin-terminal { };
       deepin-reader = callPackage ./apps/deepin-reader { };
       deepin-screensaver = callPackage ./apps/deepin-screensaver { };
 
       #### Go Packages
-      # dde-api = callPackage ./go-package/dde-api { };
-      # dde-daemon = callPackage ./go-package/dde-daemon { };
+      dde-api = callPackage ./go-package/dde-api { };
+      dde-daemon = callPackage ./go-package/dde-daemon { };
       deepin-pw-check = callPackage ./go-package/deepin-pw-check { };
-      # deepin-desktop-schemas = callPackage ./go-package/deepin-desktop-schemas { };
-      # startdde = callPackage ./go-package/startdde { };
+      deepin-desktop-schemas = callPackage ./go-package/deepin-desktop-schemas { };
+      startdde = callPackage ./go-package/startdde { };
 
       #### TOOLS
       dde-device-formatter = callPackage ./tools/dde-device-formatter { };
