@@ -30,7 +30,7 @@ let
       qt6mpris = callPackage ./library/qt6mpris { };
 
       # TODO: upgrade to Qt6 and re-enable
-      # util-dfm = callPackage ./library/util-dfm { };
+      util-dfm = callPackage ./library/util-dfm { };
 
       #### CORE
       # dde-appearance = callPackage ./core/dde-appearance { };

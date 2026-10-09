@@ -29,6 +29,7 @@ be re-enabled one by one as it is upgraded.
 | gio-qt | 0.0.16 | Qt6 | was Qt5 (now qt6-only via patch) |
 | udisks2-qt6 | 6.0.1 | Qt6 | replaces udisks2-qt5 (deleted) |
 | qt6mpris | 1.0.0.1-1deepin2 | Qt6 | was already Qt6; version bump |
+| util-dfm | 1.4.5 | Qt6 | dfm6-io/mount/burn/search libs |
 | dde-account-faces | 1.0.19 | n/a | data (avatars) |
 | deepin-gtk-theme | 25.3.7 | n/a | data (GTK themes) |
 | deepin-sound-theme | 15.10.6 | n/a | data (sounds) |
@@ -144,19 +145,14 @@ be re-enabled one by one as it is upgraded.
   `substituteInPlace` on the dbus service file (its `Exec=/bin/false` is
   intentional, no `/usr` path to patch), and the rpm cracklib patch still
   applies cleanly in 6.0.12.
-
-## Not yet upgraded (recorded blockers)
-
-These were investigated and deliberately left commented out in
-`packages/default.nix`. Revisit when their blockers are resolved.
-
-- **util-dfm** `1.4.5`: cmake/Qt6 available (`OPT_ENABLE_QT6=ON`), but pulls a
-  wide dep chain — `Dtk6::Core` (dtkcore), `lucenepp` (needs boost),
-  libmediainfo/libisoburn/libsecret/udisks2/libmount/glib. Reference uses
-  `dtk6core` (6.0.50) + `lucenepp` + `boost`. Blocked on deciding whether to
-  also ship the `dtk6*`-suffixed alias set, since util-dfm's
-  `find_package(Dtk${DFM_VERSION_MAJOR} ...)` expects `Dtk6Core` while our
-  scope only exposes `dtkcore`. Defer until dde-file-manager is unblocked.
+- **util-dfm** `1.3.2` -> `1.4.5`. cmake/Qt6 (`OPT_ENABLE_QT6=ON` is default).
+  Builds `libdfm6-io`/`-mount`/`-burn`/`-search` + headers/pkgconfig/cmake
+  config. Note: our `dtkcore` 6.7.50 dev output ships `Dtk6CoreConfig.cmake`
+  (the 6.x cmake package name is `Dtk6Core`, independent of the Nix attr
+  `dtkcore`), so `find_package(Dtk6 COMPONENTS Core)` matches directly — no
+  `dtk6*`-suffixed alias set is needed. Added `openssl` (1.4.5 links
+  `OpenSSL::Crypto` in dfm-burn) and `-DCMAKE_BUILD_TYPE=Release` (avoids the
+  default Debug build pulling `BUILD_UNIT_TESTS=ON`).
 
 ## Removed (abandoned upstream)
 

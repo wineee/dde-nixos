@@ -4,51 +4,66 @@
   fetchFromGitHub,
   cmake,
   pkg-config,
-  libsForQt5,
+  qt6Packages,
+  dtkcore,
+  glib,
   libmediainfo,
-  libsecret,
   libisoburn,
-  libuuid,
-  udisks,
+  libsecret,
+  udisks2,
+  util-linux,
+  lucenepp,
+  boost,
+  openssl,
 }:
 
-stdenv.mkDerivation rec {
+stdenv.mkDerivation (finalAttrs: {
   pname = "util-dfm";
-  version = "1.3.2";
+  version = "1.4.5";
 
   src = fetchFromGitHub {
     owner = "linuxdeepin";
-    repo = pname;
-    rev = version;
-    hash = "sha256-ngDjjdwuYqvyhaUcMNV5PRmGKC3lmY/nJQGOQgRMIQE=";
+    repo = "util-dfm";
+    rev = finalAttrs.version;
+    hash = "sha256-hvYG3DGfJX0la2mWFnfCFroZ0H3h274NY9aRtSMNckI=";
   };
 
   nativeBuildInputs = [
     cmake
     pkg-config
+    qt6Packages.qttools
+  ];
+
+  buildInputs = [
+    qt6Packages.qtbase
+    dtkcore
+    glib
+    libmediainfo
+    libisoburn
+    libsecret
+    udisks2
+    util-linux # libmount
+    lucenepp
+    boost
+    openssl
   ];
 
   dontWrapQtApps = true;
 
-  buildInputs = [
-    libsForQt5.qtbase
-    libmediainfo
-    libsecret
-    libuuid
-    libisoburn
-    udisks
-  ];
-
   cmakeFlags = [
     "-DCMAKE_INSTALL_LIBDIR=lib"
-    "-DPROJECT_VERSION=${version}"
+    "-DCMAKE_BUILD_TYPE=Release"
   ];
 
-  meta = with lib; {
-    description = "Toolkits of libdfm-io,libdfm-mount and libdfm-burn";
+  # Fix pkgconfig double-prefix issue (NixOS uses absolute install dirs)
+  postInstall = ''
+    find $out/lib/pkgconfig -name "*.pc" -exec sed -i "s|\''${prefix}/|/|g" {} +
+  '';
+
+  meta = {
+    description = "File management utility libraries for DDE (dfm6-io, dfm6-mount, dfm6-burn, dfm6-search)";
     homepage = "https://github.com/linuxdeepin/util-dfm";
-    license = licenses.gpl3Plus;
-    platforms = platforms.linux;
-    teams = [ teams.deepin ];
+    license = lib.licenses.gpl3Plus;
+    platforms = lib.platforms.linux;
   };
-}
+})

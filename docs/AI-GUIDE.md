@@ -41,17 +41,17 @@
   `dtkdeclarative`/`dtksystemsettings`（统一 6.7.50 / 6.6.22，Qt6）、
   `qt6integration`/`qt6platform-plugins`（6.0.50）、`treeland-protocols`（0.6.0）。
 - ✅ 应用：`deepin-terminal`（6.5.40，第一个 Qt6 应用）。
-- ✅ 支撑库：`deepin-pdfium`、`docparser`、`gio-qt`、`udisks2-qt6`、`qt6mpris`。
+- ✅ 支撑库：`deepin-pdfium`、`docparser`、`gio-qt`、`udisks2-qt6`、`qt6mpris`、
+  `util-dfm`。
 - ✅ artwork 全家桶：account-faces / icon / wallpapers / gtk-theme /
   sound-theme / desktop-theme。
 - ✅ `deepin-desktop-base`（2026.09.04，已移到 core/ 并 NixOS 品牌化）。
 - ❌ 已删除：`qt5platform-plugins`、`qt5integration`、`deepin-wayland-protocols`、
   `dwayland`、`deepin-kwin`、`udisks2-qt5`、`dde-api-proxy`、
   `dde-qt-dbus-factory`、`disomaster`、`dpa-ext-gnomekeyring`（后三个已加 alias throw）。
-- ⏳ 阻塞项：`util-dfm`（依赖 `Dtk6::Core` 命名 + lucenepp/boost 链）。
+- ⏳ 阻塞项：无（所有已记录 blocker 均已解决）。
 
-详见 `docs/development.md` 的「Maintained packages」表与「Not yet upgraded
-(recorded blockers)」清单。
+详见 `docs/development.md` 的「Maintained packages」表。
 
 ## 4. 参考实现（dde/ 子目录）
 
@@ -133,7 +133,6 @@ type 常用：`feat`/`fix`/`refactor`/`remove`/`chore`；scope 用包名或目�
 
 ## 8. 待办 / 下一步
 
-1. 处理剩余 blocker：`util-dfm`（Dtk6 命名问题）。
-2. 逐步升级 `packages/core/` 与 `packages/apps/` 里引用已删组件（dwayland、
-   qt5platform-plugins 等）的注释包。
-3. 未来窗管：treeland（当前已删 deepin-kwin/dwayland/deepin-wayland-protocols）。
+1. 逐步升级 `packages/core/` 里引用已删组件（dwayland、qt5platform-plugins、
+   dde-qt-dbus-factory 等）的注释包。
+2. 未来窗管：treeland（当前已删 deepin-kwin/dwayland/deepin-wayland-protocols）。
