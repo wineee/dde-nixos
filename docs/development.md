@@ -52,6 +52,10 @@ be re-enabled one by one as it is upgraded.
 | dde-polkit-agent | 6.0.24 | Qt6 | Qt6 (Dtk6 + polkit-qt6 + DDE shell) |
 | dde-app-services | 1.0.46 | Qt6 | Qt6 (Dtk6 Core+Gui+Widget + systemd) |
 | dde-session-ui | 6.0.50 | Qt6 | Qt6 (Dtk6 Widget + xcb-ewmh) |
+| dde-session | 2.0.33 | Qt6 | Qt6 (Dtk6 Tools); kwin_x11 dropped |
+| dde-session-shell | 6.0.68 | Qt6 | snipe repo; greeter skipped |
+| dde-control-center | 6.1.109 | Qt6 | Qt6 (Dtk6 + DDEShell + polkit-qt6) |
+| dde-network-core | 2.0.102 | Qt6 | Qt6 (Dtk6 + KF6NetworkManagerQt) |
 | dde-launchpad | 2.0.48 | Qt6 | Qt6 (Dtk6 + DDE shell + appstream-qt) |
 | dde-appearance | 1.1.86 | Qt6 | Qt6 (Dtk6 + KF6 + gsettings-qt6) |
 | dde-clipboard | 6.1.35 | Qt6 | Qt6 (Dtk6 + DDE shell + tray-loader) |
@@ -337,8 +341,46 @@ be re-enabled one by one as it is upgraded.
   deepin-qdbus-service + DDE shell). Qt6 auto-detect; forces
   `BUILD_OS_VERSION=25` so the Qt6-only shell plugin builds. postConfigure
   redirects the dde-shell package install dir to `$out` (ds_install_package).
+- **dde-session** `1.2.12` -> `2.0.33`. Qt6 (Dtk6 Tools + libcap-ng/libsecret/
+  xcb/xcursor/xfixes/x11). Drops the `kwin_x11 --replace` line (and its
+  kglobalshortcutsrc pre-step) from `dde-session@x11.service` — treeland is the
+  future compositor — and the optional `deepin-keyring-whitebox` branch (not
+  packaged). postInstall rewrites the `/usr/bin/{dde-shell,dde-lock,...}`
+  references in systemd/D-Bus service files to their store paths. Installs
+  `deepin.desktop` xsessions entry, so the NixOS module default session is now
+  `deepin` (was `dde-x11`).
+- **dde-session-shell** `6.0.68`. Uses the `dde-session-shell-snipe` repo
+  (old repo, per user decision). `DDE_SESSION_SHELL_SNIPE=ON` takes the Qt6
+  branch. The greeter (`lightdm-deepin-greeter`) needs `liblightdm-qt6-3`
+  which nixpkgs doesn't have, so it is skipped via `if(FALSE)` + commented-out
+  `pkg_check_modules(Greeter ...)` + removed `''${Greeter_LIBRARIES}` from the
+  dde-lock link line; tests are disabled too. `dde-session-shell.conf` is
+  redirected from `/var/lib/dde-session-shell/` to `${out}/share/...`.
+- **dde-control-center** `6.0.65` -> `6.1.109`. Qt6 (Dtk6 Core+Gui + DDEShell
+  + polkit-qt6 + treeland-protocols + wlr-protocols + ffmpegthumbnailer +
+  dpkg + icu/openssl). Built with `DISABLE_AUTHENTICATION=ON` (the
+  authentication plugin needs `dareader`, not packaged) and
+  `ENABLE_WARNINGS_AS_ERRORS=OFF` (Qt 6.11 deprecates
+  `QSortFilterProxyModel::invalidateRowsFilter`, which trips `-Werror`).
+  Patches `misc/DdeControlCenterConfig.cmake.in` so
+  `DDE_CONTROL_CENTER_PLUGIN_INSTALL_DIR` isn't double-prefixed (nixpkgs passes
+  `CMAKE_INSTALL_LIBDIR` as an absolute path).
+- **dde-network-core** `2.0.34` -> `2.0.102`. Qt6 (Dtk6 Core+Widget +
+  KF6NetworkManagerQt + libnm + gsettings-qt6 + curl). Needs
+  dde-control-center (dcc-network plugin), dde-session-shell (dss plugin) and
+  dde-tray-loader (provides the `DdeDock` cmake package). Patches
+  `dock-network-plugin` to `find_package(... WaylandClientPrivate ...)` (Qt
+  6.10+ requires the private target explicitly), installs the dcc-network
+  plugin into our own prefix (runtime looks it up via dde-control-center's
+  plugin search dir), and stops installing to `/etc/NetworkManager/conf.d`.
+  Extra build deps: `wayland-protocols` (FindWaylandProtocols via ECM) and
+  `libsysprof-capture` (glib-2.0's `Requires.private` chain).
 
 ## Removed (abandoned upstream)
+
+- **dde-widgets** `6.0.23`: Qt5-only and no Qt6 migration upstream. Removed
+  with an alias throw, and dropped from the NixOS module (`requiredPackages`,
+  `services.dbus.packages`, `systemd.packages`).
 
 - **dde-qt-dbus-factory** `6.0.1`: abandoned upstream (superseded by
   go-dbus-factory / dtkcore DBus). Removed with an alias throw.
@@ -456,3 +498,36 @@ Regenerate the patches against the new source before applying.
 Building the Qt6 packages requires a recent nixpkgs (Qt 6.9+ / `wrapGAppsHook3`).
 `flake.lock` now pins a much newer nixpkgs than the original snapshot, so the
 previously documented "keep nixpkgs untouched" note no longer applies.
+
+### Qt 6.10+ private wayland targets must be `find_package`d explicitly
+
+Qt 6.10 split the private QtWayland targets. Code that links
+`Qt6::WaylandClientPrivate` (or `GuiPrivate`, `QuickTemplates2Private`, etc.)
+must `find_package(Qt6 COMPONENTS ... WaylandClientPrivate ...)` first — merely
+requesting `WaylandClient` is no longer enough. `dde-shell` 2.0.52 does this
+correctly in a `if(Qt6_VERSION VERSION_GREATER_EQUAL 6.10)` block; older
+consumers like `dde-network-core`'s `dock-network-plugin` don't, and need a
+patch. The private targets come from `qtbase`'s cmake dir (not `qtwayland`).
+
+### nixpkgs passes absolute `CMAKE_INSTALL_*DIR`, so templates double-prefix
+
+nixpkgs' cmake wrapper injects absolute `CMAKE_INSTALL_LIBDIR`/
+`CMAKE_INSTALL_DATAROOTDIR`. Upstream config-file templates that do
+`@CMAKE_INSTALL_PREFIX@/@DCC_PLUGINS_INSTALL_DIR@` end up with the prefix
+appended twice (`/nix/store/<pkg>/nix/store/<pkg>/...`). Fix the template to
+consume the already-absolute variable (see `dde-control-center`).
+
+### Plugin install dirs pointing at another package's store path
+
+`dde-network-core`'s `dcc-network` plugin installs into
+`dde-control-center`'s `plugins_v1.1` dir because `DdeControlCenterConfig.cmake`
+exports an absolute `DDE_CONTROL_CENTER_PLUGIN_INSTALL_DIR`. Override it after
+`find_package(DdeControlCenter ...)` to install into `$out` (the plugin is
+picked up from the control-center plugin search dir at runtime).
+
+### `substituteInPlace` cannot inject `\n` into CMakeLists safely
+
+`substituteInPlace --replace-fail ...` with a `\n` in the replacement produces
+unbalanced quoting / parse errors in cmake files. For multi-line edits (or
+adding a line after a `find_package`), edit the unpacked source in
+`dde/src/` with git and generate a patch file instead.

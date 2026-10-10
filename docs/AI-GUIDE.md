@@ -46,14 +46,22 @@
 - ✅ Go 服务：`dde-api`（6.0.48）、`dde-daemon`（6.1.107）、`startdde`（6.1.6）、
   `deepin-pw-check`（6.0.12）、`deepin-desktop-schemas`（6.0.13）。
 - ✅ 核心组件（Qt6）：`dde-application-manager`（1.2.45）、
-  `deepin-service-manager`（1.0.21）、`dde-tray-loader`（2.0.25）、
-  `dde-shell`（2.0.29）、`dde-file-manager`（6.5.121）。
+  `deepin-service-manager`（1.0.21）、`dde-tray-loader`（2.0.27）、
+  `dde-shell`（2.0.52）、`dde-file-manager`（6.5.121）、
+  `dde-session-ui`（6.0.50）、`dde-launchpad`（2.0.48）、
+  `dde-appearance`（1.1.86）、`dde-clipboard`（6.1.35）、
+  `dde-grand-search`（6.1.1）、`dde-app-services`（1.0.46）、
+  `dde-session`（2.0.33）、`dde-session-shell`（6.0.68）、
+  `dde-control-center`（6.1.109）、`dde-network-core`（2.0.102）。
 - ✅ artwork 全家桶：account-faces / icon / wallpapers / gtk-theme /
   sound-theme / desktop-theme。
 - ✅ `deepin-desktop-base`（2026.09.04，已移到 core/ 并 NixOS 品牌化）。
 - ❌ 已删除：`qt5platform-plugins`、`qt5integration`、`deepin-wayland-protocols`、
   `dwayland`、`deepin-kwin`、`udisks2-qt5`、`dde-api-proxy`、
-  `dde-qt-dbus-factory`、`disomaster`、`dpa-ext-gnomekeyring`（后三个已加 alias throw）。
+  `dde-qt-dbus-factory`、`disomaster`、`dpa-ext-gnomekeyring`、`dde-widgets`
+  （均加 alias throw）。
+- ✅ NixOS 模块清理：移除已删包的引用，默认 session 改为 `deepin`，
+  `deepin-anything` 模块已注释（暂不启用）。
 - ⏳ 阻塞项：无（所有已记录 blocker 均已解决）。
 
 详见 `docs/development.md` 的「Maintained packages」表。
@@ -138,6 +146,6 @@ type 常用：`feat`/`fix`/`refactor`/`remove`/`chore`；scope 用包名或目�
 
 ## 8. 待办 / 下一步
 
-1. 逐步升级 `packages/core/` 里引用已删组件（dwayland、qt5platform-plugins、
-   dde-qt-dbus-factory 等）的注释包。
+1. `packages/apps/` 仍有一批应用待升级（由另一 AI 并行负责，提交时注意不碰其文件）。
 2. 未来窗管：treeland（当前已删 deepin-kwin/dwayland/deepin-wayland-protocols）。
+3. `deepin-anything`：模块已注释，待内核模块 + 用户态工具准备好后再启用。
