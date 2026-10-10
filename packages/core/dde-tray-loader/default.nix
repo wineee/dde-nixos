@@ -2,68 +2,71 @@
   stdenv,
   lib,
   fetchFromGitHub,
-  fetchpatch,
   cmake,
-  extra-cmake-modules,
   pkg-config,
+  qt6Packages,
+  kdePackages,
+  dtkcommon,
+  dtkcore,
+  dtkgui,
   dtkwidget,
-  dde-qt-dbus-factory,
-  qt5integration,
-  qt5platform-plugins,
-  wayland,
-  wayland-scanner,
-  xorg,
-  libsForQt5,
+  libx11,
+  libxcb,
+  libxcursor,
+  libxtst,
+  xcbutilimage,
+  xcbutilwm,
+  xcbutil,
 }:
 
 stdenv.mkDerivation (finalAttrs: {
   pname = "dde-tray-loader";
-  version = "1.0.9";
+  version = "2.0.27";
 
   src = fetchFromGitHub {
     owner = "linuxdeepin";
     repo = "dde-tray-loader";
     rev = finalAttrs.version;
-    hash = "sha256-3rmLQRGtBLASr0VSsIfGP0R9HDxFlea+iNbVjkqKTVg=";
+    hash = "sha256-SFgxrydRScRhg9KZcTods/uPDV9XId0gExAsq7R/6zM=";
   };
-
-  patches = [
-    (fetchpatch {
-      name = "remove-useless-function.patch";
-      url = "https://github.com/linuxdeepin/dde-tray-loader/commit/cf85f68db52472a0291bbbc3c298d7a2b701e4bc.patch";
-      hash = "sha256-ks7Rg5kLQvo03XKbfQaqu/heP2yoVEbNO6UhDv99JBY=";
-    })
-  ];
 
   nativeBuildInputs = [
     cmake
-    extra-cmake-modules
+    kdePackages.extra-cmake-modules
     pkg-config
-    libsForQt5.wrapQtAppsHook
-    libsForQt5.qttools
-    wayland-scanner
+    qt6Packages.qttools
+    qt6Packages.wrapQtAppsHook
   ];
 
   buildInputs = [
+    qt6Packages.qtbase
+    qt6Packages.qtdeclarative
+    qt6Packages.qtsvg
+    qt6Packages.qtwayland
+    kdePackages.kwindowsystem
+    dtkcommon
+    dtkcore
+    dtkgui
     dtkwidget
-    dde-qt-dbus-factory
-    qt5integration
-    qt5platform-plugins
-    libsForQt5.qtbase
-    libsForQt5.qtsvg
-    libsForQt5.qtwayland
-    libsForQt5.networkmanager-qt
-    libsForQt5.libdbusmenu
-    wayland
-    xorg.libXcursor
-    xorg.libXtst
+    libx11
+    libxcb
+    libxcursor
+    libxtst
+    xcbutilimage
+    xcbutilwm
+    xcbutil
+  ];
+
+  cmakeFlags = [
+    "-DDTL_BUILD_WITH_QT6=ON"
+    "-DCMAKE_INSTALL_LIBDIR=lib"
   ];
 
   meta = {
-    description = "Tray plugins that integrated into task bar";
+    description = "System tray loader for DDE shell";
     homepage = "https://github.com/linuxdeepin/dde-tray-loader";
-    license = with lib.licenses; [ gpl3Plus ];
+    license = lib.licenses.lgpl3Plus;
     platforms = lib.platforms.linux;
-    maintainers = with lib.maintainers; [ rewine ];
+    teams = [ lib.teams.deepin ];
   };
 })

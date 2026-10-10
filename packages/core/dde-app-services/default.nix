@@ -2,69 +2,85 @@
   stdenv,
   lib,
   fetchFromGitHub,
-  dtkwidget,
-  qt5integration,
-  qt5platform-plugins,
   cmake,
-  libsForQt5,
-  doxygen,
+  ninja,
+  pkg-config,
+  qt6Packages,
+  dtkcore,
+  dtkgui,
+  dtkwidget,
+  dtkcommon,
+  glib,
+  systemd,
 }:
 
-stdenv.mkDerivation rec {
+stdenv.mkDerivation (finalAttrs: {
   pname = "dde-app-services";
-  version = "1.0.25";
+  version = "1.0.46";
 
   src = fetchFromGitHub {
     owner = "linuxdeepin";
-    repo = pname;
-    rev = version;
-    hash = "sha256-/lHiSUOTD8nC0WDLAHAFzm1YC0WjSS5W5JNC0cjeVEo=";
+    repo = "dde-app-services";
+    rev = finalAttrs.version;
+    hash = "sha256-/jvOoqpoUl96RKOzEdBsy2pFDb6SuIXMEFpqV0BhpHs=";
   };
-
-  postPatch = ''
-    substituteInPlace dconfig-center/dde-dconfig-daemon/services/org.desktopspec.ConfigManager.service \
-      --replace "/usr/bin/dde-dconfig-daemon" "$out/bin/dde-dconfig-daemon"
-    substituteInPlace dconfig-center/dde-dconfig/main.cpp \
-      --replace "/bin/dde-dconfig-editor" "dde-dconfig-editor"
-    substituteInPlace dconfig-center/CMakeLists.txt \
-      --replace 'add_subdirectory("example")' " " \
-      --replace 'add_subdirectory("tests")'   " "
-
-    substituteInPlace dconfig-center/dde-dconfig-daemon/services/dde-dconfig-daemon.service \
-      --replace "/usr/bin" "$out/bin" \
-      --replace "/usr/share" "/run/current-system/sw/share"
-  '';
 
   nativeBuildInputs = [
     cmake
-    libsForQt5.qttools
-    doxygen
-    libsForQt5.wrapQtAppsHook
+    ninja
+    pkg-config
+    qt6Packages.qttools
+    qt6Packages.wrapQtAppsHook
   ];
 
   buildInputs = [
+    qt6Packages.qtbase
+    dtkcore
+    dtkgui
     dtkwidget
-    qt5integration
-    qt5platform-plugins
+    dtkcommon
+    glib
+    systemd
   ];
 
   cmakeFlags = [
-    "-DDVERSION=${version}"
-    "-DDSG_DATA_DIR=/run/current-system/sw/share/dsg"
-    "-DQCH_INSTALL_DESTINATION=${placeholder "out"}/${libsForQt5.qtbase.qtDocPrefix}"
+    "-DDTK_VERSION=6"
+    "-DDVERSION=${finalAttrs.version}"
+    "-DBUILD_TESTING=OFF"
+    "-DBUILD_DOCS=OFF"
+    "-DSYSTEMD_USER_UNIT_DIR=${placeholder "out"}/lib/systemd/user"
+    "-DCMAKE_CXX_FLAGS=-Wno-error=format"
   ];
 
-  preConfigure = ''
-    # qt.qpa.plugin: Could not find the Qt platform plugin "minimal"
-    # A workaround is to set QT_PLUGIN_PATH explicitly
-    export QT_PLUGIN_PATH=${libsForQt5.qtbase.bin}/${libsForQt5.qtbase.qtPluginPrefix}
+  postPatch = ''
+    # Disable tests/example (unconditionally added, no BUILD_TESTING guard)
+    sed -i '/add_subdirectory.*tests/d' dconfig-center/CMakeLists.txt
+    sed -i '/add_subdirectory.*example/d' dconfig-center/CMakeLists.txt
+
+    # Fix hardcoded /usr paths
+    find . -name "CMakeLists.txt" -exec sed -i \
+      -e "s|/etc/|$out/etc/|g" \
+      -e "s|/usr/share|$out/share|g" \
+      -e "s|/usr/lib|$out/lib|g" \
+      -e "s|/usr/bin|$out/bin|g" {} +
+
+    # Fix D-Bus and systemd service files (including .in templates)
+    find . \( -name "*.service" -o -name "*.service.in" \) -exec sed -i \
+      -e "s|/usr/bin|$out/bin|g" \
+      -e "s|/usr/lib|$out/lib|g" \
+      -e "s|/usr/share/dsg|/run/current-system/sw/share/dsg|g" {} +
+
+    # Fix systemd unit paths
+    find . -name "CMakeLists.txt" -exec sed -i \
+      -e 's|''${systemd_USER_UNIT_DIR}|'"$out/lib/systemd/user"'|g' \
+      -e 's|''${SYSTEMD_USER_UNIT_DIR}|'"$out/lib/systemd/user"'|g' {} +
   '';
 
-  meta = with lib; {
-    description = "Provids dbus service for reading and writing DSG configuration";
+  meta = {
+    description = "DDE application services (DConfig center)";
     homepage = "https://github.com/linuxdeepin/dde-app-services";
-    license = licenses.lgpl3Plus;
-    platforms = platforms.linux;
-    teams = [ teams.deepin ];
+    license = lib.licenses.lgpl3Plus;
+    platforms = lib.platforms.linux;
+    teams = [ lib.teams.deepin ];
   };
-}
+})

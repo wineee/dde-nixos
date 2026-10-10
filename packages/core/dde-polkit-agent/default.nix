@@ -3,49 +3,63 @@
   lib,
   fetchFromGitHub,
   dtkwidget,
-  qt5integration,
-  qt5platform-plugins,
-  dde-qt-dbus-factory,
+  dtkcore,
+  qt6integration,
+  qt6platform-plugins,
+  dde-shell,
   pkg-config,
   cmake,
-  libsForQt5,
+  qt6Packages,
+  kdePackages,
 }:
 
-stdenv.mkDerivation rec {
+stdenv.mkDerivation (finalAttrs: {
   pname = "dde-polkit-agent";
-  version = "6.0.7";
+  version = "6.0.24";
 
   src = fetchFromGitHub {
     owner = "linuxdeepin";
-    repo = pname;
-    rev = version;
-    hash = "sha256-r2WVyy1lqcBJIQnRsPWlBFWQtSeZkq98J1S4dkipCys=";
+    repo = finalAttrs.pname;
+    rev = finalAttrs.version;
+    hash = "sha256-LfqrbbgiHQpWqWjQAfIwN6cnaHrl+mQCX6/GZR0prYY=";
   };
+
+  postPatch = ''
+    substituteInPlace pluginmanager.cpp \
+      --replace "/usr/lib/polkit-1-dde/plugins/" "$out/lib/polkit-1-dde/plugins/"
+  '';
 
   nativeBuildInputs = [
     cmake
     pkg-config
-    libsForQt5.qttools
-    libsForQt5.wrapQtAppsHook
+    qt6Packages.qttools
+    qt6Packages.wrapQtAppsHook
   ];
 
   buildInputs = [
     dtkwidget
-    qt5integration
-    qt5platform-plugins
-    dde-qt-dbus-factory
-    libsForQt5.polkit-qt
+    dtkcore
+    qt6integration
+    qt6platform-plugins
+    dde-shell
+    qt6Packages.qtbase
+    kdePackages.polkit-qt-1
   ];
 
   postFixup = ''
+    # The binary is installed to lib/polkit-1-dde, outside the dirs the
+    # wrapQtAppsHook auto-wraps, so wrap it manually.
     wrapQtApp $out/lib/polkit-1-dde/dde-polkit-agent
   '';
 
+  strictDeps = true;
+
   meta = with lib; {
     description = "PolicyKit agent for Deepin Desktop Environment";
+    mainProgram = "dde-polkit-agent";
     homepage = "https://github.com/linuxdeepin/dde-polkit-agent";
     license = licenses.gpl3Plus;
     platforms = platforms.linux;
     teams = [ teams.deepin ];
   };
-}
+})

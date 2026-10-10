@@ -24,6 +24,7 @@ be re-enabled one by one as it is upgraded.
 | qt6platform-plugins | 6.0.50 | Qt6 |                                      |
 | qt6integration | 6.0.50 | Qt6 | depends on dtkwidget                 |
 | treeland-protocols | 0.6.0 | n/a |                                      |
+| dde-seatd | 0.9.3-3 | n/a | renamed libseat-compatible seat daemon |
 | deepin-pdfium | 1.5.8 | Qt6 | PDFium rendering lib (was Qt5 qmake) |
 | docparser | 1.0.26 | n/a | doc content analysis lib (was Qt5) |
 | gio-qt | 0.0.16 | Qt6 | was Qt5 (now qt6-only via patch) |
@@ -43,7 +44,23 @@ be re-enabled one by one as it is upgraded.
 | dde-daemon | 6.1.107 | n/a | Go system/session daemon (16 binaries) |
 | deepin-desktop-schemas | 6.0.13 | n/a | Go gschema build tool + schemas |
 | startdde | 6.1.6 | n/a | Go session starter |
+| dde-application-manager | 1.2.45 | Qt6 | Qt6 (Dtk6 Core + systemd + treeland-protocols) |
+| deepin-service-manager | 1.0.21 | Qt6 | Qt6 (Dtk6 Core + libqdbusservice) |
+| dde-tray-loader | 2.0.27 | Qt6 | Qt6 (Dtk6 + KF6WindowSystem) |
+| dde-shell | 2.0.52 | Qt6 | Qt6 (Dtk6 + WaylandCompositor) |
+| dde-file-manager | 6.5.121 | Qt6 | Qt6 (Dtk6 + DDE shell + dfm6); desktop plugin |
+| dde-polkit-agent | 6.0.24 | Qt6 | Qt6 (Dtk6 + polkit-qt6 + DDE shell) |
+| dde-app-services | 1.0.46 | Qt6 | Qt6 (Dtk6 Core+Gui+Widget + systemd) |
+| dde-session-ui | 6.0.50 | Qt6 | Qt6 (Dtk6 Widget + xcb-ewmh) |
+| dde-launchpad | 2.0.48 | Qt6 | Qt6 (Dtk6 + DDE shell + appstream-qt) |
+| dde-appearance | 1.1.86 | Qt6 | Qt6 (Dtk6 + KF6 + gsettings-qt6) |
+| dde-clipboard | 6.1.35 | Qt6 | Qt6 (Dtk6 + DDE shell + tray-loader) |
+| dde-grand-search | 6.1.1 | Qt6 | Qt6 (Dtk6 + dfm6-search + qdbus-service) |
+| gsettings-qt6 | 1.1.1 | Qt6 | new; Qt6 build of ubports gsettings-qt |
 | dde-device-formatter | 1.5.11 | Qt6 | was qmake/Qt5; now cmake/Qt6 |
+| dde-calendar | 6.6.3 | Qt6 | Qt6 (Dtk6 Core+Gui+Widget + libical) |
+| ddm | 0.3.8 | Qt6 | SDDM fork display manager; cmake/Qt6 |
+| treeland | 0.10.0 | Qt6 | Wayland compositor (vendored waylib + wlroots) |
 | deepin-terminal | 6.5.40 | Qt6 | first app upgraded to Qt6           |
 | deepin-calculator | 6.5.40 | Qt6 | upgraded to Qt6 (Dtk6 Widget)       |
 | deepin-compressor | 6.5.34 | Qt6 | Qt6 (Dtk6 + KF6); pzip + plugins   |
@@ -199,6 +216,51 @@ be re-enabled one by one as it is upgraded.
   `udisks2-qt6.pc` satisfies `pkg_check_modules(udisks2-qt6)`). Patched
   `set(QT_COMPONENTS ...)` to add `GuiPrivate` (linked but not declared in
   `find_package`).
+- **dde-calendar** `5.14.4` -> `6.6.3`. Switched from qmake/Qt5 to
+  cmake/Qt6 (Dtk6 Core+Gui+Widget, Qt SVG/DBus/Sql, bundled
+  `3rdparty/kcalendarcore` against `libical`). Dropped
+  `dde-qt-dbus-factory`/`sqlite` (QtSql is used for the sqlite backend, no
+  raw sqlite headers) and the obsolete `fix-wrapped-name-not-in-whitelist.diff`
+  (upstream `clientWhite()` now accepts the 15-char `/proc` truncation of the
+  wrapper name). Patched `/bin/bash` in the autostart/systemd `dbus-send`
+  commands to `${runtimeShell}`.
+- **dde-polkit-agent** `6.0.7` -> `6.0.24`. Switched from qmake/Qt5 to
+  cmake/Qt6 (Dtk6 Widget+Core+Tools, polkit-qt6, DDE Shell via
+  `find_package(DDEShell)`). Dropped `dde-qt-dbus-factory` (dbus interfaces
+  are generated with `qt_add_dbus_adaptor`/`dtk_add_dbus_interface`). The
+  binary installs to `lib/polkit-1-dde`, so it is wrapped manually in
+  `postFixup`. Patched the `/usr/lib/polkit-1-dde/plugins/` plugin search
+  path to `$out`.
+- **dde-seatd** new package `0.9.3-3` (meson). A Deepin fork of `seatd` that
+  ships a renamed libseat-compatible stack (`libdde-seat.so` + `dde-seatd`
+  daemon + `dde-seatd-launch`, socket `/run/dde-seatd.sock`, control socket
+  `/run/dde-seatd-control.sock`). Built like nixpkgs `seatd` with
+  `-Dlibseat-logind=systemd -Dlibseat-builtin=disabled -Dlibseat-seatd=enabled`.
+  Outputs `libdde-seat.pc` and header `dde-seatd/libseat.h` (pkg-config name
+  `libdde-seat`, NOT `libseat`).
+- **ddm** new package `0.3.8` (cmake/Qt6). A fork of SDDM used as the Deepin
+  display manager. Depends on `pam`/`libsystemd`/`systemd`/`xau`/`wayland-client`
+  + `treeland-protocols` (generates `treeland-ddm-v1`). Talks to `dde-seatd` via
+  raw unix socket (`/run/dde-seatd-control.sock`) — does NOT link libseat. CMake
+  fails unless `UID_MIN`/`UID_MAX` are provided (avoids reading `/etc/login.defs`
+  in the sandbox); set `UID_MIN=1000`, `UID_MAX=29999`, `DDM_INITIAL_VT=7`.
+  Installs `DDMConfig.cmake` + `DDM::Common` (required by treeland). Patched the
+  hardcoded `/usr/bin/{X,systemctl}` and session-dir defaults to
+  `/run/current-system/sw/...`.
+- **treeland** new package `0.10.0` (cmake/Qt6). Wayland compositor based on
+  QtQuick + vendored `waylib` + vendored `wlroots` 0.20.2 (both in-tree
+  subdirectories; no separate `waylib`/`wlroots` packages). Requires
+  `find_package(DDM ... COMPONENTS Common)`, Dtk6 Core/Declarative/SystemSettings,
+  and the full wlroots dependency set (wayland-server>=1.26, libdrm, xkbcommon,
+  pixman, wayland-protocols>=1.49, libudev, `libseat`>=0.2.0 from upstream `seatd`,
+  libdisplay-info, hwdata, libliftoff, libinput, xcb stack, gbm/egl/glesv2,
+  vulkan-loader/glslang, lcms2, xwayland, mpv). The vendored wlroots still needs
+  the standard `libseat.pc` (provided by `seatd`), while at runtime the compositor
+  talks to `dde-seatd` via `SEATD_SOCK=/run/dde-seatd.sock`. Needs
+  `wayland-server>=1.26` so must build against the flake-pinned nixpkgs
+  (`<nixpkgs>` channel is still on wayland 1.24). Patched the hardcoded
+  `/usr/share/wallpapers/deepin/deepin-default.jpg` fallback and the systemd
+  unit `/usr/bin`/`/bin` helper paths.
 - **dde-api** `6.0.11` -> `6.0.48`. Refreshed `vendorHash`. The old postPatch
   targeted files that no longer exist (`lunar-calendar/huangli.go`,
   `themes/theme.go`, `deepin-login-sound.service`); rebuilt the postPatch
@@ -218,6 +280,33 @@ be re-enabled one by one as it is upgraded.
   imports go-lib). Refreshed `vendorHash`.
 - **startdde** `6.0.15` -> `6.1.6`. Refreshed `vendorHash`; added
   `env.CGO_CFLAGS = "-std=gnu11"` (same go-gir/GCC14 issue).
+- **dde-application-manager** `1.2.19` -> `1.2.45`. cmake/Qt6 + systemd +
+  treeland-protocols + libxkbcommon. Removes Debian dpkg config in postInstall.
+- **deepin-service-manager** `1.0.3` -> `1.0.21`. Rewrote from Qt5 to Qt6
+  (Dtk6 Core + Qt6 DBus + libsystemd). Builds `libdeepin-qdbus-service.so` +
+  `deepin-qdbus-service.pc`/`-Config.cmake` (satisfies dde-file-manager's
+  `find_package(deepin-qdbus-service)`). preConfigure redirects the compile-time
+  `SERVICE_CONFIG_DIR`/`SERVICE_LIB_DIR` to `/run/current-system/sw/...`.
+- **dde-tray-loader** `1.0.9` -> `2.0.27`. Qt5 -> Qt6 (Dtk6 +
+  KF6WindowSystem + wayland). Provides `dde-dock.pc`/`DdeTrayLoaderConfig.cmake`
+  for dde-shell and dde-file-manager. 2.0.27 adds the `set_cursor` request to
+  `plugin-manager-v1.xml` (required by dde-shell >= 2.0.52).
+- **dde-shell** `1.0.10` -> `2.0.52`. Rewrote (Qt6 WaylandCompositor). Dropped
+  the obsolete `fix-path-for-nixos.diff`/Qt6.9 fetchpatch chain (2.0.52 is
+  built against Qt 6.11 and needs none). 2.0.52 adds
+  `frame/wayland/xdgactivation.h` (public header required by dde-launchpad
+  2.0.48). postPatch redirects `/etc/` and systemd user unit installs, and
+  `/usr/lib/dde-dock` -> `/run/current-system/sw`.
+  postInstall overrides the QtWayland.Compositor qmldir (the upstream
+  `prefer :/...` directive breaks filesystem plugin resolution). Needs
+  `xcb xcb-aux xcb-res xcb-ewmh` (libxcb + xcbutil + xcbutilwm).
+- **dde-file-manager** `6.0.57` -> `6.5.121`. Qt5 -> Qt6 (Dtk6 + DDE shell +
+  dfm6). Dropped `patch_check_v23_interface.diff` and the stale
+  `fix-permission-to-execute` fetchpatch. Stubbed out `libappimage` (not in
+  nixpkgs, AppImage thumbnail support). `deepin-qdbus-service` (diskencrypt
+  service) comes from `deepin-service-manager`. postInstall rewrites
+  `/usr/bin/{dde-file-manager,dde-desktop,...}` in service files and points the
+  D-Bus service `Exec` at `deepin-service-manager`'s store path.
 - **util-dfm** `1.3.2` -> `1.4.5`. cmake/Qt6 (`OPT_ENABLE_QT6=ON` is default).
   Builds `libdfm6-io`/`-mount`/`-burn`/`-search` + headers/pkgconfig/cmake
   config. Note: our `dtkcore` 6.7.50 dev output ships `Dtk6CoreConfig.cmake`
@@ -226,6 +315,28 @@ be re-enabled one by one as it is upgraded.
   `dtk6*`-suffixed alias set is needed. Added `openssl` (1.4.5 links
   `OpenSSL::Crypto` in dfm-burn) and `-DCMAKE_BUILD_TYPE=Release` (avoids the
   default Debug build pulling `BUILD_UNIT_TESTS=ON`).
+- **gsettings-qt6** (new). Qt6 build of ubports `gsettings-qt` 1.1.1 (copied
+  from nixpkgs `lomiri/development/gsettings-qt` but pinned to Qt6 via
+  `ENABLE_QT6=ON`). Adds the extra `-I@QT_FULL_INCLUDE_DIR@` Cflags so
+  `#include <QGSettings/QGSettings>` resolves (nixpkgs' `lomiri-qt6.gsettings-qt`
+  only exposes `include/qt6/QGSettings`, breaking that include style). Needed
+  by dde-appearance (and later dde-session / dde-session-shell).
+- **dde-app-services** `1.0.25` -> `1.0.46`. Qt6 (Dtk6 Core+Gui+Widget +
+  systemd). Disables unconditional tests/example subdirs; broad `/usr` sed.
+- **dde-session-ui** `6.0.20` -> `6.0.50`. Qt6 (Dtk6 Widget + xcb-ewmh +
+  deepin-pw-check + libxrandr). No longer uses gsettings-qt.
+- **dde-launchpad** `1.0.8` -> `2.0.48`. Qt6 (Dtk6 + DDE shell +
+  appstream-qt + qtwayland). Requires dde-shell >= 2.0.52 (xdgactivation.h).
+  postConfigure redirects dde-shell install dirs; postInstall writes on-disk
+  qmldir for its 3 QML modules (embedded in launchpadcommon.so).
+- **dde-appearance** `1.1.29` -> `1.1.86`. Qt6 (Dtk6 + KF6 + gsettings-qt6 +
+  deepin-service-manager). Replaces `/usr/share/zoneinfo` with `${tzdata}`.
+- **dde-clipboard** `6.0.11` -> `6.1.35`. Qt6 (Dtk6 + DDE shell + tray-loader +
+  gio-qt6). Hardlinks `-lgtest`; redirects `/etc/xdg/autostart`.
+- **dde-grand-search** `5.5.2` -> `6.1.1`. Qt6 (Dtk6 + dfm6-search +
+  deepin-qdbus-service + DDE shell). Qt6 auto-detect; forces
+  `BUILD_OS_VERSION=25` so the Qt6-only shell plugin builds. postConfigure
+  redirects the dde-shell package install dir to `$out` (ds_install_package).
 
 ## Removed (abandoned upstream)
 

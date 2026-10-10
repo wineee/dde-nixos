@@ -5,37 +5,61 @@
   cmake,
   pkg-config,
   qt6Packages,
-  dtk6core,
+  dtkcore,
+  systemd,
+  treeland-protocols,
+  libxkbcommon,
 }:
 
-stdenv.mkDerivation rec {
+stdenv.mkDerivation (finalAttrs: {
   pname = "dde-application-manager";
-  version = "1.2.19";
+  version = "1.2.45";
 
   src = fetchFromGitHub {
     owner = "linuxdeepin";
-    repo = pname;
-    rev = version;
-    hash = "sha256-KUwX7oilV562WDxkBhTQhwz2lgcQIYwkmRRglWj0zh8=";
+    repo = "dde-application-manager";
+    rev = finalAttrs.version;
+    hash = "sha256-HeHVjO3+sKwnkMbA19XbIVpR6iqpOKxk2w0VbxTgmZ0=";
   };
+
+  postPatch = ''
+    # Fix hardcoded /etc paths
+    find . -name "CMakeLists.txt" -exec \
+      sed -i "s|/etc/|$out/etc/|g" {} +
+  '';
 
   nativeBuildInputs = [
     cmake
     pkg-config
-    qt6Packages.wrapQtAppsNoGuiHook
+    qt6Packages.wrapQtAppsHook
   ];
 
   buildInputs = [
     qt6Packages.qtbase
-    dtk6core
+    qt6Packages.qtwayland
+    dtkcore
+    systemd
+    treeland-protocols
+    libxkbcommon
   ];
 
-  meta = with lib; {
-    description = "Application manager for DDE";
+  cmakeFlags = [
+    "-DCMAKE_INSTALL_SYSCONFDIR=${placeholder "out"}/etc"
+    "-DCMAKE_INSTALL_LIBEXECDIR=lib"
+    "-DBUILD_TESTING=OFF"
+  ];
+
+  # Remove Debian-specific dpkg config
+  postInstall = ''
+    rm -rf $out/etc/dpkg
+  '';
+
+  meta = {
+    description = "Application manager for Deepin Desktop Environment";
     mainProgram = "dde-application-manager";
     homepage = "https://github.com/linuxdeepin/dde-application-manager";
-    license = licenses.gpl3Plus;
-    platforms = platforms.linux;
-    teams = [ teams.deepin ];
+    license = lib.licenses.gpl3Plus;
+    platforms = lib.platforms.linux;
+    teams = [ lib.teams.deepin ];
   };
-}
+})

@@ -45,6 +45,9 @@
   `util-dfm`。
 - ✅ Go 服务：`dde-api`（6.0.48）、`dde-daemon`（6.1.107）、`startdde`（6.1.6）、
   `deepin-pw-check`（6.0.12）、`deepin-desktop-schemas`（6.0.13）。
+- ✅ 核心组件（Qt6）：`dde-application-manager`（1.2.45）、
+  `deepin-service-manager`（1.0.21）、`dde-tray-loader`（2.0.25）、
+  `dde-shell`（2.0.29）、`dde-file-manager`（6.5.121）。
 - ✅ artwork 全家桶：account-faces / icon / wallpapers / gtk-theme /
   sound-theme / desktop-theme。
 - ✅ `deepin-desktop-base`（2026.09.04，已移到 core/ 并 NixOS 品牌化）。

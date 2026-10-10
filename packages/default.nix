@@ -22,10 +22,12 @@ let
       qt6platform-plugins = callPackage ./library/qt6platform-plugins { };
       qt6integration = callPackage ./library/qt6integration { };
       treeland-protocols = callPackage ./library/treeland-protocols { };
+      dde-seatd = callPackage ./library/dde-seatd { };
 
       deepin-pdfium = callPackage ./library/deepin-pdfium { };
       docparser = callPackage ./library/docparser { };
       gio-qt = callPackage ./library/gio-qt { };
+      gsettings-qt6 = callPackage ./library/gsettings-qt6 { };
       udisks2-qt6 = callPackage ./library/udisks2-qt6 { };
       qt6mpris = callPackage ./library/qt6mpris { };
 
@@ -33,25 +35,27 @@ let
       util-dfm = callPackage ./library/util-dfm { };
 
       #### CORE
-      # dde-appearance = callPackage ./core/dde-appearance { };
-      # dde-app-services = callPackage ./core/dde-app-services { };
-      # dde-application-manager = callPackage ./core/dde-application-manager { };
+      dde-appearance = callPackage ./core/dde-appearance { };
+      dde-app-services = callPackage ./core/dde-app-services { };
+      dde-application-manager = callPackage ./core/dde-application-manager { };
       # dde-control-center = callPackage ./core/dde-control-center { };
-      # dde-calendar = callPackage ./core/dde-calendar { };
-      # dde-clipboard = callPackage ./core/dde-clipboard { };
-      # dde-file-manager = callPackage ./core/dde-file-manager { };
-      # dde-launchpad = callPackage ./core/dde-launchpad { };
+      dde-calendar = callPackage ./core/dde-calendar { };
+      dde-clipboard = callPackage ./core/dde-clipboard { };
+      dde-file-manager = callPackage ./core/dde-file-manager { };
+      dde-launchpad = callPackage ./core/dde-launchpad { };
       # dde-network-core = callPackage ./core/dde-network-core { };
       # dde-session = callPackage ./core/dde-session { };
       # dde-session-shell = callPackage ./core/dde-session-shell { };
-      # dde-session-ui = callPackage ./core/dde-session-ui { };
-      # deepin-service-manager = callPackage ./core/deepin-service-manager { };
-      # dde-polkit-agent = callPackage ./core/dde-polkit-agent { };
+      dde-session-ui = callPackage ./core/dde-session-ui { };
+      deepin-service-manager = callPackage ./core/deepin-service-manager { };
+      dde-polkit-agent = callPackage ./core/dde-polkit-agent { };
+      ddm = callPackage ./core/ddm { };
+      treeland = callPackage ./core/treeland { };
       # dde-gsettings-schemas = callPackage ./core/dde-gsettings-schemas { };
       # dde-widgets = callPackage ./core/dde-widgets { };
-      # dde-shell = callPackage ./core/dde-shell { };
-      # dde-grand-search = callPackage ./core/dde-grand-search { };
-      # dde-tray-loader = callPackage ./core/dde-tray-loader { };
+      dde-shell = callPackage ./core/dde-shell { };
+      dde-grand-search = callPackage ./core/dde-grand-search { };
+      dde-tray-loader = callPackage ./core/dde-tray-loader { };
       deepin-desktop-base = callPackage ./core/deepin-desktop-base { };
 
       #### Dtk Application

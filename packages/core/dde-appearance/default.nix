@@ -4,73 +4,95 @@
   fetchFromGitHub,
   cmake,
   pkg-config,
-  libsForQt5,
+  qt6Packages,
+  kdePackages,
+  dtkcore,
   dtkgui,
-  gsettings-qt,
+  gsettings-qt6,
+  deepin-service-manager,
+  glib,
   gtk3,
-  xorg,
-  iconv,
+  libxcursor,
+  libxfixes,
+  libx11,
+  libxcb,
+  xcbutilcursor,
+  fontconfig,
+  openssl,
+  systemd,
+  tzdata,
 }:
 
-stdenv.mkDerivation rec {
+stdenv.mkDerivation (finalAttrs: {
   pname = "dde-appearance";
-  version = "1.1.29";
+  version = "1.1.86";
 
   src = fetchFromGitHub {
     owner = "linuxdeepin";
-    repo = pname;
-    rev = version;
-    hash = "sha256-M39EugV0uGCIaXK4isTQpHd6Rh2Vl6sg3Jp8JIEFEE4=";
+    repo = "dde-appearance";
+    rev = finalAttrs.version;
+    hash = "sha256-kFmYWIoQYVQWFqsiJin5XCaUIi/RquWnY4OSWBVgjg4=";
   };
-
-  postPatch = ''
-    substituteInPlace src/service/impl/appearancemanager.cpp \
-      src/service/modules/{api/compatibleengine.cpp,subthemes/customtheme.cpp,background/backgrounds.cpp} \
-      misc/dconfig/org.deepin.dde.appearance.json \
-      fakewm/dbus/deepinwmfaker.cpp \
-      --replace "/usr/share" "/run/current-system/sw/share"
-
-    for file in $(grep -rl "/usr/bin/dde-appearance"); do
-      substituteInPlace $file --replace "/usr/bin/dde-appearance" "$out/bin/dde-appearance"
-    done
-
-    substituteInPlace src/service/modules/api/themethumb.cpp \
-      --replace "/usr/lib/deepin-api" "/run/current-system/sw/lib/deepin-api"
-
-    substituteInPlace fakewm/dbus/deepinwmfaker.cpp \
-      --replace "/usr/lib/deepin-daemon" "/run/current-system/sw/lib/deepin-daemon"
-
-    substituteInPlace src/service/modules/api/locale.cpp \
-      --replace "/usr/share/locale/locale.alias" "${iconv}/share/locale/locale.alias"
-  '';
 
   nativeBuildInputs = [
     cmake
     pkg-config
-    libsForQt5.wrapQtAppsHook
+    qt6Packages.qttools
+    qt6Packages.wrapQtAppsHook
   ];
 
   buildInputs = [
+    qt6Packages.qtbase
+    kdePackages.kwindowsystem
+    kdePackages.kconfig
+    kdePackages.kglobalaccel
+    dtkcore
     dtkgui
-    gsettings-qt
+    gsettings-qt6
+    deepin-service-manager
+    glib
     gtk3
-    libsForQt5.kconfig
-    libsForQt5.kwindowsystem
-    libsForQt5.kglobalaccel
-    xorg.libXcursor
-    xorg.xcbutilcursor
+    libxcursor
+    libxfixes
+    libx11
+    libxcb
+    xcbutilcursor
+    fontconfig
+    openssl
+    systemd
   ];
 
   cmakeFlags = [
-    "-DDSG_DATA_DIR=/run/current-system/sw/share/dsg"
-    "-DSYSTEMD_USER_UNIT_DIR=${placeholder "out"}/lib/systemd/user"
+    "-DCMAKE_INSTALL_SYSCONFDIR=${placeholder "out"}/etc"
   ];
 
-  meta = with lib; {
-    description = "Program used to set the theme and appearance of deepin desktop";
+  postPatch = ''
+    # Fix hardcoded /etc paths in CMakeLists
+    find . -name "CMakeLists.txt" -exec \
+      sed -i "s|/etc/|$out/etc/|g" {} +
+
+    # Fix systemd user unit install path
+    find . -name "CMakeLists.txt" -exec \
+      sed -i "s|\''${SYSTEMD_USER_UNIT_DIR}|$out/lib/systemd/user|g" {} +
+
+    # Fix timezone data path
+    substituteInPlace src/service/modules/common/commondefine.h \
+      --replace-fail '"/usr/share/zoneinfo/zone1970.tab"' '"${tzdata}/share/zoneinfo/zone1970.tab"'
+
+    # Fix hardcoded /usr/share paths to use $out
+    substituteInPlace src/service/modules/api/compatibleengine.cpp \
+      --replace-fail '"/usr/share/dsg/icons/"' '"'"$out"'/share/dsg/icons/"'
+    substituteInPlace src/service/modules/subthemes/customtheme.cpp \
+      --replace-fail '"/usr/share/dde-appearance/' '"'"$out"'/share/dde-appearance/' || true
+  '';
+
+  SYSTEMD_USER_UNIT_DIR = "${placeholder "out"}/lib/systemd/user";
+
+  meta = {
+    description = "Appearance management service for DDE";
     homepage = "https://github.com/linuxdeepin/dde-appearance";
-    license = licenses.lgpl3Plus;
-    platforms = platforms.linux;
-    teams = [ teams.deepin ];
+    license = lib.licenses.gpl3Plus;
+    platforms = lib.platforms.linux;
+    teams = [ lib.teams.deepin ];
   };
-}
+})

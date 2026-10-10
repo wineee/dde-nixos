@@ -4,54 +4,50 @@
   fetchFromGitHub,
   cmake,
   pkg-config,
-  libsForQt5,
+  qt6Packages,
   dtkwidget,
-  qt5integration,
-  qt5platform-plugins,
-  dde-qt-dbus-factory,
+  qt6integration,
+  qt6platform-plugins,
   libical,
-  sqlite,
   runtimeShell,
 }:
 
-stdenv.mkDerivation rec {
+stdenv.mkDerivation (finalAttrs: {
   pname = "dde-calendar";
-  version = "5.14.4";
+  version = "6.6.3";
 
   src = fetchFromGitHub {
     owner = "linuxdeepin";
-    repo = pname;
-    rev = version;
-    hash = "sha256-bZxNOBtLjop0eYxpMeoomaWYvPcMyDfQfgGPK9m+ARo=";
+    repo = finalAttrs.pname;
+    rev = finalAttrs.version;
+    hash = "sha256-I4e2XVd7GE9bt4LO7p+63+M5SDqeddfqRSCvFjZfe8c=";
   };
 
-  patches = [ ./fix-wrapped-name-not-in-whitelist.diff ];
-
   postPatch = ''
-    for file in $(grep -rl "/bin/bash"); do
+    # The service/systemd/autostart files invoke dbus-send via a hardcoded
+    # /bin/bash shebang/Exec line; point them at the Nix-provided shell.
+    for file in $(grep -rl "/bin/bash" src misc); do
       substituteInPlace $file --replace "/bin/bash" "${runtimeShell}"
     done
   '';
 
   nativeBuildInputs = [
     cmake
-    libsForQt5.qttools
+    qt6Packages.qttools
     pkg-config
-    libsForQt5.wrapQtAppsHook
+    qt6Packages.wrapQtAppsHook
   ];
 
   buildInputs = [
-    qt5integration
-    qt5platform-plugins
+    qt6Packages.qtbase
+    qt6Packages.qtsvg
     dtkwidget
-    libsForQt5.qtbase
-    libsForQt5.qtsvg
-    dde-qt-dbus-factory
+    qt6integration
+    qt6platform-plugins
     libical
-    sqlite
   ];
 
-  cmakeFlags = [ "-DVERSION=${version}" ];
+  cmakeFlags = [ "-DVERSION=${finalAttrs.version}" ];
 
   strictDeps = true;
 
@@ -63,4 +59,4 @@ stdenv.mkDerivation rec {
     platforms = platforms.linux;
     teams = [ teams.deepin ];
   };
-}
+})

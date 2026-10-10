@@ -3,73 +3,99 @@
   lib,
   fetchFromGitHub,
   cmake,
-  libsForQt5,
   pkg-config,
+  qt6Packages,
+  dtkcore,
+  dtkgui,
   dtkwidget,
-  dde-qt-dbus-factory,
+  dtkdeclarative,
+  util-dfm,
+  deepin-service-manager,
   dde-tray-loader,
+  dde-shell,
   deepin-pdfium,
-  qt5integration,
-  qt5platform-plugins,
-  taglib_1,
   ffmpeg,
   ffmpegthumbnailer,
-  pcre,
+  taglib,
+  icu,
+  libjpeg,
   lucenepp,
   boost,
+  glib,
 }:
 
-stdenv.mkDerivation rec {
+stdenv.mkDerivation (finalAttrs: {
   pname = "dde-grand-search";
-  version = "5.5.2";
+  version = "6.1.1";
 
   src = fetchFromGitHub {
     owner = "linuxdeepin";
-    repo = pname;
-    rev = version;
-    hash = "sha256-6s6M0cL8gjq1B5tuIRGPi8D69p4T8hPJv5QvBIvsO1w=";
+    repo = "dde-grand-search";
+    rev = finalAttrs.version;
+    hash = "sha256-A4g4LnxwK7jkVaBQ0FF9Kgsd2T3H9TKNg+/M5jTi6B8=";
   };
 
   nativeBuildInputs = [
     cmake
-    libsForQt5.qttools
     pkg-config
-    libsForQt5.wrapQtAppsHook
+    qt6Packages.qttools
+    qt6Packages.wrapQtAppsHook
   ];
 
   buildInputs = [
+    qt6Packages.qtbase
+    qt6Packages.qtdeclarative
+    qt6Packages.qt5compat
+    dtkcore
+    dtkgui
     dtkwidget
+    dtkdeclarative
+    util-dfm
+    deepin-service-manager
     dde-tray-loader
-    dde-qt-dbus-factory
+    dde-shell
     deepin-pdfium
-    qt5integration
-    qt5platform-plugins
-    taglib_1
     ffmpeg
     ffmpegthumbnailer
-    pcre
+    taglib
+    icu
+    libjpeg
     lucenepp
     boost
-  ];
-
-  patches = [
-    # This patch reverts the commit e6735e7
-    ./fix-dbus-path-for-daemon.diff
+    glib
   ];
 
   postPatch = ''
-    # fix access permit to daemon
-    substituteInPlace src/libgrand-search-daemon/dbusservice/grandsearchinterface.cpp \
-      --replace-fail "/usr/bin/dde-grand-search" "$out/bin/.dde-grand-search-wrapped"
+    # Fix hardcoded /usr paths
+    find . -name "CMakeLists.txt" -exec sed -i \
+      -e "s|/usr/bin|$out/bin|g" \
+      -e "s|/usr/share|$out/share|g" \
+      -e "s|/usr/lib|$out/lib|g" {} +
 
-    for file in $(grep -rl "/usr/bin/dde-grand-search"); do
-      substituteInPlace $file --replace-fail "/usr/bin/dde-grand-search" "$out/bin/dde-grand-search"
-    done
+    # Fix D-Bus service files
+    find . -name "*.service" -exec sed -i \
+      -e "s|/usr/bin|$out/bin|g" {} +
 
-    substituteAllInPlace src/grand-search-daemon/data/com.deepin.dde.daemon.GrandSearch.service
+    # Skip reading /etc/os-version (NixOS doesn't have it); force DDE 25 so
+    # the Qt6-only shell plugin gets built.
+    substituteInPlace CMakeLists.txt \
+      --replace-fail 'if (NOT DEFINED BUILD_OS_VERSION OR BUILD_OS_VERSION STREQUAL "")' \
+                      'if (FALSE)'
   '';
 
-  cmakeFlags = [ "-DVERSION=${version}" ];
+  postConfigure = ''
+    # Redirect dde-shell package/plugin install dirs to our own output
+    # (ds_install_package resolves DDE_SHELL_PACKAGE_INSTALL_DIR into the
+    # dde-shell store path).
+    find . -name "cmake_install.cmake" -exec sed -i \
+      -e "s|${dde-shell}/share/dde-shell|$out/share/dde-shell|g" \
+      -e "s|${dde-shell}/lib/dde-shell|$out/lib/dde-shell|g" {} +
+  '';
+
+  cmakeFlags = [
+    "-DVERSION=${finalAttrs.version}"
+    "-DBUILD_OS_VERSION=25"
+  ];
 
   meta = {
     description = "System-wide desktop search for DDE";
@@ -78,4 +104,4 @@ stdenv.mkDerivation rec {
     platforms = lib.platforms.linux;
     teams = [ lib.teams.deepin ];
   };
-}
+})

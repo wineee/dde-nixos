@@ -2,154 +2,183 @@
   stdenv,
   lib,
   fetchFromGitHub,
-  fetchpatch,
-  runtimeShell,
-  dtkwidget,
-  qt5integration,
-  qt5platform-plugins,
-  dde-qt-dbus-factory,
-  docparser,
-  dde-tray-loader,
   cmake,
-  libsForQt5,
   pkg-config,
-  ffmpegthumbnailer,
-  libsecret,
-  libmediainfo,
-  mediainfo,
-  libzen,
-  poppler,
-  polkit,
-  wrapGAppsHook3,
-  lucenepp,
-  boost,
-  taglib,
-  cryptsetup,
-  glib,
+  qt6Packages,
+  kdePackages,
+  # DTK
+  dtkcore,
+  dtkgui,
+  dtkwidget,
+  dtkdeclarative,
+  # DDE
+  dde-shell,
+  dde-tray-loader,
+  deepin-service-manager,
+  # File manager deps
   util-dfm,
   deepin-pdfium,
-  libuuid,
-  libselinux,
-  glibmm,
-  pcre,
-  udisks2,
-  libisoburn,
-  gsettings-qt,
+  docparser,
+  # System libs
+  glib,
+  libheif,
+  libsecret,
+  openssl,
+  pcre2,
+  icu,
+  boost,
+  lucenepp,
+  poppler,
+  openjpeg,
+  lcms2,
+  ffmpegthumbnailer,
+  taglib,
+  libxcb,
+  libX11,
+  util-linux,
+  polkit,
+  cryptsetup,
+  lvm2,
+  systemd,
 }:
 
-stdenv.mkDerivation rec {
+stdenv.mkDerivation (finalAttrs: {
   pname = "dde-file-manager";
-  version = "6.0.57";
+  version = "6.5.121";
 
   src = fetchFromGitHub {
     owner = "linuxdeepin";
-    repo = pname;
-    rev = version;
-    hash = "sha256-laM6PgNdUNbsqbzKFGWk7DPuAWR+XHo0eXKG0CDuc9c=";
+    repo = "dde-file-manager";
+    rev = finalAttrs.version;
+    hash = "sha256-YbKmtDnjzWPz5AFZkwObpzteta5xcJfAdZvNuQ5A2Ro=";
   };
 
   nativeBuildInputs = [
     cmake
-    libsForQt5.qttools
     pkg-config
-    libsForQt5.wrapQtAppsHook
-    wrapGAppsHook3
+    qt6Packages.qttools
+    qt6Packages.wrapQtAppsHook
   ];
-  dontWrapGApps = true;
-
-  patches = [
-    ./patch_check_v23_interface.diff
-    (fetchpatch {
-      name = "fix-permission-to-execute-dde-file-manager.patch";
-      url = "https://github.com/linuxdeepin/dde-file-manager/commit/b78cc4bd08dd487f67c5a332a2a2f4d20b3798c7.patch";
-      hash = "sha256-Tw3iu6sU0rrsM78WGMBpBgvA9YdRTM1ObjCxyM928F4=";
-    })
-  ];
-
-  postPatch = ''
-    patchShebangs tests/*.sh \
-                  assets/scripts \
-                  src/*.sh \
-                  src/plugins/daemon/daemonplugin-accesscontrol/help.sh \
-                  src/apps/dde-file-manager/dde-property-dialog \
-                  src/apps/dde-desktop/data/applications/dfm-open.sh
-
-    substituteInPlace assets/scripts/file-manager.sh \
-      --replace-fail "/usr/libexec/dde-file-manager" "$out/libexec/dde-file-manager"
-
-    substituteInPlace src/plugins/filemanager/dfmplugin-vault/utils/vaultdefine.h \
-      --replace-fail "/usr/bin/deepin-compressor" "deepin-compressor"
-
-    substituteInPlace src/plugins/filemanager/dfmplugin-avfsbrowser/utils/avfsutils.cpp \
-      --replace-fail "/usr/bin/mountavfs" "mountavfs" \
-      --replace-fail "/usr/bin/umountavfs" "umountavfs"
-
-    substituteInPlace src/plugins/common/core/dfmplugin-menu/{extendmenuscene/extendmenu/dcustomactionparser.cpp,oemmenuscene/oemmenu.cpp} \
-      --replace-fail "/usr" "$out"
-
-    substituteInPlace src/tools/upgrade/dialog/processdialog.cpp \
-      --replace-fail "/usr/bin/dde-file-manager" "dde-file-manager" \
-      --replace-fail "/usr/bin/dde-desktop" "dde-desktop"
-
-    substituteInPlace src/dfm-base/file/local/localfilehandler.cpp \
-      --replace-fail "/usr/lib/deepin-daemon" "/run/current-system/sw/lib/deepin-daemon"
-
-    substituteInPlace src/plugins/desktop/ddplugin-background/backgroundservice.cpp \
-      src/plugins/desktop/ddplugin-wallpapersetting/wallpapersettings.cpp \
-      --replace-fail "/usr/share/backgrounds" "/run/current-system/sw/share/backgrounds"
-
-    find . -type f -regex ".*\\.\\(service\\|policy\\|desktop\\)" -exec sed -i -e "s|/usr/|$out/|g" {} \;
-  '';
 
   buildInputs = [
+    # Qt6
+    qt6Packages.qtbase
+    qt6Packages.qtsvg
+    qt6Packages.qtmultimedia
+    qt6Packages.qtdeclarative
+    qt6Packages.qt5compat
+
+    # DTK
+    dtkcore
+    dtkgui
     dtkwidget
-    qt5integration
-    qt5platform-plugins
-    deepin-pdfium
-    util-dfm
-    dde-qt-dbus-factory
-    glibmm
-    docparser
+    dtkdeclarative
+
+    # DDE
+    dde-shell
     dde-tray-loader
-    libsForQt5.qtx11extras
-    libsForQt5.qtmultimedia
-    libsForQt5.kcodecs
-    ffmpegthumbnailer
+    deepin-service-manager
+
+    # File manager specific
+    util-dfm
+    deepin-pdfium
+    docparser
+
+    # System
+    glib
+    libheif
     libsecret
-    libmediainfo
-    mediainfo
-    poppler
-    libsForQt5.polkit-qt
-    polkit
-    lucenepp
+    openssl
+    pcre2
+    icu
     boost
+    lucenepp
+    poppler
+    openjpeg
+    lcms2
+    ffmpegthumbnailer
     taglib
+    libxcb
+    libX11
+    util-linux
+    polkit
     cryptsetup
-    libuuid
-    libselinux
-    pcre
-    udisks2
-    libisoburn
-    gsettings-qt
+    lvm2
+    systemd
+    kdePackages.syntax-highlighting
+    kdePackages.polkit-qt-1
   ];
 
   cmakeFlags = [
-    "-DVERSION=${version}"
-    "-DNIX_DEEPIN_VERSION=23"
+    "-DVERSION=${finalAttrs.version}"
+    "-DOPT_ENABLE_BUILD_UT=OFF"
+    "-DOPT_ENABLE_BUILD_DOCS=OFF"
+    "-DCMAKE_INSTALL_SYSCONFDIR=${placeholder "out"}/etc"
     "-DSYSTEMD_USER_UNIT_DIR=${placeholder "out"}/lib/systemd/user"
   ];
 
-  enableParallelBuilding = true;
+  # Fix hardcoded paths and missing deps
+  postPatch = ''
+    # Fix /etc/ hardcoded paths in services
+    find . -name "CMakeLists.txt" -exec sed -i \
+      -e "s|DESTINATION /etc/systemd/system|DESTINATION $out/lib/systemd/system|g" \
+      -e "s|DESTINATION /etc/udev/rules.d|DESTINATION $out/lib/udev/rules.d|g" \
+      -e "s|DESTINATION /etc/|DESTINATION $out/etc/|g" \
+      {} +
 
-  preFixup = ''
-    qtWrapperArgs+=("''${gappsWrapperArgs[@]}")
+    # Override dde-shell install dirs after find_package(DDEShell) — the imported
+    # cmake config sets non-cache variables pointing to dde-shell's store path
+    sed -i '/find_package(DDEShell REQUIRED)/a\
+set(DDE_SHELL_PACKAGE_INSTALL_DIR "''${CMAKE_INSTALL_PREFIX}/share/dde-shell")\
+set(DDE_SHELL_PLUGIN_INSTALL_DIR "''${CMAKE_INSTALL_PREFIX}/lib/dde-shell")\
+set(DDE_SHELL_TRANSLATION_INSTALL_DIR "''${CMAKE_INSTALL_PREFIX}/share/dde-shell")' \
+      src/external/dde-shell-plugins/panel-desktop/CMakeLists.txt \
+      src/plugins/desktop/ddplugin-core/dependencies.cmake
+
+    # Remove libappimage dependency (not in nixpkgs, used for AppImage thumbnail support)
+    sed -i \
+      -e 's|find_package(libappimage REQUIRED)|# libappimage removed|' \
+      -e 's|libappimage||g' \
+      cmake/DFMLibraryConfig.cmake
+    sed -i 's|libappimage ||' assets/dev/dfm6-base/dfm6-base.pc.in
+
+    # Stub out appimage thumbnail support in source (libappimage not available)
+    substituteInPlace src/dfm-base/utils/thumbnail/thumbnailcreators.cpp \
+      --replace-fail '#include <appimage/appimage.h>' '// libappimage removed'
+    # Replace the function body to avoid referencing appimage symbols
+    substituteInPlace src/dfm-base/utils/thumbnail/thumbnailcreators.cpp \
+      --replace-fail 'QImage ThumbnailCreators::appimageThumbnailCreator(const QString &filePath, ThumbnailSize size)' \
+        'QImage ThumbnailCreators::appimageThumbnailCreator(const QString &filePath, ThumbnailSize size)
+{
+    Q_UNUSED(filePath); Q_UNUSED(size);
+    return QImage(); // libappimage not available
+}
+#if 0 // original implementation disabled
+QImage _disabled_appimageThumbnailCreator(const QString &filePath, ThumbnailSize size)'
+    # Close the #if 0 after the original function's closing brace
+    substituteInPlace src/dfm-base/utils/thumbnail/thumbnailcreators.cpp \
+      --replace-fail 'QImage ThumbnailCreators::pptxThumbnailCreator' \
+        '#endif
+QImage ThumbnailCreators::pptxThumbnailCreator'
   '';
 
-  meta = with lib; {
-    description = "File manager for deepin desktop environment";
+  # Fix hardcoded /usr/bin paths in installed service files
+  postInstall = ''
+    find $out -name "*.service" -exec sed -i \
+      -e "s|/usr/bin/dde-file-manager|$out/bin/dde-file-manager|g" \
+      -e "s|/usr/bin/dde-desktop|$out/bin/dde-desktop|g" \
+      -e "s|/usr/bin/dde-select-dialog|$out/bin/dde-select-dialog|g" \
+      -e "s|/usr/bin/dde-file-dialog|$out/bin/dde-file-dialog|g" \
+      -e "s|/usr/bin/deepin-diskencrypt-service|$out/bin/deepin-diskencrypt-service|g" \
+      -e "s|/usr/bin/deepin-service-manager|${deepin-service-manager}/bin/deepin-service-manager|g" \
+      {} +
+  '';
+
+  meta = {
+    description = "File manager and desktop plugin for Deepin Desktop Environment";
     homepage = "https://github.com/linuxdeepin/dde-file-manager";
-    license = licenses.gpl3Plus;
-    platforms = platforms.linux;
-    teams = [ teams.deepin ];
+    license = lib.licenses.gpl3Plus;
+    platforms = lib.platforms.linux;
+    teams = [ lib.teams.deepin ];
   };
-}
+})

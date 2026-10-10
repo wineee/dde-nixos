@@ -2,53 +2,70 @@
   stdenv,
   lib,
   fetchFromGitHub,
+  cmake,
+  pkg-config,
+  qt6Packages,
+  kdePackages,
+  dtkcore,
+  dtkgui,
   dtkwidget,
   gio-qt,
-  cmake,
-  extra-cmake-modules,
-  libsForQt5,
+  dde-shell,
+  dde-tray-loader,
   wayland,
-  dwayland,
-  pkg-config,
-  glibmm,
+  glib,
   gtest,
 }:
 
-stdenv.mkDerivation rec {
+stdenv.mkDerivation (finalAttrs: {
   pname = "dde-clipboard";
-  version = "6.0.11";
+  version = "6.1.35";
 
   src = fetchFromGitHub {
     owner = "linuxdeepin";
-    repo = pname;
-    rev = version;
-    hash = "sha256-VSwip3WgpOYvqGw7/A8bqsYrVSACrVgoIp/pjXSAKcU=";
+    repo = "dde-clipboard";
+    rev = finalAttrs.version;
+    hash = "sha256-3lwf7RUQiKn73YZ5DCW+xMGbJbZCtZDXswbcR5p5xBM=";
   };
 
   nativeBuildInputs = [
     cmake
-    extra-cmake-modules
+    kdePackages.extra-cmake-modules
     pkg-config
-    libsForQt5.qttools
-    libsForQt5.wrapQtAppsHook
+    qt6Packages.qttools
+    qt6Packages.wrapQtAppsHook
   ];
 
   buildInputs = [
+    qt6Packages.qtbase
+    qt6Packages.qtdeclarative
+    qt6Packages.qtsvg
+    qt6Packages.qtwayland
+    dtkcore
+    dtkgui
     dtkwidget
     gio-qt
+    dde-shell
+    dde-tray-loader
     wayland
-    dwayland
-    glibmm
+    glib
     gtest
   ];
 
-  cmakeFlags = [ "-DSYSTEMD_USER_UNIT_DIR=${placeholder "out"}/lib/systemd/user" ];
+  cmakeFlags = [
+    "-DSYSTEMD_USER_UNIT_DIR=${placeholder "out"}/lib/systemd/user"
+  ];
 
-  meta = with lib; {
+  postPatch = ''
+    substituteInPlace CMakeLists.txt \
+      --replace-fail '/etc/xdg/autostart' "$out/etc/xdg/autostart"
+  '';
+
+  meta = {
     description = "DDE optional clipboard manager componment";
     homepage = "https://github.com/linuxdeepin/dde-clipboard";
-    license = licenses.gpl3Plus;
-    platforms = platforms.linux;
-    teams = [ teams.deepin ];
+    license = lib.licenses.gpl3Plus;
+    platforms = lib.platforms.linux;
+    teams = [ lib.teams.deepin ];
   };
-}
+})
