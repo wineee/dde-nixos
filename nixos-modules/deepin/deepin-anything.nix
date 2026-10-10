@@ -13,7 +13,7 @@
 
   options = {
 
-    services.deepin.deepin-anything = {
+    services.deepin25.deepin-anything = {
 
       enable = lib.mkEnableOption "deepin anything file search tool";
 
@@ -21,7 +21,7 @@
 
   };
 
-  config = lib.mkIf config.services.deepin.dde-api.enable {
+  config = lib.mkIf config.services.deepin25.dde-api.enable {
     environment.systemPackages = [ pkgs.deepin.deepin-anything ];
 
     services.dbus.packages = [ pkgs.deepin.deepin-anything ];

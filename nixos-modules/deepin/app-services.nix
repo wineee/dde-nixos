@@ -14,7 +14,7 @@
 
   options = {
 
-    services.deepin.app-services = {
+    services.deepin25.app-services = {
 
       enable = lib.mkEnableOption "service collection of DDE applications, including dconfig-center";
 
@@ -24,7 +24,7 @@
 
   ###### implementation
 
-  config = lib.mkIf config.services.deepin.app-services.enable {
+  config = lib.mkIf config.services.deepin25.app-services.enable {
 
     users.groups.dde-dconfig-daemon = { };
     users.users.dde-dconfig-daemon = {

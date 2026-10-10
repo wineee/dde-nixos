@@ -36,7 +36,11 @@ runCommand "nixos-gsettings-desktop-schemas" { preferLocalBuild = true; } ''
   mkdir -p $schema_dir
 
   ${lib.concatMapStringsSep "\n" (
-    pkg: "cp -rf \"${glib.getSchemaPath pkg}\"/*.xml \"$schema_dir\""
+    pkg: ''
+      if [ -d "${glib.getSchemaPath pkg}" ]; then
+        cp -rf "${glib.getSchemaPath pkg}"/*.xml "$schema_dir"
+      fi
+    ''
   ) gsettingsOverridePackages}
 
   chmod -R a+w "$data_dir"

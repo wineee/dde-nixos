@@ -66,6 +66,10 @@ stdenv.mkDerivation (finalAttrs: {
     "-DUID_MIN=1000"
     "-DUID_MAX=29999"
     "-DDDM_INITIAL_VT=7"
+    # Let the NixOS module generate configuration at runtime instead of
+    # baking the store path into Constants.h (upstream ~/ddm/nix precedent).
+    "-DCONFIG_FILE=/etc/ddm.conf"
+    "-DCONFIG_DIR=/etc/ddm.conf.d"
     "-DCMAKE_INSTALL_SYSCONFDIR=${placeholder "out"}/etc"
     "-DSYSTEMD_SYSTEM_UNIT_DIR=${placeholder "out"}/lib/systemd/system"
     "-DSYSTEMD_SYSUSERS_DIR=${placeholder "out"}/lib/sysusers.d"

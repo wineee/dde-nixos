@@ -14,7 +14,7 @@
 
   options = {
 
-    services.deepin.dde-api = {
+    services.deepin25.dde-api = {
 
       enable = lib.mkEnableOption ''
         the DDE API, which provides some dbus interfaces that is used for screen zone detecting,
@@ -27,7 +27,7 @@
 
   ###### implementation
 
-  config = lib.mkIf config.services.deepin.dde-api.enable {
+  config = lib.mkIf config.services.deepin25.dde-api.enable {
 
     environment.systemPackages = [ pkgs.deepin.dde-api ];
 

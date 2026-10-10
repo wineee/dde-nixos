@@ -9,8 +9,7 @@
 with lib;
 
 let
-  xcfg = config.services.xserver;
-  cfg = xcfg.desktopManager.deepin;
+  cfg = config.services.desktopManager.deepin;
 
   nixos-gsettings-overrides = pkgs.deepin.dde-gsettings-schemas.override {
     extraGSettingsOverridePackages = cfg.extraGSettingsOverridePackages;
@@ -20,8 +19,8 @@ in
 {
   options = {
 
-    services.xserver.desktopManager.deepin = {
-      enable = mkEnableOption "Deepin desktop manager";
+    services.desktopManager.deepin = {
+      enable = mkEnableOption "Deepin desktop environment (Treeland Wayland session)";
       extraGSettingsOverrides = mkOption {
         default = "";
         type = types.lines;
@@ -43,20 +42,23 @@ in
   };
 
   config = mkIf cfg.enable {
-    services.displayManager.sessionPackages = [ pkgs.deepin.dde-session ];
-    services.displayManager.defaultSession = mkDefault "deepin";
+    services.displayManager.sessionPackages = [ pkgs.deepin.treeland ];
+    services.displayManager.defaultSession = mkDefault "treeland";
 
-    # Update the DBus activation environment after launching the desktop manager.
-    services.xserver.displayManager.sessionCommands = ''
-      ${lib.getBin pkgs.dbus}/bin/dbus-update-activation-environment --systemd --all
-    '';
+    # Wayland/Treeland display manager (fork of SDDM) and its seat daemon.
+    services.displayManager.ddm.enable = mkDefault true;
 
     hardware.bluetooth.enable = mkDefault true;
     security.polkit.enable = true;
 
-    services.deepin.dde-daemon.enable = mkForce true;
-    services.deepin.dde-api.enable = mkForce true;
-    services.deepin.app-services.enable = mkForce true;
+    # Treeland is a Wayland compositor backed by wlroots; it needs a GL
+    # stack and Xwayland for X11 clients.
+    hardware.graphics.enable = mkDefault true;
+    programs.xwayland.enable = mkDefault true;
+
+    services.deepin25.dde-daemon.enable = mkForce true;
+    services.deepin25.dde-api.enable = mkForce true;
+    services.deepin25.app-services.enable = mkForce true;
 
     services.colord.enable = mkDefault true;
     services.accounts-daemon.enable = mkDefault true;
@@ -187,6 +189,7 @@ in
       ++ utils.removePackagesByName optionalPackages config.environment.deepin.excludePackages;
 
     services.dbus.packages = with pkgs.deepin; [
+      treeland
       dde-shell
       dde-launchpad
       dde-session-ui
@@ -204,6 +207,7 @@ in
     ];
 
     systemd.packages = with pkgs.deepin; [
+      treeland
       dde-shell
       dde-launchpad
       dde-file-manager

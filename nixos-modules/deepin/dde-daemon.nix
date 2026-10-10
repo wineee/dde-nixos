@@ -14,7 +14,7 @@
 
   options = {
 
-    services.deepin.dde-daemon = {
+    services.deepin25.dde-daemon = {
 
       enable = lib.mkEnableOption "daemon for handling the deepin session settings";
 
@@ -24,7 +24,7 @@
 
   ###### implementation
 
-  config = lib.mkIf config.services.deepin.dde-daemon.enable {
+  config = lib.mkIf config.services.deepin25.dde-daemon.enable {
 
     environment.systemPackages = [ pkgs.deepin.dde-daemon ];
 

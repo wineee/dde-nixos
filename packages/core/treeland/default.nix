@@ -41,6 +41,7 @@
   dtkdeclarative,
   dtksystemsettings,
   ddm,
+  dde-session,
   deepin-wallpapers,
 }:
 
@@ -72,6 +73,18 @@ stdenv.mkDerivation (finalAttrs: {
         --replace '/usr/bin/systemctl' '/run/current-system/sw/bin/systemctl' \
         --replace '/usr/bin/llvm-symbolizer' '/run/current-system/sw/bin/llvm-symbolizer' \
         --replace 'ExecCondition=/bin/sh' 'ExecCondition=/run/current-system/sw/bin/sh'
+    done
+  '';
+
+  # The single-mode session desktop entries are configured with
+  # Exec=${CMAKE_INSTALL_FULL_BINDIR}/dde-session, which resolves to a
+  # non-existent $out/bin/dde-session (treeland does not ship dde-session).
+  # Point them at the real dde-session binary. Do this after configure_file so
+  # the literal $out path is already expanded.
+  postInstall = ''
+    for f in $out/share/wayland-sessions/treeland.desktop $out/bin/treeland-user-wrapper; do
+      substituteInPlace "$f" \
+        --replace-fail "$out/bin/dde-session" "${dde-session}/bin/dde-session"
     done
   '';
 
@@ -133,6 +146,7 @@ stdenv.mkDerivation (finalAttrs: {
     dtkdeclarative
     dtksystemsettings
     ddm
+    dde-session
     deepin-wallpapers
   ];
 
@@ -153,6 +167,8 @@ stdenv.mkDerivation (finalAttrs: {
 
   # RPATH of binary /nix/store/.../bin/... contains a forbidden reference to /build/
   noAuditTmpdir = true;
+
+  passthru.providedSessions = [ "treeland" "treeland-user" ];
 
   meta = with lib; {
     description = "Wayland compositor based on wlroots and QtQuick";

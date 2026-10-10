@@ -51,7 +51,7 @@ let
       dde-polkit-agent = callPackage ./core/dde-polkit-agent { };
       ddm = callPackage ./core/ddm { };
       treeland = callPackage ./core/treeland { };
-      # dde-gsettings-schemas = callPackage ./core/dde-gsettings-schemas { };
+      dde-gsettings-schemas = callPackage ./core/dde-gsettings-schemas { };
       dde-shell = callPackage ./core/dde-shell { };
       dde-grand-search = callPackage ./core/dde-grand-search { };
       dde-tray-loader = callPackage ./core/dde-tray-loader { };
