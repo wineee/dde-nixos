@@ -3,87 +3,121 @@
   lib,
   fetchFromGitHub,
   cmake,
+  ninja,
   pkg-config,
-  doxygen,
-  wayland-scanner,
-  wayland,
-  dtkwidget,
-  qt5integration,
-  qt5platform-plugins,
-  libsForQt5,
+  qt6Packages,
+  kdePackages,
+  dtkcore,
+  dtkgui,
+  dtkcommon,
+  dde-shell,
   deepin-pw-check,
-  libxcrypt,
+  treeland-protocols,
+  deepin-gettext-tools,
+  glib,
   gtest,
-  runtimeShell,
+  systemd,
+  libxcrypt,
+  icu,
+  openssl,
+  dpkg,
+  wayland,
+  wlr-protocols,
+  ffmpegthumbnailer,
 }:
 
-stdenv.mkDerivation rec {
+stdenv.mkDerivation (finalAttrs: {
   pname = "dde-control-center";
-  version = "6.0.65";
+  version = "6.1.109";
 
   src = fetchFromGitHub {
     owner = "linuxdeepin";
-    repo = pname;
-    rev = version;
-    hash = "sha256-9v2UtLjQQ3OX69UxMknLlrQhorahDI4Z4EEHItBs7G0=";
+    repo = "dde-control-center";
+    rev = finalAttrs.version;
+    hash = "sha256-PlZsPU2xqQubhI4i42mqZk1v3YJ83tNoDCj9uJElDA0=";
   };
 
   postPatch = ''
-    substituteInPlace src/plugin-accounts/operation/accountsworker.cpp \
-      --replace "/bin/bash" "${runtimeShell}"
+    # Fix hardcoded paths
+    find . -name "*.cpp" -o -name "*.h" -o -name "*.qml" | xargs sed -i \
+      -e 's|/usr/share|/run/current-system/sw/share|g' \
+      -e 's|/usr/lib|/run/current-system/sw/lib|g' \
+      -e 's|/usr/bin|/run/current-system/sw/bin|g' || true
+
+    find . -name "*.service" -o -name "*.desktop" | xargs sed -i \
+      -e "s|/usr/bin|$out/bin|g" \
+      -e "s|/usr/lib|$out/lib|g" || true
+
+    # Fix CMake install paths
+    find . -name "CMakeLists.txt" -exec sed -i \
+      -e "s|/etc/|$out/etc/|g" \
+      -e 's|''${systemd_USER_UNIT_DIR}|'"$out/lib/systemd/user"'|g' \
+      -e 's|''${SYSTEMD_USER_UNIT_DIR}|'"$out/lib/systemd/user"'|g' {} +
+
+    # nixpkgs passes CMAKE_INSTALL_LIBDIR/DATAROOTDIR as absolute paths, so the
+    # config template would double the prefix. Consume them as-is.
+    substituteInPlace misc/DdeControlCenterConfig.cmake.in \
+      --replace-fail '@CMAKE_INSTALL_PREFIX@/@DCC_PLUGINS_INSTALL_DIR@' '@DCC_PLUGINS_INSTALL_DIR@' \
+      --replace-fail '@CMAKE_INSTALL_PREFIX@/@DCC_TRANSLATION_INSTALL_DIR@' '@DCC_TRANSLATION_INSTALL_DIR@'
   '';
 
   nativeBuildInputs = [
     cmake
+    ninja
     pkg-config
-    libsForQt5.qttools
-    doxygen
-    libsForQt5.wrapQtAppsHook
-    wayland-scanner
+    qt6Packages.qttools
+    qt6Packages.wrapQtAppsHook
+    deepin-gettext-tools
   ];
 
   buildInputs = [
-    wayland
-    dtkwidget
-    qt5platform-plugins
-    qt5integration
-    deepin-pw-check
-    libsForQt5.qtbase
-    libsForQt5.qtmultimedia
-    libsForQt5.polkit-qt
-    libxcrypt
-    gtest
-  ];
+    # Qt6
+    qt6Packages.qtbase
+    qt6Packages.qtdeclarative
+    qt6Packages.qtmultimedia
+    qt6Packages.qtwayland
+    qt6Packages.qtsvg
 
-  env.PKG_CONFIG_SYSTEMD_SYSTEMDUSERUNITDIR = "${placeholder "out"}/lib/systemd/user";
+    # DTK6
+    dtkcore
+    dtkgui
+    dtkcommon
+
+    # DDE
+    dde-shell
+    deepin-pw-check
+    treeland-protocols
+
+    # KDE
+    kdePackages.polkit-qt-1
+
+    # System
+    glib
+    gtest
+    systemd
+    libxcrypt
+    icu
+    openssl
+    dpkg
+    wayland
+    wlr-protocols
+    ffmpegthumbnailer
+  ];
 
   cmakeFlags = [
-    "-DCVERSION=${version}"
-    "-DDISABLE_AUTHENTICATION=YES"
-    "-DDISABLE_UPDATE=YES"
-    "-DDISABLE_LANGUAGE=YES"
+    "-DBUILD_TESTING=OFF"
     "-DBUILD_DOCS=OFF"
-    "-DMODULE_READ_DIR=/run/current-system/sw/lib/dde-control-center/modules"
-    "-DLOCALSTATE_READ_DIR=/var"
-  ];
-
-  preConfigure = ''
-    # qt.qpa.plugin: Could not find the Qt platform plugin "minimal"
-    # A workaround is to set QT_PLUGIN_PATH explicitly
-    export QT_PLUGIN_PATH=${libsForQt5.qtbase.bin}/${libsForQt5.qtbase.qtPluginPrefix}
-  '';
-
-  outputs = [
-    "out"
-    "dev"
+    "-DDTK_VERSION_MAJOR=6"
+    "-DQT_VERSION_MAJOR=6"
+    "-DDISABLE_AUTHENTICATION=ON"
+    "-DENABLE_WARNINGS_AS_ERRORS=OFF"
   ];
 
   meta = {
-    description = "Control panel of Deepin Desktop Environment";
-    mainProgram = "dde-control-center";
+    description = "Control center for Deepin Desktop Environment";
     homepage = "https://github.com/linuxdeepin/dde-control-center";
     license = lib.licenses.gpl3Plus;
     platforms = lib.platforms.linux;
     teams = [ lib.teams.deepin ];
   };
-}
+})

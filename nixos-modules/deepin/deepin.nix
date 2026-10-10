@@ -44,7 +44,7 @@ in
 
   config = mkIf cfg.enable {
     services.displayManager.sessionPackages = [ pkgs.deepin.dde-session ];
-    services.displayManager.defaultSession = mkDefault "dde-x11";
+    services.displayManager.defaultSession = mkDefault "deepin";
 
     # Update the DBus activation environment after launching the desktop manager.
     services.xserver.displayManager.sessionCommands = ''
@@ -136,17 +136,13 @@ in
           polkit_gnome
           librsvg # dde-api use rsvg-convert
           lshw # for dtkcore
-          libsForQt5.kde-gtk-config # deepin-api/gtk-thumbnailer need
-          libsForQt5.kglobalaccel
           xsettingsd # lightdm-deepin-greeter
           dtkcommon
           dtkcore
           dtkgui
           dtkwidget
           dtkdeclarative
-          qt5platform-plugins
           qt6platform-plugins
-          qt5integration
           qt6integration
           deepin-pw-check
 
@@ -169,9 +165,7 @@ in
           dde-clipboard
           dde-polkit-agent
           deepin-desktop-schemas
-          deepin-kwin
           dde-session
-          dde-widgets
           dde-appearance
           dde-application-manager
           deepin-service-manager
@@ -201,9 +195,7 @@ in
       dde-control-center
       dde-calendar
       dde-clipboard
-      deepin-kwin
       deepin-pw-check
-      dde-widgets
       dde-session
       dde-appearance
       dde-application-manager
@@ -217,9 +209,7 @@ in
       dde-file-manager
       dde-calendar
       dde-clipboard
-      deepin-kwin
       dde-appearance
-      dde-widgets
       dde-session
       dde-application-manager
       deepin-service-manager

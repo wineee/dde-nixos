@@ -3,45 +3,81 @@
   lib,
   fetchFromGitHub,
   cmake,
+  ninja,
   pkg-config,
+  qt6Packages,
+  kdePackages,
+  dtkcore,
   dtkwidget,
   dde-control-center,
   dde-session-shell,
-  libsForQt5,
+  dde-tray-loader,
+  gsettings-qt6,
   glib,
+  networkmanager,
+  wayland-protocols,
+  libsysprof-capture,
+  curl,
   gtest,
 }:
 
-stdenv.mkDerivation rec {
+stdenv.mkDerivation (finalAttrs: {
   pname = "dde-network-core";
-  version = "2.0.34";
+  version = "2.0.102";
 
   src = fetchFromGitHub {
     owner = "linuxdeepin";
-    repo = pname;
-    rev = version;
-    hash = "sha256-bS/PkutP5BQtqZ6MzeImFyGKoztoTswXhXaEftEv0FI=";
+    repo = "dde-network-core";
+    rev = finalAttrs.version;
+    hash = "sha256-scYimuUIADQbDcoTVfRK2uImPFVLtHbhHrL1Ck5bZIs=";
   };
 
   nativeBuildInputs = [
     cmake
-    libsForQt5.qttools
+    ninja
     pkg-config
-    libsForQt5.wrapQtAppsHook
+    qt6Packages.qttools
+    qt6Packages.wrapQtAppsHook
   ];
 
   buildInputs = [
-    libsForQt5.qtbase
-    libsForQt5.qtsvg
+    # Qt6
+    qt6Packages.qtbase
+    qt6Packages.qtdeclarative
+    qt6Packages.qtwayland
+
+    # DTK6
+    dtkcore
     dtkwidget
+
+    # DDE
     dde-control-center
     dde-session-shell
-    libsForQt5.networkmanager-qt
+    dde-tray-loader
+    gsettings-qt6
+
+    # KDE
+    kdePackages.networkmanager-qt
+    kdePackages.extra-cmake-modules
+
+    # System
     glib
+    networkmanager
+    wayland-protocols
+    libsysprof-capture
+    curl
     gtest
   ];
 
-  cmakeFlags = [ "-DVERSION=${version}" ];
+  patches = [
+    ./fix-paths.patch
+  ];
+
+  cmakeFlags = [
+    "-DVERSION=${finalAttrs.version}"
+    "-DBUILD_TESTS=OFF"
+    "-DBUILD_EXAMPLE=OFF"
+  ];
 
   strictDeps = true;
 
@@ -52,4 +88,4 @@ stdenv.mkDerivation rec {
     platforms = lib.platforms.linux;
     teams = [ lib.teams.deepin ];
   };
-}
+})

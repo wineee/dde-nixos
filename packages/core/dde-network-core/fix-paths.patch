@@ -1,0 +1,38 @@
+diff --git a/dcc-network/CMakeLists.txt b/dcc-network/CMakeLists.txt
+index 923b238..e088e9d 100644
+--- a/dcc-network/CMakeLists.txt
++++ b/dcc-network/CMakeLists.txt
+@@ -29,6 +29,7 @@ ADD_DEFINITIONS("-fstack-protector-strong -D_FORTITY_SOURCE=1 -z noexecstack -pi
+ # find_package(Qt6 REQUIRED COMPONENTS Quick)
+ find_package(Qt6 COMPONENTS Core Gui DBus Network LinguistTools REQUIRED)
+ find_package(DdeControlCenter REQUIRED)
++set(DDE_CONTROL_CENTER_PLUGIN_INSTALL_DIR ${CMAKE_INSTALL_FULL_LIBDIR}/dde-control-center/plugins_v1.1)
+ find_package(Dtk6 COMPONENTS Core REQUIRED)
+ find_package(PkgConfig REQUIRED)
+ find_package(KF6NetworkManagerQt REQUIRED)
+diff --git a/dock-network-plugin/CMakeLists.txt b/dock-network-plugin/CMakeLists.txt
+index 396f9ed..5a10f74 100644
+--- a/dock-network-plugin/CMakeLists.txt
++++ b/dock-network-plugin/CMakeLists.txt
+@@ -36,7 +36,7 @@ set(CMAKE_HAVE_THREADS_LIBRARY 1)
+ set(CMAKE_USE_PTHREADS_INIT 1)
+ set(CMAKE_PREFER_PTHREAD_FLAG ON)
+ 
+-find_package(${QT_NS} COMPONENTS Core Widgets DBus Network WaylandClient LinguistTools REQUIRED)
++find_package(${QT_NS} COMPONENTS Core Widgets DBus Network WaylandClient WaylandClientPrivate LinguistTools REQUIRED)
+ find_package(PkgConfig REQUIRED)
+ find_package(${DTK_NS} REQUIRED COMPONENTS Widget)
+ find_package(KF6NetworkManagerQt REQUIRED)
+diff --git a/network-service-plugin/CMakeLists.txt b/network-service-plugin/CMakeLists.txt
+index 65d9856..0689e46 100644
+--- a/network-service-plugin/CMakeLists.txt
++++ b/network-service-plugin/CMakeLists.txt
+@@ -77,7 +77,7 @@ else()
+     install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/src/session/plugin-session-network.json DESTINATION share/deepin-service-manager/user/)
+ endif()
+ 
+-install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/src/system/deepin.dde.daemon.conf DESTINATION /etc/NetworkManager/conf.d/)
++install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/src/system/deepin.dde.daemon.conf DESTINATION ${CMAKE_INSTALL_SYSCONFDIR}/NetworkManager/conf.d/)
+ install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/src/system/org.deepin.dde.Network1.conf DESTINATION share/dbus-1/system.d/)
+ install(FILES ${CMAKE_SOURCE_DIR}/src/misc/polkit-action/com.deepin.dde.network.policy DESTINATION share/polkit-1/actions)
+ 
