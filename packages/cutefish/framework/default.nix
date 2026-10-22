@@ -22,9 +22,9 @@ stdenv.mkDerivation (finalAttrs: {
     hash = "sha256-iZj+sQQ2JbmyYyUfsIwUFTHPNr2S6jLmxUgZURpCS1k=";
   };
 
-  # Not picky about a libspa version, just about spa/pod/parser.h having pulled
-  # in iter.h: since PipeWire 1.x it no longer does, and spa_pod_find_prop()
-  # lives in iter.h.
+  # Upstream bug, sent as https://github.com/cutefishos/cutefish-framework/pull/18
+  # -- drop this patch once that is merged: spa/pod/parser.h no longer pulls in
+  # iter.h since PipeWire 1.x, and spa_pod_find_prop() lives in iter.h.
   patches = [ ./framework-include-spa-iter.patch ];
 
   nativeBuildInputs = [
