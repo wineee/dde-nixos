@@ -41,6 +41,8 @@ stdenv.mkDerivation (finalAttrs: {
   };
 
   patches = [
+    # Upstream bug, sent as https://github.com/cutefishos/cutefish-compositor/pull/21
+    # -- drop this patch once that is merged.
     ./compositor-missing-cstdint.patch
     # cutefish-services / cutefish-polkit-agent (both cutefish-core, which
     # depends on the compositor) are looked up on PATH instead of being
