@@ -6,7 +6,7 @@ index cd9a811..bb8a9d6 100644
  #include <spa/param/props.h>
  #include <spa/param/route.h>
  #include <spa/pod/parser.h>
-+#include <spa/pod/iter.h> // spa_pod_find_prop()
++#include <spa/pod/iter.h>
  
  #include "cutefish/audio/backend.h"
  
