@@ -15,9 +15,6 @@ nixpkgs and being migrated to Qt6 + Treeland.
 >   for merge, and are not meant to be upstreamed as-is. See
 >   [docs/upstream-patches.md](docs/upstream-patches.md).
 
-The Cutefish port used to live here too; it now has its own repository:
-[`wineee/cutefish-nixos`](https://github.com/wineee/cutefish-nixos).
-
 ## Start here
 
 - [docs/development.md](docs/development.md) — maintained-package table, Qt6
@@ -38,7 +35,7 @@ cd vm && nix run -v -L      # DDM + Treeland VM
   inputs = {
     nixpkgs.url = "nixpkgs/nixos-unstable";
     dde-nixos = {
-      url = "github:wineee/dde-cutefish-for-nixos";
+      url = "github:wineee/dde-nixos";
       inputs.nixpkgs.follows = "nixpkgs";
     };
   };
@@ -62,7 +59,7 @@ cd vm && nix run -v -L      # DDM + Treeland VM
 an alias for older configurations.
 
 Non-flake setups go through `flake-compat` with
-`https://github.com/wineee/dde-cutefish-for-nixos/archive/master.tar.gz`.
+`https://github.com/wineee/dde-nixos/archive/main.tar.gz`.
 
 ## Building packages
 

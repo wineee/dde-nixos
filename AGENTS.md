@@ -131,5 +131,3 @@ type 常用：`feat`/`fix`/`refactor`/`remove`/`chore`；scope 用包名或目�
 - `deepin-anything` 模块已接好，`services.deepin25.deepin-anything.enable`
   默认 false（userspace + 内核模块 + 3 个 unit 均在，详见
   `docs/porting/tools.md`）。
-- **Cutefish 已拆成独立仓库** `wineee/cutefish-nixos`（2026-10-26）。本仓库只有
-  DDE，不再有 `packages/cutefish/`、`nixos-modules/cutefish/`、`vm-cutefish/`。
