@@ -131,12 +131,5 @@ type 常用：`feat`/`fix`/`refactor`/`remove`/`chore`；scope 用包名或目�
 - `deepin-anything` 模块已接好，`services.deepin25.deepin-anything.enable`
   默认 false（userspace + 内核模块 + 3 个 unit 均在，详见
   `docs/porting/tools.md`）。
-- **Cutefish 是第二套桌面（独立于 DDE）**：`packages/cutefish/`（`lib.fix`
-  属性集，不进 DDE scope）+ `nixos-modules/cutefish/` +
-  `vm-cutefish/`。17 个包全部构建通过，`services.desktopManager.cutefish.enable`
-  一条即可起整套（默认带 `cutefish-dm`：greeter 用户、两个 PAM 栈、
-  `display-manager.service` 别名）；VM 镜像构建通过，实机启动未验（需宿主
-  GPU 的 DRM/EGL）。详见
-  `docs/porting/cutefish-survey.md`（总览与进度）、
-  `cutefish-toolkit.md`（Skia 与 toolkit）、`cutefish-apps.md`（L3 应用）、
-  `cutefish-core.md`（会话、后台服务、显示管理器）。
+- **Cutefish 已拆成独立仓库** `wineee/cutefish-nixos`（2026-10-26）。本仓库只有
+  DDE，不再有 `packages/cutefish/`、`nixos-modules/cutefish/`、`vm-cutefish/`。
